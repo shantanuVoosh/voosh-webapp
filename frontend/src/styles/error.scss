@@ -1,0 +1,39 @@
+.error-header{
+   height: 10vh;
+}
+.error-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    h1{
+        color: $color-primary-1;
+        font-size: 5rem;
+        width: auto;
+        margin-top: 2rem;
+    }
+    h2{
+        width: auto;
+        word-wrap: break-word;
+        font-weight: 600;
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+    }
+    p{
+        font-size: 1.5rem;
+        margin: 1rem 0 3rem 0;
+    }
+    .buttons{
+        .error-btn{
+            background:linear-gradient(to right, $color-primary-1, $color-primary-2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: $radius-1;
+        }
+    }
+
+}

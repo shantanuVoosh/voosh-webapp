@@ -1,0 +1,133 @@
+/* header */
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  padding: 20px 15px;
+  overflow: hidden;
+
+  // Top circle
+  &::after {
+    content: "";
+    background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+    position: absolute;
+    height: 120px;
+    width: 120px;
+    top: -51px;
+    right: -11px;
+    border-radius: 100%;
+    // z-index: 1;
+  }
+
+  // Bottom circle
+  &::before {
+    content: "";
+    position: absolute;
+    background: #ffa20f;
+    height: 120px;
+    width: 120px;
+    top: 140px;
+    right: 158px;
+    border-radius: 100%;
+    // z-index: 1;
+  }
+
+  &__text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-white-1;
+
+    &--icon {
+      margin-top: 5px;
+    }
+
+    &--heading {
+      margin: 2px;
+      font-size: $heading-mid;
+      font-weight: 500;
+      @include breakpoint-up(xsmall) {
+        // font-size: $heading-big;
+      }
+    }
+  }
+
+  &__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    padding: 5px 10px;
+    background-color: $color-white-1;
+    border-radius: $radius-2;
+    z-index: 1;
+    @include breakpoint-up(xxsmall) {
+      padding: 0px 15px;
+      height: 35px;
+    }
+    @include breakpoint-up(xsmall) {
+      height: 40px;
+      padding: 0px 25px;
+    }
+
+    &--text {
+      font-size: $text-xsmall;
+      color: $color-grey-5;
+      font-weight: 500;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-small;
+      }
+    }
+    &--icon {
+      font-size: $text-xsmall;
+      color: $color-grey-2;
+      margin-left: 2px;
+      margin-bottom: -4px;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-small;
+      }
+    }
+  }
+}
+
+.header-big {
+  position: relative;
+  padding-bottom: 115px;
+  // z-index: -1;
+}
+
+.header-large {
+  position: relative;
+  padding-bottom: 355px;
+  // z-index: -1;
+  &::after {
+    content: "";
+    content: "";
+    background: linear-gradient(to right, #FF5920, #FFA20F);
+    position: absolute;
+    height: 220px;
+    width: 220px;
+    top: -86px;
+    right: -65px;
+    border-radius: 100%;
+    // z-index: 1;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    background: #ffa20f;
+    height: 220px;
+    width: 220px;
+    top: 300px;
+    right: 58px;
+    border-radius: 100%;
+    // z-index: 1;
+  }
+
+}
+
+

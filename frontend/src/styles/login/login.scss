@@ -1,0 +1,112 @@
+.login-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $color-white-1;
+}
+
+.login-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4.5rem 0 2rem 0;
+    &__logo{
+        margin: 0 auto;
+        height: 75px;
+    }
+    &__heading{
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+    &__sub-heading{
+        
+        &--small{
+            width: 80%;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: .5rem;
+            color: $color-grey-3;
+        }
+    }
+}
+
+.google-btn{
+    button{
+        border-radius: $radius-2 !important;
+        box-shadow: none !important;
+        border: 1px solid $color-grey-1 !important;
+        padding-top: .35rem !important;
+        padding-bottom: .35rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        color: $color-black-1 !important;
+        
+        // google logo
+        &>div{
+            background: none !important;
+            margin-bottom: -3px;
+        }
+        // text inside button
+        &>span{
+            
+        }
+    }
+}
+
+.login__form{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+
+    .form{
+         &--heading{
+            width: 80%;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            color: $color-grey-3;
+            margin-top: .5rem;
+         }
+         &--input{
+            width: 75%;
+            margin-top: .8rem;
+            padding: 1rem;
+            border-radius: 5px;
+            border:none;
+            background-color: $color-white-2;
+
+            &:placeholder-shown{
+                color: $color-grey-5;
+            }
+         }
+         &--btn{
+            width: 70%;
+            border: none;
+            margin-top: 20px;
+            text-align: center;
+            background-color: $color-white-1;
+            background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+            color: $color-white-1;
+            padding: 1rem;
+            font-size: $text-small;
+            border-radius: $radius-3;
+            @include breakpoint-up(xxsmall) {
+              font-size: $text-medium;
+            }
+
+            a, a:visited, a:hover, a:active {
+
+                text-decoration: none;
+                color: $color-white-1;
+            }
+         }
+    }
+
+}

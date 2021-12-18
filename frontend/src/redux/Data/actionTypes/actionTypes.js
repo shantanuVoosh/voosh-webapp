@@ -1,0 +1,4 @@
+export const ActionTypes = {
+    FETCH_DATA: 'FETCH_DATA',
+    SET_CURRENT_PRODUCT_INDEX: 'SET_CURRENT_PRODUCT_INDEX',
+} 

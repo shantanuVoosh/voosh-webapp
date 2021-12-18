@@ -1,0 +1,76 @@
+/* OPERARTION METRICS CARDS */
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  grid-gap: 0.5rem;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: $color-white-2;
+  border-radius: $radius-2;
+  padding: 15px 10px;
+  margin: 5px;
+
+  &:last-child:nth-child(odd) {
+    grid-column: span 2;
+    flex-direction: row;
+
+    .card__btn {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 7px;
+      width: auto;
+    }
+  }
+
+  &__text {
+    &--heading {
+      font-size: $text-medium;
+      color: $color-grey-3;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-large;
+      }
+    }
+    .value {
+      font-size: $heading-mid;
+      font-weight: 700;
+      margin: 5px 0;
+      @include breakpoint-up(xsmall) {
+        font-size: $heading-big;
+      }
+    }
+    &--info {
+      color: $color-grey-2;
+      font-size: $text-xsmall;
+      margin-bottom: 5px;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-small;
+      }
+    }
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    width: 60%;
+
+    color: $color-black-1;
+    cursor: pointer;
+    &--text {
+      font-size: $text-small;
+      margin-right: 2px;
+    }
+
+    &--icon {
+    }
+  }
+}
+
+

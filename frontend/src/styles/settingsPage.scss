@@ -1,0 +1,41 @@
+.setting {
+  height: 100%;
+  min-height: 85vh;
+  padding: 0 .5rem;
+  &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1rem 0;
+      padding: 1rem 0;
+    &--title {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    &--btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+    //   height: 30px;
+      padding: 2px 35px;
+      background-color: $color-white-1;
+      border-radius: $radius-3;
+      border: 1px solid $red;
+      color: $red;
+    //   z-index: 1;
+
+    &:hover{
+        color: #fff;
+        background-color: $red;
+    }
+    }
+  }
+}
+
+.setting-container{
+
+  .item{
+
+  }
+}
