@@ -29,21 +29,22 @@ import { BsBagCheckFill } from "react-icons/bs";
 // TODO: aager path ka name match nhi hua, then show the Error page
 
 const TimeSeriesPages = ({}) => {
-  const resultType = useSelector((state) => state.resultType);
+  const resultType = useSelector((state) => state.data.resultType);
   const location = useLocation();
 
   // ?can be usefull to grab data for this Graph
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  
+
+  // * manually handeling the data, cuz this not present in the LayoutWrapper
+  if (data.length <= 0) return null;
+
   const operationHealth = data[currentProductIndex]["operationHealth"];
   const { operationHealthMain, operationHealthData } = operationHealth;
   const operationHealthItems =
     currentProductIndex < 0 ? [] : operationHealthData;
 
-  // console.log(operationHealthItems);
 
-  // * manually handeling the data, cuz this not present in the LayoutWrapper
-  if (data.length <= 0) return null;
+
   let name;
   let type;
   // ? user using navigation from links
@@ -84,11 +85,16 @@ const TimeSeriesPages = ({}) => {
   } = timeSeriesData;
 
   let value;
+  // ? use value month Wise or week Wise
   if (currentValue === undefined) {
     value = resultType === "month" ? monthlyResult : weeklyResult;
   } else {
     value = currentValue;
   }
+  // ? compare the value with benchmark ---> bar color will change accordingly
+  const compare = compareThen === "grater" ? value >= benchmark : value <= benchmark;
+  // console.log(compare, "compare value", resultType)
+  const colorOfBar = compare ? "#27AE60" : "#f05a48";
 
 
   const options = {
@@ -96,6 +102,7 @@ const TimeSeriesPages = ({}) => {
       legend: {
         display: false,
       },
+      
     },
   
     scales: {
@@ -114,17 +121,19 @@ const TimeSeriesPages = ({}) => {
       },
     },
   };
+  // 
   const barData = {
-    labels: [`${resultType==="weekly"?"7 Days":"Month"}`, "Target"],
+    labels: [`${resultType==="week"?"7 Days":"Month"}`, "Target"],
     datasets: [
       {
         // ! value and benchmark will be change according to the data
         // data: [value, benchmark],
         data: [value, benchmark],
-        label: "",
-        backgroundColor: ["#f05a48", "#27AE60"],
-        barThickness: 40,
-        fill: false,
+        label: "vbbfb",
+        backgroundColor: [`${colorOfBar}`, "#2A327D"],
+        // backgroundColor: ["#f05a48", "#2A327D"],
+        barThickness: 60,
+        // fill: false,
       },
     ],
   };

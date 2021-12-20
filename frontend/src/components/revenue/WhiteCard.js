@@ -14,7 +14,7 @@ const WhiteCard = (props) => {
     benchmark,
     monthlyResult,
     weeklyResult,
-    compareThen,
+    color
   } = props;
 
   let value;
@@ -22,17 +22,17 @@ const WhiteCard = (props) => {
   if (currentValue === undefined) {
     value = resultType === "month" ? monthlyResult : weeklyResult;
   }
-  // !fix result no weekly or monthly
+  // ! for fix result no weekly or monthly
   else {
     value = currentValue;
   }
-  console.log(name, value, benchmark, compareThen)
+  console.log(name, value, benchmark,)
 
   return (
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-        <div className="value">{value}</div>
+        <div className="value" style={{"color":`${color}`}}>{value}</div>
         <div className="card__text--info">
           <p>{info}</p>
         </div>
@@ -40,7 +40,7 @@ const WhiteCard = (props) => {
       {/* //! sending data from this page */}
       <Link
         to={`${name.replace(/\s/g, "")}`}
-        state={{ name, type, value, benchmark, compareThen }}
+        state={{ name, type, value, benchmark,  }}
         className="card__btn"
       >
         <span className="card__btn--text">Know more</span>

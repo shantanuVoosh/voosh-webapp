@@ -37,7 +37,7 @@ const Settings = () => {
               Log Out
             </span>
           </div>
-          <div className="setting-container items__container">
+          {/* <div className="setting-container items__container">
             <div className="item">
               <div className="item__head">
                 <div className="item__head--icon"> $</div>
@@ -48,7 +48,7 @@ const Settings = () => {
             <div onClick={()=>retryLogin} className="long-btn screen-btn">
               Authorize your mail again
             </div>
-          </div>
+          </div> */}
         </div>
 
         <Footer />

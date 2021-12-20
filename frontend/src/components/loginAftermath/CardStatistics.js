@@ -10,9 +10,10 @@ const CardStatistics = ({ cardStatistics }) => {
     type,
   } = cardStatistics;
 
-  const value = parseInt(currentValue);
+  let value = parseInt(currentValue);
   const diff = value - change;
   console.log(diff, "diff");
+
 
   return (
     <>
@@ -25,27 +26,35 @@ const CardStatistics = ({ cardStatistics }) => {
             <AiOutlineFall className="icon-red" size={25} />
           )}
         </span>
-        {type === "money" && <span className="value"> &#8377; {value}</span>}
-        {type === "percentage" && <span className="value">{value}%</span>}
+        {type === "money" && (
+          <span className={`value ${changeTypeDirection === "up" ?"green":"red"}`}>
+            {value.toLocaleString("en-IN", {
+              maximumFractionDigits: 2,
+              style: "currency",
+              currency: "INR",
+            })}
+          </span>
+        )}
+        {type === "percentage" && <span className={`value ${changeTypeDirection === "up" ?"green":"red"}`}>{value}%</span>}
       </div>
       {/* //?bottom value */}
       {change !== null ? (
         <div className="card-statistics__info">
           {diff >= 0 ? (
             // ? Positive value
-            <span className="change change-green">+{diff}%</span>
+            <span className="change change-green">{diff}% over target</span>
           ) : (
             // ? Negative value
-            <span className="change change-red">{diff}%</span>
+            <span className="change change-red">{ Math.abs(diff)}% below target</span>
           )}{" "}
-          over target
+          
         </div>
-      ):
-      (<div className="card-statistics__info">
-        {/* //! for not present data */}
-        comming soon
-      </div>)
-      }
+      ) : (
+        <div className="card-statistics__info">
+          {/* //! for not present data */}
+          coming soon
+        </div>
+      )}
     </>
   );
 };

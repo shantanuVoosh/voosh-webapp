@@ -12,10 +12,9 @@ const GrayCard = (props) => {
     type,
     value: currentValue,
     info,
-    benchmark,
     monthlyResult,
     weeklyResult,
-    compareThen,
+    color,
   } = props;
 
   let value;
@@ -27,14 +26,27 @@ const GrayCard = (props) => {
   else {
     value = currentValue;
   }
-  console.log(name, value, benchmark, compareThen);
+
+  if(type === "money"){
+    value = value.toLocaleString('en-IN', {
+      maximumFractionDigits: 2,
+      style: 'currency',
+      currency: 'INR'
+  });
+  }
+  else if(type === "number"){
+    value = value.toLocaleString('en-IN');
+  }
+
+  // console.log(name, value,"new value");
 
   
   return (
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-        <div className="value">{value}</div>
+        
+        <div className="value" style={{"color":`${color}`}}>{value}</div>
 
         <div className="card__text--info">
           <p>{info}</p>

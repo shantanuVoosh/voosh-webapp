@@ -1,6 +1,6 @@
 .setting {
   height: 100%;
-  min-height: 85vh;
+  min-height: 90vh;
   padding: 0 .5rem;
   &__header {
       display: flex;
@@ -17,17 +17,16 @@
       justify-content: center;
       align-items: center;
       font-size: 16px;
-    //   height: 30px;
-      padding: 2px 35px;
+      height: 40px;
+      padding: 0px 35px;
       background-color: $color-white-1;
       border-radius: $radius-3;
-      border: 1px solid $red;
-      color: $red;
-    //   z-index: 1;
+      border: 1px solid rgb(216, 56, 56);
+      color: rgb(216, 56, 56);
 
     &:hover{
         color: #fff;
-        background-color: $red;
+        background-color: rgb(216, 56, 56);
     }
     }
   }

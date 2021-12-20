@@ -32,15 +32,26 @@
   &__item {
     margin-bottom: 0.7rem;
     position: relative;
+    display: flex;
+    align-items: center;
 
-    &::after{
-        content: "";
-        display: block;
-        width: 5px;
-        height: 5px;
-        background-color: red;
-        margin-top: 0.5rem;
+    &--icon {
+      margin-right: 0.5rem;
+      height: 6px;
+      width: 6px;
+      // background-color: brown;
+      border-radius: 100%;
     }
+    &--text {
+      font-size: 1rem;
+      .name{
+        
+      }
+      .value{
+
+      }
+    }
+
 
   }
 }

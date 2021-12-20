@@ -9,10 +9,9 @@ const VooshDB =
 
 // ! removed the default values for res_id
 // ?red_id casesensitive hai! cuz query krna hai
-async function getRequiredCollectionDataFromMongodb(
-  res_id = 256302,
-  documentName = "operationsdb"
-) {
+async function getRequiredCollectionDataFromMongodb(res_id = 311441) {
+  documentName = "operationsdb";
+
   const todaysDate = new Date().toISOString().slice(0, 10);
   const yesterdayDate = getYesterdayDate();
   const tomorrowDate = getTomorrowDate();
@@ -79,7 +78,7 @@ async function getRequiredCollectionDataFromMongodb(
       query: {
         Res_Id: res_id,
         // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
+        Date: { $gte: yesterdayDate, $lte: tomorrowDate },
         // Date: { $gte: yesterdayDate, $lte: getCurrentDate },
       },
     },
@@ -127,6 +126,15 @@ async function getRequiredCollectionDataFromMongodb(
         // Date: { $gte: yesterdayDate, $lte: getCurrentDate },
       },
     },
+    {
+      name: "NON_Voosh_swiggy_reconsilation",
+      query: {
+        Swiggy_id: res_id,
+        // "Date": yesterdayDate,
+        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
+        // Date: { $gte: yesterdayDate, $lte: getCurrentDate },
+      },
+    },
   ];
 
   // ! Collecting all Provided Collection Data
@@ -156,7 +164,6 @@ async function getRequiredCollectionDataFromMongodb(
 }
 
 function structureMongodbData(apiResponse) {
-
   // ! try catch krna hai
   // ?Operation_Health_Data
   let i = 0;
@@ -167,16 +174,18 @@ function structureMongodbData(apiResponse) {
   const rest_MFR = apiResponse["Swiggy_MFR"][0];
   const rest_RDC = apiResponse["Swiggy_RDC"][0];
   const avrage_ratings = apiResponse["Swiggy_Static_ratings"][0];
-  // console.log(rest_Serviceability);
+
   // ?listing_audit_score
   const listing_audit_score = apiResponse["Listing_Audit_Score"][0];
 
   const customer_ratings = apiResponse["Swiggy_ratings"][0];
   const rest_oders = apiResponse["Non_Voosh_Orderwise2"][0];
+
+  // ?revenue
   const revenue = apiResponse["Swiggy_Revenue"][0];
-
-  console.log("operationHealthWeeklyResult: ",operationHealthWeeklyResult)
-
+  const revenue_financical = apiResponse["NON_Voosh_swiggy_reconsilation"][0];
+  // console.log("Revenue " ,apiResponse["Swiggy_Revenue"]);
+  // console.log("rest_Serviceability: ", rest_Serviceability);
   // console.log("Rest_Acceptance: ", Object.keys(rest_Acceptance));
   // console.log("rest_igcc: ", Object.keys(rest_igcc));
   // console.log("rest_Serviceability: ", Object.keys(rest_Serviceability));
@@ -188,7 +197,6 @@ function structureMongodbData(apiResponse) {
   // console.log("rest_oders: ", Object.keys(rest_oders));
   // console.log("revenue: ", Object.keys(revenue));
 
-
   // ?calculating the data manually
   const wrongItemComplaintsOrders = parseFloat(
     rest_igcc["Wrong Item Complaints Orders"]
@@ -197,24 +205,83 @@ function structureMongodbData(apiResponse) {
     rest_igcc["Missing Item Complaints Orders"]
   );
 
+  // console.log("revenue_financical: ", revenue_financical);
+  // console.log("revenue: ", revenue);
+
   // ? Customer Complains
   const valueForIGCC =
     wrongItemComplaintsOrders + missingItemComplaintsOrders !== 0
       ? (wrongItemComplaintsOrders + missingItemComplaintsOrders) / 2
       : 0;
+
+  // ? Revenue or Financical Data
+  const totalSales = revenue_financical["Total Customer Payable "];
+  const netPayout = revenue_financical["Net Payout  (E - F - G)"];
+  const deleveries = revenue_financical["Number of orders"];
+  const cancelledOrders = rest_RDC["Res_Cancellation"];
+
+  const deductions = {
+    "Swiggy Platform Service Fee": parseFloat(
+      revenue_financical["Swiggy Platform Service Fee"].toFixed(2)
+    ),
+    TCS: revenue_financical["TCS"],
+    TDS: revenue_financical["TDS"],
+    "Homepage Banner": revenue_financical["Homepage Banner"],
+    "High Priority": revenue_financical["High Priority"],
+    "Merchant Share Of Cancelled Orders":
+      revenue_financical["Merchant Share Of Cancelled Orders"],
+  };
+
+  //  Todo: Remove this
+
+  // console.log(
+  //   "Bestseller Without Recommended",
+
+  //       parseFloat((listing_audit_score["Bestseller % in without Recommended data"]*100).toFixed(2))
+
+  // );
+
+  // console.log(
+  //   "Bestseller% in Recommended Data",
+  //   parseFloat((listing_audit_score["Bestseller % in Recommended data"]* 100).toFixed(2))
+  // );
+
+  // console.log(
+  //   "Bestseller % in Recommended vs without Recommended data",
+  //   parseFloat(
+  //     (
+  //       listing_audit_score[
+  //         "Bestseller % in Recommended vs without Recommended data"
+  //       ] * 100
+  //     ).toFixed(2)
+  //   )
+  // );
+
+  // console.log(
+  //   "Recommended %",
+  //   parseInt(listing_audit_score["Recommended %"]) * 100
+  // );
+
+  // console.log("Image %", parseInt(listing_audit_score["Recommended %"]) * 100);
+
+  // console.log(
+  //   "Description %",
+  //   parseInt(listing_audit_score["Recommended %"]) * 100
+  // );
+
   const data = {
     // ?name of the restaurant
     name: "Swiggy",
     // !Operation Health
-  
+
     operationHealth: {
-      operationHealthMain:{
+      operationHealthMain: {
         name: "Operation Health",
         type: "percentage",
         info: "Operation Health >= 95% Gets more orders",
         benchmark: 95,
-        monthlyResult:97,
-        weeklyResult:operationHealthWeeklyResult["Weekly_OH_Score"]*2*10,
+        monthlyResult: 97,
+        weeklyResult: operationHealthWeeklyResult["Weekly_OH_Score"] * 2 * 10,
       },
       operationHealthData: [
         // ?Swiggy_Kitchen_Servicibility
@@ -223,7 +290,7 @@ function structureMongodbData(apiResponse) {
           type: "percentage",
           info: "Servicibility >= 95% Gets more orders",
           // ! ye target mein jayega graph
-          benchmark: 95,
+          benchmark: 100,
           compareThen: "grater",
           monthlyResult: rest_Serviceability["Monthly_Servicibility"],
           weeklyResult: rest_Serviceability["Weekly_Servicibility"],
@@ -236,14 +303,14 @@ function structureMongodbData(apiResponse) {
           info: "Cancellation Charges <= 5% Gets more orders",
           benchmark: 5,
           compareThen: "less",
-          monthlyResult: rest_RDC["Monthly_avg_RDC"]*100,
-          weeklyResult: rest_RDC["Weekly_avg_RDC"]*100,
+          monthlyResult: rest_RDC["Monthly_avg_RDC"] * 100,
+          weeklyResult: rest_RDC["Weekly_avg_RDC"] * 100,
           ...rest_RDC,
         },
-  
+
         // ?Swiggy_Static_ratings
         {
-          name: "Average Rating",
+          name: "Rating",
           type: "rating",
           info: "Rating > 4.5 Gets better orders",
           benchmark: 4.5,
@@ -265,7 +332,7 @@ function structureMongodbData(apiResponse) {
         },
         // ? IGCC
         {
-          name: "Customer Complains",
+          name: "Customer Complaints",
           // name: "Wrong/Missing item",
           type: "percentage",
           info: "Complains <=1 Gets more orders",
@@ -287,7 +354,7 @@ function structureMongodbData(apiResponse) {
         },
       ],
     },
-    
+
     // !listing_audit_score
 
     listingScore: {
@@ -301,114 +368,132 @@ function structureMongodbData(apiResponse) {
         "Safety Tag": {
           name: "Safety Tag",
           value: listing_audit_score["safety tag"],
-          benchmark: null,
-          compareThen: null,
+          benchmark: "yes",
+          compareThen: "yes or no",
         },
 
         Fssai: {
           name: "Fssai",
           value: listing_audit_score["Fssai"],
-          benchmark: null,
-          compareThen: null,
+          benchmark: "present",
+          compareThen: "present or not prensent",
         },
 
         "Offer 1": {
           name: "Offer 1",
           value: listing_audit_score["Offer 1"],
-          benchmark: null,
-          compareThen: null,
+          // ? cuz data mein spelling wrong hai
+          benchmark: "aplicable",
+          compareThen: "applicable or not applicable",
         },
         "Offer 2": {
           name: "Offer 2",
           value: listing_audit_score["Offer 2"],
-          benchmark: null,
-          compareThen: null,
+          benchmark: "aplicable",
+          compareThen: "applicable or not applicable",
         },
 
         "Number of Rating": {
           name: "Number of Rating",
           value: listing_audit_score["Number of Rating"],
-          benchmark: null,
-          compareThen: null,
+          benchmark: "medium",
+          compareThen: "high medium or low",
         },
         Rating: {
           name: "Rating",
-          benchmark: null,
-          compareThen: null,
           value: listing_audit_score["Number of Rating"],
+          benchmark: "medium",
+          compareThen: "high medium or low",
         },
         "Bestseller Without Recommended": {
           name: "Bestseller Without Recommended",
           benchmark: 7,
           compareThen: "grater",
-          value: Number(
-            listing_audit_score["Bestseller % in without Recommended data"]
-          ).toFixed(2),
+          value: parseFloat(
+            (
+              listing_audit_score["Bestseller % in without Recommended data"] *
+              100
+            ).toFixed(2)
+          ),
         },
         "Bestseller% in Recommended Data": {
           name: "Bestseller% in Recommended Data",
           benchmark: 30,
           compareThen: "grater",
-          value: listing_audit_score["Bestseller % in Recommended data"],
+          value: parseFloat(
+            (
+              listing_audit_score["Bestseller % in Recommended data"] * 100
+            ).toFixed(2)
+          ),
         },
 
         "Bestseller% in Recommended vs Without Recommended Data": {
           name: "Bestseller % in Recommended vs without Recommended data",
+
+          value: parseFloat(
+            (
+              listing_audit_score[
+                "Bestseller % in Recommended vs without Recommended data"
+              ] * 100
+            ).toFixed(2)
+          ),
           benchmark: 6,
           compareThen: "grater",
-          value:
-            listing_audit_score[
-              "Bestseller % in Recommended vs without Recommended data"
-            ],
         },
         "Recommended %": {
           name: "Recommended %",
+          value: parseFloat(
+            (listing_audit_score["Recommended %"] * 100).toFixed(2)
+          ),
           benchmark: 17,
           compareThen: "grater",
-          value: Number(
-            listing_audit_score[
-              "Recommended %"
-            ]
-          ).toFixed(2),
         },
         "Image %": {
           name: "Image %",
-          benchmark: null,
-          compareThen: null,
-          value: Number(listing_audit_score["Image %"]).toFixed(2),
+          value:
+          parseFloat((listing_audit_score["Image %"]* 100).toFixed(2)) ,
+          benchmark: 100,
+          compareThen: "grater",
         },
         "Description %": {
           name: "Description %",
-          benchmark: null,
-          compareThen: null,
-          value: Number(listing_audit_score["Description %"]).toFixed(2),
+          value: parseFloat((listing_audit_score["Description %"]* 100).toFixed(2)),
+          benchmark: 95,
+          compareThen: "grater",
         },
         "Desserts/Sweet Category": {
           name: "Desserts/Sweet Category",
-          benchmark: null,
-          compareThen: null,
           value: listing_audit_score["Desserts/Sweet category"],
+          benchmark: "yes",
+          compareThen: "yes or no",
         },
         "Beverages Category": {
           name: "Beverages Category",
-          benchmark: null,
-          compareThen: null,
           value: listing_audit_score["Beverages category"],
+          benchmark: "yes",
+          compareThen: "yes or no",
         },
         Score: {
           name: "Score",
-          benchmark: null,
-          compareThen: null,
           value: Number(listing_audit_score["Score"]).toFixed(2),
+          benchmark: 11,
+          compareThen: "grater",
         },
       },
     },
 
     // ! Revenue
     revenue: {
-      monthlyResult: revenue["Monthly_Revenue"].toFixed(2),
-      weeklyResult: revenue["Weekly_Revenue"].toFixed(2),
-      ...revenue,
+      monthlyResult: parseFloat(revenue["Monthly_Revenue"].toFixed(2)),
+      weeklyResult: parseFloat(revenue["Weekly_Revenue"].toFixed(2)),
+
+      financicalData: {
+        totalSales,
+        netPayout,
+        deleveries,
+        cancelledOrders,
+        deductions,
+      },
     },
     adsAndAnalytics: {
       //   costPerClick: 500,

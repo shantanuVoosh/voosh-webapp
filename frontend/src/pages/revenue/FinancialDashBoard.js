@@ -3,13 +3,39 @@ import GrayCard from "../../components/revenue/GrayCard";
 import WhiteCard from "../../components/revenue/WhiteCard";
 import SectionButtons from "../../components/SectionButtons";
 import { Doughnut } from "react-chartjs-2";
+import { useSelector } from "react-redux";
+import ColorList from "../../components/revenue/ColorList";
 
 const FinancialDashBoard = () => {
-  const pieColors = ["#FE645A", "#2A327D", "#00C689", "#FFB039", "#FFCA00"];
+  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const revenue = data[currentProductIndex]["revenue"];
+  const financicalData = revenue["financicalData"];
+  console.log("financicalData", financicalData);
+  const totalSales = financicalData["totalSales"];
+  const cancelledOrders = financicalData["cancelledOrders"];
+  const netPayout = financicalData["netPayout"];
+  const deleveries = financicalData["deleveries"];
+  const deductions = financicalData["deductions"];
+
+  const deductionTitles = Object.keys(deductions);
+  const deductionValues = deductionTitles.map((item) => deductions[item]);
+  console.log("deductionTitles", deductionTitles);
+  console.log("deductionValues", deductionValues);
+
+  const pieColors = [
+    "#2A327D",
+    "#FE645A",
+    "#00C689",
+    "#FFB039",
+    "#FFCA00",
+    "#FFA20F",
+  ];
   const options = {
     plugins: {
       legend: {
-        display: false,
+        display: true,
+         // position: 'right',
+        // position: 'bottom',
       },
       title: {
         display: true,
@@ -29,12 +55,12 @@ const FinancialDashBoard = () => {
       },
     },
   };
-  const data = {
-    labels: ["Mon", "Tue", "Wed", "Thurs", "Fri"],
+  const pie_data = {
+    labels: [...deductionTitles],
     datasets: [
       {
-        label: "",
-        data: [25, 24, 25, 14, 5],
+        
+        data: [...deductionValues],
         borderColor: ["rgba(255,206,86,0.2)"],
         backgroundColor: [...pieColors],
         pointBackgroundColor: "rgba(255,206,86,0.2)",
@@ -44,39 +70,43 @@ const FinancialDashBoard = () => {
   return (
     <>
       <div className="financial">
+        {/* //? Orange, White cards */}
         <div className="cards financial-cards">
           <WhiteCard
             //   key={index}
             name={"Total Sales"}
             type={"Pecentage"}
-            value={"103847.68"}
+            value={"coming soon"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
+            color={"#27AE60"}
           />
           <WhiteCard
             //   key={index}
-            name={"Total Sales"}
+            name={"Deduction"}
             type={"Pecentage"}
-            value={"103847.68"}
+            value={"coming soon"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
+            color={"#f05a48"}
           />
           <WhiteCard
             //   key={index}
-            name={"Total Sales"}
+            name={"Total Payout"}
             type={"Pecentage"}
-            value={"103847.68"}
+            value={"coming soon"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
+            color={"#27AE60"}
           />
         </div>
         <div className="financial-breakdown">
@@ -84,69 +114,56 @@ const FinancialDashBoard = () => {
             Channel Financial Breakdown
           </div>
           <SectionButtons />
+          {/* //? Swiggy or Zomato, Cards */}
           <div className="financial-breakdown__cards">
             <GrayCard
-              name={"Delivery Orders"}
-              type={"Pecentage"}
-              value={463}
+              name={"Delivery Order(s)"}
+              type={"money"}
+              value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
+              color={"#27AE60"}
             />
             <GrayCard
               name={"Cancelled Orders"}
-              type={"Pecentage"}
-              value={1}
+              type={"number"}
+              value={cancelledOrders}
               info={"Total Order cancelled by Merchant"}
+              color={"#f05a48"}
             />
             <GrayCard
               name={"Total Sales"}
-              type={"Pecentage"}
-              value={95984.75}
+              type={"money"}
+              value={totalSales}
               info={"Including of GST lability of Merchant"}
+              color={"#262D30"}
             />
             <GrayCard
-              name={"TNey Pay"}
-              type={"Pecentage"}
-              value={103847.68}
+              name={"Net Payout"}
+              type={"money"}
+              value={netPayout}
               info={
-                "Inclusive of  TDS TCS Platform Charges & deductions from breakdwn"
+                "Inclusive of TDS TCS Platform Charges & deductions from breakdown"
               }
+              color={"#27AE60"}
             />
           </div>
           <div className="financial-breakdown__graph">
             <div className="graph-pie">
-              <Doughnut data={data} options={options} />
+              <Doughnut data={pie_data} options={options} />
             </div>
             <div className="graph-list">
-              <div className="graph-list__item">
-                <span className="graph-list__item--name">
-                  Total commission inc taxs
-                </span>
-                <span className="graph-list__item--value">23456985</span>
-              </div>
-              <div className="graph-list__item">
-                <span className="graph-list__item--name">
-                  Total ad expenses
-                </span>
-                <span className="graph-list__item--value">4000</span>
-              </div>
-              <div className="graph-list__item">
-                <span className="graph-list__item--name">
-                  Text deduction
-                </span>
-                <span className="graph-list__item--value">921</span>
-              </div>
-              <div className="graph-list__item">
-                <span className="graph-list__item--name">
-                  Total commisiion incl taxes
-                </span>
-                <span className="graph-list__item--value">23456985</span>
-              </div>
-              <div className="graph-list__item">
-                <span className="graph-list__item--name">
-                  Total commisiion incl taxes
-                </span>
-                <span className="graph-list__item--value">23456985</span>
-              </div>
+              {/* //? Single Item of deduction */}
+              {deductionTitles.map((item, index) => {
+                const name = item;
+                const value = deductionValues[index];
+                return (
+                  <ColorList
+                    name={name}
+                    value={value}
+                    color={pieColors[index]}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

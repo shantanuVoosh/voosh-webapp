@@ -37,6 +37,7 @@
   }
 
   &__text {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -106,7 +107,6 @@
   // z-index: -1;
   &::after {
     content: "";
-    content: "";
     background: linear-gradient(to right, #FF5920, #FFA20F);
     position: absolute;
     height: 220px;
@@ -120,12 +120,27 @@
     content: "";
     position: absolute;
     background: #ffa20f;
-    height: 220px;
-    width: 220px;
-    top: 300px;
-    right: 58px;
+    height: 180px;
+    width: 180px;
+    top: 338px;
+    right: 50px;
     border-radius: 100%;
     // z-index: 1;
+  }
+
+  .header__text{
+    &::after{
+      content: "";
+      position: absolute;
+      background: #FE645A;
+      height: 150px;
+      width: 150px;
+      top: 274px;
+      right: 139px;
+      border-radius: 100%;
+    }
+
+  
   }
 
 }

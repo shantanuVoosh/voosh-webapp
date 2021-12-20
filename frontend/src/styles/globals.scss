@@ -128,6 +128,20 @@ a:link {
   &:hover {
     // color: $color-black-1;
   }
+// ! till Zoom is not available
+  &:last-child{
+    position: relative;
+    &::after{
+      position: absolute;
+      content: "coming soon";
+      top: 15px;
+      left: -3px;
+      font-size: 8px;
+      font-weight: 700;
+      color: #f05a48;
+    }
+  }
+
 }
 // * (remove first-child)after mein change krna hai when zomato is available
 .nav-btn:first-child::after {

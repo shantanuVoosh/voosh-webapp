@@ -27,7 +27,6 @@ const secret = "secret";
 // !Google Login Middleware
 const checkGoogleLogin = async (req, res, next) => {
   // const { token } = req.body;
-
   // try {
   //   const response = await client.verifyIdToken({
   //     idToken: token,
@@ -96,23 +95,43 @@ router.post("/login", async (req, res) => {
       .findOne({
         "Swiggy Login Ph No": phoneNumber,
       });
+    const userRes_IdPresent = await client
+      .db(documentName)
+      .collection(cooleactionName)
+      .findOne({
+        "Swiggy Res Id": phoneNumber,
+      });
+    console.log("userRes_IdPresent", userRes_IdPresent);
 
-    if (userPresent === null) {
+    if (userPresent === null && userRes_IdPresent === null) {
       return res.json({
-        error: "Phone Number is not Present, Provide A Valid Phone Number!",
+        error:
+          "Phone Number or Restaurant Id is not Present, Provide A Valid Phone Number or Restaurant Id!",
         status: "error",
         isAuth: false,
       });
     }
     // ! if Phone Number is present, check for password
     else {
-      const verifyUser = await client
-        .db(documentName)
-        .collection(cooleactionName)
-        .findOne({
-          "Swiggy Login Ph No": phoneNumber,
-          "Swiggy Password": password,
-        });
+      let verifyUser = null;
+
+      if (userPresent) {
+        verifyUser = await client
+          .db(documentName)
+          .collection(cooleactionName)
+          .findOne({
+            "Swiggy Login Ph No": phoneNumber,
+            "Swiggy Password": password,
+          });
+      } else {
+        verifyUser = await client
+          .db(documentName)
+          .collection(cooleactionName)
+          .findOne({
+            "Swiggy Res Id": phoneNumber,
+            "Swiggy Password": password,
+          });
+      }
 
       //! Both Email and Password are valid
       if (verifyUser) {
@@ -149,6 +168,41 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// !Signup
+router.post("/signup", async (req, res) => {
+  try {
+    const {
+      name,
+      phone,
+      email,
+      restaurant_name,
+      swiggy_Id,
+      swiggy_password,
+      zomato_Id,
+      zomato_password,
+    } = req.body;
+    console.log("name", name);
+    console.log("phone", phone);
+    console.log("email", email);
+    console.log("restaurant_name", restaurant_name);
+    console.log("swiggy_Id", swiggy_Id);
+    console.log("swiggy_password", swiggy_password);
+    console.log("zomato_Id", zomato_Id);
+    console.log("zomato_password", zomato_password);
+    res.json({
+      status: "success",
+      message: "Signup Successful!",
+    });
+
+
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: `Error while signup :${err}`,
+    });
+  }
+});
+
 //  Todo: remove this (Helper route! to see the data in the db)
 router.get("/helper", async (req, res) => {
   const apiResonpse = await getRequiredCollectionDataFromMongodb();
@@ -169,10 +223,12 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
   // * get all data from mongodb specified resturant
   // ? res_id & documnetName needed,
   // ?or by default is set as some static value
-  const { res_id, phone, id, res_name } = req.payload;
-  console.log(res_name)
-  // const apiResonpse = await getRequiredCollectionDataFromMongodb(Number(res_id));
-  const apiResonpse = await getRequiredCollectionDataFromMongodb();
+  const { res_id, id, res_name } = req.payload;
+  console.log(res_name);
+  const apiResonpse = await getRequiredCollectionDataFromMongodb(
+    Number(res_id)
+  );
+  // const apiResonpse = await getRequiredCollectionDataFromMongodb();
   const results = structureMongodbData(apiResonpse);
 
   data[0] = results;

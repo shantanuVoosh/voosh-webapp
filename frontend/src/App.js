@@ -18,6 +18,8 @@ import Error from "./components/Error";
 import FinancialDashBoard from "./pages/revenue/FinancialDashBoard";
 import Settings from "./pages/Settings";
 import Notification from "./pages/Notification";
+import Signup from "./pages/Signup";
+import Greeting from "./pages/Greeting";
 
 function App() {
   const { token } = useSelector((state) => state.auth);
@@ -46,6 +48,22 @@ function App() {
           element={
             <RedirectRoute>
               <Login />
+            </RedirectRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <RedirectRoute>
+              <Signup/>
+            </RedirectRoute>
+          }
+        />
+        <Route
+          path="/greeting"
+          element={
+            <RedirectRoute>
+              <Greeting />
             </RedirectRoute>
           }
         />

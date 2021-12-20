@@ -16,7 +16,7 @@ const Dashboard = () => {
       itemName !== "_id"
     );
   });
-  console.log(items);
+  console.log("items =>", items);
 
   return (
     <>

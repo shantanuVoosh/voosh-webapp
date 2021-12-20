@@ -110,7 +110,7 @@ const Dashboard = () => {
             title="video"
             width="310px"
             height="240px"
-            src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"
+            src="https://www.youtube.com/embed?v=MIsi4vdzjgk"
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -120,7 +120,7 @@ const Dashboard = () => {
             title="video"
             width="310px"
             height="240px"
-            src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"
+            src="https://www.youtube.com/embed?v=MIsi4vdzjgk"
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

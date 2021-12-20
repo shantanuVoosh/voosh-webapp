@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import logo_img from "../../styles/images/logo-img.png";
 import { useDispatch } from "react-redux";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   loginFailure,
@@ -85,6 +85,10 @@ const Login = () => {
     }
   };
 
+  const redirectToSignUp = () => {
+    navigate("/signup");
+  };
+
   const notify = (msg) => toast.error(msg);
 
   return (
@@ -108,7 +112,7 @@ const Login = () => {
             <img src={logo_img} alt="logo" className="login-header__logo" />
             <div className="login-header__heading">Welcome!</div>
             <div className="login-header__sub-heading--small">
-              Please enter your phone number which has payment mails from swiggy
+              Please enter Restaurant Id or your phone number which has payment mails from swiggy
               and zomato
             </div>
           </div>
@@ -140,13 +144,15 @@ const Login = () => {
             /> */}
 
             {errors["Mobile number"] && (
-              <p className="form_error red">Number Not Correct</p>
+              <p className="form_error red">
+                Number or Restaurant Id Not Correct
+              </p>
             )}
             <input
               className="form--input"
               type="tel"
-              placeholder="Mobile number"
-              {...register("Mobile number", { required: true, maxLength: 10 })}
+              placeholder="Mobile number or Rest. Id"
+              {...register("Mobile number", { required: true, minLength: 3 })}
             />
             {errors["Password"] && (
               <p className="form_error red">Please enter your password</p>
@@ -165,6 +171,12 @@ const Login = () => {
               <span>SignUp</span>
             </button> */}
           </form>
+          <div className="sign-up">
+            <span className="sign-up--heading">Don't have an account?</span>
+            <span className="sign-up--link" onClick={redirectToSignUp}>
+              Sign Up
+            </span>
+          </div>
         </div>
       </div>
     </>
