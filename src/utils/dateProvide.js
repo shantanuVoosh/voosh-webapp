@@ -1,6 +1,7 @@
 // ! Get Current Time
 function getTimeLog() {
   const time = new Date();
+
   const format =
     time.getDate() +
     "/" +
@@ -20,9 +21,24 @@ function getTimeLog() {
 
 function getCurrentDate() {
   const time = new Date();
+  const tenHoursBefore = new Date();
+  tenHoursBefore.setHours(tenHoursBefore.getHours() - 20);
+  console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
+
   const format =
     time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate();
   return format;
+}
+
+const getCurrentDateBefore12HoursAgo = () => {
+  // const time = new Date();
+  const tenHoursBefore = new Date();
+  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
+  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
+  const format =
+    tenHoursBefore.getFullYear() + "-" + tenHoursBefore.getMonth() + "-" + tenHoursBefore.getDate();
+  return format;
+
 }
 
 function getYesterdayDate() {
@@ -32,7 +48,7 @@ function getYesterdayDate() {
     "-" +
     (time.getMonth() + 1) +
     "-" +
-    (time.getDate() - 2);
+    (time.getDate() - 1);
   return format;
 }
 
@@ -48,4 +64,5 @@ module.exports = {
   getCurrentDate,
   getYesterdayDate,
   getTomorrowDate,
+  getCurrentDateBefore12HoursAgo
 };

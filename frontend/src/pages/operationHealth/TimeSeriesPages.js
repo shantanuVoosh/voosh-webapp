@@ -8,21 +8,9 @@ import { useSelector } from "react-redux";
 import SectionButtons from "../../components/SectionButtons";
 import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
+import ReactPlayer from "react-player";
 
-// const Linedata = {
-//   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-//   datasets: [
-//     {
-//       lineTension: 0.3,
-//       label: "",
-//       data: [33, 53, 85, 41, 44, 65],
-//       pointRadius: 0,
-//       fill: true,
-//       backgroundColor: "rgb(60, 200, 196)",
-//       borderColor: "rgba(75,192,192,1)",
-//     },
-//   ],
-// };
+
 // TODO: fix the issue of the data not being loaded
 // TODO: cant visit the page directly (state is empty but path i can use)
 // TODO: daynamic data change!
@@ -42,8 +30,6 @@ const TimeSeriesPages = ({}) => {
   const { operationHealthMain, operationHealthData } = operationHealth;
   const operationHealthItems =
     currentProductIndex < 0 ? [] : operationHealthData;
-
-
 
   let name;
   let type;
@@ -70,7 +56,7 @@ const TimeSeriesPages = ({}) => {
     type = d.type;
   }
 
-  // ? buttons se change hua to it handel the or update the data
+  // ? buttons se change hua tho it handel the or update the data
   const timeSeriesData = operationHealthItems.find(
     (item) => item.name === name
   );
@@ -82,6 +68,7 @@ const TimeSeriesPages = ({}) => {
     weeklyResult,
     benchmark,
     compareThen,
+    videoLink,
   } = timeSeriesData;
 
   let value;
@@ -92,19 +79,18 @@ const TimeSeriesPages = ({}) => {
     value = currentValue;
   }
   // ? compare the value with benchmark ---> bar color will change accordingly
-  const compare = compareThen === "grater" ? value >= benchmark : value <= benchmark;
+  const compare =
+    compareThen === "grater" ? value >= benchmark : value <= benchmark;
   // console.log(compare, "compare value", resultType)
   const colorOfBar = compare ? "#27AE60" : "#f05a48";
-
 
   const options = {
     plugins: {
       legend: {
         display: false,
       },
-      
     },
-  
+
     scales: {
       y: {
         beginAtZero: true,
@@ -121,17 +107,15 @@ const TimeSeriesPages = ({}) => {
       },
     },
   };
-  // 
+  //
   const barData = {
-    labels: [`${resultType==="week"?"7 Days":"Month"}`, "Target"],
+    labels: [`${resultType === "week" ? "7 Days" : "Month"}`, "Target"],
     datasets: [
       {
         // ! value and benchmark will be change according to the data
-        // data: [value, benchmark],
         data: [value, benchmark],
-        label: "vbbfb",
+        // label: "",
         backgroundColor: [`${colorOfBar}`, "#2A327D"],
-        // backgroundColor: ["#f05a48", "#2A327D"],
         barThickness: 60,
         // fill: false,
       },
@@ -143,7 +127,13 @@ const TimeSeriesPages = ({}) => {
       <Header heading={currentName} isHomePage={false} />
       <div className="container">
         <SectionButtons />
-        <InfoCard name={name} value={value} type={type} />
+        <InfoCard
+          name={name}
+          value={value}
+          type={type}
+          benchmark={benchmark}
+          compareThen={compareThen}
+        />
         <div className="bar-graph">
           <Bar className="bar" data={barData} options={options} />
         </div>
@@ -154,16 +144,15 @@ const TimeSeriesPages = ({}) => {
           <div className="dashboard-bottom__heading">
             what does {currentName} mean?
           </div>
-          <div className="dashboard-bottom__videos--single-video">
-            <iframe
-              title="video"
-              width="100%"
-              height="240px"
-              src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"
-              frameBorder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+          <div className="dashboard-bottom__video">
+          <ReactPlayer
+            className="single-video"
+            url={videoLink}
+            controls
+            playbackRate={1}
+            width="310px"
+            height="240px"
+          />
           </div>
           <div className="recomendation">
             <div className="recomendation__heading">

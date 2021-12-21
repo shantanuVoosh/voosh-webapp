@@ -4,9 +4,11 @@ import Card from "../../components/operationHealth/Card";
 
 const Dashborad = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
+
   const operationHealthItems = data[currentProductIndex]["operationHealth"];
   const operationHealthData = operationHealthItems["operationHealthData"];
 
+  const {monthlyResult, weeklyResult, totalRatings} = data[currentProductIndex]["customerReviews"];
   return (
     <>
       <div className="cards">
@@ -20,6 +22,7 @@ const Dashborad = () => {
             compareThen,
             monthlyResult,
             weeklyResult,
+            videoLink
           } = item;
           return (
             <Card
@@ -32,9 +35,21 @@ const Dashborad = () => {
               weeklyResult={weeklyResult}
               benchmark={benchmark}
               compareThen={compareThen}
+              videoLink={videoLink}
             />
           );
         })}
+        <Card name={"Customer Reviews"} 
+        type={"percentage"}
+        // value={null}
+        info={"Customer Reviews are good or bad"}
+        monthlyResult={monthlyResult}
+        weeklyResult={weeklyResult}
+        benchmark={4}
+        compareThen={"grater"}
+        redirection={"/customerReviews"}
+        />
+
       </div>
     </>
   );

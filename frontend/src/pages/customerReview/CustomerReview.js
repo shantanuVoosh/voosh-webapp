@@ -11,7 +11,13 @@ const CustomerReviews = () => {
   const navigate = useNavigate();
 
   const customerReviews = data[currentProductIndex]["customerReviews"];
-  const { negative, OrdersPerRating, monthlyResult, weeklyResult, totalRatings} = customerReviews;
+  const {
+    negative,
+    OrdersPerRating,
+    monthlyResult,
+    weeklyResult,
+    totalRatings,
+  } = customerReviews;
 
   const ratings = Object.keys(OrdersPerRating).map((key) => {
     let rating = key.split("_")[0];
@@ -23,7 +29,14 @@ const CustomerReviews = () => {
   const value = resultType === "month" ? monthlyResult : weeklyResult;
 
   console.log(ratings, "ratings");
-
+  const colors = [
+    "#00C689",
+    "#2A327D",
+    "#FFCA00",
+    "#FFB039",
+    "#FFA20F",
+    "#FE645A",
+  ];
 
   return (
     <>
@@ -40,7 +53,11 @@ const CustomerReviews = () => {
               <div className="rating-bar__item--bar">
                 <div
                   className="bar-fill"
-                  style={{ width: `${Math.floor(( Object.values(rating)[0]/ totalRatings) * 100)}%` }}
+                  style={{
+                    width: `${Math.floor(
+                      (Object.values(rating)[0] / totalRatings)* 100)}%`,
+                    backgroundColor: `${colors[index]}`,
+                  }}
                 ></div>
               </div>
               <div className="rating-bar__item--orders">
@@ -56,7 +73,10 @@ const CustomerReviews = () => {
           return <NegativeReviewCard key={id} name={name} issues={issues} />;
         })}
       </div>
-      <div onClick={() => navigate("/allReviews")} className="review-btn__btn screen-btn">
+      <div
+        onClick={() => navigate("/allReviews")}
+        className="review-btn__btn screen-btn"
+      >
         See All Reviews
       </div>
     </>

@@ -7,7 +7,10 @@
 }
 
 .financial-breakdown {
-  margin-top: 2rem;
+  margin-top: 3rem;
+  @include breakpoint-up(xsmall) {
+    margin-top: 2rem
+  }
   &__heading {
     font-weight: 700;
     font-size: 1.3rem;

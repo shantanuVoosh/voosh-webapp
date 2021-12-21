@@ -72,8 +72,8 @@
 .home-card-right {
   display: flex;
   flex-direction: column;
-  // align-items: flex-end;
   align-items: center;
+  padding-top: 10px;
 
 }
 // ?Top value
@@ -83,19 +83,15 @@
     display: flex;
     justify-content: flex-end;
     margin-right: .8rem;
-    margin-top: 5px;
     .icon-box {
-      margin-top: 5.5px;
-      .icon-red {
-        color: $red;
-      }
-      .icon-green {
-        color: $green;
-      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 3px;
     }
     .value {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 18px;
       
       @include breakpoint-up(xsmall) {
         font-size: 24px;
@@ -104,12 +100,11 @@
   }
   // ?Bottom value
   &__info {
-    margin-right: 1rem;
-    text-align: right;
+    text-align: center;
     font-size: $text-xsmall;
     color: $color-grey-2;
     @include breakpoint-up(xsmall) {
-      font-size: $text-medium+1;
+      font-size: $text-medium;
     }
     .change {
       font-weight: 600;
@@ -126,7 +121,7 @@
 .dashboard-bottom {
   display: flex;
   flex-direction: column;
-  margin-top: 3rem;
+  margin-top: 2rem;
 
   &__heading {
     font-size: 1.5rem;
@@ -139,21 +134,31 @@
   // ?Video cards
   &__videos {
     display: flex;
-    overflow-x: auto;
-    width: auto;
+    overflow-x: scroll;
 
-    &--single-video {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 15px;
-      overflow-x: auto;
+    .single-video {
+      width: 310px;
+      height: 240px;
+      border-radius: 24px;
+      overflow: hidden;
     }
 
     iframe {
-      border-radius: 15px;
+      border-radius: $radius-1;
       overflow: hidden;
       margin-right: 2rem;
+    }
+  }
+
+  &__video{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .single-video {
+      width: 310px;
+      height: 240px;
+      border-radius: 24px;
+      overflow: hidden;
     }
   }
 
@@ -163,7 +168,7 @@
     margin-bottom: 5rem;
     &__heading {
       margin-bottom: 1rem;
-      margin-left: 2rem;
+      margin-left: 0rem;
       .icon {
         color: $color-primary-1;
         margin-right: 0.5rem;
@@ -182,7 +187,7 @@
     &__list {
       font-size: $text-medium;
       position: relative;
-      margin-left: 3rem;
+      margin-left: 1.2rem;
       margin-bottom: .5rem;
       @include breakpoint-up(xxsmall) {
         font-size: $text-large;

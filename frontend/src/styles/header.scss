@@ -1,14 +1,26 @@
 /* header */
+
+.Hamburger{
+  background-color: azure;
+  color: aliceblue;
+}
+
 .header {
   position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background: linear-gradient(to right, $color-primary-1, $color-primary-2);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   padding: 20px 15px;
   overflow: hidden;
+
+  .header-wrapper{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   // Top circle
   &::after {
@@ -42,6 +54,7 @@
     justify-content: center;
     align-items: center;
     color: $color-white-1;
+    z-index: 1;
 
     &--icon {
       margin-top: 5px;
@@ -49,10 +62,10 @@
 
     &--heading {
       margin: 2px;
-      font-size: $heading-mid;
+      font-size: $heading-xsmall;
       font-weight: 500;
       @include breakpoint-up(xsmall) {
-        // font-size: $heading-big;
+        font-size: $heading-mid;
       }
     }
   }
@@ -128,20 +141,21 @@
     // z-index: 1;
   }
 
-  .header__text{
-    &::after{
-      content: "";
-      position: absolute;
-      background: #FE645A;
-      height: 150px;
-      width: 150px;
-      top: 274px;
-      right: 139px;
-      border-radius: 100%;
-    }
+  //! Zindex issue
+  // .header__text{
+  //   &::after{
+  //     content: "";
+  //     position: absolute;
+  //     background: #FE645A;
+  //     height: 150px;
+  //     width: 150px;
+  //     top: 274px;
+  //     right: 139px;
+  //     border-radius: 100%;
+  //   }
 
   
-  }
+  // }
 
 }
 

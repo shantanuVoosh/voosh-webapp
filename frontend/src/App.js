@@ -55,7 +55,7 @@ function App() {
           path="/signup"
           element={
             <RedirectRoute>
-              <Signup/>
+              <Signup />
             </RedirectRoute>
           }
         />
@@ -67,18 +67,8 @@ function App() {
             </RedirectRoute>
           }
         />
-        <Route
-          path="/settings"
-          element={
-            <Settings/>
-          }
-        />
-        <Route
-          path="/notification"
-          element={
-            <Notification />
-          }
-        />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/notification" element={<Notification />} />
         <Route
           path="/dashboard"
           element={
@@ -98,7 +88,7 @@ function App() {
           element={
             <RequiredAuth>
               <LayoutWrapper
-                heading={"Financial dashboard"}
+                heading={"Revenue Dashboard"}
                 isHomePage={false}
                 isClientBtnNeeded={false}
                 headerSize={"large"}
@@ -156,26 +146,34 @@ function App() {
             </RequiredAuth>
           }
         /> */}
-        {/* <Route
-          path="/customerReview"
+        <Route
+          path="/customerReviews"
           element={
             <RequiredAuth>
-              <LayoutWrapper heading={"Customer Reviews"} isHomePage={false}>
+              <LayoutWrapper
+                heading={"Customer Reviews"}
+                isHomePage={false}
+                isClientBtnNeeded={true}
+              >
                 <CustomerReviews />
               </LayoutWrapper>
             </RequiredAuth>
           }
-        /> */}
-        {/* <Route
+        />
+        <Route
           path="/allReviews"
           element={
             <RequiredAuth>
-              <LayoutWrapper heading={"All Reviews"} isHomePage={false}>
+              <LayoutWrapper
+                heading={"All Reviews"}
+                isHomePage={false}
+                isClientBtnNeeded={true}
+              >
                 <AllReviews />
               </LayoutWrapper>
             </RequiredAuth>
           }
-        /> */}
+        />
         <Route
           path="*"
           element={

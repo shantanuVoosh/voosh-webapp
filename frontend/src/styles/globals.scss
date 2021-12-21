@@ -65,6 +65,12 @@ a:link {
 .green{
   color: $green;
 }
+
+.rise-fall_icon{
+  margin-bottom: -4px
+}
+
+
 /* navigation buttons */
 .section-btns {
   padding: 0 5px;
@@ -134,10 +140,13 @@ a:link {
     &::after{
       position: absolute;
       content: "coming soon";
-      top: 15px;
-      left: -3px;
-      font-size: 8px;
+      top: 17px;
+      left: 0;
+      font-size: 7px;
+      text-align: center;
+      text-transform: lowercase;
       font-weight: 700;
+      width: auto;
       color: #f05a48;
     }
   }
@@ -168,11 +177,12 @@ a:link {
 //     opacity: 1;
 //   }
 // }
-.nav-btn:hover::after {
-  cursor: pointer;
-  width: 100%;
-  opacity: 1;
-}
+// ?coming soon remove it when zomato is available
+// .nav-btn:hover::after {
+//   cursor: pointer;
+//   width: 100%;
+//   opacity: 1;
+// }
 
 .info-card {
   display: flex;
@@ -208,13 +218,18 @@ a:link {
     transform: scale(0.8);
   }
 }
-
 .bar-graph{
-
   .bar{
     // width: 70%;
   }
 
+}
+
+
+// ? Modal
+.bottom-modal{
+  height: 80vh!important; ;
+  margin-bottom: -330px; ;
 }
 
 

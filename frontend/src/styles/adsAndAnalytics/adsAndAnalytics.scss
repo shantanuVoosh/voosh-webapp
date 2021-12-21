@@ -52,7 +52,7 @@
     .message{
       color: $color-grey-6;
       letter-spacing: .5px;
-      font-size: $heading-small;
+      font-size: $heading-xsmall;
       @include breakpoint-up(xxsmall) {
         font-size: $heading-mid;
       }

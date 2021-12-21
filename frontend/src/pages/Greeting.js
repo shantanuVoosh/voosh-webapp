@@ -27,21 +27,23 @@ const Greeting = () => {
           }}
         >
           <div className="text" style={{ "margin-top": "50px" }}>
-            <p style={{ marginBottom: "10px", fontSize: "1.3rem" }}>
-              Congratulations on your successful registration, you have taken
-              the first step towards growing your online business.
+            {/* //? Heading */}
+            <p style={{ marginBottom: "10px", fontSize: "2.3rem" }}>
+              Congratulations!!
             </p>{" "}
             <br />
-            <p style={{ marginBottom: "10px", fontSize: "1.3rem" }}>
-              Sit back and relax, while we crunch your data and start your
-              analysis. This might take a maximum of three days
+            {/* //? Congratulations pic */}
+            <p style={{ marginBottom: "10px", fontSize: "1.4rem" }}>
+              "Thank you for successfully taking the first step towards growing
+              your online business. Sit back and relax, while we crunch data for
+              you and competition. We expect to have everything ready max by
+              next 3 days. Keep exploring and we will reach out with much more
+              soon!"
             </p>{" "}
             <br />
-            <p style={{ marginBottom: "10px", fontSize: "1.3rem" }}>
-              In the meantime, we'll be sending you intresting facts and tips on
-              how to grow your online business.
-            </p>
           </div>
+          <button >Let me Explore!!</button>
+          <button>Reach out to us!</button>
         </div>
       </div>
     </div>

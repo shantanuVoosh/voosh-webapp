@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
 const WhiteCard = (props) => {
-    const resultType = useSelector((state) => state.resultType);
+  const resultType = useSelector((state) => state.resultType);
   const {
     name,
     type,
@@ -14,7 +14,7 @@ const WhiteCard = (props) => {
     benchmark,
     monthlyResult,
     weeklyResult,
-    color
+    color,
   } = props;
 
   let value;
@@ -26,28 +26,26 @@ const WhiteCard = (props) => {
   else {
     value = currentValue;
   }
-  console.log(name, value, benchmark,)
+  console.log(name, value, benchmark);
 
   return (
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-        <div className="value" style={{"color":`${color}`}}>{value}</div>
+        <div className="value" style={{ color: `${color}` }}>
+          {value}
+        </div>
         <div className="card__text--info">
           <p>{info}</p>
         </div>
       </div>
       {/* //! sending data from this page */}
-      <Link
-        to={`${name.replace(/\s/g, "")}`}
-        state={{ name, type, value, benchmark,  }}
-        className="card__btn"
-      >
-        <span className="card__btn--text">Know more</span>
+      <div className="card__btn">
+        <span className="card__btn--text" >Know more</span>
         <AiOutlineRight className="card__btn--icon" />
-      </Link>
+      </div>
     </div>
   );
-}
+};
 
-export default WhiteCard
+export default WhiteCard;

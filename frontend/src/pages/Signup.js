@@ -23,9 +23,9 @@ const Signup = () => {
         email: data["Email"],
         restaurant_name: data["Restaurant Name"],
         swiggy_Id: data["Swiggy Id"],
+        swiggy_register_phone: data["Swiggy Reg. Phone"],
         swiggy_password: data["Swiggy Password"],
-        zomato_Id: data["Zomato Id"],
-        zomato_password: data["Zomato Password"],
+        zomato_register_phone: data["Zomato Reg. Phone"],
       });
       console.log("Signup Success, response:", response);
       if (response.status === "success") {
@@ -34,12 +34,9 @@ const Signup = () => {
         console.log("Failure response:", response.error);
         navigate("/");
       }
-
-
     } catch (err) {
       console.log(err);
     }
-
   };
 
   return (
@@ -52,12 +49,13 @@ const Signup = () => {
               Register to get started!
             </div>
             <div className="signup-header__sub-heading--small">
-              Grow your online business like never before with Voosh,
-              {/* <br /> */}
-              Insider secrets, tips and tricks, and more, all in one place!
+              Grow your online business like never before with Voosh: Insider
+              secrets, competiton analysis, and more, all in one place!
               <div className="login">
                 <span className="login--heading">Already have an account?</span>
-                <span className="login--link" onClick={()=>navigate("/")}>Log in</span>
+                <span className="login--link" onClick={() => navigate("/")}>
+                  Log in
+                </span>
               </div>
             </div>
           </div>
@@ -96,9 +94,7 @@ const Signup = () => {
               />
               {/* //! Email */}
               {errors["Email"] && (
-                <p className="form_error red">
-                  Enter your 10 digit mobile number
-                </p>
+                <p className="form_error red">Provide a valid email address</p>
               )}
               <input
                 className="form--input"
@@ -130,6 +126,22 @@ const Signup = () => {
                 })}
               />
             </div>
+            <div className="form-group">
+
+              {/* <select {...register("category")}>
+                <option value="">Select...</option>
+                <option value="A">Category A</option>
+                <option value="B">Category B</option>
+              </select> */}
+{/* 
+              <input {...register("checkbox")} type="checkbox" value="A" />
+              <input {...register("checkbox")} type="checkbox" value="B" />
+              <input {...register("checkbox")} type="checkbox" value="C" /> */}
+{/* 
+              <input {...register("radio")} type="radio" value="yes" />
+              <input {...register("radio")} type="radio" value="no" /> */}
+            </div>
+
             {/* //? Food Services */}
             <div className="form-group">
               <div className="form--heading">Partner Details</div>
@@ -150,6 +162,22 @@ const Signup = () => {
                   minLength: 3,
                 })}
               />
+              {/* //!Swiggy Rest. Id */}
+              {errors["Swiggy Reg. Phone"] && (
+                <p className="form_error red">
+                  Provide a valid number, your Swiggy Registered Phone Number
+                </p>
+              )}
+              <input
+                className="form--input"
+                type="tel"
+                placeholder="Swiggy Reg. Phone"
+                {...register("Swiggy Reg. Phone", {
+                  required: true,
+                  maxLength: 10,
+                  minLength: 10,
+                })}
+              />
               {/* //!Swiggy Password */}
               {errors["Swiggy Password"] && (
                 <p className="form_error red">
@@ -165,34 +193,20 @@ const Signup = () => {
                   minLength: 3,
                 })}
               />
-              {/* //!Zomato Id */}
-              {errors["Zomato Id"] && (
-                <p className="form_error red">Provide a valid your Swiggy Id</p>
-              )}
-              <input
-                className="form--input"
-                type="text"
-                placeholder="Zomato Id"
-                {...register("Zomato Id", {
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: "Please enter numbers only",
-                  },
-                })}
-              />
-              {/* //!Zomato Password */}
-              {errors["Zomato Password"] && (
+              {/* //!Zomato Phone Number */}
+              {errors["Zomato Reg. Phone"] && (
                 <p className="form_error red">
-                  Your Zomato password should be atleast 3 characters long
+                  Provide a valid number, your Zomato Registered Phone Number{" "}
                 </p>
               )}
               <input
                 className="form--input"
-                type="password"
-                placeholder="Zomato Password"
-                {...register("Zomato Password", {
+                type="tel"
+                placeholder="Zomato Reg. Phone"
+                {...register("Zomato Reg. Phone", {
                   required: true,
-                  minLength: 3,
+                  maxLength: 10,
+                  minLength: 10,
                 })}
               />
             </div>

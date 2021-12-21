@@ -69,9 +69,7 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
               </span>
             ))}
           </div>
-          <div className="home-card-right">
             <CardStatistics cardStatistics={cardStatistics} />
-          </div>
         </div>
       </div>
     </>

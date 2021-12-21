@@ -1,3 +1,3 @@
 # app.yaml
 runtime: nodejs14
-service: vooshapp
+service: dummy-react-app

@@ -112,20 +112,20 @@ const Login = () => {
             <img src={logo_img} alt="logo" className="login-header__logo" />
             <div className="login-header__heading">Welcome!</div>
             <div className="login-header__sub-heading--small">
-              Please enter Restaurant Id or your phone number which has payment mails from swiggy
-              and zomato
+              Learn about your competitors and improve your sales on Swiggy and
+              Zomato
             </div>
           </div>
-          <div className="google-btn">
-            {/* <GoogleLogin
+          {/* <div className="google-btn">
+            <GoogleLogin
               clientId={clientId}
               buttonText="CONTINUE WITH GOOGLE"
               onSuccess={onLoginSuccessByGoogle}
               onFailure={onLoginFailureByGoogle}
               cookiePolicy={"single_host_origin"}
               isSignedIn={true}
-            /> */}
-          </div>
+            />
+          </div> */}
           <form
             className="login__form"
             onSubmit={handleSubmit(handleLoginByPhoneNumber)}
@@ -171,13 +171,14 @@ const Login = () => {
               <span>SignUp</span>
             </button> */}
           </form>
-          <div className="sign-up">
+         
+        </div>
+        <div className="sign-up">
             <span className="sign-up--heading">Don't have an account?</span>
             <span className="sign-up--link" onClick={redirectToSignUp}>
               Sign Up
             </span>
           </div>
-        </div>
       </div>
     </>
   );

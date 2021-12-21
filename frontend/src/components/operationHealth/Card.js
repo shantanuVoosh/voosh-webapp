@@ -8,13 +8,14 @@ const Card = (props) => {
   const resultType = useSelector((state) => state.resultType);
   const {
     name,
-    type,
     value: currentValue,
     info,
     benchmark,
     monthlyResult,
     weeklyResult,
     compareThen,
+    redirection,
+    videoLink
   } = props;
 
   let value;
@@ -26,7 +27,7 @@ const Card = (props) => {
   else {
     value = currentValue;
   }
-  console.log(name, value, benchmark, compareThen)
+  console.log(name, value, benchmark, compareThen);
 
   return (
     <div className="card">
@@ -38,18 +39,18 @@ const Card = (props) => {
               value >= benchmark ? "green-value value" : "red-value value"
             }
           >
-            { value >= benchmark ? <AiOutlineRise/>:<AiOutlineFall/>}
-             {value}%
+            {value >= benchmark ? <AiOutlineRise className="rise-fall_icon" /> : <AiOutlineFall className="rise-fall_icon" />}
+            {value}%
           </div>
         )}
-        {compareThen === "less" &&  (
+        {compareThen === "less" && (
           <div
             className={
               value <= benchmark ? "green-value value" : "red-value value"
             }
           >
             {/* { value <= benchmark && <AiOutlineRise/>} */}
-            { value <= benchmark ? <AiOutlineRise/>:<AiOutlineFall/>}
+            {value <= benchmark ? <AiOutlineRise className="rise-fall_icon" /> : <AiOutlineFall className="rise-fall_icon" />}
             {value}%
           </div>
         )}
@@ -59,14 +60,26 @@ const Card = (props) => {
         </div>
       </div>
       {/* //! sending data from this page */}
-      <Link
-        to={`${name.replace(/\s/g, "")}`}
-        state={{ name, type, value, benchmark, compareThen }}
-        className="card__btn"
-      >
-        <span className="card__btn--text">Know more</span>
-        <AiOutlineRight className="card__btn--icon" />
-      </Link>
+      {/* //? redirect for special card */}
+      {redirection ? (
+        <>
+          <Link to={redirection} className="card__btn">
+            <span className="card__btn--text">Know more</span>
+            <AiOutlineRight className="card__btn--icon " />
+          </Link>
+        </>
+      ) : (
+        <>
+        <Link
+          to={`${name.replace(/\s/g, "")}`}
+          state={{ name, value, benchmark, compareThen, videoLink }}
+          className="card__btn"
+        >
+          <span className="card__btn--text">Know more</span>
+          <AiOutlineRight className="card__btn--icon" />
+        </Link>
+        </>
+      )}
     </div>
   );
 };

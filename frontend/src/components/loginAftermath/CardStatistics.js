@@ -21,9 +21,9 @@ const CardStatistics = ({ cardStatistics }) => {
         {/* //?top value */}
         <span className="icon-box">
           {changeTypeDirection === "up" ? (
-            <AiOutlineRise className="icon-green" size={25} />
+            <AiOutlineRise className="green rise-fall_icon" size={25} />
           ) : (
-            <AiOutlineFall className="icon-red" size={25} />
+            <AiOutlineFall className="red rise-fall_icon" size={25} />
           )}
         </span>
         {type === "money" && (
@@ -52,7 +52,7 @@ const CardStatistics = ({ cardStatistics }) => {
       ) : (
         <div className="card-statistics__info">
           {/* //! for not present data */}
-          coming soon
+          competition comparison<br/> coming soon
         </div>
       )}
     </>

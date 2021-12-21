@@ -10,31 +10,33 @@ const FinancialDashBoard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
   const revenue = data[currentProductIndex]["revenue"];
   const financicalData = revenue["financicalData"];
-  console.log("financicalData", financicalData);
-  const totalSales = financicalData["totalSales"];
-  const cancelledOrders = financicalData["cancelledOrders"];
-  const netPayout = financicalData["netPayout"];
-  const deleveries = financicalData["deleveries"];
-  const deductions = financicalData["deductions"];
+
+  const { totalSales, cancelledOrders, netPayout, deleveries, deductions } =
+    financicalData;
 
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
-  console.log("deductionTitles", deductionTitles);
-  console.log("deductionValues", deductionValues);
+
+  const [showModal, setShowModal] = React.useState(false);
 
   const pieColors = [
-    "#2A327D",
+    "#370665",
     "#FE645A",
+    "#C84B31",
+    "#2A327D",
     "#00C689",
-    "#FFB039",
-    "#FFCA00",
-    "#FFA20F",
+    "#FC9918",
+    "#F14A16",
+    "#35589A",
+    "#9145B6",
+    "#FABB51",
+    "#FFBD35",
   ];
   const options = {
     plugins: {
       legend: {
         display: true,
-         // position: 'right',
+        // position: 'right',
         // position: 'bottom',
       },
       title: {
@@ -59,11 +61,10 @@ const FinancialDashBoard = () => {
     labels: [...deductionTitles],
     datasets: [
       {
-        
         data: [...deductionValues],
-        borderColor: ["rgba(255,206,86,0.2)"],
+        // borderColor: ["rgba(255,21,86,0.2)"],
         backgroundColor: [...pieColors],
-        pointBackgroundColor: "rgba(255,206,86,0.2)",
+        pointBackgroundColor: "rgba(255,26,86,0.2)",
       },
     ],
   };
@@ -86,7 +87,7 @@ const FinancialDashBoard = () => {
           />
           <WhiteCard
             //   key={index}
-            name={"Deduction"}
+            name={"Net Deduction"}
             type={"Pecentage"}
             value={"coming soon"}
             info={"Total Sales includes all taxes"}
@@ -110,15 +111,13 @@ const FinancialDashBoard = () => {
           />
         </div>
         <div className="financial-breakdown">
-          <div className="financial-breakdown__heading">
-            Channel Financial Breakdown
-          </div>
+          <div className="financial-breakdown__heading">Channel Breakdown</div>
           <SectionButtons />
           {/* //? Swiggy or Zomato, Cards */}
           <div className="financial-breakdown__cards">
             <GrayCard
               name={"Delivery Order(s)"}
-              type={"money"}
+              type={"number"}
               value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
               color={"#27AE60"}
@@ -158,6 +157,7 @@ const FinancialDashBoard = () => {
                 const value = deductionValues[index];
                 return (
                   <ColorList
+                    key={index}
                     name={name}
                     value={value}
                     color={pieColors[index]}

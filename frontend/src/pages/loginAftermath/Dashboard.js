@@ -2,13 +2,15 @@ import React from "react";
 import Card from "../../components/loginAftermath/Card";
 import { BsBagCheckFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import ReactPlayer from "react-player";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.resultType);
+  const resultType = useSelector((state) => state.data.resultType);
 
   // ?Listing Score
-  const {listingScoreMain, listScoreData} = data[currentProductIndex]["listingScore"];
+  const { listingScoreMain, listScoreData } =
+    data[currentProductIndex]["listingScore"];
 
   // ?Revenue
   // *Not month or week wise score!
@@ -65,7 +67,7 @@ const Dashboard = () => {
             value: operationHealthResult,
             change: 95,
             benchmark: 95,
-            changeTypeDirection: (operationHealthResult-95>0)?"up":"down",  
+            changeTypeDirection: operationHealthResult - 95 > 0 ? "up" : "down",
             type: "percentage",
           }}
         />
@@ -77,7 +79,7 @@ const Dashboard = () => {
           cardStatistics={{
             value: listingScoreMain,
             change: 90,
-            changeTypeDirection: (listingScoreMain-90>0)?"up":"down",
+            changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
             type: "percentage",
           }}
         />
@@ -97,7 +99,31 @@ const Dashboard = () => {
           Some tutorials for your business
         </div>
         <div className="dashboard-bottom__videos">
-          <iframe
+          <ReactPlayer
+            className="single-video"
+            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+            controls
+            playbackRate={1}
+            width="310px"
+            height="240px"
+          />
+          <ReactPlayer
+            className="single-video"
+            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+            controls
+            playbackRate={1}
+            width="310px"
+            height="240px"
+          />
+          <ReactPlayer
+            className="single-video"
+            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+            controls
+            playbackRate={1}
+            width="310px"
+            height="240px"
+          />
+          {/* <iframe
             title="video"
             width="310px"
             height="240px"
@@ -105,8 +131,8 @@ const Dashboard = () => {
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
-          <iframe
+          ></iframe> */}
+          {/* <iframe
             title="video"
             width="310px"
             height="240px"
@@ -114,9 +140,9 @@ const Dashboard = () => {
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          ></iframe> */}
 
-          <iframe
+          {/* <iframe
             title="video"
             width="310px"
             height="240px"
@@ -124,7 +150,7 @@ const Dashboard = () => {
             frameBorder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          ></iframe> */}
         </div>
         <div className="recomendation">
           <div className="recomendation__heading">

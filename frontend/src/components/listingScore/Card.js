@@ -4,71 +4,46 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
-const Card = (props) => {
-  const resultType = useSelector((state) => state.resultType);
-  const {
-    name,
-    type,
-    value: currentValue,
-    info,
-    benchmark,
-    monthlyResult,
-    weeklyResult,
-    comapreThen,
-  } = props;
+const Card = ({ name, value, benchmark, info, compareType,}) => {
+  const resultType = useSelector((state) => state.data.resultType);
 
-  let value;
+  let finalValue;
+  let colorName;
+  console.log(resultType, compareType);
 
-  if (currentValue === undefined) {
-    value = resultType === "month" ? monthlyResult : weeklyResult;
+  if (compareType === "yes or no") {
+    colorName = value.toLowerCase() === "yes" ? "green" : "red";
+
+  } 
+  else if (compareType === "present or not prensent") {
+    colorName = value.toLowerCase() === "present" ? "green" : "red";
+  } 
+  else if (compareType === "applicable or not applicable") {
+    // ? spelling mistake, applicable! not aplicable
+    colorName = value.toLowerCase() === "aplicable" ? "green" : "red";
+  } 
+  else if (compareType === "high medium or low") {
+    colorName =
+      value.toLowerCase() === "high" || value.toLowerCase() === "medium"
+        ? "green"
+        : "red";
+  } 
+  else if (compareType === "grater") {
+    colorName = value >= benchmark ? "green" : "red";
   }
-  // !fix result no weekly or monthly
-  else {
-    value = currentValue;
-  }
 
-  console.log(value);
+  console.log(colorName, "colorName");
 
   return (
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-        {/* {(comapreThen!==null && comapreThen === "grater") && (
-          <div
-            className={
-              parseInt(value) >= benchmark ? "green-value value" : "red-value value"
-            }
-          >
-            { (benchmark!==null && parseInt(value) >= benchmark )&& <AiOutlineRise/>}
-            { (benchmark!==null && parseInt(value) >= benchmark ) && <AiOutlineFall/>}
-            {value}%
-          </div>
-        )}
-        {( comapreThen!==null &&comapreThen === "less") && (
-          <div
-            className={
-              parseInt(value) <= benchmark ? "green-value value" : "red-value value"
-            }
-          >
-            {parseInt(value)}%
-          </div>
-        )}
-        {value} */}
-        <div className={"green-value value"}>{value}</div>
+        <div className={`value ${colorName}`}>{value}</div>
 
         <div className="card__text--info">
           <p>{info}</p>
         </div>
       </div>
-      {/* //! sending data from this page */}
-      {/* <Link
-        to={`${name.replace(/\s/g, "")}`}
-        state={{ name, type, value }}
-        className="card__btn"
-      >
-        <span className="card__btn--text">Know more</span>
-        <AiOutlineRight className="card__btn--icon" />
-      </Link> */}
     </div>
   );
 };

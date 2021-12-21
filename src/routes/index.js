@@ -168,32 +168,64 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// !Signup
+// !Signup, if already registered ?
 router.post("/signup", async (req, res) => {
+  const newCollectionName = "Non_Voosh_Onboard_New_Users_1";
+  const {
+    name,
+    phone,
+    email,
+    restaurant_name,
+    swiggy_register_phone,
+    swiggy_password,
+    swiggy_Id,
+    zomato_register_phone,
+  } = req.body;
+
+  console.log("name", name);
+  console.log("phone", phone);
+  console.log("email", email);
+  console.log("restaurant_name", restaurant_name);
+  console.log("swiggy_id", swiggy_Id);
+  console.log("swiggy_register_phone", swiggy_register_phone);
+  console.log("swiggy_password", swiggy_password);
+  console.log("zomato_register_phone", zomato_register_phone);
+
   try {
-    const {
-      name,
-      phone,
-      email,
-      restaurant_name,
-      swiggy_Id,
-      swiggy_password,
-      zomato_Id,
-      zomato_password,
-    } = req.body;
-    console.log("name", name);
-    console.log("phone", phone);
-    console.log("email", email);
-    console.log("restaurant_name", restaurant_name);
-    console.log("swiggy_Id", swiggy_Id);
-    console.log("swiggy_password", swiggy_password);
-    console.log("zomato_Id", zomato_Id);
-    console.log("zomato_password", zomato_password);
-    res.json({
-      status: "success",
-      message: "Signup Successful!",
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
     });
 
+    const db = client.db(documentName).collection(newCollectionName);
+    const user = await client
+      .db(documentName)
+      .collection(newCollectionName)
+      .findOne({ phone: swiggy_register_phone });
+
+    if (user) {
+      return res.json({
+        status: "error",
+        message: `User Already Exists!`,
+        // isAuth: false,
+      });
+    } else {
+      const newUser = await db.insertOne({
+        name,
+        phone,
+        email,
+        restaurant_name,
+        swiggy_register_phone,
+        swiggy_password,
+        swiggy_Id,
+        zomato_register_phone,
+      });
+      console.log("newUser", newUser);
+      return res.json({
+        status: "success",
+        message: `User Created Successfully!`,
+        // isAuth: false,
+      });
+    }
 
   } catch (err) {
     res.json({

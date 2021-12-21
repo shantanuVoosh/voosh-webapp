@@ -22,15 +22,16 @@ const Dashboard = () => {
     <>
       <div className="cards">
         {items.map((itemName, index) => {
-          const { name, value, benchmark, compareThen } = listingScoreData[itemName];
-          console.log( name, value, benchmark, compareThen )
+          const { name, value, benchmark, info, compareThen } = listingScoreData[itemName];
+          console.log( name, value, benchmark, compareThen)
           return (
             <Card
               key={index}
               name={name}
               value={value}
-              compareThen={compareThen}
               benchmark={benchmark}
+              info={info}
+              compareType={compareThen}
             />
           );
         })}
