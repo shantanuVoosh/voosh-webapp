@@ -40,6 +40,11 @@ function App() {
     }
   }, [location.pathname, token]);
 
+  // ?Component that alerts if you click outside of it
+  
+
+
+
   return (
     <div className="main-container">
       <Routes>

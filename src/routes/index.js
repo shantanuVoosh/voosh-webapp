@@ -10,6 +10,7 @@ const {
   getRequiredCollectionDataFromMongodb,
   structureMongodbData,
 } = require("../utils/clientDataFormat");
+const { getAllRestaurants } = require("../utils/getAllRestaurants");
 // const { getTimeLog } = require("../database/db/mongoDB");
 
 // TODO: remove this
@@ -81,7 +82,7 @@ const checkAuthentication = (req, res, next) => {
 // !Login By Phone Number
 router.post("/login", async (req, res) => {
   const { phoneNumber, password } = req.body;
-  console.log("phoneNumber", phoneNumber);
+  console.log("---------- <login> ----------------");
   const cooleactionName = "Non_Voosh_Listing_Dashboard_Products";
 
   try {
@@ -101,9 +102,14 @@ router.post("/login", async (req, res) => {
       .findOne({
         "Swiggy Res Id": phoneNumber,
       });
-    console.log("userRes_IdPresent", userRes_IdPresent);
+
+    console.log("phoneNumber or res_id:", phoneNumber);
+    console.log("userRes_IdPresent:", userRes_IdPresent);
+    console.log("userPresent:", userPresent);
 
     if (userPresent === null && userRes_IdPresent === null) {
+      console.log("---------- <login End> ----------------");
+
       return res.json({
         error:
           "Phone Number or Restaurant Id is not Present, Provide A Valid Phone Number or Restaurant Id!",
@@ -135,14 +141,29 @@ router.post("/login", async (req, res) => {
 
       //! Both Email and Password are valid
       if (verifyUser) {
+        console.log("verifyUser", verifyUser);
+
         // ? multriple res id will be present in the database
         const id = verifyUser["_id"];
         const res_id = verifyUser["Swiggy Res Id"];
         const phone = verifyUser["Swiggy Login Ph No"];
         const res_name = verifyUser["Partner Restaurant Name "];
+        console.log(
+          "Current User:\n",
+          "Id:",
+          id,
+          "Res_Id:",
+          res_id,
+          "Phone:",
+          phone,
+          "Res_Name:",
+          res_name
+        );
         const token = jwt.sign({ id, res_id, phone, res_name }, secret, {
-          expiresIn: 3000 * 24, //50min->3000
+          expiresIn: 3000, //50min->3000
         });
+
+        console.log("---------- <login End on Success> ----------------");
 
         return res.json({
           status: "success",
@@ -151,6 +172,8 @@ router.post("/login", async (req, res) => {
       }
       // ! Password miss match
       else {
+        
+        console.log("---------- <login End on Error> ----------------");
         return res.json({
           status: "error",
           error: `Password was incorrect, Please try again!`,
@@ -226,7 +249,6 @@ router.post("/signup", async (req, res) => {
         // isAuth: false,
       });
     }
-
   } catch (err) {
     res.json({
       status: "error",
@@ -238,13 +260,17 @@ router.post("/signup", async (req, res) => {
 //  Todo: remove this (Helper route! to see the data in the db)
 router.get("/helper", async (req, res) => {
   const apiResonpse = await getRequiredCollectionDataFromMongodb();
+  const getAllRestaurantsData = await getAllRestaurants();
   const name = Object.keys(apiResonpse);
   const data = Object.values(apiResonpse).map((item, index) => {
     const obj = {};
     obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
     return obj;
   });
-  res.json(data);
+  res.json({
+    restaurant_names: getAllRestaurantsData,
+    data,
+  });
   // const apiResonpse = await getRequiredCollectionDataFromMongodb();
   // const results = structureMongodbData(apiResonpse);
   // res.json(results);
@@ -252,30 +278,61 @@ router.get("/helper", async (req, res) => {
 
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
-  // * get all data from mongodb specified resturant
-  // ? res_id & documnetName needed,
-  // ?or by default is set as some static value
-  const { res_id, id, res_name } = req.payload;
-  console.log(res_name);
-  const apiResonpse = await getRequiredCollectionDataFromMongodb(
-    Number(res_id)
-  );
-  // const apiResonpse = await getRequiredCollectionDataFromMongodb();
-  const results = structureMongodbData(apiResonpse);
+  console.log("---------- <Get All Data Start> ----------------");
+  try {
+    // TODO get all data from mongodb specified resturant
+    // ? res_id & documnetName needed,
+    // ?or by default is set as some static value
+    const { res_id, id, res_name, phone } = req.payload;
+    console.log(
+      "Current User:\n",
+      "Id:",
+      id,
+      "Res_Id:",
+      res_id,
+      "Phone:",
+      phone,
+      "Res_Name:",
+      res_name
+    );
+    const apiResonpse = await getRequiredCollectionDataFromMongodb(
+      Number(res_id)
+    );
+    // const apiResonpse = await getRequiredCollectionDataFromMongodb();
+    const results = structureMongodbData(apiResonpse);
+    let restaurantList = [];
+    //? then it is a res_id soi only one restaurant
+    if (new String(res_id).length < 10) {
+      restaurantList = [{ res_name, res_id }];
+    } else {
+      //? then it is a phone number so multiple restaurants
+      const getAllRestaurantsData = await getAllRestaurants();
+      restaurantList = [...getAllRestaurantsData];
+    }
 
-  data[0] = results;
-  res.json({
-    data: {
-      api_data: data,
-      res_name: res_name,
-    },
-    status: "success",
-    results,
-  });
+    data[0] = results;
+    console.log("---------- <Get All Data Success End> ----------------");
+    res.json({
+      data: {
+        api_data: data,
+        res_name: res_name,
+        restaurantList: restaurantList,
+      },
+      status: "success",
+      results,
+    });
+  } catch (err) {
+    console.log("Error:", err);
+    console.log("---------- <Get All Data Error End> ----------------");
+    res.json({
+      status: "error",
+      message: `Error while getting data :${err}`,
+    });
+  }
 });
 
 // !Log User Activity
-router.post("/update/user-log", checkGoogleLogin, async (req, res) => {
+router.post("/update/user-log", checkAuthentication, async (req, res) => {
   const { email } = req.payload;
   const { location } = req.body;
   try {
@@ -345,5 +402,14 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
     });
   }
 });
+
+// router.post("/api/allreviews", checkAuthentication, async (req, res) => {
+//   res.json({
+//     status: "success",
+//     message: "All Reviews",
+//   })
+// });
+
+
 
 module.exports = router;

@@ -15,7 +15,8 @@ const Card = (props) => {
     weeklyResult,
     compareThen,
     redirection,
-    videoLink
+    videoLink,
+    recommendations
   } = props;
 
   let value;
@@ -27,7 +28,7 @@ const Card = (props) => {
   else {
     value = currentValue;
   }
-  console.log(name, value, benchmark, compareThen);
+  console.log(name, value, benchmark, compareThen, recommendations);
 
   return (
     <div className="card">
@@ -72,7 +73,7 @@ const Card = (props) => {
         <>
         <Link
           to={`${name.replace(/\s/g, "")}`}
-          state={{ name, value, benchmark, compareThen, videoLink }}
+          state={{ name, value, benchmark, compareThen, videoLink, recommendations }}
           className="card__btn"
         >
           <span className="card__btn--text">Know more</span>

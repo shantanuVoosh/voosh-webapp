@@ -10,7 +10,6 @@ import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
 
-
 // TODO: fix the issue of the data not being loaded
 // TODO: cant visit the page directly (state is empty but path i can use)
 // TODO: daynamic data change!
@@ -69,6 +68,7 @@ const TimeSeriesPages = ({}) => {
     benchmark,
     compareThen,
     videoLink,
+    recommendations,
   } = timeSeriesData;
 
   let value;
@@ -142,19 +142,38 @@ const TimeSeriesPages = ({}) => {
         </div> */}
         <div className="dashboard-bottom">
           <div className="dashboard-bottom__heading">
-            what does {currentName} mean?
+            What does {currentName} mean?
           </div>
           <div className="dashboard-bottom__video">
-          <ReactPlayer
-            className="single-video"
-            url={videoLink}
-            controls
-            playbackRate={1}
-            width="310px"
-            height="240px"
-          />
+            <ReactPlayer
+              className="single-video"
+              url={videoLink}
+              controls
+              playbackRate={1}
+              width="310px"
+              height="240px"
+            />
           </div>
-          <div className="recomendation">
+          {recommendations !== undefined && (
+            <div className="recomendation">
+              <div className="recomendation__heading">
+                <span className="icon">
+                  <BsBagCheckFill />
+                </span>
+                <span className="text">Top Suggestion</span>
+              </div>
+              <div className="recomendation__list-container">
+                {recommendations.map((item, index) => {
+                  return (
+                    <div className="recomendation__list" key={index}>
+                      {item}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {/* { <div className="recomendation">
             <div className="recomendation__heading">
               <span className="icon">
                 <BsBagCheckFill />
@@ -166,7 +185,7 @@ const TimeSeriesPages = ({}) => {
             <div className="recomendation__list">
               Add 'Dal Makhni' to "Recommendation
             </div>
-          </div>
+          </div>} */}
         </div>
       </div>
       <Footer />

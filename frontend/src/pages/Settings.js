@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
+import { clearData } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -13,6 +14,7 @@ const Settings = () => {
   const onSignoutSuccess = () => {
     console.log("You have been logged out successfully");
     dispatch(signoutSuccess());
+    dispatch(clearData());
     cookie.remove(APP_TOKEN, { path: "/" });
     navigate("/");
   };

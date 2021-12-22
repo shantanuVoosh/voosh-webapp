@@ -38,12 +38,13 @@ const Card = ({ name, value, benchmark, info, compareType,}) => {
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-        <div className={`value ${colorName}`}>{value}</div>
+      
 
         <div className="card__text--info">
           <p>{info}</p>
         </div>
       </div>
+        <div className={`value ${colorName}`}>{value}</div>
     </div>
   );
 };

@@ -11,7 +11,11 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
   return (
     <div className="info-card">
       <div className="name">{name}</div>
-      <div className={`${showColor} value`}>{`${value}%`}</div>
+      {type === "average" ? (
+        <div className={`${showColor} value`}>{`${value}`}</div>
+      ) : (
+        <div className={`${showColor} value`}>{`${value}%`}</div>
+      )}
     </div>
   );
 };

@@ -3,15 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { IoChevronDownSharp } from "react-icons/io5";
 import { GoogleLogout } from "react-google-login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
+import { clearData } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
-import { Spin as Hamburger } from 'hamburger-react'
+import { Spin as Hamburger } from "hamburger-react";
 
 // TODO: remove the hardcoded clientId
 const APP_TOKEN = "voosh-token";
 const clientId =
   "383868004224-r359p669am3jbghshp42l4h7c7ab62s7.apps.googleusercontent.com";
+
+
 
 const Header = ({
   heading,
@@ -23,19 +26,23 @@ const Header = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setOpen] = React.useState(false);
-
+  const [isRestaurantListOpen, setRestaurantListOpen] = React.useState(false);
+  const restaurant_list = useSelector((state) => state.data.restaurantList);
+  console.log("restaurant list", restaurant_list);
   // *change the state of the auth to false
   // * and remove the token from the cookie
   // * and redirect to the login page
   const onSignoutSuccess = () => {
     console.log("You have been logged out successfully");
     dispatch(signoutSuccess());
+    dispatch(clearData());
     cookie.remove(APP_TOKEN, { path: "/" });
     navigate("/");
   };
 
   const openRestaurantList = () => {
     console.log("open restaurant list");
+    setRestaurantListOpen((prevState) => !prevState);
   };
 
   const showrestaurantList = () => {
@@ -55,7 +62,7 @@ const Header = ({
             direction="right"
             size={22}
             color="#F5F5F9"
-            rounded 
+            rounded
             duration={1}
             easing="ease-in"
             className="Hamburger"
@@ -88,8 +95,22 @@ const Header = ({
                     {restaurantName}
                     {/* {heading} */}
                   </h1>
+                  <div className="rest_list">
+                  <div className={isRestaurantListOpen?"dropdown":"hide-dropdown"}>
+                    {restaurant_list.map((restaurant, index) => {
+                      const {res_id, res_name} = restaurant;
+                      return (
+                        <div className="item" key={index}>
+                          <span className="item--name">
+                            {res_name}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  </div>
                   <span className="header__text--icon">
-                    <IoChevronDownSharp />
+                    <IoChevronDownSharp onClick={openRestaurantList} />
                   </span>
                 </>
               )}

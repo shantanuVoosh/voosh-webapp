@@ -26,7 +26,7 @@ function getCurrentDate() {
   console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
 
   const format =
-    time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate();
+    time.getFullYear() + "-" + (time.getMonth()+1) + "-" + time.getDate();
   return format;
 }
 
@@ -36,11 +36,21 @@ const getCurrentDateBefore12HoursAgo = () => {
   tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
   // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
   const format =
-    tenHoursBefore.getFullYear() + "-" + tenHoursBefore.getMonth() + "-" + tenHoursBefore.getDate();
+    tenHoursBefore.getFullYear() + "-" + (tenHoursBefore.getMonth()+1) + "-" + tenHoursBefore.getDate();
   return format;
 
 }
+const getYesterdayDateBefore12HoursAgo = () => {
+  // const time = new Date();
+  const tenHoursBefore = new Date();
+  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
+  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
+  const format =
+    tenHoursBefore.getFullYear() + "-" + (tenHoursBefore.getMonth()+1) + "-" + (tenHoursBefore.getDate()-1);
+  return format;
 
+}
+// !extra 1 day+
 function getYesterdayDate() {
   const time = new Date();
   const format =
@@ -64,5 +74,6 @@ module.exports = {
   getCurrentDate,
   getYesterdayDate,
   getTomorrowDate,
-  getCurrentDateBefore12HoursAgo
+  getCurrentDateBefore12HoursAgo,
+  getYesterdayDateBefore12HoursAgo,
 };

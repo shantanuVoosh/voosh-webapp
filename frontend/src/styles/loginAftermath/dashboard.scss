@@ -134,6 +134,7 @@
   // ?Video cards
   &__videos {
     display: flex;
+    width: 500%;
     overflow-x: scroll;
 
     .single-video {

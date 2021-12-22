@@ -4,24 +4,30 @@ const {
   getCurrentDate,
   getYesterdayDate,
   getTomorrowDate,
-  getCurrentDateBefore12HoursAgo
+  getCurrentDateBefore12HoursAgo,
+  getYesterdayDateBefore12HoursAgo
 } = require("./dateProvide");
-const { translateAliases } = require("../database/models/user");
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 
 // ! removed the default values for res_id
 // ?red_id casesensitive hai! cuz query krna hai
 async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
-  documentName = "operationsdb";
-  
+
+  console.log("---------- <getRequiredCollectionDataFromMongodb Start> ----------------");
+  console.log("Current res_id:", res_id);
+
+  documentName = "operationsdb"
   const todaysDate = getCurrentDate();
   const yesterdayDate = getYesterdayDate();
   const tomorrowDate = getTomorrowDate();
   const currentDateBefore12HoursAgo = getCurrentDateBefore12HoursAgo();
+  const yesterdayDateBefore12HoursAgo = getYesterdayDateBefore12HoursAgo();
   console.log("Yesterday Date:", yesterdayDate);
   console.log("Todays Date:", todaysDate);
   console.log("Tomorrow Date:", tomorrowDate);
+  console.log("Current Date Before 12 Hours Ago:", currentDateBefore12HoursAgo);
+  console.log("Yesterday Date Before 12 Hours Ago:", yesterdayDateBefore12HoursAgo);
 
   const collectionRequired = [
     // ! ye format hai {Date:"15-Nov-2021 07:31 pm"}
@@ -34,9 +40,9 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       },
     },
     {
-      name: "Swiggy_Acceptance",
+      name: "Swiggy_Acceptance_v1",
       query: {
-        "Res Id": res_id,
+        "swiggy_res_id": res_id,
         // "Date": yesterdayDate,
         // "Date": yesterdayDate,
         // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
@@ -92,7 +98,7 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Swiggy_ratings",
       query: {
         "Res Id": res_id,
-        // "Date": yesterdayDate,
+        Date: getYesterdayDateBefore12HoursAgo,
         // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
         // Date: { $gte: yesterdayDate, $lte: currentDateBefore12HoursAgo },
       },
@@ -136,7 +142,8 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
     {
       name: "Weekly_review_analytics",
       query: {
-        res_id: res_id,
+        swiggy_res_id: res_id,
+        sum:{$gt:0}
         // "Date": yesterdayDate,
         // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
         // Date: { $gte: yesterdayDate, $lte: currentDateBefore12HoursAgo },
@@ -163,9 +170,13 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       return { ...prevObj };
     }, {});
 
+    console.log("---------- <getRequiredCollectionDataFromMongodb Success End> ----------------");
+
     return apiResult;
   } catch (err) {
+
     console.log("Error while getting data from DB: ", err);
+    console.log("---------- <getRequiredCollectionDataFromMongodb Error End> ----------------");
     return {};
   }
 }
@@ -174,7 +185,7 @@ function structureMongodbData(apiResponse) {
   // ! try catch krna hai
   // !Operation_Health_Data
   let i = 0;
-  const rest_Acceptance = apiResponse["Swiggy_Acceptance"][0];
+  const rest_Acceptance = apiResponse["Swiggy_Acceptance_v1"][0];
   const operationHealthWeeklyResult = apiResponse["Weekly_OH_Score"][0];
   const rest_igcc = apiResponse["Swiggy_IGCC"][0];
   const rest_Serviceability = apiResponse["Swiggy_Kitchen_Servicibility"][0];
@@ -187,7 +198,7 @@ function structureMongodbData(apiResponse) {
 
   const customer_ratings = apiResponse["Swiggy_ratings"][0];
   const rest_oders = apiResponse["Non_Voosh_Orderwise2"][0];
-  const Weekly_review_analytics = apiResponse["Weekly_review_analytics"][0];
+  const Weekly_review_analytics = apiResponse["Weekly_review_analytics"];
   // console.log("Revenue " ,apiResponse["Swiggy_Revenue"]);
   // console.log("rest_Serviceability: ", rest_Serviceability);
   // console.log("Rest_Acceptance: ", Object.keys(rest_Acceptance));
@@ -298,7 +309,8 @@ function structureMongodbData(apiResponse) {
           videoLink: Serviceability_video,
           monthlyResult: rest_Serviceability["Monthly_Servicibility"],
           weeklyResult: rest_Serviceability["Weekly_Servicibility"],
-          ...rest_Serviceability,
+          recommendations: ["Get the serviceability notification service"
+          ],
         },
         // ?Swiggy_RDC
         {
@@ -335,7 +347,10 @@ function structureMongodbData(apiResponse) {
           videoLink: MFR_video,
           monthlyResult: rest_MFR["Monthly_Mfr"],
           weeklyResult: rest_MFR["Weekly_Mfr"],
-          ...rest_MFR,
+          recommendations:[
+            "Press food ready button only when food prepared, not before",
+            "If you forget to mark food ready, take the MFR calling service. Tap here!"
+          ],
         },
         // ? IGCC
         {
@@ -349,6 +364,10 @@ function structureMongodbData(apiResponse) {
           missingItemComplaintsOrders:
             rest_igcc["Missing Item Complaints Orders"],
           value: valueForIGCC,
+          recommendations:[
+            "Paste a menu + item poster at the packaging area",
+            "Retrain packagers on high order days"
+          ],
         },
         // ?Swiggy_Acceptance
         {
@@ -357,7 +376,10 @@ function structureMongodbData(apiResponse) {
           info: "Acceptance = 100% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
-          value: parseFloat(rest_Acceptance["Accept Orders"]),
+          value: parseFloat(rest_Acceptance["accept_orders"]),
+          recommendations:[
+            "Enable Auto acceptance"
+          ]
         },
       ],
     },
@@ -502,13 +524,13 @@ function structureMongodbData(apiResponse) {
           compareThen: "yes or no",
           info: "Beverages Category = yes Gets more orders",
         },
-        Score: {
-          name: "Score",
-          value: Number(listing_audit_score["Score"]).toFixed(2),
-          benchmark: 11,
-          compareThen: "grater",
-          info: "Score >= 11 Gets more orders",
-        },
+        // Score: {
+        //   name: "Score",
+        //   value: Number(listing_audit_score["Score"]).toFixed(2),
+        //   benchmark: 11,
+        //   compareThen: "grater",
+        //   info: "Score >= 11 Gets more orders",
+        // },
       },
     },
 
@@ -543,6 +565,8 @@ function structureMongodbData(apiResponse) {
       monthlyResult: customer_ratings["Monthly_Rating"],
       weeklyResult: customer_ratings["Weekly_Rating"],
       totalRatings: customer_ratings["Total_Ratings"],
+      weeklyReview:Weekly_review_analytics,
+      type:"average",
       OrdersPerRating: {
         "5_star": customer_ratings["5_Ratings"],
         "4_star": customer_ratings["4_Ratings"],

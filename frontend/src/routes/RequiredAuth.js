@@ -25,8 +25,8 @@ function RequiredAuth({ children }) {
 
       // *dispatch the data if token not expired
       if (response.status === "success") {
-        const { api_data, res_name } = response.data;
-        dispatch(fetchData(api_data, res_name));
+        const { api_data, res_name, restaurantList } = response.data;
+        dispatch(fetchData(api_data, res_name, restaurantList));
       }
       // *if token expired, login will fail, will redirect to login page and relogin
       else {
