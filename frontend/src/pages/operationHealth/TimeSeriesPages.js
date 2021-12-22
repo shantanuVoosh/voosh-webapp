@@ -63,6 +63,8 @@ const TimeSeriesPages = ({}) => {
   const {
     name: currentName,
     value: currentValue,
+    info,
+    type: valueType,
     monthlyResult,
     weeklyResult,
     benchmark,
@@ -130,7 +132,7 @@ const TimeSeriesPages = ({}) => {
         <InfoCard
           name={name}
           value={value}
-          type={type}
+          type={valueType}
           benchmark={benchmark}
           compareThen={compareThen}
         />
@@ -144,16 +146,35 @@ const TimeSeriesPages = ({}) => {
           <div className="dashboard-bottom__heading">
             What does {currentName} mean?
           </div>
-          <div className="dashboard-bottom__video">
-            <ReactPlayer
-              className="single-video"
-              url={videoLink}
-              controls
-              playbackRate={1}
-              width="310px"
-              height="240px"
-            />
-          </div>
+          {
+            videoLink!==undefined&&(
+              <div className="dashboard-bottom__videos">
+              <ReactPlayer
+                className="single-video"
+                url={videoLink}
+                controls
+                playbackRate={1}
+                width="100%"
+                height="240px"
+              />
+            </div>
+            )
+          }
+          {
+            videoLink===undefined&&(
+              <div className="dashboard-bottom__video">
+              <ReactPlayer
+                className="video-upcoming"
+                url={videoLink}
+                controls
+                playbackRate={1}
+                width="100%"
+                height="240px"
+              />
+            </div>
+            )
+          }
+         
           {recommendations !== undefined && (
             <div className="recomendation">
               <div className="recomendation__heading">
@@ -173,19 +194,21 @@ const TimeSeriesPages = ({}) => {
               </div>
             </div>
           )}
-          {/* { <div className="recomendation">
-            <div className="recomendation__heading">
-              <span className="icon">
-                <BsBagCheckFill />
-              </span>
-              <span className="text">Top Recommendations</span>
+          {recommendations === undefined && (
+            <div className="recomendation">
+              <div className="recomendation__heading">
+                <span className="icon">
+                  <BsBagCheckFill />
+                </span>
+                <span className="text">Top Suggestion</span>
+              </div>
+              <div className="recomendation__list-container">
+                <div className="recomendation__list">
+                Working on it!!
+                </div>
+              </div>
             </div>
-            <div className="recomendation__list">Remove Banner Ads</div>
-            <div className="recomendation__list">ncrease CPC ₹5000</div>
-            <div className="recomendation__list">
-              Add 'Dal Makhni' to "Recommendation
-            </div>
-          </div>} */}
+          )}
         </div>
       </div>
       <Footer />

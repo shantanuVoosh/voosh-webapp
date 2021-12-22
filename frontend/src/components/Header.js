@@ -14,8 +14,6 @@ const APP_TOKEN = "voosh-token";
 const clientId =
   "383868004224-r359p669am3jbghshp42l4h7c7ab62s7.apps.googleusercontent.com";
 
-
-
 const Header = ({
   heading,
   restaurantName,
@@ -23,21 +21,24 @@ const Header = ({
   isErrorPage = false,
   headerSize,
 }) => {
+  const resultType = useSelector((state) => state.data.resultType);
+  const restaurant_list = useSelector((state) => state.data.restaurantList);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setOpen] = React.useState(false);
   const [isRestaurantListOpen, setRestaurantListOpen] = React.useState(false);
-  const restaurant_list = useSelector((state) => state.data.restaurantList);
-  console.log("restaurant list", restaurant_list);
+  const [isResultTypeOpne, setResultTypeOpne] = React.useState(false);
+  // console.log("restaurant list", restaurant_list);
   // *change the state of the auth to false
   // * and remove the token from the cookie
   // * and redirect to the login page
   const onSignoutSuccess = () => {
-    console.log("You have been logged out successfully");
-    dispatch(signoutSuccess());
-    dispatch(clearData());
-    cookie.remove(APP_TOKEN, { path: "/" });
-    navigate("/");
+    // console.log("You have been logged out successfully");
+    // dispatch(signoutSuccess());
+    // dispatch(clearData());
+    // cookie.remove(APP_TOKEN, { path: "/" });
+    // navigate("/");
   };
 
   const openRestaurantList = () => {
@@ -45,10 +46,11 @@ const Header = ({
     setRestaurantListOpen((prevState) => !prevState);
   };
 
-  const showrestaurantList = () => {
-    // !Wont work if he click other Heading than the Home page
-    if (!isHomePage) return null;
+  const onOpenResultType = () => {
+    setResultTypeOpne((prevState) => !prevState);
   };
+
+  const allResultType = ["This Week", "This Month", "Previous Month", "Previous Week"];
 
   // !Header for All Pages Except Error Page
   const HeaderComponent = () => {
@@ -68,7 +70,7 @@ const Header = ({
             className="Hamburger"
           />
           <div className="header-wrapper">
-            <div className="header__text" onClick={showrestaurantList}>
+            <div className="header__text">
               {!isHomePage ? (
                 // ? Then show the back button and the heading
                 <>
@@ -96,18 +98,20 @@ const Header = ({
                     {/* {heading} */}
                   </h1>
                   <div className="rest_list">
-                  <div className={isRestaurantListOpen?"dropdown":"hide-dropdown"}>
-                    {restaurant_list.map((restaurant, index) => {
-                      const {res_id, res_name} = restaurant;
-                      return (
-                        <div className="item" key={index}>
-                          <span className="item--name">
-                            {res_name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                    <div
+                      className={
+                        isRestaurantListOpen ? "dropdown" : "hide-dropdown"
+                      }
+                    >
+                      {restaurant_list.map((restaurant, index) => {
+                        const { res_id, res_name } = restaurant;
+                        return (
+                          <div className="item" key={index}>
+                            <span className="item--name">{res_name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                   <span className="header__text--icon">
                     <IoChevronDownSharp onClick={openRestaurantList} />
@@ -117,9 +121,22 @@ const Header = ({
             </div>
 
             <div className="header__btn btn">
+              <div className="result-type_list">
+                <div
+                  className={isResultTypeOpne ? "dropdown" : "hide-dropdown"}
+                >
+                  {allResultType.map((type, index) => {
+                    return (
+                      <div className="item" key={index}>
+                        <span className="item--name">{type}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <span className="header__btn--text">This Week</span>
               <span className="header__btn--icon">
-                <IoChevronDownSharp />
+                <IoChevronDownSharp onClick={onOpenResultType} />
               </span>
             </div>
           </div>

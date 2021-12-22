@@ -4,13 +4,14 @@ import InfoCard from "../../components/InfoCard";
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-const resultType = "month";
+// const resultType = "month";
 
 const CustomerReviews = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
+  const resultType = useSelector((state) => state.data.resultType);
   const navigate = useNavigate();
 
-  const customerReviews = data[currentProductIndex]["customerReviews"];
+  const {customerReviews} = data[currentProductIndex];
   const {
     negative,
     OrdersPerRating,
@@ -18,6 +19,8 @@ const CustomerReviews = () => {
     weeklyResult,
     totalRatings,
   } = customerReviews;
+
+
 
   const ratings = Object.keys(OrdersPerRating).map((key) => {
     let rating = key.split("_")[0];
@@ -28,19 +31,18 @@ const CustomerReviews = () => {
 
   const value = resultType === "month" ? monthlyResult : weeklyResult;
 
-  console.log(ratings, "ratings");
+  // console.log(ratings, "ratings", value, "value");
   const colors = [
-    "#00C689",
     "#2A327D",
+    "#00C689",
     "#FFCA00",
     "#FFB039",
-    "#FFA20F",
     "#FE645A",
   ];
 
   return (
     <>
-      <InfoCard name={"Current Rating"} value={value} type={"rating"} />
+      <InfoCard name={"Current Rating"} value={value} type={"average"} />
       {/* Rating bars */}
       <div className="rating-bar">
         {ratings.map((rating, index) => {
@@ -55,7 +57,8 @@ const CustomerReviews = () => {
                   className="bar-fill"
                   style={{
                     width: `${Math.floor(
-                      (Object.values(rating)[0] / totalRatings)* 100)}%`,
+                      (Object.values(rating)[0] / totalRatings) * 100
+                    )}%`,
                     backgroundColor: `${colors[index]}`,
                   }}
                 ></div>
@@ -69,8 +72,8 @@ const CustomerReviews = () => {
       </div>
       <div className="negative-reviews">
         {negative.map((item, index) => {
-          const { id, name, issues } = item;
-          return <NegativeReviewCard key={id} name={name} issues={issues} />;
+          const { item_name, issues } = item;
+          return <NegativeReviewCard key={index} name={item_name} issues={issues} />;
         })}
       </div>
       <div

@@ -33,7 +33,11 @@ const WhiteCard = (props) => {
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
         <div className="value" style={{ color: `${color}` }}>
-          {value}
+          {value.toLocaleString("en-IN", {
+            maximumFractionDigits: 2,
+            style: "currency",
+            currency: "INR",
+          })}
         </div>
         <div className="card__text--info">
           <p>{info}</p>
@@ -41,7 +45,7 @@ const WhiteCard = (props) => {
       </div>
       {/* //! sending data from this page */}
       <div className="card__btn">
-        <span className="card__btn--text" >Know more</span>
+        <span className="card__btn--text">Know more</span>
         <AiOutlineRight className="card__btn--icon" />
       </div>
     </div>

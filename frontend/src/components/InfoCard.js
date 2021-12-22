@@ -7,7 +7,7 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
   } else {
     showColor = value <= benchmark ? "green-value" : "red-value";
   }
-
+  console.log(name, value, benchmark, compareThen, "info card");
   return (
     <div className="info-card">
       <div className="name">{name}</div>

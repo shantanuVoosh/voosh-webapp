@@ -99,49 +99,37 @@ const Dashboard = () => {
           Some tutorials for your business
         </div>
         <div className="dashboard-bottom__videos">
-          <ReactPlayer
-            className="single-video"
+         <div className="single-video">
+         <ReactPlayer
+            // className="single-video"
             url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
             controls
             playbackRate={1}
             width="310px"
             height="240px"
           />
-          <ReactPlayer
-            className="single-video"
+         </div>
+         <div className="single-video">
+         <ReactPlayer
+            // className="single-video"
             url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
             controls
             playbackRate={1}
             width="310px"
             height="240px"
           />
-          <ReactPlayer
-            className="single-video"
+         </div>
+         <div className="single-video">
+         <ReactPlayer
+            // className="single-video"
             url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
             controls
             playbackRate={1}
             width="310px"
             height="240px"
           />
-          {/* <iframe
-            title="video"
-            width="310px"
-            height="240px"
-            src="https://www.youtube.com/embed?v=MIsi4vdzjgk"
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe> */}
-          {/* <iframe
-            title="video"
-            width="310px"
-            height="240px"
-            src="https://www.youtube.com/embed?v=MIsi4vdzjgk"
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe> */}
-
+         </div>
+         
           {/* <iframe
             title="video"
             width="310px"
@@ -157,12 +145,20 @@ const Dashboard = () => {
             <span className="icon">
               <BsBagCheckFill />
             </span>
-            <span className="text">Top Recommendations</span>
+            <span className="text">Top Suggestion</span>
           </div>
-          <div className="recomendation__list">Remove Banner Ads</div>
-          <div className="recomendation__list">ncrease CPC ₹5000</div>
           <div className="recomendation__list">
-            Add 'Dal Makhni' to "Recommendation
+            Running an offer increases your visibility ranking
+          </div>
+          <div className="recomendation__list">
+            More ratings helps you improve visibility
+          </div>
+          <div className="recomendation__list">
+            Make sure that all your menu items have different images! Swiggy
+            increases your visibility!
+          </div>
+          <div className="recomendation__list">
+            Having a desert category improves listing score
           </div>
         </div>
       </div>

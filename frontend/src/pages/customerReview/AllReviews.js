@@ -6,22 +6,26 @@ const AllReviews = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
 
   const customerReviews = data[currentProductIndex]["customerReviews"];
-  const { positive } = customerReviews;
+  const { all_reviews } = customerReviews;
+  console.log("all_reviews", all_reviews);
 
   return (
     <>
       <div className="review-container">
-        {positive !== undefined &&
-          positive.length > 0 &&
-          positive.map((review, index) => (
-            <ReviewCard
-              key={review.id}
-              id={review.id}
-              rating={review.rating}
-              review={review.review}
-              date={review.date}
-            />
-          ))}
+        {all_reviews !== undefined &&
+          all_reviews.length > 0 &&
+          all_reviews.map((review, index) => {
+            const {order_id, feedback, rating, date} = review;
+            return (
+              <ReviewCard
+                key={index}
+                id={order_id}
+                rating={rating}
+                review={feedback}
+                date={date}
+              />
+            );
+          })}
       </div>
     </>
   );

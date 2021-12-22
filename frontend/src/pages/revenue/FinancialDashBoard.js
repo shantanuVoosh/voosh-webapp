@@ -5,19 +5,37 @@ import SectionButtons from "../../components/SectionButtons";
 import { Doughnut } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import ColorList from "../../components/revenue/ColorList";
+const thisPageResulyType = "prev month";
 
 const FinancialDashBoard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
+  const resultType = useSelector((state) => state.data.resultType);
   const revenue = data[currentProductIndex]["revenue"];
-  const financicalData = revenue["financicalData"];
+  const [showModal, setShowModal] = React.useState(false);
+  const {
+    monthlyResult: revenueMonthlyResult,
+    weeklyResult: revenueWeeklyResult,
+  } = revenue;
 
+
+  const financicalData = revenue["financicalData"];
   const { totalSales, cancelledOrders, netPayout, deleveries, deductions } =
     financicalData;
 
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
-  const [showModal, setShowModal] = React.useState(false);
+  let revenueResult="Coming Soon!!!";
+
+  if (resultType === "week") {
+    revenueResult = revenueWeeklyResult;
+
+  } else {
+    revenueResult = revenueMonthlyResult;
+    
+  }
+
+
 
   const pieColors = [
     "#370665",
@@ -77,37 +95,41 @@ const FinancialDashBoard = () => {
             //   key={index}
             name={"Total Sales"}
             type={"Pecentage"}
-            value={"coming soon"}
+            // value={resultType===thisPageResulyType?listingScoreMain:"Coming soon!!"}
+            value={revenueResult}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
             color={"#27AE60"}
+            // color={"#262D30"}
           />
           <WhiteCard
             //   key={index}
             name={"Net Deduction"}
             type={"Pecentage"}
-            value={"coming soon"}
+            value={"Working on it!!"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
             color={"#f05a48"}
+            // color={"#262D30"}
           />
           <WhiteCard
             //   key={index}
             name={"Total Payout"}
             type={"Pecentage"}
-            value={"coming soon"}
+            value={"Working on it!!"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
             benchmark={"103847.68"}
             //   compareThen={"less"}
             color={"#27AE60"}
+            // color={"#262D30"}
           />
         </div>
         <div className="financial-breakdown">

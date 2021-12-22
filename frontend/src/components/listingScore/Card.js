@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
-const Card = ({ name, value, benchmark, info, compareType,}) => {
+const Card = ({ name, value, benchmark, info, compareType }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
   let finalValue;
@@ -13,22 +13,17 @@ const Card = ({ name, value, benchmark, info, compareType,}) => {
 
   if (compareType === "yes or no") {
     colorName = value.toLowerCase() === "yes" ? "green" : "red";
-
-  } 
-  else if (compareType === "present or not prensent") {
+  } else if (compareType === "present or not prensent") {
     colorName = value.toLowerCase() === "present" ? "green" : "red";
-  } 
-  else if (compareType === "applicable or not applicable") {
+  } else if (compareType === "applicable or not applicable") {
     // ? spelling mistake, applicable! not aplicable
     colorName = value.toLowerCase() === "aplicable" ? "green" : "red";
-  } 
-  else if (compareType === "high medium or low") {
+  } else if (compareType === "high medium or low") {
     colorName =
       value.toLowerCase() === "high" || value.toLowerCase() === "medium"
         ? "green"
         : "red";
-  } 
-  else if (compareType === "grater") {
+  } else if (compareType === "grater") {
     colorName = value >= benchmark ? "green" : "red";
   }
 
@@ -38,13 +33,28 @@ const Card = ({ name, value, benchmark, info, compareType,}) => {
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>
-      
 
         <div className="card__text--info">
           <p>{info}</p>
         </div>
+      <div className={`value ${colorName}`}>{value}</div>
       </div>
-        <div className={`value ${colorName}`}>{value}</div>
+      <Link
+        to={`${name.replace(/\s/g, "")}`}
+        state={{
+          name,
+          value,
+          benchmark,
+          // compareThen,
+          // videoLink,
+          // recommendations,
+          // type,
+        }}
+        className="card__btn"
+      >
+        <span className="card__btn--text">Know more</span>
+        <AiOutlineRight className="card__btn--icon" />
+      </Link>
     </div>
   );
 };

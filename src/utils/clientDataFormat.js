@@ -1,11 +1,11 @@
 const { MongoClient } = require("mongodb");
-const {video_urls} = require("./traning_video_urls")
+const { video_urls } = require("./traning_video_urls");
 const {
   getCurrentDate,
   getYesterdayDate,
   getTomorrowDate,
   getCurrentDateBefore12HoursAgo,
-  getYesterdayDateBefore12HoursAgo
+  getYesterdayDateBefore12HoursAgo,
 } = require("./dateProvide");
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
@@ -13,11 +13,12 @@ const VooshDB =
 // ! removed the default values for res_id
 // ?red_id casesensitive hai! cuz query krna hai
 async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
-
-  console.log("---------- <getRequiredCollectionDataFromMongodb Start> ----------------");
+  console.log(
+    "---------- <getRequiredCollectionDataFromMongodb Start> ----------------"
+  );
   console.log("Current res_id:", res_id);
 
-  documentName = "operationsdb"
+  documentName = "operationsdb";
   const todaysDate = getCurrentDate();
   const yesterdayDate = getYesterdayDate();
   const tomorrowDate = getTomorrowDate();
@@ -27,7 +28,10 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
   console.log("Todays Date:", todaysDate);
   console.log("Tomorrow Date:", tomorrowDate);
   console.log("Current Date Before 12 Hours Ago:", currentDateBefore12HoursAgo);
-  console.log("Yesterday Date Before 12 Hours Ago:", yesterdayDateBefore12HoursAgo);
+  console.log(
+    "Yesterday Date Before 12 Hours Ago:",
+    yesterdayDateBefore12HoursAgo
+  );
 
   const collectionRequired = [
     // ! ye format hai {Date:"15-Nov-2021 07:31 pm"}
@@ -35,72 +39,64 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Non_Voosh_Orderwise2",
       query: {
         "Res Id": res_id,
-        // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
+        Rating: { $ne: null },
+        Feedback: { $ne: null },
       },
     },
     {
       name: "Swiggy_Acceptance_v1",
       query: {
-        "swiggy_res_id": res_id,
+        swiggy_res_id: res_id,
         // "Date": yesterdayDate,
-        // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
       },
     },
     {
       name: "Swiggy_IGCC",
       query: {
         "Res Id": res_id,
-        // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
       },
     },
     {
       name: "Swiggy_Kitchen_Servicibility",
       query: {
         res_id: res_id,
-
-        // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
-        Date: { $gte: yesterdayDate, $lte: yesterdayDate }, //! y14  c16  1dday piche day h, cuz update problem
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_MFR",
       query: {
         Res_Id: res_id,
-        Date: yesterdayDate,
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_RDC",
       query: {
         "Res Id": res_id,
-        Date: yesterdayDate,
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_Revenue",
       query: {
         Res_Id: res_id,
-        Date: yesterdayDate,
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_Static_ratings",
       query: {
         "Res ID": res_id,
-        Date: yesterdayDate,
+        // Date: currentDateBefore12HoursAgo,
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_ratings",
       query: {
         "Res Id": res_id,
-        Date: getYesterdayDateBefore12HoursAgo,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
-        // Date: { $gte: yesterdayDate, $lte: currentDateBefore12HoursAgo },
+        Date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
@@ -143,7 +139,7 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Weekly_review_analytics",
       query: {
         swiggy_res_id: res_id,
-        sum:{$gt:0}
+        sum: { $gt: 0 },
         // "Date": yesterdayDate,
         // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
         // Date: { $gte: yesterdayDate, $lte: currentDateBefore12HoursAgo },
@@ -170,16 +166,31 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       return { ...prevObj };
     }, {});
 
-    console.log("---------- <getRequiredCollectionDataFromMongodb Success End> ----------------");
+    console.log(
+      "---------- <getRequiredCollectionDataFromMongodb Success End> ----------------"
+    );
 
     return apiResult;
   } catch (err) {
-
     console.log("Error while getting data from DB: ", err);
-    console.log("---------- <getRequiredCollectionDataFromMongodb Error End> ----------------");
+    console.log(
+      "---------- <getRequiredCollectionDataFromMongodb Error End> ----------------"
+    );
     return {};
   }
 }
+// console.log("Revenue " ,apiResponse["Swiggy_Revenue"]);
+// console.log("rest_Serviceability: ", rest_Serviceability);
+// console.log("Rest_Acceptance: ", Object.keys(rest_Acceptance));
+// console.log("rest_igcc: ", Object.keys(rest_igcc));
+// console.log("rest_Serviceability: ", Object.keys(rest_Serviceability));
+// console.log("rest_MFR: ", Object.keys(rest_MFR));
+// console.log("rest_RDC: ", Object.keys(rest_RDC));
+// console.log("avrage_ratings: ", Object.keys(avrage_ratings));
+// console.log("listing_audit_score: ", Object.keys(listing_audit_score));
+// console.log("customer_ratings: ", Object.keys(customer_ratings));
+// console.log("rest_oders: ", Object.keys(rest_oders));
+// console.log("revenue: ", Object.keys(revenue));
 
 function structureMongodbData(apiResponse) {
   // ! try catch krna hai
@@ -192,25 +203,143 @@ function structureMongodbData(apiResponse) {
   const rest_MFR = apiResponse["Swiggy_MFR"][0];
   const rest_RDC = apiResponse["Swiggy_RDC"][0];
   const avrage_ratings = apiResponse["Swiggy_Static_ratings"][0];
+  // ?review_analytics
+  const customer_ratings = apiResponse["Swiggy_ratings"][0];
+  const review_analytics = apiResponse["Weekly_review_analytics"];
+  const all_oders_review = apiResponse["Non_Voosh_Orderwise2"];
 
   // !listing_audit_score
   const listing_audit_score = apiResponse["Listing_Audit_Score"][0];
 
-  const customer_ratings = apiResponse["Swiggy_ratings"][0];
   const rest_oders = apiResponse["Non_Voosh_Orderwise2"][0];
   const Weekly_review_analytics = apiResponse["Weekly_review_analytics"];
-  // console.log("Revenue " ,apiResponse["Swiggy_Revenue"]);
-  // console.log("rest_Serviceability: ", rest_Serviceability);
-  // console.log("Rest_Acceptance: ", Object.keys(rest_Acceptance));
-  // console.log("rest_igcc: ", Object.keys(rest_igcc));
-  // console.log("rest_Serviceability: ", Object.keys(rest_Serviceability));
-  // console.log("rest_MFR: ", Object.keys(rest_MFR));
-  // console.log("rest_RDC: ", Object.keys(rest_RDC));
-  // console.log("avrage_ratings: ", Object.keys(avrage_ratings));
-  // console.log("listing_audit_score: ", Object.keys(listing_audit_score));
-  // console.log("customer_ratings: ", Object.keys(customer_ratings));
-  // console.log("rest_oders: ", Object.keys(rest_oders));
-  // console.log("revenue: ", Object.keys(revenue));
+
+  //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
+  const negative_review_items = review_analytics.map((item) => {
+    const { item_name } = item;
+    const {
+      quality,
+      taste,
+      cooking,
+      freshness_stale,
+      foreignobject,
+      oily,
+      spice,
+      hard,
+      temperature,
+      quantity,
+      missing,
+      wrong,
+      packaging,
+      price,
+      delivery_n_time,
+    } = item;
+    const food_negative_review_items = [
+      {
+        name: "quality",
+        value: parseFloat(quality),
+      },
+      {
+        name: "taste",
+        value: parseFloat(taste),
+      },
+      {
+        name: "cooking",
+        value: parseFloat(cooking),
+      },
+      {
+        name: "freshness_stale",
+        value: parseFloat(freshness_stale),
+      },
+      {
+        name: "foreignobject",
+        value: parseFloat(foreignobject),
+      },
+      {
+        name: "oily",
+        value: parseFloat(oily),
+      },
+      {
+        name: "spice",
+        value: parseFloat(spice),
+      },
+      {
+        name: "hard",
+        value: parseFloat(hard),
+      },
+      {
+        name: "temperature",
+        value: parseFloat(temperature),
+      },
+      {
+        name: "quantity",
+        value: parseFloat(quantity),
+      },
+      {
+        name: "missing",
+        value: parseFloat(missing),
+      },
+      {
+        name: "wrong",
+        value: parseFloat(wrong),
+      },
+      {
+        name: "packaging",
+        value: parseFloat(packaging),
+      },
+      {
+        name: "price",
+        value: parseFloat(price),
+      },
+      {
+        name: "delivery_n_time",
+        value: parseFloat(delivery_n_time),
+      },
+    ].sort((a, b) => (a.value > b.value ? -1 : 1));
+
+    console.log("food_negative_review_items: ", food_negative_review_items);
+
+    return {
+      item_name: item_name,
+      issues: [...food_negative_review_items.slice(0, 3)],
+    };
+  });
+
+  // ? Grabbing the all reviews in {order_id:id...} format
+
+  const all_reviews = all_oders_review.map((item, index) => {
+    const months = {
+      Jan: "01",
+      Feb: "02",
+      Mar: "03",
+      Apr: "04",
+      May: "05",
+      Jun: "06",
+      Jul: "07",
+      Aug: "08",
+      Sep: "09",
+      Oct: "10",
+      Nov: "11",
+      Dec: "12",
+    };
+
+    let modify_time_format = item["Date"].split(" ")[0].split("-");
+    modify_time_format =
+      modify_time_format[2] +
+      months[modify_time_format[1]] +
+      modify_time_format[0];
+
+    return {
+      order_id: item["Order Id"],
+      // ?for time being date : date: "20201107",
+      date: modify_time_format,
+      // date: (item["Date"].split(" ")[0]).split("-").join(""),
+      rating: item["Rating"],
+      feedback: item["Feedback"].replace(/(\r\n|\n|\r)/gm, " ").substring(1),
+    };
+  });
+
+  console.log("all_review_items: ", all_reviews);
 
   // ?calculating the data manually
   const wrongItemComplaintsOrders = parseFloat(
@@ -279,9 +408,9 @@ function structureMongodbData(apiResponse) {
     TDS: revenue_financical["TDS"],
   };
 
-
   // Todo: Training Videod
-  const {RDC_video, Serviceability_video, MFR_video, Ratings_video}  = video_urls;
+  const { RDC_video, Serviceability_video, MFR_video, Ratings_video } =
+    video_urls;
 
   const data = {
     // ?name of the restaurant
@@ -309,8 +438,7 @@ function structureMongodbData(apiResponse) {
           videoLink: Serviceability_video,
           monthlyResult: rest_Serviceability["Monthly_Servicibility"],
           weeklyResult: rest_Serviceability["Weekly_Servicibility"],
-          recommendations: ["Get the serviceability notification service"
-          ],
+          recommendations: ["Get the serviceability notification service"],
         },
         // ?Swiggy_RDC
         {
@@ -335,7 +463,10 @@ function structureMongodbData(apiResponse) {
           videoLink: Ratings_video,
           monthlyResult: avrage_ratings["Monthly_Rating"],
           weeklyResult: avrage_ratings["Weekly_Rating"],
-          ...avrage_ratings,
+          recommendations:[
+            "Improve reviews by understanding the problem areas",
+            "Contact Voosh for Rating Booster service",
+          ]
         },
         // ?Swiggy_MFR
         {
@@ -347,9 +478,9 @@ function structureMongodbData(apiResponse) {
           videoLink: MFR_video,
           monthlyResult: rest_MFR["Monthly_Mfr"],
           weeklyResult: rest_MFR["Weekly_Mfr"],
-          recommendations:[
+          recommendations: [
             "Press food ready button only when food prepared, not before",
-            "If you forget to mark food ready, take the MFR calling service. Tap here!"
+            "If you forget to mark food ready, take the MFR calling service. Tap here!",
           ],
         },
         // ? IGCC
@@ -364,9 +495,9 @@ function structureMongodbData(apiResponse) {
           missingItemComplaintsOrders:
             rest_igcc["Missing Item Complaints Orders"],
           value: valueForIGCC,
-          recommendations:[
+          recommendations: [
             "Paste a menu + item poster at the packaging area",
-            "Retrain packagers on high order days"
+            "Retrain packagers on high order days",
           ],
         },
         // ?Swiggy_Acceptance
@@ -377,9 +508,7 @@ function structureMongodbData(apiResponse) {
           benchmark: 99,
           compareThen: "grater",
           value: parseFloat(rest_Acceptance["accept_orders"]),
-          recommendations:[
-            "Enable Auto acceptance"
-          ]
+          recommendations: ["Enable Auto acceptance"],
         },
       ],
     },
@@ -399,7 +528,11 @@ function structureMongodbData(apiResponse) {
           value: listing_audit_score["safety tag"],
           benchmark: "yes",
           compareThen: "yes or no",
-          info: "Safety Tag = yes Gets more orders",
+          info: "Ensure that you have the Safety Tag! This draws in customers and boosts orders!",
+          suggestions: [
+            "Get safety tag for your restaurant",
+            "Reach out to us or 3rd parties who help in getting the tag",
+          ],
         },
 
         Fssai: {
@@ -407,7 +540,8 @@ function structureMongodbData(apiResponse) {
           value: listing_audit_score["Fssai"],
           benchmark: "present",
           compareThen: "present or not prensent",
-          info: "Fssai = present Gets more orders",
+          info: "Having FSSAI builds trust. Swiggy/Zomato reward it",
+          suggestions: [],
         },
 
         "Offer 1": {
@@ -419,7 +553,8 @@ function structureMongodbData(apiResponse) {
               : "not applicable",
           benchmark: "applicable",
           compareThen: "applicable or not applicable",
-          info: "Offer 1 = applicable Gets more orders",
+          info: "Running an offer increases your visibility ranking",
+          suggestions: [],
         },
         "Offer 2": {
           name: "Offer 2",
@@ -430,7 +565,8 @@ function structureMongodbData(apiResponse) {
               : "not applicable",
           benchmark: "applicable",
           compareThen: "applicable or not applicable",
-          info: "Offer 2 = applicable Gets more orders",
+          info: "Running multiple offer have much more impact",
+          suggestions: [],
         },
 
         "Number of Rating": {
@@ -438,14 +574,23 @@ function structureMongodbData(apiResponse) {
           value: listing_audit_score["Number of Rating"],
           benchmark: "medium",
           compareThen: "high medium or low",
-          info: "Number of Rating = medium or High Gets more orders",
+          info: "More ratings helps you improve visibility",
+          suggestions: [
+            "Increase number of reviews through personalized notes",
+            -"Improve customer service",
+            "Provide complimentory dishes",
+          ],
         },
         Rating: {
           name: "Rating",
           value: listing_audit_score["Number of Rating"],
           benchmark: "medium",
           compareThen: "high medium or low",
-          info: "Rating = medium or High Gets more orders",
+          info: "Ratings is very directly related to sales",
+          suggestions: [
+            "Improve reviews by understanding the problem areas",
+            "Contact Voosh for Rating Booster service",
+          ],
         },
         "Bestseller Without Recommended": {
           name: "Bestseller Without Recommended",
@@ -457,7 +602,8 @@ function structureMongodbData(apiResponse) {
               100
             ).toFixed(2)
           ),
-          info: "Bestseller Without Recommended >= 7% Gets more orders",
+          info: "Target to have more than 7% of non recommended as bestsellers for better growth",
+          suggestions: [],
         },
         "Bestseller% in Recommended Data": {
           name: "Bestseller% in Recommended Data",
@@ -468,23 +614,25 @@ function structureMongodbData(apiResponse) {
               listing_audit_score["Bestseller % in Recommended data"] * 100
             ).toFixed(2)
           ),
-          info: "Bestseller% in Recommended Data >= 30% Gets more orders",
+          info: "Target to have more than 30% of recommended as bestsellers for better growth",
+          suggestions: [],
         },
 
-        "Bestseller% in Recommended vs Without Recommended Data": {
-          name: "Bestseller % in Recommended vs without Recommended data",
+        // ? Do we need this?
+        // "Bestseller% in Recommended vs Without Recommended Data": {
+        //   name: "Bestseller % in Recommended vs without Recommended data",
 
-          value: parseFloat(
-            (
-              listing_audit_score[
-                "Bestseller % in Recommended vs without Recommended data"
-              ] * 100
-            ).toFixed(2)
-          ),
-          benchmark: 6,
-          compareThen: "grater",
-          info: "Bestseller % in Recommended vs without Recommended data >= 6% Gets more orders",
-        },
+        //   value: parseFloat(
+        //     (
+        //       listing_audit_score[
+        //         "Bestseller % in Recommended vs without Recommended data"
+        //       ] * 100
+        //     ).toFixed(2)
+        //   ),
+        //   benchmark: 6,
+        //   compareThen: "grater",
+        //   info: "Bestseller % in Recommended vs without Recommended data >= 6% Gets more orders",
+        // },
         "Recommended %": {
           name: "Recommended %",
           value: parseFloat(
@@ -492,30 +640,27 @@ function structureMongodbData(apiResponse) {
           ),
           benchmark: 17,
           compareThen: "grater",
-          info: "Recommended % >= 17% Gets more orders",
+          info: "Ensure to have at least 20% of your total items as 'Recommended'",
         },
         "Image %": {
-          name: "Image %",
+          name: "Images",
           value: parseFloat((listing_audit_score["Image %"] * 100).toFixed(2)),
           benchmark: 100,
           compareThen: "grater",
-          info: "Image % >= 100% Gets more orders",
+          info: "Make sure that all your menu items have different images! Swiggy increases your visibility!",
+          suggestions: [
+            "Add images to minimum 30 items",
+            "Contact Voosh photoshoot service for quality images",
+          ],
         },
-        "Description %": {
-          name: "Description %",
-          value: parseFloat(
-            (listing_audit_score["Description %"] * 100).toFixed(2)
-          ),
-          benchmark: 95,
-          compareThen: "grater",
-          info: "Description % >= 95% Gets more orders",
-        },
+
         "Desserts/Sweet Category": {
-          name: "Desserts/Sweet Category",
+          name: "Desserts/Sweet Category Availability ",
           value: listing_audit_score["Desserts/Sweet category"],
           benchmark: "yes",
           compareThen: "yes or no",
-          info: "Desserts/Sweet Category = yes Gets more orders",
+          info: "Having a desert category improves listing score",
+          suggestions: ["Add Desserts category and corrosponding item"],
         },
         "Beverages Category": {
           name: "Beverages Category",
@@ -523,6 +668,7 @@ function structureMongodbData(apiResponse) {
           benchmark: "yes",
           compareThen: "yes or no",
           info: "Beverages Category = yes Gets more orders",
+          suggestions: ["Add breverage category and corrosponding item"],
         },
         // Score: {
         //   name: "Score",
@@ -531,6 +677,19 @@ function structureMongodbData(apiResponse) {
         //   compareThen: "grater",
         //   info: "Score >= 11 Gets more orders",
         // },
+        "Description %": {
+          name: "Item Description",
+          value: parseFloat(
+            (listing_audit_score["Description %"] * 100).toFixed(2)
+          ),
+          benchmark: 95,
+          compareThen: "grater",
+          info: "Make sure that all your menu items have descriptions! Swiggy increases your visibility!",
+          suggestions: [
+            "Add descriptions into more items",
+            "Use good keywords in item descriptons",
+          ],
+        },
       },
     },
 
@@ -565,8 +724,8 @@ function structureMongodbData(apiResponse) {
       monthlyResult: customer_ratings["Monthly_Rating"],
       weeklyResult: customer_ratings["Weekly_Rating"],
       totalRatings: customer_ratings["Total_Ratings"],
-      weeklyReview:Weekly_review_analytics,
-      type:"average",
+      weeklyReview: Weekly_review_analytics,
+      type: "average",
       OrdersPerRating: {
         "5_star": customer_ratings["5_Ratings"],
         "4_star": customer_ratings["4_Ratings"],
@@ -575,56 +734,8 @@ function structureMongodbData(apiResponse) {
         "1_star": customer_ratings["1_Ratings"],
       },
       //? Not used
-      positive: [
-        {
-          id: 41534354341,
-          date: "20201107",
-          rating: 5,
-          review:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
-        },
-        {
-          id: 41534354342,
-          date: "20201107",
-          rating: 5,
-          review:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
-        },
-        {
-          id: 41534354343,
-          date: "20201107",
-          rating: 5,
-          review:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
-        },
-        {
-          id: 41534354344,
-          date: "20201107",
-          rating: 5,
-          review:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
-        },
-      ],
-      negative: [
-        {
-          id: 114153435434,
-          name: "Dal Makhni",
-          issues: [
-            { name: "oil", percentage: 60 },
-            { name: "spice", percentage: 40 },
-            { name: "issue 3", percentage: 40 },
-          ],
-        },
-        {
-          id: 124153435434,
-          name: "Masala Dosa",
-          issues: [
-            { name: "oil", percentage: 60 },
-            { name: "spice", percentage: 40 },
-            { name: "issue 3", percentage: 40 },
-          ],
-        },
-      ],
+      positive: [...all_reviews],
+      negative: [...negative_review_items],
     },
   };
 

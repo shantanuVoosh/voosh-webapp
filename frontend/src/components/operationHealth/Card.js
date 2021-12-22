@@ -10,13 +10,14 @@ const Card = (props) => {
     name,
     value: currentValue,
     info,
+    type,
     benchmark,
     monthlyResult,
     weeklyResult,
     compareThen,
     redirection,
     videoLink,
-    recommendations
+    recommendations,
   } = props;
 
   let value;
@@ -40,8 +41,14 @@ const Card = (props) => {
               value >= benchmark ? "green-value value" : "red-value value"
             }
           >
-            {value >= benchmark ? <AiOutlineRise className="rise-fall_icon" /> : <AiOutlineFall className="rise-fall_icon" />}
-            {value}%
+            {/* //? rise and fall and avg or percentange  */}
+            {value >= benchmark ? (
+              <AiOutlineRise className="rise-fall_icon" />
+            ) : (
+              <AiOutlineFall className="rise-fall_icon" />
+            )}
+            {value}
+            {type === "average" ? "" : "%"}
           </div>
         )}
         {compareThen === "less" && (
@@ -51,7 +58,11 @@ const Card = (props) => {
             }
           >
             {/* { value <= benchmark && <AiOutlineRise/>} */}
-            {value <= benchmark ? <AiOutlineRise className="rise-fall_icon" /> : <AiOutlineFall className="rise-fall_icon" />}
+            {value <= benchmark ? (
+              <AiOutlineRise className="rise-fall_icon" />
+            ) : (
+              <AiOutlineFall className="rise-fall_icon" />
+            )}
             {value}%
           </div>
         )}
@@ -71,14 +82,22 @@ const Card = (props) => {
         </>
       ) : (
         <>
-        <Link
-          to={`${name.replace(/\s/g, "")}`}
-          state={{ name, value, benchmark, compareThen, videoLink, recommendations }}
-          className="card__btn"
-        >
-          <span className="card__btn--text">Know more</span>
-          <AiOutlineRight className="card__btn--icon" />
-        </Link>
+          <Link
+            to={`${name.replace(/\s/g, "")}`}
+            state={{
+              name,
+              value,
+              benchmark,
+              compareThen,
+              videoLink,
+              recommendations,
+              type,
+            }}
+            className="card__btn"
+          >
+            <span className="card__btn--text">Know more</span>
+            <AiOutlineRight className="card__btn--icon" />
+          </Link>
         </>
       )}
     </div>

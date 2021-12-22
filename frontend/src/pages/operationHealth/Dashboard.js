@@ -15,7 +15,7 @@ const Dashborad = () => {
         {operationHealthData.map((item, index) => {
           const {
             name,
-            // type,
+            type,
             value,
             info,
             benchmark,
@@ -29,7 +29,7 @@ const Dashborad = () => {
             <Card
               key={index}
               name={name}
-              // type={type}
+              type={type}
               value={value}
               info={info}
               monthlyResult={monthlyResult}
@@ -43,7 +43,6 @@ const Dashborad = () => {
         })}
         <Card name={"Customer Reviews"} 
         type={"average"}
-        // value={null}
         info={"Customer Reviews are good or bad"}
         monthlyResult={monthlyResult}
         weeklyResult={weeklyResult}

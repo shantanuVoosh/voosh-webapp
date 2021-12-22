@@ -141,6 +141,15 @@ function App() {
             </RequiredAuth>
           }
         />
+
+        <Route
+          path="/listingScore/:id"
+          element={
+            <RequiredAuth>
+              <TimeSeriesPages />
+            </RequiredAuth>
+          }
+        />
         {/* <Route
           path="/ads&Analytics"
           element={
