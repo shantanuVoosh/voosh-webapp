@@ -8,24 +8,24 @@ const Card = ({ name, value, benchmark, info, compareType }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
   let finalValue;
-  let colorName;
+  let colorName="green";
   console.log(resultType, compareType);
 
-  if (compareType === "yes or no") {
-    colorName = value.toLowerCase() === "yes" ? "green" : "red";
-  } else if (compareType === "present or not prensent") {
-    colorName = value.toLowerCase() === "present" ? "green" : "red";
-  } else if (compareType === "applicable or not applicable") {
-    // ? spelling mistake, applicable! not aplicable
-    colorName = value.toLowerCase() === "aplicable" ? "green" : "red";
-  } else if (compareType === "high medium or low") {
-    colorName =
-      value.toLowerCase() === "high" || value.toLowerCase() === "medium"
-        ? "green"
-        : "red";
-  } else if (compareType === "grater") {
-    colorName = value >= benchmark ? "green" : "red";
-  }
+  // if (compareType === "yes or no") {
+  //   colorName = value.toLowerCase() === "yes" ? "green" : "red";
+  // } else if (compareType === "present or not prensent") {
+  //   colorName = value.toLowerCase() === "present" ? "green" : "red";
+  // } else if (compareType === "applicable or not applicable") {
+  //   // ? spelling mistake, applicable! not aplicable
+  //   colorName = value.toLowerCase() === "aplicable" ? "green" : "red";
+  // } else if (compareType === "high medium or low") {
+  //   colorName =
+  //     value.toLowerCase() === "high" || value.toLowerCase() === "medium"
+  //       ? "green"
+  //       : "red";
+  // } else if (compareType === "grater") {
+  //   colorName = value >= benchmark ? "green" : "red";
+  // }
 
   console.log(colorName, "colorName");
 
@@ -37,9 +37,15 @@ const Card = ({ name, value, benchmark, info, compareType }) => {
         <div className="card__text--info">
           <p>{info}</p>
         </div>
-      <div className={`value ${colorName}`}>{value}</div>
+        {/* //!Error if value not presen */}
+        {value !== "working on it" && (
+          <div className={`value ${colorName}`}>{value===undefined?"working on it":value}</div>
+        )}
+        {value === "working on it" && (
+          <div className=''>working on it...</div>
+        )}
       </div>
-      <Link
+      {/* <Link
         to={`${name.replace(/\s/g, "")}`}
         state={{
           name,
@@ -54,7 +60,7 @@ const Card = ({ name, value, benchmark, info, compareType }) => {
       >
         <span className="card__btn--text">Know more</span>
         <AiOutlineRight className="card__btn--icon" />
-      </Link>
+      </Link> */}
     </div>
   );
 };

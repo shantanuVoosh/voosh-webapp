@@ -5,7 +5,11 @@ import { IoChevronDownSharp } from "react-icons/io5";
 import { GoogleLogout } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
-import { clearData } from "../redux/Data/actions/actions";
+import {
+  clearData,
+  setResultType,
+  setRestaurantNameAndId,
+} from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import { Spin as Hamburger } from "hamburger-react";
 
@@ -28,29 +32,84 @@ const Header = ({
   const navigate = useNavigate();
   const [isOpen, setOpen] = React.useState(false);
   const [isRestaurantListOpen, setRestaurantListOpen] = React.useState(false);
-  const [isResultTypeOpne, setResultTypeOpne] = React.useState(false);
-  // console.log("restaurant list", restaurant_list);
-  // *change the state of the auth to false
-  // * and remove the token from the cookie
-  // * and redirect to the login page
-  const onSignoutSuccess = () => {
-    // console.log("You have been logged out successfully");
-    // dispatch(signoutSuccess());
-    // dispatch(clearData());
-    // cookie.remove(APP_TOKEN, { path: "/" });
-    // navigate("/");
+  const [isResultTypeOpne, setResultTypeOpen] = React.useState(false);
+
+  const resultTypeRef = React.useRef(null);
+  const restaurantListRef = React.useRef(null);
+
+  const handleOnClickAnywhere = (e) => {
+    if (
+      e.target.classList.contains("item--name") ||
+      e.target.classList.contains("item") ||
+      e.target.classList.contains("rest_list") ||
+      e.target.classList.contains("result-type_list")
+    ) {
+
+      // if(isRestaurantListOpen) {
+      //   setRestaurantListOpen(false);
+      //   // setResultType(true)
+      // }
+      // if(isResultTypeOpne) {
+      //   setResultTypeOpen(false);
+      // }
+
+      return;
+    }
+    // console.log(e.target.classList.contains("item--name"), resultTypeRef.current.classList.contains("item--name"));
+    // console.log(e.target, resultTypeRef.current.classList.contains("item"));
+    setOpen(false);
+    setRestaurantListOpen(false);
+    setResultTypeOpen(false);
   };
 
+  React.useEffect(() => {
+    document.addEventListener("mousedown", handleOnClickAnywhere);
+    return () => {
+      document.removeEventListener("mousedown", handleOnClickAnywhere);
+    };
+  });
+
+  // ! Restaurant List Dropdown
   const openRestaurantList = () => {
     console.log("open restaurant list");
     setRestaurantListOpen((prevState) => !prevState);
   };
 
+  // ! Result Type Dropdown
   const onOpenResultType = () => {
-    setResultTypeOpne((prevState) => !prevState);
+    setResultTypeOpen((prevState) => !prevState);
+  };
+  const setResultTypeOfData = (type) => {
+    let t = "";
+    console.log("type", type);
+    if (type === "This Week") {
+      t = "week";
+    } else if (type === "This Month") {
+      t = "month";
+    } else if (type === "Prv. Month") {
+      t = "prev_month";
+    } else if (type === "Prv. Week") {
+      t = "prev_week";
+    }
+    dispatch(setResultType(t));
+    setResultTypeOpen((prevState) => !prevState);
   };
 
-  const allResultType = ["This Week", "This Month", "Previous Month", "Previous Week"];
+  const setRestaurantClicked = (res_name, res_id) => {
+    dispatch(setRestaurantNameAndId(res_name, res_id));
+    setRestaurantListOpen((prevState) => !prevState);
+  };
+
+  React.useEffect(() => {}, []);
+
+  const allResultType = ["This Week", "This Month", "Prv. Month", "Prv. Week"];
+
+  const allResultTypeMap = {
+    week: "This Week",
+    month: "This Month",
+    prev_month: "Prv. Month",
+    prev_week: "Prv. Week",
+  };
 
   // !Header for All Pages Except Error Page
   const HeaderComponent = () => {
@@ -58,7 +117,7 @@ const Header = ({
       <>
         {/*//? small , mid , big */}
         <header className={`header header-${headerSize}`}>
-          <Hamburger
+          {/* <Hamburger
             toggled={isOpen}
             toggle={setOpen}
             direction="right"
@@ -68,7 +127,7 @@ const Header = ({
             duration={1}
             easing="ease-in"
             className="Hamburger"
-          />
+          /> */}
           <div className="header-wrapper">
             <div className="header__text">
               {!isHomePage ? (
@@ -107,14 +166,25 @@ const Header = ({
                         const { res_id, res_name } = restaurant;
                         return (
                           <div className="item" key={index}>
-                            <span className="item--name">{res_name}</span>
+                            <span
+                              className="item--name"
+                              onClick={() =>
+                                setRestaurantClicked(res_name, res_id)
+                              }
+                            >
+                              {res_name}
+                            </span>
                           </div>
                         );
                       })}
                     </div>
                   </div>
-                  <span className="header__text--icon">
-                    <IoChevronDownSharp onClick={openRestaurantList} />
+                  <span
+                    className="header__text--icon btn"
+                    ref={restaurantListRef}
+                    onClick={openRestaurantList}
+                  >
+                    <IoChevronDownSharp />
                   </span>
                 </>
               )}
@@ -128,14 +198,21 @@ const Header = ({
                   {allResultType.map((type, index) => {
                     return (
                       <div className="item" key={index}>
-                        <span className="item--name">{type}</span>
+                        <span
+                          className="item--name"
+                          onClick={() => setResultTypeOfData(type)}
+                        >
+                          {type}
+                        </span>
                       </div>
                     );
                   })}
                 </div>
               </div>
-              <span className="header__btn--text">This Week</span>
-              <span className="header__btn--icon">
+              <span className="header__btn--text">
+                {allResultTypeMap[resultType]}
+              </span>
+              <span className="header__btn--icon" ref={resultTypeRef}>
                 <IoChevronDownSharp onClick={onOpenResultType} />
               </span>
             </div>

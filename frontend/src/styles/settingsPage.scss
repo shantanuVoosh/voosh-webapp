@@ -33,8 +33,14 @@
 }
 
 .setting-container{
-
-  .item{
-
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  .btn{
+    text-decoration: none;
+    text-align: center;
+    padding: 1rem 0;
+    color: #fff;
   }
 }

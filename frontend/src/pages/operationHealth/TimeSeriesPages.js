@@ -148,7 +148,7 @@ const TimeSeriesPages = ({}) => {
           </div>
           {
             videoLink!==undefined&&(
-              <div className="dashboard-bottom__videos">
+              <div className="dashboard-bottom__video">
               <ReactPlayer
                 className="single-video"
                 url={videoLink}

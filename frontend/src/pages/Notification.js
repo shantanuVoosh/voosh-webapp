@@ -56,6 +56,10 @@ const Notification = () => {
             {notification_from_api.length < 1 ? (
               <div className="no-notification">
                 <div className="text">No Notification Found.</div>
+                <div className="sub-text">
+                  We will reach out as soon as we get something interesting for
+                  you
+                </div>
               </div>
             ) : (
               notification_from_api.map((item, index) => {

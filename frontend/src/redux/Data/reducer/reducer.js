@@ -7,20 +7,31 @@ const initialState = {
   currentProductIndex: -1,
   resultType: "week",
   restaurantList: [],
+  isLoading: false,
+  res_id: "",
 };
 
 export const dataReducer = (state = initialState, action) => {
-  const { FETCH_DATA, SET_CURRENT_PRODUCT_INDEX, CLEAR_DATA } = ActionTypes;
+  const {
+    FETCH_ALL_DATA,
+    FETCH_DATA,
+    SET_CURRENT_PRODUCT_INDEX,
+    CLEAR_DATA,
+    SET_RESULT_TYPE,
+    IS_LOADING,
+    SET_RESTAURANT_NAME_AND_ID,
+  } = ActionTypes;
   const { type, payload } = action;
 
   switch (type) {
-    case FETCH_DATA:
+    case FETCH_ALL_DATA:
       return {
         ...state,
         data: payload.data,
         res_name: payload.res_name,
         currentProductIndex: 0,
         restaurantList: payload.restaurantList,
+        res_id: payload.res_id,
       };
     case SET_CURRENT_PRODUCT_INDEX:
       return {
@@ -35,7 +46,35 @@ export const dataReducer = (state = initialState, action) => {
         res_name: "",
         currentProductIndex: -1,
         restaurantList: [],
+        resultType: "week",
+        isLoading: false,
+        res_id: "",
       };
+    case SET_RESULT_TYPE:
+      return {
+        ...state,
+        resultType: payload.resultType,
+      };
+
+    case IS_LOADING:
+      return {
+        ...state,
+        isLoading: payload.isLoading,
+      };
+
+    case SET_RESTAURANT_NAME_AND_ID:
+      return {
+        ...state,
+        res_name: payload.res_name,
+        res_id: payload.res_id,
+      };
+
+    case FETCH_DATA:
+      return {
+        ...state,
+        data: payload.data,
+      };
+
     default:
       return state;
   }

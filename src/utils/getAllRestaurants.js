@@ -30,7 +30,7 @@ async function getAllRestaurants(phoneNumber = 9886850338) {
 
       return { res_id, res_name };
     });
-    console.log("restaurantList:", restaurantList);
+    // console.log("restaurantList:", restaurantList);
     console.log("---------- END-----------------");
 
     return restaurantList;

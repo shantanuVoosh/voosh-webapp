@@ -6,6 +6,7 @@ const {
   getTomorrowDate,
   getCurrentDateBefore12HoursAgo,
   getYesterdayDateBefore12HoursAgo,
+  getPreviousWeek,
 } = require("./dateProvide");
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
@@ -22,6 +23,7 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
   const todaysDate = getCurrentDate();
   const yesterdayDate = getYesterdayDate();
   const tomorrowDate = getTomorrowDate();
+  const previousWeek = getPreviousWeek();
   const currentDateBefore12HoursAgo = getCurrentDateBefore12HoursAgo();
   const yesterdayDateBefore12HoursAgo = getYesterdayDateBefore12HoursAgo();
   console.log("Yesterday Date:", yesterdayDate);
@@ -32,9 +34,9 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
     "Yesterday Date Before 12 Hours Ago:",
     yesterdayDateBefore12HoursAgo
   );
+  console.log("Previous Week:", previousWeek);
 
   const collectionRequired = [
-    // ! ye format hai {Date:"15-Nov-2021 07:31 pm"}
     {
       name: "Non_Voosh_Orderwise2",
       query: {
@@ -47,13 +49,15 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Swiggy_Acceptance_v1",
       query: {
         swiggy_res_id: res_id,
-        // "Date": yesterdayDate,
+        run_date: yesterdayDateBefore12HoursAgo,
       },
     },
     {
       name: "Swiggy_IGCC",
       query: {
         "Res Id": res_id,
+        Start_Date: { $lt: yesterdayDateBefore12HoursAgo },
+        End_Date: { $gt: yesterdayDateBefore12HoursAgo },
       },
     },
     {
@@ -88,6 +92,7 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Swiggy_Static_ratings",
       query: {
         "Res ID": res_id,
+        // ?this present for today's date
         // Date: currentDateBefore12HoursAgo,
         Date: yesterdayDateBefore12HoursAgo,
       },
@@ -103,9 +108,16 @@ async function getRequiredCollectionDataFromMongodb(res_id = 256302) {
       name: "Listing_Audit_Score",
       query: {
         "Res Id": res_id,
-        // "Date": yesterdayDate,
-        // Date: { $gte: yesterdayDate, $lte: tomorrowDate },
-        // Date: { $gte: yesterdayDate, $lte: currentDateBefore12HoursAgo },
+        // ?this present for 15 dec Previous week
+        // Date: yesterdayDateBefore12HoursAgo,
+        // Date: yesterdayDateBefore12HoursAgo,
+      },
+    },
+    {
+      name: "swiggy_weekly_listing_score_products",
+      query: {
+        swiggy_res_id: `${res_id}`,
+        // ?this present for 15 dec Previous week
       },
     },
     // {
@@ -304,7 +316,7 @@ function structureMongodbData(apiResponse) {
       issues: [...food_negative_review_items.slice(0, 3)],
     };
   });
-
+  console.log("Revenue ", apiResponse["Swiggy_Revenue"]);
   // ? Grabbing the all reviews in {order_id:id...} format
 
   const all_reviews = all_oders_review.map((item, index) => {
@@ -463,10 +475,10 @@ function structureMongodbData(apiResponse) {
           videoLink: Ratings_video,
           monthlyResult: avrage_ratings["Monthly_Rating"],
           weeklyResult: avrage_ratings["Weekly_Rating"],
-          recommendations:[
+          recommendations: [
             "Improve reviews by understanding the problem areas",
             "Contact Voosh for Rating Booster service",
-          ]
+          ],
         },
         // ?Swiggy_MFR
         {
@@ -733,7 +745,7 @@ function structureMongodbData(apiResponse) {
         "2_star": customer_ratings["2_Ratings"],
         "1_star": customer_ratings["1_Ratings"],
       },
-      //? Not used
+
       positive: [...all_reviews],
       negative: [...negative_review_items],
     },

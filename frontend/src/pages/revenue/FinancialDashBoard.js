@@ -25,6 +25,8 @@ const FinancialDashBoard = () => {
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
+  console.log("deductionTitles =>", deductionTitles);
+
   let revenueResult="Coming Soon!!!";
 
   if (resultType === "week") {
@@ -34,8 +36,6 @@ const FinancialDashBoard = () => {
     revenueResult = revenueMonthlyResult;
     
   }
-
-
 
   const pieColors = [
     "#370665",
@@ -79,7 +79,7 @@ const FinancialDashBoard = () => {
     labels: [...deductionTitles],
     datasets: [
       {
-        data: [...deductionValues],
+        data: totalSales!=="working on it"? [...deductionValues]:[1,2,3,2,1,1.5],
         // borderColor: ["rgba(255,21,86,0.2)"],
         backgroundColor: [...pieColors],
         pointBackgroundColor: "rgba(255,26,86,0.2)",
@@ -109,7 +109,7 @@ const FinancialDashBoard = () => {
             //   key={index}
             name={"Net Deduction"}
             type={"Pecentage"}
-            value={"Working on it!!"}
+            value={"working on it"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}
@@ -122,7 +122,7 @@ const FinancialDashBoard = () => {
             //   key={index}
             name={"Total Payout"}
             type={"Pecentage"}
-            value={"Working on it!!"}
+            value={"working on it"}
             info={"Total Sales includes all taxes"}
             //   monthlyResult={monthlyResult}
             //   weeklyResult={weeklyResult}

@@ -28,6 +28,8 @@ const Dashboard = () => {
     weeklyResult: operationHealthWeeklyResult,
   } = operationHealthMain;
 
+
+
   let revenueResult;
   let operationHealthResult;
 
@@ -37,7 +39,13 @@ const Dashboard = () => {
   } else {
     revenueResult = revenueMonthlyResult;
     operationHealthResult = operationHealthMonthlyResult;
+
+
+
   }
+
+
+
 
   // ! Benchmark Manually Added
 
@@ -83,16 +91,6 @@ const Dashboard = () => {
             type: "percentage",
           }}
         />
-        {/* <Card
-          iconName={"bag"}
-          name={"Ads & Analytics"}
-          info={"Get details of your orders and metrics of orders"}
-        /> */}
-        {/* <Card
-          iconName={"bag"}
-          name={"Customer Review"}
-          info={"Get details of your orders and metrics of orders"}
-        /> */}
       </div>
       <div className="dashboard-bottom">
         <div className="dashboard-bottom__heading">
@@ -100,7 +98,7 @@ const Dashboard = () => {
         </div>
         <div className="dashboard-bottom__videos">
          <div className="single-video">
-         <ReactPlayer
+         {/* <ReactPlayer
             // className="single-video"
             url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
             controls
@@ -109,36 +107,36 @@ const Dashboard = () => {
             height="240px"
           />
          </div>
-         <div className="single-video">
+         <div className="single-video"> */}
          <ReactPlayer
             // className="single-video"
             url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
             controls
             playbackRate={1}
-            width="310px"
+            width="100%"
             height="240px"
           />
          </div>
          <div className="single-video">
          <ReactPlayer
             // className="single-video"
-            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+            url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
             controls
             playbackRate={1}
             width="310px"
             height="240px"
           />
+         {/* <ReactPlayer
+            // className="single-video"
+            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+            controls
+            playbackRate={1}
+            width="310px"
+            height="240px"
+          /> */}
          </div>
          
-          {/* <iframe
-            title="video"
-            width="310px"
-            height="240px"
-            src="https://www.youtube.com/embed?v=MIsi4vdzjgk"
-            frameBorder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe> */}
+        
         </div>
         <div className="recomendation">
           <div className="recomendation__heading">

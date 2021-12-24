@@ -39,18 +39,12 @@ const Settings = () => {
               Log Out
             </span>
           </div>
-          {/* <div className="setting-container items__container">
-            <div className="item">
-              <div className="item__head">
-                <div className="item__head--icon"> $</div>
-                <div className="item__head--text">abc@123.Gmail.com</div>
-              </div>
-              <div className="item__body">Email Auth</div>
-            </div>
-            <div onClick={()=>retryLogin} className="long-btn screen-btn">
-              Authorize your mail again
-            </div>
-          </div> */}
+          <div className="setting-container ">
+
+            <a href="tel:9015317006" className="long-btn screen-btn btn">
+            Call us at +91-9015317006
+            </a>
+          </div>
         </div>
 
         <Footer />

@@ -17,6 +17,24 @@ const WhiteCard = (props) => {
     color,
   } = props;
 
+  if (currentValue === "working on it") {
+    return (
+      <div className="card error-card">
+        <div className="card__text">
+          <h5 className="card__text--heading">{name}</h5>
+          <div className="value error-value">{currentValue}</div>
+          <div className="card__text--info">
+            <p>{info}</p>
+          </div>
+        </div>
+        <div className="card__btn">
+          <span className="card__btn--text">Know more</span>
+          <AiOutlineRight className="card__btn--icon" />
+        </div>
+      </div>
+    );
+  }
+
   let value;
 
   if (currentValue === undefined) {

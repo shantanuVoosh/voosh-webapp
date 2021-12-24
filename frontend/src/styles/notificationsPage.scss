@@ -46,11 +46,17 @@
   flex-grow: 1;
   .no-notification{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+    text-align: center;
     .text{
       font-weight: 600;
+      font-size: 20px;
+    }
+    .sub-tex{
+      text-align: center;
     }
   }
   .item{

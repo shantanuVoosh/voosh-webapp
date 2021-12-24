@@ -31,8 +31,9 @@ const LayoutWrapper = (props) => {
 
   const { data } = useSelector((state) => state.data);
   const res_name = useSelector((state) => state.data.res_name);
+  const isLoading = useSelector((state) => state.data.isLoading);
 
-  if (data.length === 0) {
+  if (data.length === 0 || isLoading) {
     return (
       <>
         <Header isErrorPage={true} />

@@ -1,5 +1,5 @@
 // ! Get Current Time
-function getTimeLog() {
+export function getTimeLog() {
   const time = new Date();
 
   const format =
@@ -19,7 +19,7 @@ function getTimeLog() {
   return format;
 }
 
-function getCurrentDate() {
+export function getCurrentDate() {
   const time = new Date();
   const tenHoursBefore = new Date();
   tenHoursBefore.setHours(tenHoursBefore.getHours() - 20);
@@ -30,7 +30,7 @@ function getCurrentDate() {
   return format;
 }
 
-const getCurrentDateBefore12HoursAgo = () => {
+export const getCurrentDateBefore12HoursAgo = () => {
   // const time = new Date();
   const tenHoursBefore = new Date();
   tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
@@ -43,7 +43,7 @@ const getCurrentDateBefore12HoursAgo = () => {
     tenHoursBefore.getDate();
   return format;
 };
-const getYesterdayDateBefore12HoursAgo = () => {
+export const getYesterdayDateBefore12HoursAgo = () => {
   // const time = new Date();
   const tenHoursBefore = new Date();
   tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
@@ -57,7 +57,7 @@ const getYesterdayDateBefore12HoursAgo = () => {
   return format;
 };
 
-function getPreviousWeek() {
+export function getPreviousWeek() {
   const time = new Date();
   const format =
     time.getFullYear() +
@@ -68,7 +68,7 @@ function getPreviousWeek() {
   return format;
 }
 // !extra 1 day+
-function getYesterdayDate() {
+export function getYesterdayDate() {
   const time = new Date();
   const format =
     time.getFullYear() +
@@ -79,7 +79,7 @@ function getYesterdayDate() {
   return format;
 }
 
-function getTomorrowDate() {
+export function getTomorrowDate() {
   const time = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
   const format =
     time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
@@ -88,27 +88,15 @@ function getTomorrowDate() {
 
 // ? Month
 // ! 2021-12
-function getCurrentMonth() {
+export function getCurrentMonth() {
   const time = new Date();
-  const format =
-    time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
+  const format = time.getFullYear() + "-" + (time.getMonth() + 1);
   return format;
 }
 
-function getPreviousMonth() {
+export function getPreviousMonth() {
   const time = new Date();
   const format =
     time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate();
   return format;
 }
-
-module.exports = {
-  getTimeLog,
-  getCurrentDate,
-  getYesterdayDate,
-  getTomorrowDate,
-  getCurrentDateBefore12HoursAgo,
-  getYesterdayDateBefore12HoursAgo,
-  getPreviousWeek,
-  getPreviousMonth
-};

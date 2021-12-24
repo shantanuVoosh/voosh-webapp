@@ -11,7 +11,7 @@ const CustomerReviews = () => {
   const resultType = useSelector((state) => state.data.resultType);
   const navigate = useNavigate();
 
-  const {customerReviews} = data[currentProductIndex];
+  const { customerReviews } = data[currentProductIndex];
   const {
     negative,
     OrdersPerRating,
@@ -19,8 +19,6 @@ const CustomerReviews = () => {
     weeklyResult,
     totalRatings,
   } = customerReviews;
-
-
 
   const ratings = Object.keys(OrdersPerRating).map((key) => {
     let rating = key.split("_")[0];
@@ -32,13 +30,7 @@ const CustomerReviews = () => {
   const value = resultType === "month" ? monthlyResult : weeklyResult;
 
   // console.log(ratings, "ratings", value, "value");
-  const colors = [
-    "#2A327D",
-    "#00C689",
-    "#FFCA00",
-    "#FFB039",
-    "#FE645A",
-  ];
+  const colors = ["#2A327D", "#00C689", "#FFCA00", "#FFB039", "#FE645A"];
 
   return (
     <>
@@ -56,9 +48,13 @@ const CustomerReviews = () => {
                 <div
                   className="bar-fill"
                   style={{
-                    width: `${Math.floor(
-                      (Object.values(rating)[0] / totalRatings) * 100
-                    )}%`,
+                    width: `${
+                      totalRatings === 0
+                        ? 0
+                        : Math.floor(
+                            (Object.values(rating)[0] / totalRatings) * 100
+                          )
+                    }%`,
                     backgroundColor: `${colors[index]}`,
                   }}
                 ></div>
@@ -73,7 +69,9 @@ const CustomerReviews = () => {
       <div className="negative-reviews">
         {negative.map((item, index) => {
           const { item_name, issues } = item;
-          return <NegativeReviewCard key={index} name={item_name} issues={issues} />;
+          return (
+            <NegativeReviewCard key={index} name={item_name} issues={issues} />
+          );
         })}
       </div>
       <div

@@ -45,6 +45,7 @@
     &--heading {
       font-size: $text-medium;
       color: $color-grey-3;
+      
       @include breakpoint-up(xxsmall) {
         font-size: $text-large;
       }
@@ -62,8 +63,12 @@
       font-size: $text-xsmall;
       max-width: 250px;
       margin-bottom: 5px;
+     
       @include breakpoint-up(xxsmall) {
         font-size: $text-small;
+      }
+      @include breakpoint-up(xsmall) {
+        // min-height: 52px;
       }
     }
   }

@@ -69,7 +69,7 @@ const Login = () => {
         // * if success,set token to cookie
         cookie.save(APP_TOKEN, response.token, { path: "/" });
         dispatch(loginSuccess(response.token));
-        navigate("/dashboard");
+      navigate("/dashboard");
       } else {
         console.log("Failure response:", response.error);
         notify(response.error);

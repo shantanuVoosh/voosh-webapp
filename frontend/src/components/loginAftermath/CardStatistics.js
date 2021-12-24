@@ -9,11 +9,23 @@ const CardStatistics = ({ cardStatistics }) => {
     changeTypeDirection,
     type,
   } = cardStatistics;
+  // ? handle Error if no data
+  if (currentValue === undefined || currentValue === "working on it") {
+    return (
+      <>
+        <div className=" error-card">
+          {/* //?top value */}
+          <div className="error-value">Working on it,</div>
+          <div className="error-info">coming soon.</div>
+        </div>
+      </>
+    );
+  }
 
+  // ?Else Show the value
   let value = parseInt(currentValue);
   const diff = value - change;
   console.log(diff, "diff");
-
 
   return (
     <>
@@ -27,7 +39,11 @@ const CardStatistics = ({ cardStatistics }) => {
           )}
         </span>
         {type === "money" && (
-          <span className={`value ${changeTypeDirection === "up" ?"green":"red"}`}>
+          <span
+            className={`value ${
+              changeTypeDirection === "up" ? "green" : "red"
+            }`}
+          >
             {value.toLocaleString("en-IN", {
               maximumFractionDigits: 2,
               style: "currency",
@@ -35,7 +51,15 @@ const CardStatistics = ({ cardStatistics }) => {
             })}
           </span>
         )}
-        {type === "percentage" && <span className={`value ${changeTypeDirection === "up" ?"green":"red"}`}>{value}%</span>}
+        {type === "percentage" && (
+          <span
+            className={`value ${
+              changeTypeDirection === "up" ? "green" : "red"
+            }`}
+          >
+            {value}%
+          </span>
+        )}
       </div>
       {/* //?bottom value */}
       {change !== null ? (
@@ -45,14 +69,16 @@ const CardStatistics = ({ cardStatistics }) => {
             <span className="change change-green">{diff}% over target</span>
           ) : (
             // ? Negative value
-            <span className="change change-red">{ Math.abs(diff)}% below target</span>
+            <span className="change change-red">
+              {Math.abs(diff)}% below target
+            </span>
           )}{" "}
-          
         </div>
       ) : (
         <div className="card-statistics__info">
           {/* //! for not present data */}
-          competition comparison<br/> coming soon
+          competition comparison
+          <br /> coming soon
         </div>
       )}
     </>

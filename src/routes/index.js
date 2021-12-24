@@ -11,6 +11,7 @@ const {
   structureMongodbData,
 } = require("../utils/clientDataFormat");
 const { getAllRestaurants } = require("../utils/getAllRestaurants");
+const { dataProvider } = require("../utils/dataProvider");
 // const { getTimeLog } = require("../database/db/mongoDB");
 
 // TODO: remove this
@@ -172,7 +173,6 @@ router.post("/login", async (req, res) => {
       }
       // ! Password miss match
       else {
-        
         console.log("---------- <login End on Error> ----------------");
         return res.json({
           status: "error",
@@ -257,24 +257,31 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-//  Todo: remove this (Helper route! to see the data in the db)
-router.get("/helper", async (req, res) => {
-  const apiResonpse = await getRequiredCollectionDataFromMongodb();
-  const getAllRestaurantsData = await getAllRestaurants();
-  const name = Object.keys(apiResonpse);
-  const data = Object.values(apiResonpse).map((item, index) => {
-    const obj = {};
-    obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
-    return obj;
-  });
-  res.json({
-    restaurant_names: getAllRestaurantsData,
-    data,
-  });
-  // const apiResonpse = await getRequiredCollectionDataFromMongodb();
-  // const results = structureMongodbData(apiResonpse);
-  // res.json(results);
-});
+// //  Todo: remove this (Helper route! to see the data in the db)
+// router.get("/helper", async (req, res) => {
+//   const apiResonpse = await getRequiredCollectionDataFromMongodb(256302);
+//   const getAllRestaurantsData = await getAllRestaurants();
+//   const mycustomFun = await dataProvider(272065, "2021-12-22");
+//   const name = Object.keys(apiResonpse);
+//   const data = Object.values(apiResonpse).map((item, index) => {
+//     const obj = {};
+//     obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
+//     return obj;
+//   });
+//   res.json({
+//     restaurant_names: getAllRestaurantsData,
+//     data,
+//     mycustomFun,
+//   });
+//   // const apiResonpse = await getRequiredCollectionDataFromMongodb();
+//   // const results = structureMongodbData(apiResonpse);
+//   // res.json(results);
+// });
+
+
+router.get
+
+
 
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
@@ -284,6 +291,8 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     // ? res_id & documnetName needed,
     // ?or by default is set as some static value
     const { res_id, id, res_name, phone } = req.payload;
+    const date = req.body.date;
+    const client_res_id = req.body.client_res_id;
     console.log(
       "Current User:\n",
       "Id:",
@@ -295,31 +304,40 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       "Res_Name:",
       res_name
     );
-    const apiResonpse = await getRequiredCollectionDataFromMongodb(
-      Number(res_id)
-    );
-    // const apiResonpse = await getRequiredCollectionDataFromMongodb();
-    const results = structureMongodbData(apiResonpse);
+
     let restaurantList = [];
     //? then it is a res_id soi only one restaurant
-    if (new String(res_id).length < 10) {
+    if (`${phone}`.length < 10 || phone === null || phone === undefined) {
       restaurantList = [{ res_name, res_id }];
     } else {
       //? then it is a phone number so multiple restaurants
-      const getAllRestaurantsData = await getAllRestaurants();
+      const getAllRestaurantsData = await getAllRestaurants(phone);
       restaurantList = [...getAllRestaurantsData];
     }
+    console.log("restaurantList", restaurantList);
+    let apiData;
+    console.log(client_res_id, "client_res_id");
+    if (client_res_id.length) {
+      // res_id = client_res_id;
+      api_data = await dataProvider(parseInt(client_res_id), date);
+      console.log("client_res_id-----------------?", client_res_id);
+    } else {
+      api_data = await dataProvider(parseInt(res_id), date);
+      console.log("res_id-----------------?", res_id);
+    }
 
-    data[0] = results;
+    // console.log("api_data", api_data[0][]);
+
+    data[0] = api_data;
     console.log("---------- <Get All Data Success End> ----------------");
     res.json({
       data: {
         api_data: data,
         res_name: res_name,
         restaurantList: restaurantList,
+        res_id: res_id,
       },
       status: "success",
-      results,
     });
   } catch (err) {
     console.log("Error:", err);
@@ -409,7 +427,5 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
 //     message: "All Reviews",
 //   })
 // });
-
-
 
 module.exports = router;
