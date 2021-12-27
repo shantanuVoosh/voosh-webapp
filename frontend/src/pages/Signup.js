@@ -14,6 +14,8 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
 
+  const notify = (msg) => toast.error(msg);
+
   const onSubmit = async (data) => {
     console.log(data);
     try {
@@ -23,16 +25,18 @@ const Signup = () => {
         email: data["Email"],
         restaurant_name: data["Restaurant Name"],
         swiggy_Id: data["Swiggy Id"],
-        swiggy_register_phone: data["Swiggy Reg. Phone"],
+        swiggy_register_phone: data["Swiggy Reg"][" Phone"],
         swiggy_password: data["Swiggy Password"],
-        zomato_register_phone: data["Zomato Reg. Phone"],
+        zomato_register_phone: data["Zomato Reg"][" Phone"],
       });
       console.log("Signup Success, response:", response);
       if (response.status === "success") {
         navigate("/greeting");
       } else {
         console.log("Failure response:", response.error);
-        navigate("/");
+        notify(response.error)
+        // navigate("/");
+
       }
     } catch (err) {
       console.log(err);
@@ -43,6 +47,17 @@ const Signup = () => {
     <>
       <div className="container">
         <div className="signup-container">
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <div className="signup-header">
             <img src={logo_img} alt="logo" className="signup-header__logo" />
             <div className="signup-header__heading">
@@ -127,17 +142,16 @@ const Signup = () => {
               />
             </div>
             <div className="form-group">
-
               {/* <select {...register("category")}>
                 <option value="">Select...</option>
                 <option value="A">Category A</option>
                 <option value="B">Category B</option>
               </select> */}
-{/* 
+              {/* 
               <input {...register("checkbox")} type="checkbox" value="A" />
               <input {...register("checkbox")} type="checkbox" value="B" />
               <input {...register("checkbox")} type="checkbox" value="C" /> */}
-{/* 
+              {/* 
               <input {...register("radio")} type="radio" value="yes" />
               <input {...register("radio")} type="radio" value="no" /> */}
             </div>

@@ -2,6 +2,10 @@
   margin-top: 3rem;
 }
 
+.pre_signup-container {
+  height: 100vh;
+}
+
 .pre_signup-head_logo {
   height: 75px;
   width: 140px;
@@ -12,13 +16,15 @@
   flex-direction: column;
   align-items: center;
   .heading {
-    max-width: 500px;
+    text-align: left;
+    margin: 0 1.2rem;
     margin-bottom: 2rem;
     font-weight: 600;
     font-size: 1.3rem;
+    min-width: 290px;
 
     .orange {
-      color: #FF5920;
+      color: #ff5920;
       font-weight: 700;
       font-size: 1.4rem;
     }
@@ -30,9 +36,37 @@
   height: auto;
 }
 
+.pre_signup__bottom {
+  margin: 2rem 1.2rem;
+
+  .list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-direction: flex-start;
+    align-items: align-start;
+    justify-content: center;
+    
+    margin-left: 0.5rem;
+    margin-bottom: 0.4rem;
+    &::before {
+      position: absolute;
+      content: "";
+      display: block;
+      width: 100%;
+      height: 10px;
+      width: 10px;
+      background-color: $color-primary-1;
+      top: 8px;
+      left: -12px;
+      border-radius: 100%;
+    }
+  }
+}
+
 .pre_signup-btn {
   width: 60%;
-  text-align: center;
+  // text-align: center;
   border: none;
   margin-top: 20px;
   text-align: center;

@@ -136,7 +136,7 @@ router.post("/login", async (req, res) => {
 
 // !Signup, if already registered ?
 router.post("/signup", async (req, res) => {
-  const newCollectionName = "Non_Voosh_Onboard_New_Users_1";
+  const newCollectionName = "onboard_products";
   const {
     name,
     phone,
@@ -180,10 +180,10 @@ router.post("/signup", async (req, res) => {
         phone,
         email,
         restaurant_name,
-        swiggy_register_phone,
+        swiggy_register_phone: parseInt(swiggy_register_phone),
         swiggy_password,
         swiggy_Id,
-        zomato_register_phone,
+        zomato_register_phone: parseInt(zomato_register_phone),
       });
       console.log("newUser", newUser);
       return res.json({
@@ -290,7 +290,6 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     const number = req.body.number;
     const resultType = req.body.resultType;
 
-
     const client_res_id = req.body.client_res_id;
     console.log(
       "Current User:\n",
@@ -301,7 +300,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       "Phone:",
       phone,
       "Res_Name:",
-      res_name,
+      res_name
     );
     console.log(number, resultType, date, "////////////");
 
@@ -324,7 +323,11 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       api_data = await dataProvider(parseInt(client_res_id), date);
       console.log("client_res_id-----------------??:", client_res_id);
 
-      api_data2 = await getAllDataFromApi(parseInt(client_res_id), number, resultType);
+      api_data2 = await getAllDataFromApi(
+        parseInt(client_res_id),
+        number,
+        resultType
+      );
     } else {
       api_data = await dataProvider(parseInt(res_id), date);
 
@@ -341,7 +344,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         res_name: res_name,
         restaurantList: restaurantList,
         res_id: res_id,
-        api_data2: [api_data2,{name:"Zomato"}],
+        api_data2: [api_data2, { name: "Zomato" }],
       },
       status: "success",
     });
@@ -486,7 +489,7 @@ async function getAllDataFromApi(res_id, number, resultType) {
   const revenue_score = await revenueMongoDBData(res_id, number, resultType);
   const revenue = await revenuDataFormatter(res_id, number, resultType);
   return {
-    name:"Swiggy",
+    name: "Swiggy",
     operationHealth: oh,
     listingScore: ls,
     revenue_score,
