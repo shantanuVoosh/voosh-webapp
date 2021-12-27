@@ -12,13 +12,7 @@ const CustomerReviews = () => {
   const navigate = useNavigate();
 
   const { customerReviews } = data[currentProductIndex];
-  const {
-    negative,
-    OrdersPerRating,
-    monthlyResult,
-    weeklyResult,
-    totalRatings,
-  } = customerReviews;
+  const { negative, OrdersPerRating, value, totalRatings } = customerReviews;
 
   const ratings = Object.keys(OrdersPerRating).map((key) => {
     let rating = key.split("_")[0];
@@ -27,58 +21,74 @@ const CustomerReviews = () => {
     return obj;
   });
 
-  const value = resultType === "month" ? monthlyResult : weeklyResult;
-
   // console.log(ratings, "ratings", value, "value");
   const colors = ["#2A327D", "#00C689", "#FFCA00", "#FFB039", "#FE645A"];
 
   return (
     <>
-      <InfoCard name={"Current Rating"} value={value} type={"average"} />
-      {/* Rating bars */}
-      <div className="rating-bar">
-        {ratings.map((rating, index) => {
-          return (
-            <div className="rating-bar__item" key={index}>
-              <div className="rating-bar__item--rating">
-                <span className="rating">{Object.keys(rating)[0]}</span>
-                <AiFillStar className="icon" />
+      <div className="customer_review-container  customer_review">
+        <InfoCard name={"Current Rating"} value={value} type={"average"} />
+        {/* Rating bars */}
+        <div className="customer_review__sub-heading">
+          <div className="customer_review__sub-heading--text">
+            Ratings Split For {resultType}
+          </div>
+        </div>
+        <div className="rating-bar">
+          {ratings.map((rating, index) => {
+            return (
+              <div className="rating-bar__item" key={index}>
+                <div className="rating-bar__item--rating">
+                  <span className="rating">{Object.keys(rating)[0]}</span>
+                  <AiFillStar className="icon" />
+                </div>
+                <div className="rating-bar__item--bar">
+                  <div
+                    className="bar-fill"
+                    style={{
+                      width: `${
+                        totalRatings === 0
+                          ? 0
+                          : Math.floor(
+                              (Object.values(rating)[0] / totalRatings) * 100
+                            )
+                      }%`,
+                      backgroundColor: `${colors[index]}`,
+                    }}
+                  ></div>
+                </div>
+                <div className="rating-bar__item--orders">
+                  <span>{Object.values(rating)[0]} Orders</span>
+                </div>
               </div>
-              <div className="rating-bar__item--bar">
-                <div
-                  className="bar-fill"
-                  style={{
-                    width: `${
-                      totalRatings === 0
-                        ? 0
-                        : Math.floor(
-                            (Object.values(rating)[0] / totalRatings) * 100
-                          )
-                    }%`,
-                    backgroundColor: `${colors[index]}`,
-                  }}
-                ></div>
-              </div>
-              <div className="rating-bar__item--orders">
-                <span>{Object.values(rating)[0]} Orders</span>
-              </div>
+            );
+          })}
+        </div>
+        <div className="customer_review__sub-heading">
+          {negative.length > 0 && (
+            <div className="customer_review__sub-heading--text">
+              Major Complains By Customer In {resultType}
             </div>
-          );
-        })}
-      </div>
-      <div className="negative-reviews">
-        {negative.map((item, index) => {
-          const { item_name, issues } = item;
-          return (
-            <NegativeReviewCard key={index} name={item_name} issues={issues} />
-          );
-        })}
-      </div>
-      <div
-        onClick={() => navigate("/allReviews")}
-        className="review-btn__btn screen-btn"
-      >
-        See All Reviews
+          )}
+        </div>
+        <div className="negative-reviews">
+          {negative.map((item, index) => {
+            const { item_name, issues } = item;
+            return (
+              <NegativeReviewCard
+                key={index}
+                name={item_name}
+                issues={issues}
+              />
+            );
+          })}
+        </div>
+        <div
+          onClick={() => navigate("/allReviews")}
+          className="review-btn__btn screen-btn"
+        >
+          See All Reviews
+        </div>
       </div>
     </>
   );

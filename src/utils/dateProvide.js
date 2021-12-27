@@ -101,6 +101,18 @@ function getPreviousMonth() {
     time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate();
   return format;
 }
+// ?12 hr ago
+const getPreviousDay12HoursAgo = () => {
+  const time = new Date();
+  time.setHours(time.getHours() - 12);
+  const format =
+    (time.getMonth() +1) +
+    "-" +
+    (time.getDate() - 1) +
+    "-" +
+    time.getFullYear();
+  return format;
+};
 
 module.exports = {
   getTimeLog,
@@ -110,5 +122,6 @@ module.exports = {
   getCurrentDateBefore12HoursAgo,
   getYesterdayDateBefore12HoursAgo,
   getPreviousWeek,
-  getPreviousMonth
+  getPreviousMonth,
+  getPreviousDay12HoursAgo
 };

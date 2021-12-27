@@ -1,3 +1,11 @@
+.financial{
+  margin-top: -311px;
+  @include breakpoint-up(xxsmall) {
+    margin-top: -330px;
+   }
+
+}
+
 .financial-cards {
   margin-top: -330px;
 

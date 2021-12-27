@@ -3,6 +3,7 @@ const video_urls = {
   Ratings_video: "https://www.youtube.com/watch?v=QN1GGCNMOY4",
   MFR_video: "https://www.youtube.com/watch?v=RD6PiwwMRRg",
   Serviceability_video: "https://www.youtube.com/watch?v=MIsi4vdzjgk",
+  Onbording_video: "https://www.youtube.com/watch?v=QN1GGCNMOY4",
 };
 
 module.exports = {video_urls};

@@ -4,7 +4,8 @@ import ListingScoreDashBoard from "./pages/listingScore/Dashboard";
 import AdsAndAnalytics from "./pages/adsAndAnalytics/AdsAndAnalytics";
 import CustomerReviews from "./pages/customerReview/CustomerReview";
 import AllReviews from "./pages/customerReview/AllReviews";
-import TimeSeriesPages from "./pages/operationHealth/TimeSeriesPages";
+import TimeSeriesPages from "./pages/operationHealth/TimeSeriesPage";
+import ListingScoreTimeSeriesPage from "./pages/listingScore/TimeSeriesPage";
 import Login from "./pages/login/Login";
 import { Route, Routes, useLocation } from "react-router-dom";
 import RequiredAuth from "./routes/RequiredAuth";
@@ -16,10 +17,14 @@ import { useSelector } from "react-redux";
 import LayoutWrapper from "./components/LayoutWrapper";
 import Error from "./components/Error";
 import FinancialDashBoard from "./pages/revenue/FinancialDashBoard";
+// ! For testing purpose A and B
+import FinancialDashBoard_A from "./pages/revenue/FinancialDashBoard_A";
+import FinancialDashBoard_B from "./pages/revenue/FinancialDashBoard_B";
 import Settings from "./pages/Settings";
 import Notification from "./pages/Notification";
 import Signup from "./pages/Signup";
 import Greeting from "./pages/Greeting";
+import PreSignUp from "./pages/PreSignUp";
 
 function App() {
   const { token } = useSelector((state) => state.auth);
@@ -74,6 +79,7 @@ function App() {
         />
         <Route path="/settings" element={<Settings />} />
         <Route path="/notification" element={<Notification />} />
+        <Route path="/pre-signup" element={<PreSignUp />} />
         <Route
           path="/dashboard"
           element={
@@ -98,7 +104,9 @@ function App() {
                 isClientBtnNeeded={false}
                 headerSize={"large"}
               >
-                <FinancialDashBoard />
+                <FinancialDashBoard_A />
+                {/* <FinancialDashBoard_B /> */}
+                {/* <FinancialDashBoard /> */}
               </LayoutWrapper>
             </RequiredAuth>
           }
@@ -122,7 +130,7 @@ function App() {
           path="/operationHealth/:id"
           element={
             <RequiredAuth>
-              <TimeSeriesPages />
+               <TimeSeriesPages />
             </RequiredAuth>
           }
         />
@@ -146,7 +154,7 @@ function App() {
           path="/listingScore/:id"
           element={
             <RequiredAuth>
-              <TimeSeriesPages />
+              <ListingScoreTimeSeriesPage />
             </RequiredAuth>
           }
         />

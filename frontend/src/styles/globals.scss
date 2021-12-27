@@ -45,8 +45,9 @@ a:link {
   position: relative;
   padding: 0 0.5rem;
   max-width: 500px;
-  min-height: 100vh;
-  // margin-bottom: 100px;
+  // min-height: 100vh;
+  margin-bottom: 3rem;
+  z-index: 0;
 }
 
 .green-value {
@@ -59,17 +60,16 @@ a:link {
   font-weight: 700;
   color: $red;
 }
-.red{
+.red {
   color: $red;
 }
-.green{
+.green {
   color: $green;
 }
 
-.rise-fall_icon{
-  margin-bottom: -4px
+.rise-fall_icon {
+  margin-bottom: -4px;
 }
-
 
 /* navigation buttons */
 .section-btns {
@@ -89,7 +89,7 @@ a:link {
   }
 }
 
-.long-btn{
+.long-btn {
   width: 95%;
   margin: 10px auto;
   text-align: center;
@@ -105,7 +105,7 @@ a:link {
 }
 
 // ! settins and Notifications List deatils
-.items__container{
+.items__container {
   display: flex;
   flex-direction: column;
 }
@@ -134,23 +134,25 @@ a:link {
   &:hover {
     // color: $color-black-1;
   }
-// ! till Zoom is not available
-  &:last-child{
+  // ! till Zoom is not available
+  &:last-child {
     position: relative;
-    &::after{
+    &::after {
       position: absolute;
       content: "coming soon";
       top: 17px;
-      left: 0;
-      font-size: 7px;
+      left: 5px;
+      font-size: 5px;
       text-align: center;
       text-transform: lowercase;
       font-weight: 700;
       width: auto;
       color: #f05a48;
+      @include breakpoint-up(xxsmall) {
+        font-size: 7px;
+      }
     }
   }
-
 }
 // * (remove first-child)after mein change krna hai when zomato is available
 .nav-btn:first-child::after {
@@ -218,24 +220,21 @@ a:link {
     transform: scale(0.8);
   }
 }
-.bar-graph{
-  .bar{
+.bar-graph {
+  .bar {
     // width: 70%;
   }
-
 }
-
 
 // ? Modal
-.bottom-modal{
-  height: 80vh!important; ;
-  margin-bottom: -330px; ;
+.bottom-modal {
+  height: 80vh !important;
+  margin-bottom: -330px;
 }
-
 
 // Spinner
 .loading-container {
-  height: 70vh;
+  min-height: calc(100vh - 200px);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -6,48 +6,12 @@ import ReactPlayer from "react-player";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
 
-  // ?Listing Score
-  const { listingScoreMain, listScoreData } =
-    data[currentProductIndex]["listingScore"];
-
-  // ?Revenue
-  // *Not month or week wise score!
-  const revenue = data[currentProductIndex]["revenue"];
-  const {
-    monthlyResult: revenueMonthlyResult,
-    weeklyResult: revenueWeeklyResult,
-  } = revenue;
-
-  // ?Operation Health
   const operationHealth = data[currentProductIndex]["operationHealth"];
   const { operationHealthMain } = operationHealth;
-  const {
-    monthlyResult: operationHealthMonthlyResult,
-    weeklyResult: operationHealthWeeklyResult,
-  } = operationHealthMain;
 
-
-
-  let revenueResult;
-  let operationHealthResult;
-
-  if (resultType === "week") {
-    revenueResult = revenueWeeklyResult;
-    operationHealthResult = operationHealthWeeklyResult;
-  } else {
-    revenueResult = revenueMonthlyResult;
-    operationHealthResult = operationHealthMonthlyResult;
-
-
-
-  }
-
-
-
-
-  // ! Benchmark Manually Added
+  const { listingScoreMain } = data[currentProductIndex]["listingScore"];
+  const revenue = data[currentProductIndex]["revenue"];
 
   return (
     <>
@@ -59,11 +23,12 @@ const Dashboard = () => {
           info={"Get your Revenue and Deduction Details!"}
           cardStatistics={{
             // ! if prev month is null then show 0
-            value: revenueResult,
+            value: revenue.value,
             change: null,
             benchmark: null,
             changeTypeDirection: "up",
             type: "money",
+            isDataPresent: revenue.value!=="data not present",
           }}
         />
         {/* //? Operation Health */}
@@ -72,11 +37,16 @@ const Dashboard = () => {
           name={"Operation Health"}
           info={"Understand your Operation Health and Metrics!"}
           cardStatistics={{
-            value: operationHealthResult,
-            change: 95,
-            benchmark: 95,
-            changeTypeDirection: operationHealthResult - 95 > 0 ? "up" : "down",
-            type: "percentage",
+            value: operationHealthMain.value,
+            benchmark: operationHealthMain.benchmark,
+            type: operationHealthMain.type,
+            changeTypeDirection: !operationHealthMain.isDataPresent
+              ? "up"
+              : operationHealthMain.value >= operationHealthMain.benchmark
+              ? "up"
+              : "down",
+            change: operationHealthMain.benchmark,
+            isDataPresent: operationHealthMain.isDataPresent,
           }}
         />
         {/* //?List Score */}
@@ -85,10 +55,17 @@ const Dashboard = () => {
           name={"Listing Score"}
           info={"Understand how your online Swiggy listing is performing!"}
           cardStatistics={{
-            value: listingScoreMain,
-            change: 90,
-            changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
-            type: "percentage",
+            value: listingScoreMain.value,
+            benchmark: listingScoreMain.benchmark,
+            type: listingScoreMain.type,
+            changeTypeDirection: !listingScoreMain.isDataPresent
+              ? "up"
+              : listingScoreMain.value >= listingScoreMain.benchmark
+              ? "up"
+              : "down",
+            // changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
+            change: listingScoreMain.benchmark,
+            isDataPresent: listingScoreMain.isDataPresent,
           }}
         />
       </div>
@@ -97,46 +74,46 @@ const Dashboard = () => {
           Some tutorials for your business
         </div>
         <div className="dashboard-bottom__videos">
-         <div className="single-video">
-         {/* <ReactPlayer
-            // className="single-video"
-            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
-            controls
-            playbackRate={1}
-            width="310px"
-            height="240px"
-          />
-         </div>
-         <div className="single-video"> */}
-         <ReactPlayer
-            // className="single-video"
-            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
-            controls
-            playbackRate={1}
-            width="100%"
-            height="240px"
-          />
-         </div>
-         <div className="single-video">
-         <ReactPlayer
-            // className="single-video"
-            url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
-            controls
-            playbackRate={1}
-            width="310px"
-            height="240px"
-          />
-         {/* <ReactPlayer
-            // className="single-video"
-            url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
-            controls
-            playbackRate={1}
-            width="310px"
-            height="240px"
-          /> */}
-         </div>
-         
-        
+          <div className="single-video">
+            <ReactPlayer
+              // className="single-video"
+              url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
+              controls
+              playbackRate={1}
+              width="100%"
+              height="240px"
+            />
+          </div>
+          <div className="single-video">
+            <ReactPlayer
+              // className="single-video"
+              url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
+              controls
+              playbackRate={1}
+              width="310px"
+              height="240px"
+            />
+          </div>
+          <div className="single-video">
+            <ReactPlayer
+              // className="single-video"
+              url="https://www.youtube.com/watch?v=w3RqWoQa19M"
+              controls
+              playbackRate={1}
+              width="310px"
+              height="240px"
+            />
+          </div>
+          {/* <div className="single-video">
+            <ReactPlayer
+              // className="single-video"
+              url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
+              controls
+              playbackRate={1}
+              width="310px"
+              height="240px"
+            />
+          </div> */}
         </div>
         <div className="recomendation">
           <div className="recomendation__heading">

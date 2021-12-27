@@ -8,15 +8,16 @@ const CardStatistics = ({ cardStatistics }) => {
     benchmark,
     changeTypeDirection,
     type,
+    isDataPresent
   } = cardStatistics;
   // ? handle Error if no data
-  if (currentValue === undefined || currentValue === "working on it") {
+  if (!isDataPresent) {
     return (
       <>
-        <div className=" error-card">
+        <div className=" error-card green">
           {/* //?top value */}
-          <div className="error-value">Working on it,</div>
-          <div className="error-info">coming soon.</div>
+          <div className="error-value ">Working on it,</div>
+          <div className="error-info ">coming soon.</div>
         </div>
       </>
     );
@@ -25,7 +26,6 @@ const CardStatistics = ({ cardStatistics }) => {
   // ?Else Show the value
   let value = parseInt(currentValue);
   const diff = value - change;
-  console.log(diff, "diff");
 
   return (
     <>

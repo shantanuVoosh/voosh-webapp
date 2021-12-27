@@ -9,6 +9,7 @@ import SectionButtons from "../../components/SectionButtons";
 import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
+import BarGraph from "../../components/BarGraph";
 
 // TODO: fix the issue of the data not being loaded
 // TODO: cant visit the page directly (state is empty but path i can use)
@@ -26,7 +27,7 @@ const TimeSeriesPages = ({}) => {
   if (data.length <= 0) return null;
 
   const operationHealth = data[currentProductIndex]["operationHealth"];
-  const { operationHealthMain, operationHealthData } = operationHealth;
+  const { operationHealthData } = operationHealth;
   const operationHealthItems =
     currentProductIndex < 0 ? [] : operationHealthData;
 
@@ -62,67 +63,13 @@ const TimeSeriesPages = ({}) => {
   // console.log(timeSeriesData)
   const {
     name: currentName,
-    value: currentValue,
-    info,
+    value,
     type: valueType,
-    monthlyResult,
-    weeklyResult,
     benchmark,
     compareThen,
     videoLink,
     recommendations,
   } = timeSeriesData;
-
-  let value;
-  // ? use value month Wise or week Wise
-  if (currentValue === undefined) {
-    value = resultType === "month" ? monthlyResult : weeklyResult;
-  } else {
-    value = currentValue;
-  }
-  // ? compare the value with benchmark ---> bar color will change accordingly
-  const compare =
-    compareThen === "grater" ? value >= benchmark : value <= benchmark;
-  // console.log(compare, "compare value", resultType)
-  const colorOfBar = compare ? "#27AE60" : "#f05a48";
-
-  const options = {
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          drawBorder: false,
-          display: false,
-        },
-      },
-      x: {
-        beginAtZero: true,
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
-  //
-  const barData = {
-    labels: [`${resultType === "week" ? "7 Days" : "Month"}`, "Target"],
-    datasets: [
-      {
-        // ! value and benchmark will be change according to the data
-        data: [value, benchmark],
-        // label: "",
-        backgroundColor: [`${colorOfBar}`, "#2A327D"],
-        barThickness: 60,
-        // fill: false,
-      },
-    ],
-  };
 
   return (
     <>
@@ -136,19 +83,17 @@ const TimeSeriesPages = ({}) => {
           benchmark={benchmark}
           compareThen={compareThen}
         />
-        <div className="bar-graph">
-          <Bar className="bar" data={barData} options={options} />
-        </div>
-        {/* <div className="line-graph">
-          <Line data={Linedata} options={options} />
-        </div> */}
-        <div className="dashboard-bottom">
-          <div className="dashboard-bottom__heading">
+        <BarGraph
+          compareThen={compareThen}
+          value={value}
+          benchmark={benchmark}
+        />
+        <div className="time_series__bottom">
+          <div className="time_series__bottom--heading">
             What does {currentName} mean?
           </div>
-          {
-            videoLink!==undefined&&(
-              <div className="dashboard-bottom__video">
+          {videoLink !== undefined && (
+            <div className="video-preview">
               <ReactPlayer
                 className="single-video"
                 url={videoLink}
@@ -158,11 +103,10 @@ const TimeSeriesPages = ({}) => {
                 height="240px"
               />
             </div>
-            )
-          }
-          {
-            videoLink===undefined&&(
-              <div className="dashboard-bottom__video">
+          )}
+          {/* //! if Video not Presnt */}
+          {videoLink === undefined && (
+            <div className="video-preview">
               <ReactPlayer
                 className="video-upcoming"
                 url={videoLink}
@@ -172,27 +116,26 @@ const TimeSeriesPages = ({}) => {
                 height="240px"
               />
             </div>
-            )
-          }
-         
+          )}
+
           {recommendations !== undefined && (
-            <div className="recomendation">
-              <div className="recomendation__heading">
+            <>
+              <div className="time_series__bottom--heading">
                 <span className="icon">
                   <BsBagCheckFill />
                 </span>
                 <span className="text">Top Suggestion</span>
               </div>
-              <div className="recomendation__list-container">
+              <div>
                 {recommendations.map((item, index) => {
                   return (
-                    <div className="recomendation__list" key={index}>
+                    <div className="time_series__bottom--list" key={index}>
                       {item}
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </>
           )}
           {recommendations === undefined && (
             <div className="recomendation">
@@ -202,11 +145,8 @@ const TimeSeriesPages = ({}) => {
                 </span>
                 <span className="text">Top Suggestion</span>
               </div>
-              <div className="recomendation__list-container">
-                <div className="recomendation__list">
-                Working on it!!
-                </div>
-              </div>
+
+              <div className="time_series__bottom--list">Working on it!!</div>
             </div>
           )}
         </div>

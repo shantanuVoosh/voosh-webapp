@@ -462,7 +462,10 @@ function structureMongodbData(apiResponse) {
           videoLink: RDC_video,
           monthlyResult: rest_RDC["Monthly_avg_RDC"] * 100,
           weeklyResult: rest_RDC["Weekly_avg_RDC"] * 100,
-          ...rest_RDC,
+          recommendations: [
+            "Ensure Restaurant open at the given timings to swiggy and zomato",
+            "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
+          ],
         },
 
         // ?Swiggy_Static_ratings

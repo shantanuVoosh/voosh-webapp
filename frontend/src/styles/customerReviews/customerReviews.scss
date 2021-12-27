@@ -1,5 +1,21 @@
 // Customer Reviews
+.customer_review {
+  min-height: calc(100vh);
 
+
+  &__sub-heading {
+    &--text {
+      font-size: $text-medium;
+      color: $color-grey-3;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-large;
+      }
+    }
+  }
+}
 .negative-reviews {
 }
 
@@ -27,19 +43,31 @@
 
   &__issues {
     display: flex;
+    flex-direction: column;
     width: 100%;
     .issue {
-      // width:%;
+     flex-grow: 1;
       margin-right: 8px;
       margin-top: 5px;
       margin-bottom: 5px;
-      @include breakpoint-up(xxsmall) {
-        width: 30%;
-      }
       .alert-icon {
         color: $red;
         margin-right: 5px;
         margin-bottom: -3px;
+      }
+      .text {
+        font-size: $text-small;
+        font-weight: 400;
+        // color: $color-grey-3;
+        @include breakpoint-up(xxsmall) {
+          font-size: $text-medium;
+        }
+
+        .name{
+          font-weight: 600;
+        }
+
+
       }
     }
   }
@@ -70,7 +98,8 @@
 .review-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  min-height: 100vh;
 }
 
 .review-card {
@@ -122,8 +151,8 @@
 }
 
 // Rating bar
-.rating-bar{
-  margin-bottom: 10px;
+.rating-bar {
+  margin-bottom: 30px;
 }
 .rating-bar__item {
   display: flex;
@@ -138,7 +167,7 @@
       font-weight: 600;
     }
 
-    .icon{
+    .icon {
       margin-left: 5px;
       margin-bottom: -2px;
     }
@@ -151,7 +180,7 @@
     background-color: $color-grey-2;
     border-radius: $radius-3;
 
-    .bar-fill{
+    .bar-fill {
       height: 100%;
       border-radius: $radius-3;
       background-color: $red;

@@ -5,7 +5,7 @@ const initialState = {
   data: [],
   // cuz no at first we don't have any data
   currentProductIndex: -1,
-  resultType: "week",
+  resultType: "This Week",
   restaurantList: [],
   isLoading: false,
   res_id: "",
@@ -46,7 +46,7 @@ export const dataReducer = (state = initialState, action) => {
         res_name: "",
         currentProductIndex: -1,
         restaurantList: [],
-        resultType: "week",
+        resultType: "This Week",
         isLoading: false,
         res_id: "",
       };

@@ -1,10 +1,7 @@
 const router = require("express").Router();
-const { OAuth2Client } = require("google-auth-library");
 const data = require("../fakedata/data");
-const User = require("../database/models/user");
 const { MongoClient } = require("mongodb");
 const { getTimeLog } = require("../utils/dateProvide");
-const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {
   getRequiredCollectionDataFromMongodb,
@@ -14,71 +11,17 @@ const { getAllRestaurants } = require("../utils/getAllRestaurants");
 const { dataProvider } = require("../utils/dataProvider");
 // const { getTimeLog } = require("../database/db/mongoDB");
 
-// TODO: remove this
-const documentName = "operationsdb";
-const collection = "users";
-const LocalDB = "mongodb://localhost:27017/VooshApp";
+// Todo: when Use it, jst change the name!
+const {
+  checkAuthenticationByGoogle: checkGoogleLogin,
+} = require("../controller/googleAuth");
+const { checkAuthentication } = require("../controller/checkAuth");
+
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
-// ! dont change the CLIENT_ID to any other name, or it wont work
-CLIENT_ID =
-  "780953688776-s0jujjc4hmro0jth97edb3o82qis73eq.apps.googleusercontent.com";
-const client = new OAuth2Client(CLIENT_ID);
+
+const documentName = "operationsdb";
 const secret = "secret";
-
-// !Google Login Middleware
-const checkGoogleLogin = async (req, res, next) => {
-  // const { token } = req.body;
-  // try {
-  //   const response = await client.verifyIdToken({
-  //     idToken: token,
-  //     audience: CLIENT_ID,
-  //   });
-  //   const { email_verified } = response.payload;
-  //   if (email_verified) {
-  //     req.payload = response.payload;
-  //     next();
-  //   } else {
-  //     res.json({ status: "error", message: "Token Expired!", isAuth: false });
-  //   }
-  // } catch (err) {
-  //   res.json({
-  //     status: "error",
-  //     message: `Error while verifyIdToken:${err}`,
-  //     isAuth: false,
-  //   });
-  // }
-};
-
-const checkAuthentication = (req, res, next) => {
-  const { token } = req.body;
-  if (!token) {
-    res.json({
-      status: "error",
-      message: `Please log in no token present!`,
-      isAuth: false,
-    });
-  } else {
-    try {
-      jwt.verify(token, secret, (err, decoded) => {
-        if (err) {
-          res.json({
-            status: "error",
-            message: `Error while verifying token:${err}`,
-            isAuth: false,
-          });
-        } else {
-          req.payload = decoded;
-          // console.log("decoded", decoded);
-          // console.log(res_id, id, phone);
-          next();
-        }
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-};
 
 // !Login By Phone Number
 router.post("/login", async (req, res) => {
@@ -161,7 +104,7 @@ router.post("/login", async (req, res) => {
           res_name
         );
         const token = jwt.sign({ id, res_id, phone, res_name }, secret, {
-          expiresIn: 3000, //50min->3000
+          expiresIn: 3000 * 3, //50min->3000
         });
 
         console.log("---------- <login End on Success> ----------------");
@@ -257,31 +200,82 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// //  Todo: remove this (Helper route! to see the data in the db)
-// router.get("/helper", async (req, res) => {
-//   const apiResonpse = await getRequiredCollectionDataFromMongodb(256302);
-//   const getAllRestaurantsData = await getAllRestaurants();
-//   const mycustomFun = await dataProvider(272065, "2021-12-22");
-//   const name = Object.keys(apiResonpse);
-//   const data = Object.values(apiResonpse).map((item, index) => {
-//     const obj = {};
-//     obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
-//     return obj;
-//   });
-//   res.json({
-//     restaurant_names: getAllRestaurantsData,
-//     data,
-//     mycustomFun,
-//   });
-//   // const apiResonpse = await getRequiredCollectionDataFromMongodb();
-//   // const results = structureMongodbData(apiResonpse);
-//   // res.json(results);
-// });
+// ! helper for revenue
+router.get("/api/rev", async (req, res) => {
+  const colleactionName = "swiggy_revenue_products";
 
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    // const revenue = await db.find({
+    //   name: "swiggy_revenue_products",
+    //   query: {
+    //       swiggy_res_id: 256302,
+    //       week_no:48
+    //   }
 
-router.get
+    // });
 
+    const revenue = await db
+      .collection(colleactionName)
+      .find({
+        swiggy_res_id: 256302,
+        week_no: 20,
+      })
+      .toArray();
 
+    const resx = await db
+      .collection(colleactionName)
+      .aggregate([
+        {
+          $match: {
+            swiggy_res_id: 256302,
+            week_no: 48,
+          },
+        },
+        {
+          $group: {
+            _id: "$week_no",
+            total: { $sum: "$final_revenue" },
+          },
+        },
+      ])
+      .toArray();
+
+    return res.json({
+      status: "success",
+      // revenue:revenue[0],
+      resx: resx,
+    });
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: `Error :${err}`,
+    });
+  }
+});
+
+//  Todo: remove this (Helper route! to see the data in the db)
+router.get("/helper", async (req, res) => {
+  const apiResonpse = await getRequiredCollectionDataFromMongodb(256302);
+  const getAllRestaurantsData = await getAllRestaurants();
+  const mycustomFun = await dataProvider(272065, "2021-12-23");
+  const name = Object.keys(apiResonpse);
+  const data = Object.values(apiResonpse).map((item, index) => {
+    const obj = {};
+    obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
+    return obj;
+  });
+  res.json({
+    restaurant_names: getAllRestaurantsData,
+    data,
+    mycustomFun,
+  });
+});
+
+router.get;
 
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
@@ -292,6 +286,11 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     // ?or by default is set as some static value
     const { res_id, id, res_name, phone } = req.payload;
     const date = req.body.date;
+
+    const number = req.body.number;
+    const resultType = req.body.resultType;
+
+
     const client_res_id = req.body.client_res_id;
     console.log(
       "Current User:\n",
@@ -302,8 +301,9 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       "Phone:",
       phone,
       "Res_Name:",
-      res_name
+      res_name,
     );
+    console.log(number, resultType, date, "////////////");
 
     let restaurantList = [];
     //? then it is a res_id soi only one restaurant
@@ -316,17 +316,22 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     }
     console.log("restaurantList", restaurantList);
     let apiData;
+    let apiData2;
+
     console.log(client_res_id, "client_res_id");
     if (client_res_id.length) {
       // res_id = client_res_id;
       api_data = await dataProvider(parseInt(client_res_id), date);
-      console.log("client_res_id-----------------?", client_res_id);
+      console.log("client_res_id-----------------??:", client_res_id);
+
+      api_data2 = await getAllDataFromApi(parseInt(client_res_id), number, resultType);
     } else {
       api_data = await dataProvider(parseInt(res_id), date);
-      console.log("res_id-----------------?", res_id);
-    }
 
-    // console.log("api_data", api_data[0][]);
+      api_data2 = await getAllDataFromApi(parseInt(res_id), number, resultType);
+
+      console.log("res_id-----------------?:", res_id);
+    }
 
     data[0] = api_data;
     console.log("---------- <Get All Data Success End> ----------------");
@@ -336,6 +341,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         res_name: res_name,
         restaurantList: restaurantList,
         res_id: res_id,
+        api_data2: [api_data2,{name:"Zomato"}],
       },
       status: "success",
     });
@@ -421,11 +427,70 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
   }
 });
 
-// router.post("/api/allreviews", checkAuthentication, async (req, res) => {
-//   res.json({
-//     status: "success",
-//     message: "All Reviews",
-//   })
-// });
+const {
+  operationHealthDataFormatter,
+} = require("../collectionFormatter/operationalHealth");
+const {
+  listingScoreDataFormatter,
+} = require("../collectionFormatter/listingScore");
+// Todo
+const { revenueMongoDBData } = require("../collectionFormatter/revenue");
+
+const {
+  customerReviewsDataFormatter,
+} = require("../collectionFormatter/customerReviews");
+const { revenuDataFormatter } = require("../collectionFormatter/revenue");
+// ! Test le liye get hoga ye post
+router.get("/api/data", async (req, res) => {
+  // const {res_id, number, resultType} = req.body;
+
+  const res_id = 256302;
+  const number = 51;
+  const resultType = "week";
+  // const res_id = 272065;
+  // const number = 51;
+  // const resultType = "week";
+  // const res_id = 272065;
+  // const number = 12;
+  // const resultType = "month";
+
+  const oh = await operationHealthDataFormatter(res_id, number, resultType);
+  const ls = await listingScoreDataFormatter(res_id, number, resultType);
+  const customerReviews = await customerReviewsDataFormatter(
+    res_id,
+    number,
+    resultType
+  );
+  const revenue = await revenueMongoDBData(res_id, number, resultType);
+  const f_revenue = await revenuDataFormatter(res_id, number, resultType);
+
+  res.json({
+    operationHealth: oh,
+    listingScore: ls,
+    revenue,
+    f_revenue,
+    customerReviews,
+  });
+});
 
 module.exports = router;
+
+async function getAllDataFromApi(res_id, number, resultType) {
+  const oh = await operationHealthDataFormatter(res_id, number, resultType);
+  const ls = await listingScoreDataFormatter(res_id, number, resultType);
+  const customerReviews = await customerReviewsDataFormatter(
+    res_id,
+    number,
+    resultType
+  );
+  const revenue_score = await revenueMongoDBData(res_id, number, resultType);
+  const revenue = await revenuDataFormatter(res_id, number, resultType);
+  return {
+    name:"Swiggy",
+    operationHealth: oh,
+    listingScore: ls,
+    revenue_score,
+    revenue,
+    customerReviews,
+  };
+}

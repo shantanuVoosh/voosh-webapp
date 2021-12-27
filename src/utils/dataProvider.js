@@ -75,13 +75,20 @@ async function apiCall(res_id, date) {
       query: {
         Res_Id: res_id,
         Date: date,
+        // $match: {
+        //   swiggy_res_id: res_id,
+        //   week_no:48
+        // },
+        // $group:{
+        //   _id:"$week_no",
+        //   "revenue":{$sum:"$final_revenue"}
+        // }
       },
     },
     {
       name: "Swiggy_Static_ratings",
       query: {
         "Res ID": res_id,
-        // ?this present for today's date
         Date: date,
       },
     },
@@ -95,7 +102,7 @@ async function apiCall(res_id, date) {
     {
       name: "swiggy_weekly_listing_score_products",
       query: {
-        swiggy_res_id:res_id+"",
+        swiggy_res_id: res_id + "",
       },
     },
 
@@ -170,9 +177,10 @@ async function dataProvider(res_id, date) {
   //   ?date
 
   const todayDate = getCurrentDate();
-  const prevMonth=getPreviousMonth();
+  const prevMonth = getPreviousMonth();
 
   let rest_acceptance = apiResponse["Swiggy_Acceptance_v1"][0];
+
   let operationHealthWeeklyResult = apiResponse["Weekly_OH_Score"][0];
   let rest_igcc = apiResponse["Swiggy_IGCC"][0];
   let rest_Serviceability = apiResponse["Swiggy_Kitchen_Servicibility"][0];
@@ -272,8 +280,6 @@ async function dataProvider(res_id, date) {
       },
     ].sort((a, b) => (a.value > b.value ? -1 : 1));
 
-    // console.log("food_negative_review_items: ", food_negative_review_items);
-
     return {
       item_name: item_name,
       issues: [...food_negative_review_items.slice(0, 3)],
@@ -347,7 +353,7 @@ async function dataProvider(res_id, date) {
 
   let deductions = {};
 
-  if (isObjectEmpty(revenue_financical)|| prevMonth!==date) {
+  if (isObjectEmpty(revenue_financical) || prevMonth !== date) {
     deductions = {
       "Platform Services Charges": "working on it",
 
@@ -415,8 +421,9 @@ async function dataProvider(res_id, date) {
         listing_audit_score["score"] === undefined
           ? "working on it"
           : listing_audit_score["score"],
-      listingScoreData: {
-        "Safety Tag": {
+      listingScoreData: [
+        // ?Safety Tag
+        {
           name: "Safety Tag",
           result_value: listing_audit_score["safety_tag"],
           benchmark: "yes",
@@ -427,8 +434,8 @@ async function dataProvider(res_id, date) {
             "Reach out to us or 3rd parties who help in getting the tag",
           ],
         },
-
-        Rating: {
+        // ?Ratings
+        {
           name: "Ratings",
           result_value: listing_audit_score["rating"],
           benchmark: "medium",
@@ -440,7 +447,8 @@ async function dataProvider(res_id, date) {
           ],
         },
 
-        "Number of Rating": {
+        // ?Number of Rating
+        {
           name: "Number of Rating",
           result_value: listing_audit_score["number_of_rating"],
           benchmark: "",
@@ -452,8 +460,8 @@ async function dataProvider(res_id, date) {
             "Provide complimentory dishes",
           ],
         },
-
-        "Offer 1": {
+        // ?Offer1
+        {
           name: "Offer 1",
           // ? cuz data mein spelling wrong hai
           result_value:
@@ -465,7 +473,8 @@ async function dataProvider(res_id, date) {
           info: "Running an offer increases your visibility ranking",
           suggestions: [],
         },
-        "Offer 2": {
+        // ?Offer2
+        {
           name: "Offer 2",
           // ? cuz data mein spelling wrong hai
           result_value:
@@ -477,17 +486,9 @@ async function dataProvider(res_id, date) {
           info: "Running multiple offer have much more impact",
           suggestions: [],
         },
+        // ?Image %
 
-        "Recommended %": {
-          name: "Recommended %",
-          result_value: parseFloat(
-            (listing_audit_score["Recommended %"] * 100).toFixed(2)
-          ),
-          benchmark: 17,
-          compareThen: "grater",
-          info: "Ensure to have at least 20% of your total items as 'Recommended'",
-        },
-        "Image %": {
+        {
           name: "Images",
           result_value: parseFloat(listing_audit_score["Image %"]),
           benchmark: 100,
@@ -498,30 +499,22 @@ async function dataProvider(res_id, date) {
             "Contact Voosh photoshoot service for quality images",
           ],
         },
-        // "Description %": {
-        //   name: "Item Description",
-        //   result_value: parseFloat(
-        //     (listing_audit_score["Description %"] * 100).toFixed(2)
-        //   ),
-        //   benchmark: 95,
-        //   compareThen: "grater",
-        //   info: "Make sure that all your menu items have descriptions! Swiggy increases your visibility!",
-        //   suggestions: [
-        //     "Add descriptions into more items",
-        //     "Use good keywords in item descriptons",
-        //   ],
-        // },
-      
-
-        "Desserts/Sweet Category": {
-          name: "Desserts/Sweet Category Availability ",
-          result_value: listing_audit_score["Desserts/Sweet category"],
-          benchmark: "yes",
-          compareThen: "yes or no",
-          info: "Having a desert category improves listing score",
-          suggestions: ["Add Desserts category and corrosponding item"],
+        // ?Description %
+        {
+          name: "Item Description",
+          result_value: parseFloat(
+            (listing_audit_score["Description %"] * 100).toFixed(2)
+          ),
+          benchmark: 95,
+          compareThen: "grater",
+          info: "Make sure that all your menu items have descriptions! Swiggy increases your visibility!",
+          suggestions: [
+            "Add descriptions into more items",
+            "Use good keywords in item descriptons",
+          ],
         },
-        "Beverages Category": {
+        // ?Beverage Category
+        {
           name: "Beverages Category",
           result_value: listing_audit_score["Beverages category"],
           benchmark: "yes",
@@ -529,19 +522,29 @@ async function dataProvider(res_id, date) {
           info: "Beverages Category = yes Gets more orders",
           suggestions: ["Add breverage category and corrosponding item"],
         },
-        "Bestseller Score Recommended": {
-            name: "Bestseller Without Recommended",
-            benchmark: 7,
-            compareThen: "grater",
-            result_value: parseFloat(
-              listing_audit_score[
-                "bestseller_%_in_recommended_vs_without_recommended_data"
-              ]
-            ),
-            info: "Target to have more than 7% of non recommended as bestsellers for better growth",
-            suggestions: [],
-          },
-      },
+        // ?"bestseller_%_in_recommended_vs_without_recommended_data"
+        {
+          name: "Bestseller Without Recommended",
+          benchmark: 7,
+          compareThen: "grater",
+          result_value: parseFloat(
+            listing_audit_score[
+              "bestseller_%_in_recommended_vs_without_recommended_data"
+            ]
+          ),
+          info: "Target to have more than 7% of non recommended as bestsellers for better growth",
+          suggestions: [],
+        },
+        // ?Desserts/Sweet category
+        {
+          name: "Desserts",
+          result_value: listing_audit_score["Desserts/Sweet category"],
+          benchmark: "yes",
+          compareThen: "yes or no",
+          info: "Having a desert category improves listing score",
+          suggestions: ["Add Desserts category and corrosponding item"],
+        },
+      ],
     },
     // !Operation Health
     operationHealth: {
@@ -589,6 +592,10 @@ async function dataProvider(res_id, date) {
           weeklyResult: isObjectEmpty(rest_RDC)
             ? "working on it"
             : rest_RDC["Weekly_avg_RDC"] * 100,
+          recommendations: [
+            "Ensure Restaurant open at the given timings to swiggy and zomato",
+            "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
+          ],
         },
 
         // ?Swiggy_Static_ratings
@@ -668,11 +675,11 @@ async function dataProvider(res_id, date) {
         : parseFloat(revenue["Weekly_Revenue"].toFixed(2)),
 
       financicalData: {
-        totalSales: prevMonth===date?totalSales:"working on it" ,
-        netPayout: prevMonth===date?netPayout:"working on it",
-        deleveries: prevMonth===date?deleveries:"working on it",
-        cancelledOrders: prevMonth===date?cancelledOrders:"working on it",
-        deductions:deductions,
+        totalSales: prevMonth === date ? totalSales : "working on it",
+        netPayout: prevMonth === date ? netPayout : "working on it",
+        deleveries: prevMonth === date ? deleveries : "working on it",
+        cancelledOrders: prevMonth === date ? cancelledOrders : "working on it",
+        deductions: deductions,
       },
     },
     adsAndAnalytics: {},

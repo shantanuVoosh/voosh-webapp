@@ -109,3 +109,35 @@
     }
   }
 }
+
+
+.greeting-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.greeting-btn{
+  width: 90%;
+  text-align: center;
+  border: none;
+  margin-top: 20px;
+  text-align: center;
+  background-color: $color-white-1;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+  color: $color-white-1;
+  padding: .7rem;
+  font-size: $text-small;
+  border-radius: $radius-3;
+  @include breakpoint-up(xxsmall) {
+    font-size: $text-medium;
+  }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: $color-white-1;
+  }
+}

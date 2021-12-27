@@ -1,0 +1,56 @@
+.pre_signup-header {
+  margin-top: 3rem;
+}
+
+.pre_signup-head_logo {
+  height: 75px;
+  width: 140px;
+  margin-bottom: 1rem;
+}
+.pre_signup-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .heading {
+    max-width: 500px;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    font-size: 1.3rem;
+
+    .orange {
+      color: #FF5920;
+      font-weight: 700;
+      font-size: 1.4rem;
+    }
+  }
+}
+
+.pre_signup-body__video {
+  width: 90%;
+  height: auto;
+}
+
+.pre_signup-btn {
+  width: 60%;
+  text-align: center;
+  border: none;
+  margin-top: 20px;
+  text-align: center;
+  background-color: $color-white-1;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+  color: $color-white-1;
+  padding: 0.7rem;
+  font-size: $text-small;
+  border-radius: $radius-3;
+  @include breakpoint-up(xxsmall) {
+    font-size: $text-medium;
+  }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: $color-white-1;
+  }
+}

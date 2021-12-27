@@ -2,65 +2,108 @@ import React from "react";
 import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
+import CardWithNoData from "./CardWithNoData";
 
-const Card = ({ name, value, benchmark, info, compareType }) => {
+const Card = ({ name, value, benchmark, info, compareThen, type }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
-  let finalValue;
-  let colorName="green";
-  console.log(resultType, compareType);
+  let showColor = "";
+  let resultValue = 0;
+  let resultBenchmark = 0;
 
-  // if (compareType === "yes or no") {
-  //   colorName = value.toLowerCase() === "yes" ? "green" : "red";
-  // } else if (compareType === "present or not prensent") {
-  //   colorName = value.toLowerCase() === "present" ? "green" : "red";
-  // } else if (compareType === "applicable or not applicable") {
-  //   // ? spelling mistake, applicable! not aplicable
-  //   colorName = value.toLowerCase() === "aplicable" ? "green" : "red";
-  // } else if (compareType === "high medium or low") {
-  //   colorName =
-  //     value.toLowerCase() === "high" || value.toLowerCase() === "medium"
-  //       ? "green"
-  //       : "red";
-  // } else if (compareType === "grater") {
-  //   colorName = value >= benchmark ? "green" : "red";
-  // }
+  // Todo: String Working
+  if (type === "string") {
+    // ? Possible String Compariso
+    // ! Yes No
+    if (compareThen === "yes or no") {
+      resultValue = value === benchmark ? 100 : 0;
+      resultBenchmark = 100;
+    }
+    // ! String Number
+    else if (benchmark === "4.0") {
+      console.log("here");
+      // resultValue=value===benchmark?100:0;
+      // compare="equal";
+      if (value.includes("<")) {
+        value = value.replace("<", "");
+        resultValue = parseFloat(value);
+        resultBenchmark = parseFloat(benchmark);
+      } else if (value.includes(">")) {
+        value = value.replace(">", "");
+        resultValue = parseFloat(value);
+        resultBenchmark = parseFloat(benchmark);
+      } else if (value.includes("=")) {
+        value = value.replace("=", "");
+        value = parseFloat(value);
+        resultValue = parseFloat(value);
+        resultBenchmark = parseFloat(benchmark);
+      } else if (value.includes("to")) {
+        value = value.split("to")[1];
+        value = parseFloat(value);
+        resultValue = parseFloat(value);
+        resultBenchmark = parseFloat(benchmark);
+      }
+    } else if (value === "Not Applicable" || value === "Applicable") {
+      // console.log("here++++++++++++++++")
+      resultValue = value === "Not Applicable" ? 0 : 100;
+      resultBenchmark = 100;
+    }
+  } else if (type === "High Medium Low") {
+  } else if (type === "percentage") {
+    if (compareThen === "High Medium Low") {
+      resultBenchmark = benchmark;
+      if (value === "High") {
+        resultValue = 90;
+      } else if (value === "Medium") {
+        resultValue = 70;
+      } else if (value === "Low") {
+        resultValue = 50;
+      }
+    } else {
+      resultValue = value;
+      resultBenchmark = benchmark;
+    }
+  }
+  // Todo: Dont Touch this
 
-  console.log(colorName, "colorName");
+  showColor = resultValue >= resultBenchmark ? "green" : "red";
+
 
   return (
-    <div className="card">
-      <div className="card__text">
-        <h5 className="card__text--heading">{name}</h5>
+    <div className="listing_score_card">
+      <div className="listing_score_card__text">
+        <h5 className="listing_score_card__text--heading">{name}</h5>
 
-        <div className="card__text--info">
-          <p>{info}</p>
+        <div className="listing_score_card__text--info">
+          <p>{info.length > 60 ? info.substring(0, 60) + "..." : info}</p>
         </div>
-        {/* //!Error if value not presen */}
-        {value !== "working on it" && (
-          <div className={`value ${colorName}`}>{value===undefined?"working on it":value}</div>
-        )}
-        {value === "working on it" && (
-          <div className=''>working on it...</div>
+
+        {type === "percentage" ? (
+          <div className={`value ${showColor}`}>
+            {value === undefined ? "working on it" : value}
+          </div>
+        ) : (
+          <div className={`value ${showColor}`}>
+            {value === undefined ? "working on it" : value}
+          </div>
         )}
       </div>
-      {/* <Link
+      <Link
         to={`${name.replace(/\s/g, "")}`}
         state={{
-          name,
-          value,
-          benchmark,
+          name: "ko",
+          value: 52,
+          benchmark: 62,
           // compareThen,
           // videoLink,
           // recommendations,
           // type,
         }}
-        className="card__btn"
+        className="listing_score_card__btn"
       >
-        <span className="card__btn--text">Know more</span>
-        <AiOutlineRight className="card__btn--icon" />
-      </Link> */}
+        <span className="listing_score_card__btn--text">Know more</span>
+        <AiOutlineRight className="listing_score_card__btn--icon" />
+      </Link>
     </div>
   );
 };

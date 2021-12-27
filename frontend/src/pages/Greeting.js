@@ -20,7 +20,6 @@ const Greeting = () => {
           className="greeting-container"
           style={{
             width: "80%",
-            height: "80vh",
             display: "flex",
             flexDirection: "column",
             // justifyContent:"center"
@@ -42,8 +41,8 @@ const Greeting = () => {
             </p>{" "}
             <br />
           </div>
-          <button >Let me Explore!!</button>
-          <button>Reach out to us!</button>
+          <button className="greeting-btn">Let me Explore!!</button>
+          <button className="greeting-btn">Reach out to us!</button>
         </div>
       </div>
     </div>

@@ -47,9 +47,9 @@ const WhiteCard = (props) => {
   console.log(name, value, benchmark);
 
   return (
-    <div className="card">
-      <div className="card__text">
-        <h5 className="card__text--heading">{name}</h5>
+    <div className="financial_a-card">
+      <div className="financial_a-card__text">
+        <h5 className="financial_a-card__text--heading">{name}</h5>
         <div className="value" style={{ color: `${color}` }}>
           {value.toLocaleString("en-IN", {
             maximumFractionDigits: 2,
@@ -57,14 +57,14 @@ const WhiteCard = (props) => {
             currency: "INR",
           })}
         </div>
-        <div className="card__text--info">
+        <div className="financial_a-card__text--info">
           <p>{info}</p>
         </div>
       </div>
       {/* //! sending data from this page */}
-      <div className="card__btn">
-        <span className="card__btn--text">Know more</span>
-        <AiOutlineRight className="card__btn--icon" />
+      <div className="financial_a-card__btn">
+        <span className="financial_a-card__btn--text">Know more</span>
+        <AiOutlineRight className="financial_a-card__btn--icon" />
       </div>
     </div>
   );

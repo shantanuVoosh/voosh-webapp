@@ -53,8 +53,10 @@ const LayoutWrapper = (props) => {
         headerSize={headerSize}
       />
       <div className="container">
-        {!isClientBtnNeeded ? null : <SectionButtons />}
-        {children}
+        <div className="layout_warraper-container">
+          {!isClientBtnNeeded ? null : <SectionButtons />}
+          {children}
+        </div>
       </div>
       {!isErrorPage && <Footer />}
     </>

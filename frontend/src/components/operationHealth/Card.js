@@ -3,53 +3,26 @@ import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
+import CardWithNoData from "./CardWithNoData";
 
 const Card = (props) => {
   const resultType = useSelector((state) => state.resultType);
   const {
     name,
-    value: currentValue,
+    value,
     info,
     type,
     benchmark,
-    monthlyResult,
-    weeklyResult,
     compareThen,
     redirection,
     videoLink,
     recommendations,
+    isDataPresent,
   } = props;
 
-  let value;
-
-  if (currentValue === undefined) {
-    value = resultType === "month" ? monthlyResult : weeklyResult;
-  }
-  // !fix result no weekly or monthly
-  else {
-    value = currentValue;
-  }
-
   // ? handle Error if no data
-  if (value === "working on it") {
-    return (
-      <div className="card">
-        <div className="card__text">
-          <h5 className="card__text--heading">{name}</h5>
-
-          <div className={"value green error-value"}>{value}...</div>
-
-          <div className="card__text--info">
-            <p>{info}</p>
-          </div>
-        </div>
-
-        <div to={redirection} className="card__btn">
-          <span className="card__btn--text">Know more</span>
-          <AiOutlineRight className="card__btn--icon " />
-        </div>
-      </div>
-    );
+  if (!isDataPresent) {
+    return <CardWithNoData name={name} info={info} />;
   }
 
   return (

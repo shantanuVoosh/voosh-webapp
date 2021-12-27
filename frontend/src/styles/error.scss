@@ -43,3 +43,18 @@
     font-weight: 600;
     // text-align: center;
 }
+
+
+.unavailable{
+    position: relative;
+    &::after{
+        position: absolute;
+        content: "unavailable";
+        color: $red;
+        top: 12px;
+        font-size: 10px;
+        left: 0px;
+
+
+    }
+}

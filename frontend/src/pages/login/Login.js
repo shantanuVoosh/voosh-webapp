@@ -69,7 +69,7 @@ const Login = () => {
         // * if success,set token to cookie
         cookie.save(APP_TOKEN, response.token, { path: "/" });
         dispatch(loginSuccess(response.token));
-      navigate("/dashboard");
+        navigate("/dashboard");
       } else {
         console.log("Failure response:", response.error);
         notify(response.error);
@@ -171,14 +171,19 @@ const Login = () => {
               <span>SignUp</span>
             </button> */}
           </form>
-         
         </div>
         <div className="sign-up">
-            <span className="sign-up--heading">Don't have an account?</span>
-            <span className="sign-up--link" onClick={redirectToSignUp}>
-              Sign Up
-            </span>
-          </div>
+          <span className="sign-up--heading">Don't have an account?</span>
+          <span className="sign-up--link" onClick={redirectToSignUp}>
+            Sign Up
+          </span>
+        </div>
+        <div className="sign-up">
+          <span className="sign-up--heading">or watch a video?</span>
+          <span className="sign-up--link" onClick={()=>navigate("/pre-signup")}>
+            Video
+          </span>
+        </div>
       </div>
     </>
   );

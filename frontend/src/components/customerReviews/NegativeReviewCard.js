@@ -12,19 +12,23 @@ const NegativeReviewCard = ({ name, issues }) => {
       <div className="review-card__issues">
         {issues.map((issue, index) => {
           return (
-            <span key={index} className="issue">
+            <>
+              {" "}
               {issue.value === 0 ? null : (
-                <>
+                <div key={index} className="issue">
                   <span>
                     <IoAlertCircleSharp className="alert-icon" />
                   </span>
                   <span>
-                    <span className="name">{issue.name}</span>:
-                    <span className="name">{issue.value}</span>
+                    <span className="text">
+                      <span className="name">{issue.value}</span>% of the
+                      customer say's <span className="name">{issue.name}</span>{" "}
+                      is an issue
+                    </span>
                   </span>
-                </>
+                </div>
               )}
-            </span>
+            </>
           );
         })}
       </div>

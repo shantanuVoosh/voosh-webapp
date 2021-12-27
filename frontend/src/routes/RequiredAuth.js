@@ -15,14 +15,17 @@ import {
   getCurrentMonth,
   getPreviousWeek,
   getYesterdayDateBefore12HoursAgo,
+  getWeekNumberFromDate,
+  getMonthNumberFromDate,
 } from "../utils/dateProvider";
 const APP_TOKEN_BY_GOOGLE = "voosh-token-by-google";
 const APP_TOKEN = "voosh-token";
 const allResultTypeMap = {
-  week: getYesterdayDateBefore12HoursAgo(),
-  month: getCurrentMonth(),
-  prev_week: getPreviousWeek(),
-  prev_month: getPreviousMonth(),
+  "This Week": getYesterdayDateBefore12HoursAgo(),
+  "Previous Day": getYesterdayDateBefore12HoursAgo(),
+  "This Month": getCurrentMonth(),
+  "Previous Week": getPreviousWeek(),
+  "Previous Month": getPreviousMonth(),
 };
 
 // !Protecting routes
@@ -37,17 +40,35 @@ function RequiredAuth({ children }) {
   // !Checking if user is authenticated, Phone Number
   const getDataFromApi = React.useCallback(async () => {
     const date = allResultTypeMap[resultType];
-    if (resultType === "month") {
-      return;
+    if(resultType === "Previous Day"){
+      return 
     }
     try {
       dispatch(isLoading(true));
+      const tempMonthMap = {
+        "This Week": "week",
+        "Previous Week": "week",
+        "This Month": "month",
+        "Previous Month": "month",
+      };
+      //!  prev month somehow decreasd by 1
+      const tempNumberMap = {
+        "This Week": getWeekNumberFromDate(date),
+        "Previous Week": getWeekNumberFromDate(date) - 1,
+        "This Month": getMonthNumberFromDate(date),
+        "Previous Month": getMonthNumberFromDate(date),
+      };
+
+      console.log();
+
       // const client_res_id = restaurantList.find((item) => item.name === res_name).id;
       const { data: response } = await axios.post("/voosh-data", {
         //? 1st time token will be null or undefined
         token: token,
         date: date,
         client_res_id: res_id,
+        number: tempNumberMap[resultType],
+        resultType: tempMonthMap[resultType],
       });
       console.log("voosh data", response);
 
@@ -58,13 +79,14 @@ function RequiredAuth({ children }) {
           res_name: name,
           restaurantList,
           res_id: id,
+          api_data2,
         } = response.data;
         if (res_name === "" && res_id === "") {
           console.log("call data with res_name and res_id");
-          dispatch(fetchAllData(api_data, name, restaurantList, id));
+          dispatch(fetchAllData(api_data2, name, restaurantList, id));
         } else {
           console.log("only data");
-          dispatch(fetchData(api_data));
+          dispatch(fetchData(api_data2));
         }
         dispatch(isLoading(false));
       }

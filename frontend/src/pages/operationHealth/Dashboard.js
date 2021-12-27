@@ -6,9 +6,9 @@ const Dashborad = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
 
   const operationHealthItems = data[currentProductIndex]["operationHealth"];
-  const operationHealthData = operationHealthItems["operationHealthData"];
+  const {operationHealthData} = operationHealthItems;
 
-  const {monthlyResult, weeklyResult, totalRatings} = data[currentProductIndex]["customerReviews"];
+  const customerReviews = data[currentProductIndex]["customerReviews"];
   return (
     <>
       <div className="cards">
@@ -23,7 +23,8 @@ const Dashborad = () => {
             monthlyResult,
             weeklyResult,
             videoLink,
-            recommendations
+            recommendations,
+            isDataPresent,
           } = item;
           return (
             <Card
@@ -38,17 +39,18 @@ const Dashborad = () => {
               compareThen={compareThen}
               videoLink={videoLink}
               recommendations={recommendations}
+              isDataPresent={isDataPresent}
             />
           );
         })}
         <Card name={"Customer Reviews"} 
         type={"average"}
         info={"Customer Reviews are good or bad"}
-        monthlyResult={monthlyResult}
-        weeklyResult={weeklyResult}
+        value={customerReviews.value}
         benchmark={4}
         compareThen={"grater"}
         redirection={"/customerReviews"}
+        isDataPresent={true}
         />
 
       </div>
