@@ -232,7 +232,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Use good keywords in item descriptons",
           ],
           value:
-            description === undefined ? "data not present" : description * 100,
+            description === undefined ? "data not present" : parseInt(description * 100),
           isDataPresent: description === undefined ? false : true,
         },
         // ?Beverage Category

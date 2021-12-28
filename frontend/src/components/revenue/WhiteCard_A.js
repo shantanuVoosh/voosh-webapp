@@ -9,20 +9,21 @@ const WhiteCard = (props) => {
   const {
     name,
     type,
-    value: currentValue,
+    value,
     info,
     benchmark,
     monthlyResult,
     weeklyResult,
     color,
+    isDataPresent,
   } = props;
 
-  if (currentValue === "working on it") {
+  if (!isDataPresent) {
     return (
       <div className="financial_a-card error-card">
         <div className="financial_a-card__text">
           <h5 className="financial_a-card__text--heading">{name}</h5>
-          <div className="value error-value">{currentValue}</div>
+          <div className="value error-value">{"working on it"}</div>
           <div className="financial_a-card__text--info">
             <p>{info}</p>
           </div>
@@ -34,17 +35,6 @@ const WhiteCard = (props) => {
       </div>
     );
   }
-
-  let value;
-
-  if (currentValue === undefined) {
-    value = resultType === "month" ? monthlyResult : weeklyResult;
-  }
-  // ! for fix result no weekly or monthly
-  else {
-    value = currentValue;
-  }
-  console.log(name, value, benchmark);
 
   return (
     <div className="financial_a-card">

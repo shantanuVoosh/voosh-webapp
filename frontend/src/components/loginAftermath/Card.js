@@ -3,7 +3,7 @@ import { BsBagCheck, BsBarChartLine } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import SectionButtons from "../SectionButtons";
 import { useSelector, useDispatch } from "react-redux";
-import CardStatistics from "./CardStatistics";
+import CardStatisticsWithNoData from "./CardStatisticsWithNoData";
 
 const Card = ({ iconName, name, info, cardStatistics }) => {
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
               </span>
             ))}
           </div>
-            <CardStatistics cardStatistics={cardStatistics} />
+            <CardStatisticsWithNoData cardStatistics={cardStatistics} />
         </div>
       </div>
     </>

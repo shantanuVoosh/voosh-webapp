@@ -18,12 +18,14 @@ const APP_TOKEN = "voosh-token";
 const clientId =
   "383868004224-r359p669am3jbghshp42l4h7c7ab62s7.apps.googleusercontent.com";
 
+
 const Header = ({
   heading,
   restaurantName,
   isHomePage,
   isErrorPage = false,
   headerSize,
+  fakeData,
 }) => {
   const { resultType, res_name: selected_res_name } = useSelector(
     (state) => state.data
@@ -46,14 +48,22 @@ const Header = ({
   const resultTypeRef = React.useRef(null);
   const restaurantListRef = React.useRef(null);
 
+
+  let cStyles = {};
+if (fakeData) {
+  cStyles = {
+    zIndex: "-1",
+  };
+}
+
+
   // ? Help's to Close the dropdown menu
   const handleOnClickAnywhere = (e) => {
     if (
       e.target.classList.contains("item") ||
       e.target.classList.contains("item--name") ||
-      e.target.classList.contains("result-type_list")||
+      e.target.classList.contains("result-type_list") ||
       e.target.classList.contains("rest_list")
-      
     ) {
       return;
     }
@@ -147,7 +157,7 @@ const Header = ({
       <>
         {/*//? small , mid , big */}
         <div className="head-color"></div>
-        <header className={`header header-${headerSize}`}>
+        <header className={`header header-${headerSize}`} style={cStyles}>
           {/* <Hamburger
             toggled={isOpen}
             toggle={setOpen}
@@ -168,7 +178,7 @@ const Header = ({
                     className="header__text--icon"
                     onClick={() => navigate(-1)}
                   >
-                    <MdOutlineArrowBackIosNew />
+                    <MdOutlineArrowBackIosNew size={20} />
                   </span>
                   <h1
                     className="header__text--heading"

@@ -41,8 +41,10 @@ const Greeting = () => {
             </p>{" "}
             <br />
           </div>
-          <button className="greeting-btn">Let me Explore!!</button>
-          <button className="greeting-btn">Reach out to us!</button>
+          <button className="greeting-btn" onClick={()=>navigate("/dashboard-sample")}   >Let me Explore!!</button>
+          <a href="tel:9015317006" className="greeting-btn" >
+            Reach out to us!
+          </a>
         </div>
       </div>
     </div>

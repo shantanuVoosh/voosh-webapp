@@ -1,4 +1,5 @@
 import LoginAftermathDashboard from "./pages/loginAftermath/Dashboard";
+import LoginAftermathDashboardWithNoData from "./pages/loginAftermath/DashBoradWithNoData";
 import OperationHealthDashboard from "./pages/operationHealth/Dashboard";
 import ListingScoreDashBoard from "./pages/listingScore/Dashboard";
 import AdsAndAnalytics from "./pages/adsAndAnalytics/AdsAndAnalytics";
@@ -46,9 +47,6 @@ function App() {
   }, [location.pathname, token]);
 
   // ?Component that alerts if you click outside of it
-  
-
-
 
   return (
     <div className="main-container">
@@ -95,6 +93,10 @@ function App() {
           }
         />
         <Route
+          path="/dashboard-sample"
+          element={<LoginAftermathDashboardWithNoData />}
+        />
+        <Route
           path="revenue"
           element={
             <RequiredAuth>
@@ -130,7 +132,7 @@ function App() {
           path="/operationHealth/:id"
           element={
             <RequiredAuth>
-               <TimeSeriesPages />
+              <TimeSeriesPages />
             </RequiredAuth>
           }
         />

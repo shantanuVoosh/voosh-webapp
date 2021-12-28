@@ -13,7 +13,7 @@ const FinancialDashBoard = () => {
   const revenue = data[currentProductIndex]["revenue"];
 
   const { financicalData } = revenue;
-  const { totalSales, cancelledOrders, netPayout, deleveries, deductions, previousDayRevenue } =
+  const { totalSales, cancelledOrders, netPayout, deleveries, deductions } =
     financicalData;
 
   const deductionTitles = Object.keys(deductions);
@@ -23,7 +23,7 @@ const FinancialDashBoard = () => {
 
   let revenueResult = revenue.value;
 
-  console.log(previousDayRevenue, "5415123121131")
+  console.log("revenue =>", revenue.previousDayRevenue);
 
   const pieColors = [
     "#370665",
@@ -85,10 +85,13 @@ const FinancialDashBoard = () => {
           <WhiteCard
             name={"Total Sales"}
             type={"Pecentage"}
-            value={revenueResult}
+            value={revenue.previousDayRevenue}
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
             // color={"#262D30"}
+            isDataPresent={
+              revenue.previousDayRevenue === undefined ? false : true
+            }
           />
           <WhiteCard
             name={"Total Payout"}
@@ -97,14 +100,16 @@ const FinancialDashBoard = () => {
             info={"Total Sales includes all taxes"}
             benchmark={"103847.68"}
             color={"#27AE60"}
+            isDataPresent={true}
           />
           <WhiteCard
             name={"Net Deduction"}
             type={"Pecentage"}
-            value={totalSales-netPayout}
+            value={totalSales - netPayout}
             info={"Total Sales includes all taxes"}
             benchmark={"103847.68"}
             color={"#f05a48"}
+            isDataPresent={true}
           />
         </div>
         <div className="financial_a-breakdown">

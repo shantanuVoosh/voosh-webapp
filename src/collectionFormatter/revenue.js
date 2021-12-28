@@ -94,10 +94,10 @@ const getPreviousDaySales = async (res_id) => {
       ])
       .toArray();
 
-    // console.log(
-    //   "previousDaySales/*/*//*/*/*////--------------+++",
-    //   previousDayRevenue
-    // );
+    console.log(
+      "previousDaySales/*/*//*/*/*////--------------+++",
+      previousDayRevenue
+    );
     return {
       previousDayRevenue: previousDayRevenue[0]?.final_revenue,
     };

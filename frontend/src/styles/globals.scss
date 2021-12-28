@@ -25,7 +25,7 @@ a:visited,
 a:hover,
 a:active,
 a:link {
-  color: $color-black-1;
+  // color: $color-black-1;
   text-decoration: none;
 }
 
@@ -65,6 +65,10 @@ a:link {
 }
 .green {
   color: $green;
+}
+
+.white{
+  color: $color-white-1;
 }
 
 .rise-fall_icon {
