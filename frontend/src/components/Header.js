@@ -40,9 +40,9 @@ const Header = ({
   const [isResultTypeOpne, setResultTypeOpen] = React.useState(false);
   const [allResultType, setAllResultType] = React.useState([
     "This Week",
+    "Previous Week",
     "This Month",
     "Previous Month",
-    "Previous Week",
   ]);
 
   const resultTypeRef = React.useRef(null);

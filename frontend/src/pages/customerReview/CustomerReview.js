@@ -72,16 +72,21 @@ const CustomerReviews = () => {
           )}
         </div>
         <div className="negative-reviews">
-          {negative.map((item, index) => {
-            const { item_name, issues } = item;
-            return (
-              <NegativeReviewCard
-                key={index}
-                name={item_name}
-                issues={issues}
-              />
-            );
-          })}
+          {negative.length > 0
+            ? negative.map((item, index) => {
+                const { item_name, issues } = item;
+                return (
+                  <NegativeReviewCard
+                    key={index}
+                    name={item_name}
+                    issues={issues}
+                  />
+                );
+              })
+            : // <div className="no_reviews">
+              //   <div className="text">No Complains Found In {resultType}</div>
+              // </div>
+              null}
         </div>
         <div
           onClick={() => navigate("/allReviews")}

@@ -1,3 +1,18 @@
+
+
+.same_as_btn{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  margin: .5rem 0;
+}
+.check-box_msg{
+  font-size: 10px;
+  margin-left: .5rem;
+}
+
+
 .signup-container {
   width: 100%;
   height: 100%;

@@ -12,14 +12,46 @@ const Signup = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
+    getValues,
   } = useForm();
-
   const notify = (msg) => toast.error(msg);
+  const swiggyNumberRef = React.useRef(null);
+  const zomatoNumberRef = React.useRef(null);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    console.log(errors)
+    // console.log(data);
+    // console.log(errors)
     try {
+      // console.log(data["Swiggy Reg"]?.[" Phone"]);
+      // // ! Check if the number is registered with swiggy
+      // const { data: swiggy_response } = await axios.get(
+      //   `https://partner.swiggy.com/registration/v2/registration-status?userId=${data["Swiggy Reg"]?.[" Phone"]}`,
+      //   {
+      //     // method: 'HEAD',
+      //     // mode: 'no-cors',
+      //     headers: {
+      //       'Access-Control-Allow-Origin': '*',
+      //       // Accept: 'application/json',
+      //       // 'Content-Type': 'application/json',
+      //     },
+      //     // withCredentials: true,
+      //     // credentials: 'same-origin',
+      //     // crossdomain: true,
+      //   }
+      // );
+
+      // console.log(swiggy_response, "swiggy_response");
+
+      // if (
+      //   swiggy_response.statusCode === -1 ||
+      //   swiggy_response.statusMessage === "Invalid Mobile Number"
+      // ) {
+      //   console.log("Invalid Mobile Number");
+      //   notify("Swiggy Reg. Phone Number is not registered");
+      //   return;
+      // }
+
       const { data: response } = await axios.post("/signup", {
         name: data["Your Name"],
         phone: data["Phone Number"],
@@ -36,12 +68,11 @@ const Signup = () => {
         navigate("/greeting");
       } else {
         console.log("Failure response:", response.error);
-        notify(response.error)
+        notify(response.error);
         // navigate("/");
-
       }
     } catch (err) {
-      console.log(err);
+      console.log("Error", err);
     }
   };
 
@@ -61,7 +92,10 @@ const Signup = () => {
             pauseOnHover
           />
           <div className="signup-header">
-            <img src={logo_img} alt="logo" className="signup-header__logo" />
+            <img src={logo_img} alt="logo" className="signup-header__logo"
+            onClick={()=>navigate("/")}
+            
+            />
             <div className="signup-header__heading">
               Register to get started!
             </div>
@@ -170,12 +204,32 @@ const Signup = () => {
               <input
                 className="form--input"
                 type="tel"
+                name="Swiggy Reg. Phone"
                 placeholder="Swiggy Reg. Phone"
+                ref={swiggyNumberRef}
                 {...register("Swiggy Reg. Phone", {
                   // required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
+                onChange={(e) => {
+                  const data = getValues();
+                  console.log(data);
+                  const swiggy_number = e.target.value;
+                  console.log(swiggy_number);
+                  if (data.checkbox) {
+                    reset({
+                      "Your Name": data["Your Name"],
+                      Email: data["Email"],
+                      "Phone Number": data["Phone Number"],
+                      "Restaurant Name": data["Restaurant Name"],
+                      "Swiggy Password": data["Swiggy Password"],
+                      "Swiggy Reg": { " Phone": swiggy_number },
+                      "Zomato Reg. Phone": swiggy_number,
+                      checkbox: true,
+                    });
+                  }
+                }}
               />
               {/* //!Swiggy Password */}
               {errors["Swiggy Password"] && (
@@ -192,15 +246,19 @@ const Signup = () => {
                   minLength: 3,
                 })}
               />
+
               {/* //!Zomato Phone Number */}
               {errors["Zomato Reg"]?.[" Phone"] && (
                 <p className="form_error red">
                   Provide a valid number, your Zomato Registered Phone Number{" "}
                 </p>
               )}
+
               <input
                 className="form--input"
                 type="tel"
+                name="Zomato Reg. Phone"
+                ref={zomatoNumberRef}
                 placeholder="Zomato Reg. Phone"
                 {...register("Zomato Reg. Phone", {
                   // required: true,
@@ -208,6 +266,60 @@ const Signup = () => {
                   minLength: 10,
                 })}
               />
+              {/* <input {...register("radio")} type="radio" value="no" pattern="same as Swiggy" /> */}
+
+              {/* 
+Email: "shanu09.sm@gmail.com"
+"Phone Number": "7008237257"
+"Restaurant Name": "Test"
+"Swiggy Password": "12345"
+"Swiggy Reg": Object { " Phone": "7008237257" }
+"Your Name": "shantanu"
+"Zomato Reg": Object { " Phone": "" }
+checkbox: false */}
+
+              <div className="same_as_btn">
+                <input
+                  {...register("checkbox")}
+                  type="checkbox"
+                  onClick={(e) => {
+                    const data = getValues();
+                    const swiggy_number = data["Swiggy Reg"]?.[" Phone"];
+                    const copy_data = { ...data };
+                    console.log(data);
+                    console.log(e.target.checked);
+                    if (e.target.checked) {
+                      reset({
+                        "Your Name": data["Your Name"],
+                        Email: data["Email"],
+                        "Phone Number": data["Phone Number"],
+                        "Restaurant Name": data["Restaurant Name"],
+                        "Swiggy Password": data["Swiggy Password"],
+                        "Swiggy Reg": { " Phone": swiggy_number },
+                        "Zomato Reg. Phone": swiggy_number,
+                        checkbox: e.target.checked,
+                      });
+                    } else {
+                      reset({
+                        "Your Name": data["Your Name"],
+                        Email: data["Email"],
+                        "Phone Number": data["Phone Number"],
+                        "Restaurant Name": data["Restaurant Name"],
+                        "Swiggy Password": data["Swiggy Password"],
+                        "Swiggy Reg": { " Phone": swiggy_number },
+                        "Zomato Reg. Phone": "",
+                        checkbox: e.target.checked,
+                      });
+                    }
+
+                    // e.target.checked = e.target.checked ? false : true;
+                  }}
+                />
+                <span className="check-box_msg">
+                  {" "}
+                  Same as Swiggy Registered Phone Number
+                </span>
+              </div>
             </div>
             <button className="form--btn screen-btn">
               <span>Sign Up</span>

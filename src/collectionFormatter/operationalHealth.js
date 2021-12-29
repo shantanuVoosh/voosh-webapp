@@ -232,7 +232,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
         type: "percentage",
         info: "Operation Health >= 95% Gets more orders",
         benchmark: 95,
-        value: oh_score === undefined ? "data not present" : oh_score * 2 * 10,
+        value: oh_score === undefined ? "Please wait! We are working on It." : oh_score * 2 * 10,
         isDataPresent: oh_score === undefined ? false : true,
       },
       operationHealthData: [
@@ -248,7 +248,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           recommendations: ["Get the serviceability notification service"],
           value:
             serviceability_score === undefined
-              ? "data not present"
+              ? "Please wait! We are working on It."
               : parseInt(serviceability_score),
           isDataPresent: serviceability_score === undefined ? false : true,
         },
@@ -267,14 +267,14 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             rdc_score === undefined
-              ? "data not present"
+              ? "Please wait! We are working on It."
               : parseInt(rdc_score * 100),
           isDataPresent: rdc_score === undefined ? false : true,
         },
 
         // ?Swiggy_Static_ratings
         {
-          name: "Current Rating",
+          name: "Rating",
           type: "average",
           // info: "get more then 4.5 star rating to get more orders",
           info: "Rating > 4.5 Gets better orders",
@@ -287,7 +287,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             rating_score === undefined
-              ? "data not present"
+              ? "Please wait! We are working on It."
               : parseFloat(rating_score.toFixed(1)),
           isDataPresent: rating_score === undefined ? false : true,
         },
@@ -305,7 +305,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
             "If you forget to mark food ready, take the MFR calling service. Tap here!",
           ],
           value:
-            mfr_score === undefined ? "data not present" : parseInt(mfr_score),
+            mfr_score === undefined ? "Please wait! We are working on It." : parseInt(mfr_score),
           isDataPresent: mfr_score === undefined ? false : true,
         },
         // ? IGCC
@@ -322,7 +322,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             igcc_score === undefined
-              ? "data not present"
+              ? "Please wait! We are working on It."
               : parseInt(igcc_score * 100),
           isDataPresent: igcc_score === undefined ? false : true,
         },
@@ -337,7 +337,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           recommendations: ["Enable Auto acceptance"],
           value:
             acceptance_score === undefined
-              ? "data not present"
+              ? "Please wait! We are working on It."
               : parseInt(acceptance_score),
           isDataPresent: acceptance_score === undefined ? false : true,
         },

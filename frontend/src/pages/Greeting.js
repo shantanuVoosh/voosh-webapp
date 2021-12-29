@@ -41,12 +41,12 @@ const Greeting = () => {
             </p>{" "}
             <br />
           </div>
-          <button
+          <div
             className="greeting-btn"
             onClick={() => navigate("/dashboard-sample")}
           >
             Let me Explore!!
-          </button>
+          </div>
           <a href="tel:9015317006" className="greeting-btn">
             Reach out to us!
           </a>

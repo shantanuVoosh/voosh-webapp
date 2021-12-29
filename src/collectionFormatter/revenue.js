@@ -86,7 +86,7 @@ const getPreviousDaySales = async (res_id) => {
       .aggregate([
         {
           $match: {
-            date: getPreviousDay12HoursAgo(),
+            run_date: getPreviousDay12HoursAgo(),
             swiggy_res_id: parseInt(res_id),
           },
         },
@@ -185,35 +185,35 @@ const revenuDataFormatter = async (res_id, number, resultType) => {
   // );
 
   const totalSales = isObjectEmpty(revenue_financical)
-    ? "working on it"
+    ? "Please wait! We are working on It."
     : revenue_financical["Total Customer Payable "];
   const netPayout = isObjectEmpty(revenue_financical)
-    ? "working on it"
+    ? "Please wait! We are working on It."
     : revenue_financical["Net Payout  (E - F - G)"];
   const deleveries = isObjectEmpty(revenue_financical)
-    ? "working on it"
+    ? "Please wait! We are working on It."
     : revenue_financical["Number of orders"];
   const cancelledOrders = rdc_score
     ? parseFloat(rdc_score.toFixed(2))
-    : "working on it";
+    : "Please wait! We are working on It.";
 
   let deductions = {};
 
   if (isObjectEmpty(revenue_financical)) {
     deductions = {
-      "Platform Services Charges": "working on it",
+      "Platform Services Charges": "Please wait! We are working on It.",
 
-      "Cancellation Deduction": "working on it",
-      "Other OFD deduction": "working on it",
+      "Cancellation Deduction": "Please wait! We are working on It.",
+      "Other OFD deduction": "Please wait! We are working on It.",
 
-      Promotions: "working on it",
+      Promotions: "Please wait! We are working on It.",
 
-      "Previous Week Outstanding": "working on it",
+      "Previous Week Outstanding": "Please wait! We are working on It.",
 
-      Miscellaneous: "working on it",
+      Miscellaneous: "Please wait! We are working on It.",
 
-      TCS: "working on it",
-      TDS: "working on it",
+      TCS: "Please wait! We are working on It.",
+      TDS: "Please wait! We are working on It.",
     };
   } else {
     deductions = {

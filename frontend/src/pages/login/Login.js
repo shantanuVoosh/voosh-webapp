@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactPlayer from "react-player";
 
 import {
   loginFailure,
@@ -126,6 +127,22 @@ const Login = () => {
               isSignedIn={true}
             />
           </div> */}
+
+          <div className="login__video">
+            <ReactPlayer
+              className="single-video"
+              url={"https://www.youtube.com/watch?v=LlgUIHoiQyY"}
+              controls
+              muted={true}
+              playing={true}
+              playbackRate={1}
+              width="100%"
+              height="240px"
+            />
+          </div>
+
+          <div className="login-header__heading">Log In</div>
+
           <form
             className="login__form"
             onSubmit={handleSubmit(handleLoginByPhoneNumber)}
@@ -151,7 +168,7 @@ const Login = () => {
             <input
               className="form--input"
               type="tel"
-              placeholder="Mobile number or Rest. Id"
+              placeholder="Mobile no. or Restaurant Id"
               {...register("Mobile number", { required: true, minLength: 3 })}
             />
             {errors["Password"] && (
@@ -160,6 +177,7 @@ const Login = () => {
             <input
               className="form--input"
               type="password"
+              // autoComplete="on"
               placeholder="Password"
               {...register("Password", { required: true, minLength: 1 })}
             />
@@ -171,19 +189,41 @@ const Login = () => {
               <span>SignUp</span>
             </button> */}
           </form>
+          <div className="sign-up">
+            <span className="sign-up--heading">Don't have an account?</span>
+            <span className="sign-up--link" onClick={redirectToSignUp}>
+              Sign Up
+            </span>
+          </div>
+          <div className="signup__bottom">
+            <div className="signup__bottom--heading">
+              {" "}
+              Grow your sales & revenue on{" "}
+              <span className="orange">Swiggy</span> &{" "}
+              <span className="red">Zomato</span> with Voosh!
+            </div>
+            <div className="signup__bottom--list">
+              <div className="list">
+                - Learn Insider secrets of Online Food Business
+              </div>
+              <div className="list">- Understand your competition</div>
+              <div className="list">
+                - High-impact and personalized Recommendations for your online
+                listing!
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="sign-up">
-          <span className="sign-up--heading">Don't have an account?</span>
-          <span className="sign-up--link" onClick={redirectToSignUp}>
-            Sign Up
-          </span>
-        </div>
-        <div className="sign-up">
+
+        {/* <div className="sign-up">
           <span className="sign-up--heading">or watch a video?</span>
-          <span className="sign-up--link" onClick={()=>navigate("/pre-signup")}>
+          <span
+            className="sign-up--link"
+            onClick={() => navigate("/pre-signup")}
+          >
             Video
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );

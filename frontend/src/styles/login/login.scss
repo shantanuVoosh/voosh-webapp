@@ -1,7 +1,6 @@
 .login-container {
   width: 100%;
   height: 100%;
-  min-height: 95vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,12 +20,12 @@
     height: 75px;
   }
   &__heading {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
   }
   &__sub-heading {
     &--small {
-      width: 80%;
+
       text-align: center;
       font-size: 1rem;
       font-weight: 500;
@@ -58,12 +57,19 @@
   }
 }
 
+.login__video{
+  width: 80%;
+  overflow:hidden;
+  border-radius: $radius-1;
+}
+
+
 .login__form {
   width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 0;
+  // padding: 1rem 0;
 
   .form {
     &--heading {
@@ -81,6 +87,7 @@
       border-radius: 5px;
       border: none;
       background-color: $color-white-2;
+      font-size: 12px;
 
       &:placeholder-shown {
         color: $color-grey-5;
@@ -89,7 +96,7 @@
     &--btn {
       width: 70%;
       border: none;
-      margin-top: 20px;
+      margin: 20px 0;
       text-align: center;
       background-color: $color-white-1;
       background: linear-gradient(to right, $color-primary-1, $color-primary-2);
@@ -131,4 +138,33 @@
       color: $color-primary-2;
     }
   }
+}
+
+.signup__bottom{
+  margin-top: 2rem;
+  width: 80%;
+    &--heading{
+      text-align: center;
+      font-size: $heading-mid+3;
+      font-weight: 600;
+    }
+    &--list{
+
+      .list{
+        position: relative;
+        font-size: 14px;
+        color: $color-grey-3;
+        margin-left: 1rem;
+
+        // &::after{
+        //   position: absolute;
+        //   content: "";
+        //   height: 2px;
+        //   width: 7px;
+        //   top: 11px;
+        //   left: -13px;
+        //   background-color: #FF5920;
+        // }
+      }
+    }
 }

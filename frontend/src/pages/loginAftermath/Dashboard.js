@@ -3,15 +3,31 @@ import Card from "../../components/loginAftermath/Card";
 import { BsBagCheckFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
+import { getTopSuggestionsProvider } from "../../utils/getTopSuggestionsProvider";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
+  const resultType = useSelector((state) => state.data.resultType);
 
   const operationHealth = data[currentProductIndex]["operationHealth"];
-  const { operationHealthMain } = operationHealth;
+  const { operationHealthMain, operationHealthData } = operationHealth;
 
-  const { listingScoreMain } = data[currentProductIndex]["listingScore"];
+  const { listingScoreMain, listingScoreData } =
+    data[currentProductIndex]["listingScore"];
   const revenue = data[currentProductIndex]["revenue"];
+
+  // ! get top 5 suggestions
+  let getTopSuggestions = getTopSuggestionsProvider(
+    operationHealthData,
+    listingScoreData
+  );
+  getTopSuggestions =
+    getTopSuggestions.length > 5
+      ? getTopSuggestions.slice(0, 5)
+      : getTopSuggestions;
+  const topSuggestions = [...getTopSuggestions];
+
+  // console.log(topSuggestions, "top suggestions");
 
   return (
     <>
@@ -28,7 +44,7 @@ const Dashboard = () => {
             benchmark: null,
             changeTypeDirection: "up",
             type: "money",
-            isDataPresent: revenue.value!=="data not present",
+            isDataPresent: revenue.value !== "data not present",
           }}
         />
         {/* //? Operation Health */}
@@ -104,16 +120,7 @@ const Dashboard = () => {
               height="240px"
             />
           </div>
-          {/* <div className="single-video">
-            <ReactPlayer
-              // className="single-video"
-              url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
-              controls
-              playbackRate={1}
-              width="310px"
-              height="240px"
-            />
-          </div> */}
+     
         </div>
         <div className="recomendation">
           <div className="recomendation__heading">
@@ -122,19 +129,25 @@ const Dashboard = () => {
             </span>
             <span className="text">Top Suggestion</span>
           </div>
-          <div className="recomendation__list">
-            Running an offer increases your visibility ranking
-          </div>
-          <div className="recomendation__list">
-            More ratings helps you improve visibility
-          </div>
-          <div className="recomendation__list">
-            Make sure that all your menu items have different images! Swiggy
-            increases your visibility!
-          </div>
-          <div className="recomendation__list">
-            Having a desert category improves listing score
-          </div>
+          {topSuggestions.length > 0 &&
+            topSuggestions.map((item, index) => {
+              return (
+                <div key={index} className="recomendation__list">
+                  {item}
+                </div>
+              );
+            })}
+          {topSuggestions.length === 0 && (
+            <div className="no_recomendation">
+              <div className="">
+                <span className="text_1">Your business is doing great!</span>
+                <br />
+                <span className="text_2">
+                  No Suggestions for you in this {resultType}.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

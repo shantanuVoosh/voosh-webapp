@@ -54,7 +54,7 @@ function RequiredAuth({ children }) {
       //!  prev month somehow decreasd by 1
       const tempNumberMap = {
         "This Week": getWeekNumberFromDate(date),
-        "Previous Week": getWeekNumberFromDate(date) - 1,
+        "Previous Week": getWeekNumberFromDate(date),
         "This Month": getMonthNumberFromDate(date),
         "Previous Month": getMonthNumberFromDate(date),
       };

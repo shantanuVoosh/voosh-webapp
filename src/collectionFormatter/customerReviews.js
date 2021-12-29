@@ -293,7 +293,7 @@ const customerReviewsDataFormatter = async (res_id, number, resultType) => {
     const customerReviews = {
       value:
         customerRatings === undefined
-          ? "data not available"
+          ? "Please wait! We are working on It."
           : parseFloat(customerRatings.toFixed(1)),
       type: "average",
       compareType: "grater",
