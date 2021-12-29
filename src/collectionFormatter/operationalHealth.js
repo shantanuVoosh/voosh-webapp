@@ -274,7 +274,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
 
         // ?Swiggy_Static_ratings
         {
-          name: "Rating",
+          name: "Current Rating",
           type: "average",
           // info: "get more then 4.5 star rating to get more orders",
           info: "Rating > 4.5 Gets better orders",

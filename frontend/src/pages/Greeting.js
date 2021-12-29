@@ -25,7 +25,7 @@ const Greeting = () => {
             // justifyContent:"center"
           }}
         >
-          <div className="text" style={{ "margin-top": "50px" }}>
+          <div className="text" style={{ marginTop: "50px" }}>
             {/* //? Heading */}
             <p style={{ marginBottom: "10px", fontSize: "2.3rem" }}>
               Congratulations!!
@@ -41,9 +41,20 @@ const Greeting = () => {
             </p>{" "}
             <br />
           </div>
-          <button className="greeting-btn" onClick={()=>navigate("/dashboard-sample")}   >Let me Explore!!</button>
-          <a href="tel:9015317006" className="greeting-btn" >
+          <button
+            className="greeting-btn"
+            onClick={() => navigate("/dashboard-sample")}
+          >
+            Let me Explore!!
+          </button>
+          <a href="tel:9015317006" className="greeting-btn">
             Reach out to us!
+          </a>
+          <a
+            href="https://drive.google.com/file/d/1787w-RudEjIppa9h1GKa-3OYiENa2mW4/"
+            className="greeting-btn"
+          >
+            Download APK
           </a>
         </div>
       </div>

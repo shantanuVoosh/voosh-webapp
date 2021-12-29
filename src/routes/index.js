@@ -144,15 +144,13 @@ router.post("/signup", async (req, res) => {
     restaurant_name,
     swiggy_register_phone,
     swiggy_password,
-    swiggy_Id,
     zomato_register_phone,
   } = req.body;
-
+  console.log("inside api!");
   console.log("name", name);
   console.log("phone", phone);
   console.log("email", email);
   console.log("restaurant_name", restaurant_name);
-  console.log("swiggy_id", swiggy_Id);
   console.log("swiggy_register_phone", swiggy_register_phone);
   console.log("swiggy_password", swiggy_password);
   console.log("zomato_register_phone", zomato_register_phone);
@@ -162,42 +160,73 @@ router.post("/signup", async (req, res) => {
       useNewUrlParser: true,
     });
 
-    const db = client.db(documentName).collection(newCollectionName);
-    const user = await client
+    const newUser = await client
       .db(documentName)
       .collection(newCollectionName)
-      .findOne({ phone: swiggy_register_phone });
-
-    if (user) {
-      return res.json({
-        status: "error",
-        message: `User Already Exists!`,
-        // isAuth: false,
-      });
-    } else {
-      const newUser = await db.insertOne({
+      .insertOne({
         name,
         phone,
         email,
         restaurant_name,
         swiggy_register_phone: parseInt(swiggy_register_phone),
         swiggy_password,
-        swiggy_Id,
         zomato_register_phone: parseInt(zomato_register_phone),
+        join_date: new Date(),
       });
-      console.log("newUser", newUser);
-      return res.json({
-        status: "success",
-        message: `User Created Successfully!`,
-        // isAuth: false,
-      });
-    }
+    console.log("newUser", newUser);
+    return res.json({
+      status: "success",
+      message: `User Created Successfully!`,
+      // isAuth: false,
+    });
   } catch (err) {
     res.json({
       status: "error",
       message: `Error while signup :${err}`,
     });
   }
+
+  // ! removed!
+  // try {
+  //   const client = await MongoClient.connect(VooshDB, {
+  //     useNewUrlParser: true,
+  //   });
+
+  //   const db = client.db(documentName).collection(newCollectionName);
+  //   const user = await client
+  //     .db(documentName)
+  //     .collection(newCollectionName)
+  //     .findOne({ phone: swiggy_register_phone });
+
+  //   if (user) {
+  //     return res.json({
+  //       status: "error",
+  //       message: `User Already Exists!`,
+  //       // isAuth: false,
+  //     });
+  //   } else {
+  //     const newUser = await db.insertOne({
+  //       name,
+  //       phone,
+  //       email,
+  //       restaurant_name,
+  //       swiggy_register_phone: parseInt(swiggy_register_phone),
+  //       swiggy_password,
+  //       zomato_register_phone: parseInt(zomato_register_phone),
+  //     });
+  //     console.log("newUser", newUser);
+  //     return res.json({
+  //       status: "success",
+  //       message: `User Created Successfully!`,
+  //       // isAuth: false,
+  //     });
+  //   }
+  // } catch (err) {
+  //   res.json({
+  //     status: "error",
+  //     message: `Error while signup :${err}`,
+  //   });
+  // }
 });
 
 // ! helper for revenue
@@ -314,13 +343,13 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       restaurantList = [...getAllRestaurantsData];
     }
     console.log("restaurantList", restaurantList);
-    let apiData;
+    // let apiData;
     let apiData2;
 
     console.log(client_res_id, "client_res_id");
     if (client_res_id.length) {
       // res_id = client_res_id;
-      api_data = await dataProvider(parseInt(client_res_id), date);
+      // api_data = await dataProvider(parseInt(client_res_id), date);
       console.log("client_res_id-----------------??:", client_res_id);
 
       api_data2 = await getAllDataFromApi(
@@ -329,18 +358,18 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         resultType
       );
     } else {
-      api_data = await dataProvider(parseInt(res_id), date);
+      // api_data = await dataProvider(parseInt(res_id), date);
 
       api_data2 = await getAllDataFromApi(parseInt(res_id), number, resultType);
 
       console.log("res_id-----------------?:", res_id);
     }
 
-    data[0] = api_data;
+    // data[0] = api_data;
     console.log("---------- <Get All Data Success End> ----------------");
     res.json({
       data: {
-        api_data: data,
+        // api_data: data,
         res_name: res_name,
         restaurantList: restaurantList,
         res_id: res_id,
@@ -448,7 +477,7 @@ router.get("/api/data", async (req, res) => {
   // const {res_id, number, resultType} = req.body;
 
   const res_id = 256302;
-  const number = 51;
+  const number = 52;
   const resultType = "week";
   // const res_id = 272065;
   // const number = 51;

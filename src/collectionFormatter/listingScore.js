@@ -9,6 +9,9 @@ const documentName = "operationsdb";
 const listingScoreMongoDBData = async (res_id, number, resultType) => {
   // ? key is different in collection
 
+
+  console.log("listingScoreMongoDBData********************", res_id, number, resultType);
+
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -57,7 +60,7 @@ const listingScoreMongoDBData = async (res_id, number, resultType) => {
     }
 
     // console.log("------******------");
-    // console.log("listingScore:", listingScore);
+    // console.log("listingScore--------------------------.................:", listingScore);
     // console.log("------******------");
 
     client.close();

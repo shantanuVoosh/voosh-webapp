@@ -18,6 +18,7 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    console.log(errors)
     try {
       const { data: response } = await axios.post("/signup", {
         name: data["Your Name"],
@@ -30,6 +31,7 @@ const Signup = () => {
         zomato_register_phone: data["Zomato Reg"][" Phone"],
       });
       console.log("Signup Success, response:", response);
+
       if (response.status === "success") {
         navigate("/greeting");
       } else {
@@ -102,7 +104,7 @@ const Signup = () => {
                 type="tel"
                 placeholder="Phone Number"
                 {...register("Phone Number", {
-                  required: true,
+                  // required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
@@ -114,7 +116,7 @@ const Signup = () => {
               <input
                 className="form--input"
                 type="email"
-                required
+                // required
                 placeholder="Email"
                 {...register("Email", {
                   required: "Email is required",
@@ -136,7 +138,7 @@ const Signup = () => {
                 type="text"
                 placeholder="Restaurant Name"
                 {...register("Restaurant Name", {
-                  required: true,
+                  // required: true,
                   minLength: 1,
                 })}
               />
@@ -159,25 +161,8 @@ const Signup = () => {
             {/* //? Food Services */}
             <div className="form-group">
               <div className="form--heading">Partner Details</div>
-              {/* //!Swiggy Id */}
-              {errors["Swiggy Id"] && (
-                <p className="form_error red">Provide a valid your Swiggy Id</p>
-              )}
-              <input
-                className="form--input"
-                type="text"
-                placeholder="Swiggy Id"
-                {...register("Swiggy Id", {
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: "Please enter numbers only",
-                  },
-                  required: true,
-                  minLength: 3,
-                })}
-              />
-              {/* //!Swiggy Rest. Id */}
-              {errors["Swiggy Reg. Phone"] && (
+              {/* //!Swiggy Rest. Phone */}
+              {errors["Swiggy Reg"]?.[" Phone"] && (
                 <p className="form_error red">
                   Provide a valid number, your Swiggy Registered Phone Number
                 </p>
@@ -187,7 +172,7 @@ const Signup = () => {
                 type="tel"
                 placeholder="Swiggy Reg. Phone"
                 {...register("Swiggy Reg. Phone", {
-                  required: true,
+                  // required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
@@ -203,12 +188,12 @@ const Signup = () => {
                 type="password"
                 placeholder="Swiggy Password"
                 {...register("Swiggy Password", {
-                  required: true,
+                  // required: true,
                   minLength: 3,
                 })}
               />
               {/* //!Zomato Phone Number */}
-              {errors["Zomato Reg. Phone"] && (
+              {errors["Zomato Reg"]?.[" Phone"] && (
                 <p className="form_error red">
                   Provide a valid number, your Zomato Registered Phone Number{" "}
                 </p>
@@ -218,7 +203,7 @@ const Signup = () => {
                 type="tel"
                 placeholder="Zomato Reg. Phone"
                 {...register("Zomato Reg. Phone", {
-                  required: true,
+                  // required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}

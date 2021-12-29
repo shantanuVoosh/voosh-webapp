@@ -62,7 +62,6 @@ const revenueMongoDBData = async (res_id, number, resultType) => {
       ])
       .toArray();
 
-
     client.close();
     return {
       revenue_score: revenue[0]?.revenue,
@@ -95,8 +94,10 @@ const getPreviousDaySales = async (res_id) => {
       .toArray();
 
     console.log(
-      "previousDaySales/*/*//*/*/*////--------------+++",
-      previousDayRevenue
+      "previousDaySales:",
+      previousDayRevenue,
+      "previousDayDate:",
+      getPreviousDay12HoursAgo()
     );
     return {
       previousDayRevenue: previousDayRevenue[0]?.final_revenue,
@@ -178,10 +179,10 @@ const revenuDataFormatter = async (res_id, number, resultType) => {
 
   // console.log("revenue_score:", revenue_score);
   // console.log("revenue_financical:", revenue_financical);
-  console.log(
-    "previousDayRevenue:------------------------->",
-    previousDayRevenue
-  );
+  // console.log(
+  //   "previousDayRevenue:------------------------->",
+  //   previousDayRevenue
+  // );
 
   const totalSales = isObjectEmpty(revenue_financical)
     ? "working on it"
