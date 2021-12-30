@@ -2,6 +2,8 @@ import React from "react";
 import Footer from "../components/Footer";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import StaticHeader from "../components/StaticHeader";
+
 // ?abhi for testing
 const test_data = [
   {
@@ -46,11 +48,9 @@ const NotificationItem = ({ message, info, messageType }) => {
 const Notification = () => {
   return (
     <>
+      <StaticHeader name={"Notification"} />
       <div className="container">
         <div className="notification">
-          <div className="notification__header">
-            <h1 className="notification__header--title">Notification</h1>
-          </div>
           {/* //! list of items */}
           <div className="notification-items-container items__container">
             {notification_from_api.length < 1 ? (
@@ -76,8 +76,8 @@ const Notification = () => {
             )}
           </div>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 };

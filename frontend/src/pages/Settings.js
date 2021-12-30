@@ -5,6 +5,7 @@ import { clearData } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import StaticHeader from "../components/StaticHeader";
 const APP_TOKEN = "voosh-token";
 
 const Settings = () => {
@@ -24,31 +25,24 @@ const Settings = () => {
     // ?Open model to authorize again
   };
   const LogOut = () => {
-    signoutSuccess()
+    signoutSuccess();
     // ?Open model to authorize again
   };
- 
 
   return (
     <>
+      <StaticHeader name={"Settings"} addBtn={true} />
       <div className="container">
         <div className="setting">
-          <div className="setting__header">
-            <h1 className="setting__header--title">Settings</h1>
-            <span className="setting__header--btn screen-btn" onClick={onSignoutSuccess}>
-              Log Out
-            </span>
-          </div>
           <div className="setting-container ">
-
+            {/* 
             <a href="tel:9015317006" className="long-btn screen-btn btn">
             Call us at +91-9015317006
-            </a>
+            </a> */}
           </div>
         </div>
-
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 };

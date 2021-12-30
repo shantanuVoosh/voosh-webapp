@@ -143,20 +143,13 @@ if (fakeData) {
     setRestaurantListOpen((prevState) => !prevState);
   };
 
-  const allResultTypeMap = {
-    week: "This Week",
-    month: "This Month",
-    prev_month: "Previous Month",
-    prev_week: "Previous Week",
-    prev_day: "Previous Day",
-  };
 
   // !Header for All Pages Except Error Page
   const HeaderComponent = () => {
     return (
       <>
         {/*//? small , mid , big */}
-        <div className="head-color"></div>
+        {/* <div className="header_bg"></div> */}
         <header className={`header header-${headerSize}`} style={cStyles}>
           {/* <Hamburger
             toggled={isOpen}

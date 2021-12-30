@@ -1,15 +1,8 @@
 const router = require("express").Router();
-const data = require("../fakedata/data");
 const { MongoClient } = require("mongodb");
 const { getTimeLog } = require("../utils/dateProvide");
 const jwt = require("jsonwebtoken");
-const {
-  getRequiredCollectionDataFromMongodb,
-  structureMongodbData,
-} = require("../utils/clientDataFormat");
 const { getAllRestaurants } = require("../utils/getAllRestaurants");
-const { dataProvider } = require("../utils/dataProvider");
-// const { getTimeLog } = require("../database/db/mongoDB");
 
 // Todo: when Use it, jst change the name!
 const {
@@ -33,7 +26,6 @@ router.post("/login", async (req, res) => {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
-    // const db = client.db(documentName).collection(cooleactionName);
     const userPresent = await client
       .db(documentName)
       .collection(cooleactionName)
@@ -229,83 +221,6 @@ router.post("/signup", async (req, res) => {
   // }
 });
 
-// ! helper for revenue
-router.get("/api/rev", async (req, res) => {
-  const colleactionName = "swiggy_revenue_products";
-
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = client.db(documentName);
-    // const revenue = await db.find({
-    //   name: "swiggy_revenue_products",
-    //   query: {
-    //       swiggy_res_id: 256302,
-    //       week_no:48
-    //   }
-
-    // });
-
-    const revenue = await db
-      .collection(colleactionName)
-      .find({
-        swiggy_res_id: 256302,
-        week_no: 20,
-      })
-      .toArray();
-
-    const resx = await db
-      .collection(colleactionName)
-      .aggregate([
-        {
-          $match: {
-            swiggy_res_id: 256302,
-            week_no: 48,
-          },
-        },
-        {
-          $group: {
-            _id: "$week_no",
-            total: { $sum: "$final_revenue" },
-          },
-        },
-      ])
-      .toArray();
-
-    return res.json({
-      status: "success",
-      // revenue:revenue[0],
-      resx: resx,
-    });
-  } catch (err) {
-    res.json({
-      status: "error",
-      message: `Error :${err}`,
-    });
-  }
-});
-
-//  Todo: remove this (Helper route! to see the data in the db)
-router.get("/helper", async (req, res) => {
-  const apiResonpse = await getRequiredCollectionDataFromMongodb(256302);
-  const getAllRestaurantsData = await getAllRestaurants();
-  const mycustomFun = await dataProvider(272065, "2021-12-23");
-  const name = Object.keys(apiResonpse);
-  const data = Object.values(apiResonpse).map((item, index) => {
-    const obj = {};
-    obj[name[index]] = item.slice(Math.max(item.length - 3, 0));
-    return obj;
-  });
-  res.json({
-    restaurant_names: getAllRestaurantsData,
-    data,
-    mycustomFun,
-  });
-});
-
-router.get;
-
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
   console.log("---------- <Get All Data Start> ----------------");
@@ -322,34 +237,33 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     const client_res_id = req.body.client_res_id;
     console.log(
       "Current User:\n",
-      "Id:",
+      "id:",
       id,
-      "Res_Id:",
+      "res_id:",
       res_id,
-      "Phone:",
+      "phone:",
       phone,
-      "Res_Name:",
+      "Restaurant Name:",
       res_name
     );
-    console.log(number, resultType, date, "////////////");
+    console.log("Number:", number, "ResultType:", resultType, "Date:", date);
 
     let restaurantList = [];
-    //? then it is a res_id soi only one restaurant
+    //? then it is a res_id soit will only have one restaurant
     if (`${phone}`.length < 10 || phone === null || phone === undefined) {
       restaurantList = [{ res_name, res_id }];
-    } else {
-      //? then it is a phone number so multiple restaurants
+    }
+
+    //? then it is a phone number so multiple restaurants
+    else {
       const getAllRestaurantsData = await getAllRestaurants(phone);
       restaurantList = [...getAllRestaurantsData];
     }
-    console.log("restaurantList", restaurantList);
-    // let apiData;
-    let apiData2;
-
+    console.log("Restaurant List:", restaurantList);
     console.log(client_res_id, "client_res_id");
+    let api_data2;
+
     if (client_res_id.length) {
-      // res_id = client_res_id;
-      // api_data = await dataProvider(parseInt(client_res_id), date);
       console.log("client_res_id-----------------??:", client_res_id);
 
       api_data2 = await getAllDataFromApi(
@@ -358,18 +272,14 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         resultType
       );
     } else {
-      // api_data = await dataProvider(parseInt(res_id), date);
-
       api_data2 = await getAllDataFromApi(parseInt(res_id), number, resultType);
 
       console.log("res_id-----------------?:", res_id);
     }
 
-    // data[0] = api_data;
     console.log("---------- <Get All Data Success End> ----------------");
     res.json({
       data: {
-        // api_data: data,
         res_name: res_name,
         restaurantList: restaurantList,
         res_id: res_id,
@@ -408,7 +318,6 @@ router.post("/update/user-log", checkAuthentication, async (req, res) => {
 });
 
 router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
-  // console.log("inside login route");
   const { name, email } = req.payload;
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -465,20 +374,20 @@ const {
 const {
   listingScoreDataFormatter,
 } = require("../collectionFormatter/listingScore");
-// Todo
 const { revenueMongoDBData } = require("../collectionFormatter/revenue");
 
 const {
   customerReviewsDataFormatter,
 } = require("../collectionFormatter/customerReviews");
 const { revenuDataFormatter } = require("../collectionFormatter/revenue");
-// ! Test le liye get hoga ye post
+
+// ! Test Route
 router.get("/api/data", async (req, res) => {
   // const {res_id, number, resultType} = req.body;
 
-  const res_id = 256302;
-  const number = 52;
-  const resultType = "week";
+  // const res_id = 256302;
+  // const number = 52;
+  // const resultType = "week";
   // const res_id = 272065;
   // const number = 51;
   // const resultType = "week";

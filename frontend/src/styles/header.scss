@@ -5,6 +5,39 @@
   color: aliceblue;
 }
 
+.header_bg {
+  position: absolute;
+  height: $header-height-small;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  user-select: none;
+  width: 100%;
+  z-index: -1;
+  &::after {
+    content: "";
+    background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+    position: absolute;
+    height: 120px;
+    width: 120px;
+    top: -51px;
+    right: -11px;
+    border-radius: 100%;
+  }
+
+  // Bottom circle
+  // &::before {
+  //   content: "";
+  //   position: absolute;
+  //   background: #ffa20f;
+  //   height: 120px;
+  //   width: 120px;
+  //   top: 140px;
+  //   right: 158px;
+  //   border-radius: 100%;
+  // }
+}
+
 .header {
   position: relative;
   height: $header-height-small;
@@ -175,12 +208,13 @@
 
   .dropdown {
     position: absolute;
-    height: auto;
-    min-width: 160px;
-    width: auto;
-    padding: 4px 8px;
     top: 11px;
     right: -161px;
+    height: auto;
+    width: auto;
+    min-width: 170px;
+
+    padding: 4px 8px;
     border: 1px solid $color-primary-1;
     background-color: #ffffff;
     color: #262d30;
@@ -195,9 +229,8 @@
       border-bottom: 1px solid $color-white-3;
     }
     .item {
-
       @include breakpoint-up(xxsmall) {
-        font-size: 12px;
+        font-size: 13px;
       }
 
       @include breakpoint-up(xsmall) {
@@ -211,13 +244,14 @@
         font-size: $text-small;
         font-weight: 500;
         margin-bottom: 1px;
+        @include breakpoint-up(xxsmall) {
+          font-size: $text-medium;
+        }
 
         &.selected {
           color: $color-primary-1;
         }
       }
-
-      
     }
   }
 }
@@ -231,14 +265,14 @@
   max-width: 500px;
 
   @include breakpoint-up(xxsmall) {
-    font-size: 12px;
+    font-size: 13px;
     top: 5px px;
     right: -13px;
     font-size: 12px;
   }
 
   @include breakpoint-up(xsmall) {
-    font-size: 12px;
+    font-size: 14px;
     top: 1px;
     right: -2px;
     font-size: 14px;
@@ -271,7 +305,6 @@
       border-bottom: 1px solid $color-white-3;
     }
     .item {
-
       @include breakpoint-up(xxsmall) {
         font-size: 12px;
       }
@@ -292,8 +325,6 @@
           color: $color-primary-1;
         }
       }
-
-      
     }
   }
 }

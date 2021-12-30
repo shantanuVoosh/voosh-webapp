@@ -1,43 +1,21 @@
 .setting {
   height: 100%;
-  min-height: 90vh;
-  padding: 0 .5rem;
-  &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 1rem 0;
-      padding: 1rem 0;
-    &--title {
-      font-size: 1.6rem;
-      font-weight: 700;
-    }
-    &--btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-      height: 40px;
-      padding: 0px 35px;
-      background-color: $color-white-1;
-      border-radius: $radius-3;
-      border: 1px solid rgb(216, 56, 56);
-      color: rgb(216, 56, 56);
-
-    &:hover{
-        color: #fff;
-        background-color: rgb(216, 56, 56);
-    }
-    }
-  }
-}
-
-.setting-container{
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
-  .btn{
+}
+
+.setting-container {
+  height: 100%;
+  width: 100%;
+  flex-grow: 1;
+  text-align: center;
+
+  .btn {
     text-decoration: none;
     text-align: center;
     padding: 1rem 0;

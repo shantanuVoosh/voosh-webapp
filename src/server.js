@@ -11,7 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", allRoutes);
 
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(process.cwd(), "frontend/build")));
 

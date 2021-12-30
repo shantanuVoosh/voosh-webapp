@@ -6,13 +6,20 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-const getPreviousDay12HoursAgo = () => {
-  const time = new Date();
-  time.setHours(time.getHours() - 12);
+const getYesterdayDateBefore12HoursAgo = () => {
+  // const time = new Date();
+  const tenHoursBefore = new Date();
+  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
+  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
   const format =
-    time.getDate() - 1 + "-" + (time.getMonth() + 1) + "-" + time.getFullYear();
+    tenHoursBefore.getFullYear() +
+    "-" +
+    (tenHoursBefore.getMonth() + 1) +
+    "-" +
+    (tenHoursBefore.getDate() - 1);
   return format;
 };
+
 
 function getPrevMonth() {
   var d = new Date();
@@ -80,25 +87,25 @@ const getPreviousDaySales = async (res_id) => {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    console.log("date time yyy", getPreviousDay12HoursAgo());
+    console.log("date time yyy", getYesterdayDateBefore12HoursAgo());
     const previousDayRevenue = await db
       .collection("swiggy_revenue_products")
       .aggregate([
         {
           $match: {
-            run_date: getPreviousDay12HoursAgo(),
+            date: getYesterdayDateBefore12HoursAgo(),
             swiggy_res_id: parseInt(res_id),
           },
         },
       ])
       .toArray();
 
-    console.log(
-      "previousDaySales:",
-      previousDayRevenue,
-      "previousDayDate:",
-      getPreviousDay12HoursAgo()
-    );
+    // console.log(
+    //   "previousDaySales:",
+    //   previousDayRevenue,
+    //   "previousDayDate:",
+    //   getPreviousDay12HoursAgo()
+    // );
     return {
       previousDayRevenue: previousDayRevenue[0]?.final_revenue,
     };
@@ -148,7 +155,7 @@ const revenueFinancical = async (res_id, number, resultType) => {
       ])
       .toArray();
 
-    console.log("rdc----------------->", rdc);
+    // console.log("rdc----------------->", rdc);
 
     client.close();
     return {

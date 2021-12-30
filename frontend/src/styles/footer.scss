@@ -2,12 +2,12 @@
 .footer {
   position: relative;
   background-color: $color-white-1;
-  bottom: 0;
   width: 100%;
   padding: 10px;
   margin-top: 15px;
-  
-  position: sticky;
+
+  position: fixed;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

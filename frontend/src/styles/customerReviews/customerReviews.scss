@@ -16,9 +16,9 @@
 
 // .no_reviews {
 //   display: flex;
-//   // justify-content: center;
-//   // align-items: center;
-//   // min-height: 200px;
+  // justify-content: center;
+  // align-items: center;
+  // min-height: 200px;
 //   .text{
 //     font-size: 16px;
 //     color: $color-grey-3;
@@ -27,7 +27,7 @@
 // }
 
 .customer_review {
-  min-height: calc(100vh);
+  margin-bottom: 2rem;
 
   &__sub-heading {
     &--text {
@@ -42,6 +42,12 @@
     }
   }
 }
+
+.review-container{
+  margin-bottom: 3rem;
+}
+
+
 .negative-reviews {
 }
 
