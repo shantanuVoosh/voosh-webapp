@@ -15,6 +15,7 @@
   .financial_a-card {
     position: relative;
     width: 100%;
+    min-height: 135px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -41,8 +42,8 @@
         position: absolute;
         content: "( previous month )";
         color: $red;
-        top: 17px;
-        left: 92px;
+        top: 31px;
+        left: 11px;
         font-size: 8px;
         font-weight: 700;
       }
@@ -52,8 +53,8 @@
         position: absolute;
         content: "( previous month )";
         color: $red;
-        top: 16px;
-        left: 103px;
+        top: 31px;
+        left: 11px;
         font-size: 8px;
         font-weight: 700;
       }
@@ -120,7 +121,7 @@
 .financial_a-breakdown {
   margin-top: 3rem;
   @include breakpoint-up(xsmall) {
-    margin-top: 2rem;
+    margin-top: 3.5rem;
   }
   &__heading {
     font-weight: 700;
@@ -131,6 +132,7 @@
       color: $red;
       font-size: 12px;
       margin-left: 5px;
+      
     }
   }
   &__cards {

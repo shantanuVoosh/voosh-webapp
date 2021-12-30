@@ -12,7 +12,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import RequiredAuth from "./routes/RequiredAuth";
 import RedirectRoute from "./routes/RedirectRoute";
 import React from "react";
-import "./styles/styles.scss";
+import "./styles/styles.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import LayoutWrapper from "./components/LayoutWrapper";

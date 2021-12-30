@@ -52,10 +52,10 @@ const WhiteCard = (props) => {
         </div>
       </div>
       {/* //! sending data from this page */}
-      <div className="financial_a-card__btn">
+      {/* <div className="financial_a-card__btn">
         <span className="financial_a-card__btn--text">Know more</span>
         <AiOutlineRight className="financial_a-card__btn--icon" />
-      </div>
+      </div> */}
     </div>
   );
 };

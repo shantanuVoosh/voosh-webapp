@@ -34,12 +34,12 @@ const Settings = () => {
       <StaticHeader name={"Settings"} addBtn={true} />
       <div className="container">
         <div className="setting">
-          <div className="setting-container ">
-            {/* 
-            <a href="tel:9015317006" className="long-btn screen-btn btn">
+          {/* <div className="setting-container "> */}
+
+          <a href="tel:9015317006" className="long-btn screen-btn btn">
             Call us at +91-9015317006
-            </a> */}
-          </div>
+          </a>
+          {/* </div> */}
         </div>
       </div>
       <Footer />
