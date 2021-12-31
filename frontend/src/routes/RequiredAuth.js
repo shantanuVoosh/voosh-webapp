@@ -11,21 +11,25 @@ import {
 } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import {
-  getPreviousMonth,
-  getCurrentMonth,
-  getPreviousWeek,
-  getYesterdayDateBefore12HoursAgo,
+  //? if today is 2022-1-1, then 2021-12-31 after 12 hours or 2021-12-30
+  getPreviousDay12HoursAgoDate,
+
+  getCurrentMonthDate,
+  getPreviousWeekDate,
+  getPreviousMonthDate,
+
+  //? Only to get week or month number
   getWeekNumberFromDate,
   getMonthNumberFromDate,
 } from "../utils/dateProvider";
 const APP_TOKEN_BY_GOOGLE = "voosh-token-by-google";
 const APP_TOKEN = "voosh-token";
 const allResultTypeMap = {
-  "This Week": getYesterdayDateBefore12HoursAgo(),
-  "Previous Day": getYesterdayDateBefore12HoursAgo(),
-  "This Month": getCurrentMonth(),
-  "Previous Week": getPreviousWeek(),
-  "Previous Month": getPreviousMonth(),
+  "Previous Day": getPreviousDay12HoursAgoDate(),
+  "This Week": getPreviousDay12HoursAgoDate(),
+  "Previous Week": getPreviousWeekDate(),
+  "This Month": getCurrentMonthDate(),
+  "Previous Month": getPreviousMonthDate(),
 };
 
 // !Protecting routes
@@ -40,26 +44,29 @@ function RequiredAuth({ children }) {
   // !Checking if user is authenticated, Phone Number
   const getDataFromApi = React.useCallback(async () => {
     const date = allResultTypeMap[resultType];
-    if(resultType === "Previous Day"){
-      return 
+    // !for testing purpose
+    // const date = "2022-01-01";
+    console.log("date", date);
+
+    if (resultType === "Previous Day") {
+      return;
     }
     try {
       dispatch(isLoading(true));
+      // ? To identify if the slected option is week or month
       const tempMonthMap = {
         "This Week": "week",
         "Previous Week": "week",
         "This Month": "month",
         "Previous Month": "month",
       };
-      //!  prev month somehow decreasd by 1
+      //? date is already modified, just calculating the week number or month number
       const tempNumberMap = {
         "This Week": getWeekNumberFromDate(date),
         "Previous Week": getWeekNumberFromDate(date),
         "This Month": getMonthNumberFromDate(date),
         "Previous Month": getMonthNumberFromDate(date),
       };
-
-      console.log();
 
       // const client_res_id = restaurantList.find((item) => item.name === res_name).id;
       const { data: response } = await axios.post("/voosh-data", {
@@ -81,10 +88,13 @@ function RequiredAuth({ children }) {
           res_id: id,
           api_data2,
         } = response.data;
+        // ! call of the first time
         if (res_name === "" && res_id === "") {
           console.log("call data with res_name and res_id");
           dispatch(fetchAllData(api_data2, name, restaurantList, id));
-        } else {
+        }
+        // ! only restaurant data will change or dispatch
+        else {
           console.log("only data");
           dispatch(fetchData(api_data2));
         }

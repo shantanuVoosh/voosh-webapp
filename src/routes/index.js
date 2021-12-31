@@ -231,14 +231,11 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     const { res_id, id, res_name, phone } = req.payload;
     const date = req.body.date;
 
-    const number = req.body.number;
-    const resultType = req.body.resultType;
+    const { number, resultType, client_res_id } = req.body;
 
-    const client_res_id = req.body.client_res_id;
     console.log(
       "Current User:\n",
-      "id:",
-      id,
+      "id:", id,
       "res_id:",
       res_id,
       "phone:",

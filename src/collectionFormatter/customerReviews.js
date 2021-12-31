@@ -1,7 +1,4 @@
 const { MongoClient } = require("mongodb");
-const { video_urls } = require("../utils/traning_video_urls");
-const { RDC_video, Serviceability_video, MFR_video, Ratings_video } =
-  video_urls;
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
@@ -172,7 +169,7 @@ const customerReviewsMongoDBData = async (res_id, number, resultType) => {
               "3_star": 0,
               "2_star": 0,
               "1_star": 0,
-              total_rating: 0,
+              total_ratings: 0,
             },
     };
   } catch (err) {
@@ -185,7 +182,7 @@ const customerReviewsDataFormatter = async (res_id, number, resultType) => {
     const data = await customerReviewsMongoDBData(res_id, number, resultType);
     const { reviewOfProducts, allFeedbacks, OrdersPerRating, customerRatings } =
       data;
-      // console.log(reviewOfProducts, "line no. 188");
+      console.log(reviewOfProducts.length, "line no. 188");
     //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
     const negative_review_items = reviewOfProducts.map((item) => {
       const { item_name } = item;
@@ -291,9 +288,13 @@ const customerReviewsDataFormatter = async (res_id, number, resultType) => {
           });
 
     const customerReviews = {
+      // value:
+      //   customerRatings === undefined
+      //     ? "Please wait! We are working on It."
+      //     : parseFloat(customerRatings.toFixed(1)),
       value:
         customerRatings === undefined
-          ? "Please wait! We are working on It."
+          ? "working on It."
           : parseFloat(customerRatings.toFixed(1)),
       type: "average",
       compareType: "grater",

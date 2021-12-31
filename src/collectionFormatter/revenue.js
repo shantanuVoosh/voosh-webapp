@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const moment = require("moment");
 const { video_urls } = require("../utils/traning_video_urls");
 const { RDC_video, Serviceability_video, MFR_video, Ratings_video } =
   video_urls;
@@ -6,20 +7,11 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-const getYesterdayDateBefore12HoursAgo = () => {
-  // const time = new Date();
-  const tenHoursBefore = new Date();
-  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
-  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
-  const format =
-    tenHoursBefore.getFullYear() +
-    "-" +
-    (tenHoursBefore.getMonth() + 1) +
-    "-" +
-    (tenHoursBefore.getDate() - 1);
-  return format;
+const previousDay12HoursAgo = () => {
+  const m = moment();
+  const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
+  return result;
 };
-
 
 function getPrevMonth() {
   var d = new Date();
@@ -82,18 +74,18 @@ const revenueMongoDBData = async (res_id, number, resultType) => {
 };
 
 const getPreviousDaySales = async (res_id) => {
+  console.log("for prev day sale/revenue: yyyy-mm-dd", previousDay12HoursAgo());
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    console.log("date time yyy", getYesterdayDateBefore12HoursAgo());
     const previousDayRevenue = await db
       .collection("swiggy_revenue_products")
       .aggregate([
         {
           $match: {
-            date: getYesterdayDateBefore12HoursAgo(),
+            date: previousDay12HoursAgo(),
             swiggy_res_id: parseInt(res_id),
           },
         },
@@ -259,7 +251,8 @@ const revenuDataFormatter = async (res_id, number, resultType) => {
   }
 
   const revenueFinalResult = {
-    value: revenue_score,
+    // ? suppose this this 1st day oft the month so the revenue is 0
+    value: revenue_score?revenue_score:0,
     previousDayRevenue: previousDayRevenue,
 
     financicalData: {

@@ -1,7 +1,7 @@
 import React from "react";
-
 import { useSelector } from "react-redux";
 import Card from "../../components/listingScore/Card";
+import CardWithNoData from "../../components/listingScore/CardWithNoData";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
@@ -9,14 +9,21 @@ const Dashboard = () => {
   const listingScoreData = listingScoreItems["listingScoreData"];
   // console.log(listingScoreData);
 
-
   return (
     <>
       <div className="listing_score_cards">
         {listingScoreData.map((item, index) => {
-          const { name, value, benchmark, info, compareThen, type } = item;
-          console.log( name, value, benchmark, compareThen, type)
-          return (
+          const {
+            name,
+            value,
+            benchmark,
+            info,
+            compareThen,
+            type,
+            isDataPresent,
+          } = item;
+          // console.log( name, value, benchmark, compareThen, type)
+          return isDataPresent ? (
             <Card
               key={index}
               name={name}
@@ -25,7 +32,10 @@ const Dashboard = () => {
               info={info}
               compareThen={compareThen}
               type={type}
+              isDataPresent={isDataPresent}
             />
+          ) : (
+            <CardWithNoData key={index} name={name} info={info} />
           );
         })}
       </div>

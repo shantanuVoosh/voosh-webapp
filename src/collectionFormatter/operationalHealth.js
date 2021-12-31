@@ -208,11 +208,10 @@ const operationalHealthMongoDBData = async (res_id, number, resultType) => {
 };
 
 const operationHealthDataFormatter = async (res_id, number, resultType) => {
-  // console.log("operationHealthDataFormatter", res_id, number, resultType);
-
   try {
     const data = await operationalHealthMongoDBData(res_id, number, resultType);
-
+    // console.log("operationHealthDataFormatter res_id, num, resultType", res_id, number, resultType);
+    // console.log("operationHealthDataFormatter data", data);
     const {
       oh_score,
       serviceability_score,
@@ -222,7 +221,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
       mfr_score,
       acceptance_score,
     } = data;
-    // console.log("operationHealthDataFormatter", data);
+
     // !If the values inside data is not present, then it will return undefined
     const operationalHealth = {
       dataPresent: true,
@@ -232,7 +231,10 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
         type: "percentage",
         info: "Operation Health >= 95% Gets more orders",
         benchmark: 95,
-        value: oh_score === undefined ? "Please wait! We are working on It." : oh_score * 2 * 10,
+        value:
+          oh_score === undefined
+            ? "Please wait! We are working on It."
+            : oh_score * 2 * 10,
         isDataPresent: oh_score === undefined ? false : true,
       },
       operationHealthData: [
@@ -305,7 +307,9 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
             "If you forget to mark food ready, take the MFR calling service. Tap here!",
           ],
           value:
-            mfr_score === undefined ? "Please wait! We are working on It." : parseInt(mfr_score),
+            mfr_score === undefined
+              ? "Please wait! We are working on It."
+              : parseInt(mfr_score),
           isDataPresent: mfr_score === undefined ? false : true,
         },
         // ? IGCC

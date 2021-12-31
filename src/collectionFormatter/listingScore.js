@@ -1,7 +1,4 @@
 const { MongoClient } = require("mongodb");
-const { video_urls } = require("../utils/traning_video_urls");
-const { RDC_video, Serviceability_video, MFR_video, Ratings_video } =
-  video_urls;
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
@@ -9,8 +6,7 @@ const documentName = "operationsdb";
 const listingScoreMongoDBData = async (res_id, number, resultType) => {
   // ? key is different in collection
 
-
-  console.log("listingScoreMongoDBData********************", res_id, number, resultType);
+  // console.log("listingScoreMongoDBData:", res_id, number, resultType);
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -91,7 +87,8 @@ const listingScoreMongoDBData = async (res_id, number, resultType) => {
 const listingScoreDataFormatter = async (res_id, number, resultType) => {
   try {
     const data = await listingScoreMongoDBData(res_id, number, resultType);
-    // console.log("data:", data);
+    // console.log("listingScoreDataFormatter res_id, number, resultType", res_id, number, resultType);
+    // console.log("listingScoreMongoDBData:", data);
     const {
       score,
       safety_tag,
@@ -109,7 +106,10 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
     // !If the values inside data is not present, then it will return undefined
     const listing = {
       listingScoreMain: {
-        value: score === undefined ? "Please wait! We are working on It." : score * 10,
+        value:
+          score === undefined
+            ? "Please wait! We are working on It."
+            : score * 10,
         type: "percentage",
         compareThen: "grater",
         benchmark: 90,
@@ -127,7 +127,10 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Get safety tag for your restaurant",
             "Reach out to us or 3rd parties who help in getting the tag",
           ],
-          value: safety_tag === undefined ? "Please wait! We are working on It." : safety_tag,
+          value:
+            safety_tag === undefined
+              ? "Please wait! We are working on It."
+              : safety_tag,
           isDataPresent: safety_tag === undefined ? false : true,
         },
 
@@ -143,14 +146,17 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Add images to minimum 30 items",
             "Contact Voosh photoshoot service for quality images",
           ],
-          value: image === undefined ? "Please wait! We are working on It." : image * 100,
+          value:
+            image === undefined
+              ? "Please wait! We are working on It."
+              : image * 100,
           isDataPresent: image === undefined ? false : true,
         },
         // !Number of Ratings
         // ?Number of Rating
         {
           name: "Number of Rating",
-          type:"percentage",
+          type: "percentage",
           benchmark: 90,
           compareThen: "High Medium Low",
           info: "More ratings helps you improve visibility",
@@ -178,7 +184,10 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Improve reviews by understanding the problem areas",
             "Contact Voosh for Rating Booster service",
           ],
-          value: rating === undefined ? "Please wait! We are working on It.": rating,
+          value:
+            rating === undefined
+              ? "Please wait! We are working on It."
+              : rating,
           isDataPresent: rating === undefined ? false : true,
         },
 
@@ -235,7 +244,9 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Use good keywords in item descriptons",
           ],
           value:
-            description === undefined ? "Please wait! We are working on It." : parseInt(description * 100),
+            description === undefined
+              ? "Please wait! We are working on It."
+              : parseInt(description * 100),
           isDataPresent: description === undefined ? false : true,
         },
         // ?Beverage Category
@@ -275,7 +286,10 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           compareThen: "yes or no",
           info: "Having a desert category improves listing score",
           suggestions: ["Add Desserts category and corrosponding item"],
-          value: desserts === undefined ? "Please wait! We are working on It." : desserts,
+          value:
+            desserts === undefined
+              ? "Please wait! We are working on It."
+              : desserts,
           isDataPresent: desserts === undefined ? false : true,
         },
       ],

@@ -1,7 +1,7 @@
 
 /* OPERARTION METRICS CARDS */
 
-.cards {
+.op_cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: 1fr;
@@ -9,7 +9,7 @@
   grid-gap: 0.5rem;
 }
 
-.card {
+.op_card {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@
     grid-column: span 2;
     flex-direction: row;
 
-    .card__btn {
+    .op_card__btn {
       display: flex;
       align-items: flex-end;
       margin-bottom: 7px;

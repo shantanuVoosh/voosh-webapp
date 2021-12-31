@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CardWithNoData from "./CardWithNoData";
 
-const Card = ({ name, value, benchmark, info, compareThen, type }) => {
+const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
   let showColor = "";

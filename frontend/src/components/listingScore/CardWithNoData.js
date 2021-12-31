@@ -14,7 +14,7 @@ const CardWithNoData = ({ name, info }) => {
       </div>
 
       <div className="card__btn">
-        <span className="card__btn--text">Know more</span>
+        <span className="card__btn--text unavailable">Know more</span>
         <AiOutlineRight className="card__btn--icon " />
       </div>
     </div>

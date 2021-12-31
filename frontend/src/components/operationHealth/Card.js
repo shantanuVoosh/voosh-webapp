@@ -20,15 +20,16 @@ const Card = (props) => {
     isDataPresent,
   } = props;
 
-  // ? handle Error if no data
-  if (!isDataPresent) {
-    return <CardWithNoData name={name} info={info} />;
+  // ? for customer reviews only
+  if(value === "working on It."){
+    return <CardWithNoData {...props} />
   }
 
+
   return (
-    <div className="card">
-      <div className="card__text">
-        <h5 className="card__text--heading">{name}</h5>
+    <div className="op_card">
+      <div className="op_card__text">
+        <h5 className="op_card__text--heading">{name}</h5>
         {compareThen === "grater" && (
           <div
             className={
@@ -61,17 +62,17 @@ const Card = (props) => {
           </div>
         )}
 
-        <div className="card__text--info">
+        <div className="op_card__text--info">
           <p>{info}</p>
         </div>
       </div>
       {/* //! sending data from this page */}
-      {/* //? redirect for special card */}
+      {/* //? redirect for special op_card */}
       {redirection ? (
         <>
-          <Link to={redirection} className="card__btn">
-            <span className="card__btn--text">Know more</span>
-            <AiOutlineRight className="card__btn--icon " />
+          <Link to={redirection} className="op_card__btn">
+            <span className="op_card__btn--text">Know more</span>
+            <AiOutlineRight className="op_card__btn--icon " />
           </Link>
         </>
       ) : (
@@ -87,10 +88,10 @@ const Card = (props) => {
               recommendations,
               type,
             }}
-            className="card__btn"
+            className="op_card__btn"
           >
-            <span className="card__btn--text">Know more</span>
-            <AiOutlineRight className="card__btn--icon" />
+            <span className="op_card__btn--text">Know more</span>
+            <AiOutlineRight className="op_card__btn--icon" />
           </Link>
         </>
       )}

@@ -1,119 +1,6 @@
-// ! Get Current Time
-export function getTimeLog() {
-  const time = new Date();
+import moment from "moment";
 
-  const format =
-    time.getDate() +
-    "/" +
-    time.getMonth() +
-    "/" +
-    time.getFullYear() +
-    "-" +
-    time.getHours() +
-    ":" +
-    time.getMinutes() +
-    ":" +
-    time.getSeconds() +
-    ":" +
-    time.getMilliseconds();
-  return format;
-}
-
-export function getCurrentDate() {
-  const time = new Date();
-  const tenHoursBefore = new Date();
-  tenHoursBefore.setHours(tenHoursBefore.getHours() - 20);
-  console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
-
-  const format =
-    time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
-  return format;
-}
-
-export const getCurrentDateBefore12HoursAgo = () => {
-  // const time = new Date();
-  const tenHoursBefore = new Date();
-  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
-  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
-  const format =
-    tenHoursBefore.getFullYear() +
-    "-" +
-    (tenHoursBefore.getMonth() + 1) +
-    "-" +
-    tenHoursBefore.getDate();
-  return format;
-};
-export const getYesterdayDateBefore12HoursAgo = () => {
-  // const time = new Date();
-  const tenHoursBefore = new Date();
-  tenHoursBefore.setHours(tenHoursBefore.getHours() - 12);
-  // console.log("Day:", tenHoursBefore.getDate(), "tenHoursBefore");
-  const format =
-    tenHoursBefore.getFullYear() +
-    "-" +
-    (tenHoursBefore.getMonth() + 1) +
-    "-" +
-    (tenHoursBefore.getDate() - 1);
-  return format;
-};
-
-export function getPreviousWeek() {
-  const time = new Date();
-  const format =
-    time.getFullYear() +
-    "-" +
-    (time.getMonth() + 1) +
-    "-" +
-    (time.getDate() - 7);
-  return format;
-}
-// !extra 1 day+
-export function getYesterdayDate() {
-  const time = new Date();
-  const format =
-    time.getFullYear() +
-    "-" +
-    (time.getMonth() + 1) +
-    "-" +
-    (time.getDate() - 1);
-  return format;
-}
-
-export function getTomorrowDate() {
-  const time = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-  const format =
-    time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
-  return format;
-}
-
-// ? Month
-// ! 2021-12
-export function getCurrentMonth() {
-  const time = new Date();
-  const format = time.getFullYear() + "-" + (time.getMonth() + 1);
-  return format;
-}
-
-export function getPreviousMonth() {
-  const time = new Date();
-  const format =
-    time.getFullYear() + "-" + time.getMonth() + "-" + time.getDate();
-  return format;
-}
-
-
-// console.log(getWeekNumberFromDate("2021-12-27"))
-//52
-
-// console.log(getWeekNumberFromDate("2021-12-24"))
-//51
-
-// console.log(getWeekNumberFromDate("2022-1-1"))
-//52
-
-// console.log(getWeekNumberFromDate("2022-1-3"))
-//1
-
+//* console.log(getWeekNumberFromDate("2022-1-1")) -->52
 export function getWeekNumberFromDate(date) {
   var d = new Date(date);
   d.setHours(0, 0, 0);
@@ -123,9 +10,44 @@ export function getWeekNumberFromDate(date) {
   return weekNo;
 }
 
+//* console.log(getMonthNumberFromDate("2022-1-3")) -->1
 export function getMonthNumberFromDate(date) {
   var d = new Date(date);
   var month = d.getMonth() + 1;
   return month;
 }
 
+//* if today is 2022-1-1, then 2021-12-31 after 12 hours or 2021-12-30
+export const getPreviousDay12HoursAgoDate = () => {
+  const m = moment();
+  const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
+  return result;
+};
+
+// * if current month is 2022-01-01, then 2021-12-25
+// * if current month is 2022-01-02, then 2021-12-26
+// * if current month is 2022-01-03, then 2021-12-27
+export const getPreviousWeekDate = () => {
+  const m = moment();
+  // const m = moment().add(1, "days");
+  //   console.log("This will be the curr adte", m.format("YYYY-MM-DD"));
+  const result = m.add(-7, "days").format("YYYY-MM-DD");
+  return result;
+};
+
+export const getPreviousMonthDate = () => {
+  const m = moment();
+  // const m = moment().add(1, "days");
+  // console.log("This will be the curr adte", m.format("YYYY-MM-DD"));
+  const result = m.add(-1, "months").format("YYYY-MM-DD");
+  return result;
+};
+
+export function getCurrentMonthDate() {
+  const time = new Date();
+  const d = time.getDate();
+  const m = time.getMonth() + 1;
+  const y = time.getFullYear();
+  const format = `${y}-${m}-${d}`;
+  return format;
+}

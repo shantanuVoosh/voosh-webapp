@@ -23,34 +23,34 @@ const Signup = () => {
     // console.log(data);
     // console.log(errors)
     try {
-      console.log(data["Swiggy Reg"]?.[" Phone"]);
       // ! Check if the number is registered with swiggy
-      const { data: swiggy_response } = await axios.get(
-        `https://partner.swiggy.com/registration/v2/registration-status?userId=${data["Swiggy Reg"]?.[" Phone"]}`,
-        {
-          // method: 'HEAD',
-          // mode: 'no-cors',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            // Accept: 'application/json',
-            // 'Content-Type': 'application/json',
-          },
-          // withCredentials: true,
-          // credentials: 'same-origin',
-          // crossdomain: true,
-        }
-      );
+      // console.log(data["Swiggy Reg"]?.[" Phone"]);
+      // const { data: swiggy_response } = await axios.get(
+      //   `https://partner.swiggy.com/registration/v2/registration-status?userId=${data["Swiggy Reg"]?.[" Phone"]}`,
+      //   {
+      //     // method: 'HEAD',
+      //     // mode: 'no-cors',
+      //     headers: {
+      //       'Access-Control-Allow-Origin': '*',
+      //       // Accept: 'application/json',
+      //       // 'Content-Type': 'application/json',
+      //     },
+      //     // withCredentials: true,
+      //     // credentials: 'same-origin',
+      //     // crossdomain: true,
+      //   }
+      // );
 
-      console.log(swiggy_response, "swiggy_response");
+      // console.log(swiggy_response, "swiggy_response");
 
-      if (
-        swiggy_response.statusCode === -1 ||
-        swiggy_response.statusMessage === "Invalid Mobile Number"
-      ) {
-        console.log("Invalid Mobile Number");
-        notify("Swiggy Reg. Phone Number is not registered");
-        return;
-      }
+      // if (
+      //   swiggy_response.statusCode === -1 ||
+      //   swiggy_response.statusMessage === "Invalid Mobile Number"
+      // ) {
+      //   console.log("Invalid Mobile Number");
+      //   notify("Swiggy Reg. Phone Number is not registered");
+      //   return;
+      // }
 
       const { data: response } = await axios.post("/signup", {
         name: data["Your Name"],
@@ -208,7 +208,7 @@ const Signup = () => {
                 placeholder="Swiggy Reg. Phone"
                 ref={swiggyNumberRef}
                 {...register("Swiggy Reg. Phone", {
-                  // required: true,
+                  required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
@@ -261,7 +261,7 @@ const Signup = () => {
                 ref={zomatoNumberRef}
                 placeholder="Zomato Reg. Phone"
                 {...register("Zomato Reg. Phone", {
-                  // required: true,
+                  required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
