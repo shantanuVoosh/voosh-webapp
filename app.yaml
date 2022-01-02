@@ -1,5 +1,5 @@
 # app.yaml
 runtime: nodejs14
-service: new-voosh
+service: voosh-dev-1
 
 

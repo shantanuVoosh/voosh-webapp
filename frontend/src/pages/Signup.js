@@ -138,7 +138,7 @@ const Signup = () => {
                 type="tel"
                 placeholder="Phone Number"
                 {...register("Phone Number", {
-                  // required: true,
+                  required: true,
                   maxLength: 10,
                   minLength: 10,
                 })}
