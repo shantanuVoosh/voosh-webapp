@@ -23,15 +23,18 @@ const WhiteCard = (props) => {
       <div className="financial_a-card error-card">
         <div className="financial_a-card__text">
           <h5 className="financial_a-card__text--heading">{name}</h5>
-          <div className="value error-value">{"working on it"}</div>
+          <div className="value error-value">
+            {/* {"No successful order yesterday"} */}
+            {"Working on it..."}
+            </div>
           <div className="financial_a-card__text--info">
             <p>{info}</p>
           </div>
         </div>
-        <div className="financial_a-card__btn">
+        {/* <div className="financial_a-card__btn">
           <span className="financial_a-card__btn--text">Know more</span>
           <AiOutlineRight className="financial_a-card__btn--icon" />
-        </div>
+        </div> */}
       </div>
     );
   }

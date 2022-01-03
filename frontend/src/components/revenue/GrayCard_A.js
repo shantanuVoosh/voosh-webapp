@@ -6,28 +6,25 @@ import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
 const GrayCard = (props) => {
   const resultType = useSelector((state) => state.resultType);
-  const {
-    name,
-    type,
-    value,
-    info,
-    color,
-  } = props;
+  const { name, type, value, info, color, isDataPresent } = props;
 
-  console.log(name, value, color, type);
-  return value === "working on it" || value === undefined ? (
-    <div className="card">
-      <div className="card__text">
-        <h5 className="card__text--heading">{name}</h5>
+  if (!isDataPresent) {
+    return (
+      <div className="card">
+        <div className="card__text">
+          <h5 className="card__text--heading">{name}</h5>
 
-        <div className="value error-value">{value}</div>
+          <div className="value error-value">{value}</div>
 
-        <div className="card__text--info">
-          <p>{info}</p>
+          <div className="card__text--info">
+            <p>{info}</p>
+          </div>
         </div>
       </div>
-    </div>
-  ) : (
+    );
+  }
+
+  return (
     <div className="card">
       <div className="card__text">
         <h5 className="card__text--heading">{name}</h5>

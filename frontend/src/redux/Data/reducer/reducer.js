@@ -9,6 +9,7 @@ const initialState = {
   restaurantList: [],
   isLoading: false,
   res_id: "",
+  date:"2022-1-2",
 };
 
 export const dataReducer = (state = initialState, action) => {

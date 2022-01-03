@@ -36,7 +36,7 @@ const Dashboard = () => {
         <Card
           iconName={"bar"}
           name={"Revenue"}
-          info={"Get your Revenue and Deduction Details!"}
+          info={"Dive into sales, deduction, commisions, etc."}
           cardStatistics={{
             // ! if prev month is null then show 0
             value: revenue.value,
@@ -51,7 +51,7 @@ const Dashboard = () => {
         <Card
           iconName={"bar"}
           name={"Operation Health"}
-          info={"Understand your Operation Health and Metrics!"}
+          info={"Analyse and improve your Operational Metrics."}
           cardStatistics={{
             value: operationHealthMain.value,
             benchmark: operationHealthMain.benchmark,
@@ -69,7 +69,7 @@ const Dashboard = () => {
         <Card
           iconName={"bar"}
           name={"Listing Score"}
-          info={"Understand how your online Swiggy listing is performing!"}
+          info={"Visibility performance on Swiggy and Zomato"}
           cardStatistics={{
             value: listingScoreMain.value,
             benchmark: listingScoreMain.benchmark,
@@ -87,7 +87,7 @@ const Dashboard = () => {
       </div>
       <div className="dashboard-bottom">
         <div className="dashboard-bottom__heading">
-          Some tutorials for your business
+          Learn more about Online Business
         </div>
         <div className="dashboard-bottom__videos">
           <div className="single-video">
@@ -120,14 +120,13 @@ const Dashboard = () => {
               height="240px"
             />
           </div>
-     
         </div>
         <div className="recomendation">
           <div className="recomendation__heading">
             <span className="icon">
               <BsBagCheckFill />
             </span>
-            <span className="text">Top Suggestion</span>
+            <span className="text">Recommendation For You</span>
           </div>
           {topSuggestions.length > 0 &&
             topSuggestions.map((item, index) => {
@@ -143,7 +142,7 @@ const Dashboard = () => {
                 <span className="text_1">Your business is doing great!</span>
                 <br />
                 <span className="text_2">
-                  No Suggestions for you in this {resultType}.
+                  No Recommendation for you in this {resultType}.
                 </span>
               </div>
             </div>

@@ -35,9 +35,10 @@ const Greeting = () => {
             <p style={{ marginBottom: "10px", fontSize: "1.4rem" }}>
               "Thank you for successfully taking the first step towards growing
               your online business. Sit back and relax, while we crunch data for
-              you and competition. We expect to have everything ready max by
-              next 3 days. Keep exploring and we will reach out with much more
-              soon!"
+              you and competition.
+              <br />
+               We expect to have everything ready in 3 days.
+              Keep exploring and we will reach out with much more soon!"
             </p>{" "}
             <br />
           </div>

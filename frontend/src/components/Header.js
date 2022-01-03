@@ -2,14 +2,18 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { IoChevronDownSharp } from "react-icons/io5";
-import { GoogleLogout } from "react-google-login";
 import { useDispatch, useSelector } from "react-redux";
-import { signoutSuccess } from "../redux/Auth/actions/authAction";
 import {
-  clearData,
   setResultType,
   setRestaurantNameAndId,
 } from "../redux/Data/actions/actions";
+import {
+  currentWeekStartAndEndDate,
+  PreviousWeekStartAndEndDate,
+  MonthStringProvider,
+} from "../utils/dateProvider";
+import { GoogleLogout } from "react-google-login";
+import { signoutSuccess } from "../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
 import { Spin as Hamburger } from "hamburger-react";
 
@@ -17,7 +21,6 @@ import { Spin as Hamburger } from "hamburger-react";
 const APP_TOKEN = "voosh-token";
 const clientId =
   "383868004224-r359p669am3jbghshp42l4h7c7ab62s7.apps.googleusercontent.com";
-
 
 const Header = ({
   heading,
@@ -27,12 +30,14 @@ const Header = ({
   headerSize,
   fakeData,
 }) => {
-  const { resultType, res_name: selected_res_name } = useSelector(
-    (state) => state.data
-  );
-  const restaurant_list = useSelector((state) => state.data.restaurantList);
-  const location = useLocation();
+  const {
+    resultType,
+    res_name: selected_res_name,
+    restaurantList: restaurant_list,
+    date: dateInsideState,
+  } = useSelector((state) => state.data);
 
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setOpen] = React.useState(false);
@@ -44,18 +49,30 @@ const Header = ({
     "This Month",
     "Previous Month",
   ]);
-
   const resultTypeRef = React.useRef(null);
   const restaurantListRef = React.useRef(null);
 
+  const customDateString = (date) => {
+    let result = "";
+    if (resultType === "This Week") {
+      const { startDate, endDate } = currentWeekStartAndEndDate();
+      result = `${startDate} to ${endDate}`;
+    } else if (resultType === "Previous Week") {
+      const { startDate, endDate } = PreviousWeekStartAndEndDate();
+      result = `${startDate} to ${endDate}`;
+    } else if (resultType === "This Month" || resultType === "Previous Month") {
+      const stringDate = MonthStringProvider(resultType);
+      result = stringDate;
+    }
+    return result;
+  };
 
   let cStyles = {};
-if (fakeData) {
-  cStyles = {
-    zIndex: "-1",
-  };
-}
-
+  if (fakeData) {
+    cStyles = {
+      zIndex: "-1",
+    };
+  }
 
   // ? Help's to Close the dropdown menu
   const handleOnClickAnywhere = (e) => {
@@ -142,7 +159,6 @@ if (fakeData) {
     dispatch(setRestaurantNameAndId(res_name, res_id));
     setRestaurantListOpen((prevState) => !prevState);
   };
-
 
   // !Header for All Pages Except Error Page
   const HeaderComponent = () => {
@@ -249,6 +265,10 @@ if (fakeData) {
                   {allResultType.map((type, index) => {
                     return (
                       <div className="item" key={index}>
+                        {/* //! inside drop down */}
+                        {/* <span>
+                          {dateInsideState}
+                        </span> */}
                         <span
                           className={
                             "item--name" +
@@ -268,7 +288,11 @@ if (fakeData) {
               </div>
               {/* {console.log("allResultType",allResultType, resultType)} */}
               {/* {console.log("allResultType",allResultType, resultType)} */}
-              <span className="header__btn--text">{resultType}</span>
+              <span className="header__btn--text">
+                {resultType}
+                {/* <br />
+                <span className="date">{customDateString(dateInsideState)}</span> */}
+              </span>
               <span
                 className="header__btn--icon"
                 // ! No use till now

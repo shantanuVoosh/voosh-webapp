@@ -14,8 +14,8 @@ const previousDay12HoursAgo = () => {
 };
 
 function getPrevMonth() {
-  var d = new Date();
-  var month = d.getMonth();
+  let d = new Date();
+  let month = d.getMonth()===0?12:d.getMonth();
   return month;
 }
 
@@ -85,7 +85,7 @@ const getPreviousDaySales = async (res_id) => {
       .aggregate([
         {
           $match: {
-            date: previousDay12HoursAgo(),
+            date: `${previousDay12HoursAgo()}`,
             swiggy_res_id: parseInt(res_id),
           },
         },
@@ -136,6 +136,7 @@ const revenueFinancical = async (res_id, number, resultType) => {
           $match: {
             swiggy_res_id: parseInt(res_id),
             month_no: getPrevMonth(),
+            // month_no: 11,
           },
         },
         {

@@ -182,7 +182,7 @@ const customerReviewsDataFormatter = async (res_id, number, resultType) => {
     const data = await customerReviewsMongoDBData(res_id, number, resultType);
     const { reviewOfProducts, allFeedbacks, OrdersPerRating, customerRatings } =
       data;
-      console.log(reviewOfProducts.length, "line no. 188");
+      // console.log(reviewOfProducts.length, "line no. 188");
     //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
     const negative_review_items = reviewOfProducts.map((item) => {
       const { item_name } = item;

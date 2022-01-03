@@ -265,7 +265,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
         },
         // ?"bestseller_%_in_recommended_vs_without_recommended_data"
         {
-          name: "Bestseller Without Recommended",
+          name: "Best Seller Score",
           type: "percentage",
           benchmark: 80,
           compareThen: "grater",
@@ -295,6 +295,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       ],
     };
     return listing;
+    
   } catch (err) {
     console.log(err);
     return {

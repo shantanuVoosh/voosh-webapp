@@ -1,5 +1,5 @@
 import React from "react";
-import GrayCard from "../../components/revenue/GrayCard";
+import GrayCard from "../../components/revenue/GrayCard_A";
 import WhiteCard from "../../components/revenue/WhiteCard_A";
 import SectionButtons from "../../components/SectionButtons";
 import { Doughnut } from "react-chartjs-2";
@@ -125,6 +125,7 @@ const FinancialDashBoard = () => {
               value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
               color={"#27AE60"}
+              isDataPresent={deleveries!=="Please wait! We are working on It."?true:false}
             />
             <GrayCard
               name={"Cancelled Orders"}
@@ -132,6 +133,7 @@ const FinancialDashBoard = () => {
               value={cancelledOrders}
               info={"Total Order cancelled by Merchant"}
               color={"#f05a48"}
+              isDataPresent={cancelledOrders!=="Please wait! We are working on It."?true:false}
             />
             <GrayCard
               name={"Total Sales"}
@@ -139,6 +141,7 @@ const FinancialDashBoard = () => {
               value={totalSales}
               info={"Including of GST lability of Merchant"}
               color={"#262D30"}
+              isDataPresent={totalSales!=="Please wait! We are working on It."?true:false}
             />
             <GrayCard
               name={"Net Payout"}
@@ -148,6 +151,7 @@ const FinancialDashBoard = () => {
                 "Inclusive of TDS TCS Platform Charges & deductions from breakdown"
               }
               color={"#27AE60"}
+              isDataPresent={netPayout!=="Please wait! We are working on It."?true:false}
             />
           </div>
           <div className="financial_a-breakdown__graph">

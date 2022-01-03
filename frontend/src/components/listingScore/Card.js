@@ -11,6 +11,8 @@ const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }
   let resultValue = 0;
   let resultBenchmark = 0;
 
+  console.log(name, value, benchmark, compareThen, type);
+
   // Todo: String Working
   if (type === "string") {
     // ? Possible String Compariso
@@ -21,7 +23,7 @@ const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }
     }
     // ! String Number
     else if (benchmark === "4.0") {
-      console.log("here");
+      // console.log("here");
       // resultValue=value===benchmark?100:0;
       // compare="equal";
       if (value.includes("<")) {
@@ -67,6 +69,8 @@ const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }
   // Todo: Dont Touch this
 
   showColor = resultValue >= resultBenchmark ? "green" : "red";
+
+  console.log(resultValue, resultBenchmark, "resultValue", "resultBenchmark");
 
 
   return (

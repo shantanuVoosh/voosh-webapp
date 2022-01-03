@@ -133,6 +133,15 @@
       @include breakpoint-up(xxsmall) {
         font-size: $text-small;
       }
+      .date {
+        position: absolute;
+        color: $red;
+        min-width: 80px;
+        font-size: 10px;
+        top: 24px;
+        left: 32px;
+        font-weight: 600;
+      }
     }
     &--icon {
       font-size: $text-xsmall;
