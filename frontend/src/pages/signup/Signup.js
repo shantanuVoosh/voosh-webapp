@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import logo_img from "../styles/images/logo-img.png";
+import logo_img from "../../styles/images/logo-img.png";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";

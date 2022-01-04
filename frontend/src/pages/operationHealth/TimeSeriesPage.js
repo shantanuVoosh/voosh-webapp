@@ -10,6 +10,7 @@ import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
 import BarGraph from "../../components/BarGraph";
+import ScrollButton from "../../components/ScrollButton";
 
 // TODO: fix the issue of the data not being loaded
 // TODO: cant visit the page directly (state is empty but path i can use)
@@ -73,7 +74,7 @@ const TimeSeriesPages = ({}) => {
 
   return (
     <>
-      <Header heading={currentName} isHomePage={false} />
+      <Header heading={currentName} isHomePage={false} isDropdownNeeded={true}/>
       <div className="container">
         <SectionButtons />
         <InfoCard
@@ -124,7 +125,7 @@ const TimeSeriesPages = ({}) => {
                 <span className="icon">
                   <BsBagCheckFill />
                 </span>
-                <span className="text">Top Suggestion</span>
+                <span className="text">Recommendation For You</span>
               </div>
               <div>
                 {recommendations.map((item, index) => {
@@ -143,13 +144,16 @@ const TimeSeriesPages = ({}) => {
                 <span className="icon">
                   <BsBagCheckFill />
                 </span>
-                <span className="text">Top Suggestion</span>
+                <span className="text">Recommendation For You</span>
               </div>
 
               <div className="time_series__bottom--list">Working on it!!</div>
             </div>
           )}
         </div>
+      </div>
+      <div className="">
+        <ScrollButton />
       </div>
       <Footer />
     </>

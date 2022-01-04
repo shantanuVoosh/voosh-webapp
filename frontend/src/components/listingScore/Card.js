@@ -4,7 +4,15 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CardWithNoData from "./CardWithNoData";
 
-const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }) => {
+const Card = ({
+  name,
+  value,
+  benchmark,
+  info,
+  compareThen,
+  type,
+  isDataPresent,
+}) => {
   const resultType = useSelector((state) => state.data.resultType);
 
   let showColor = "";
@@ -72,37 +80,21 @@ const Card = ({ name, value, benchmark, info, compareThen, type, isDataPresent }
 
   console.log(resultValue, resultBenchmark, "resultValue", "resultBenchmark");
 
-
   return (
     <div className="listing_score_card">
       <div className="listing_score_card__text">
         <h5 className="listing_score_card__text--heading">{name}</h5>
 
         <div className="listing_score_card__text--info">
-          <p>{info.length > 60 ? info.substring(0, 60) + "..." : info}</p>
+          <p>{info.length > 55 ? info.substring(0, 55) + "..." : info}</p>
         </div>
 
-        {type === "percentage" ? (
-          <div className={`value ${showColor}`}>
-            {value === undefined ? "working on it" : value}
-          </div>
-        ) : (
-          <div className={`value ${showColor}`}>
-            {value === undefined ? "working on it" : value}
-          </div>
-        )}
+        <div className={`value ${showColor}`}>
+          {value}
+        </div>
       </div>
       <Link
         to={`${name.replace(/\s/g, "")}`}
-        state={{
-          name: "ko",
-          value: 52,
-          benchmark: 62,
-          // compareThen,
-          // videoLink,
-          // recommendations,
-          // type,
-        }}
         className="listing_score_card__btn"
       >
         <span className="listing_score_card__btn--text">Know more</span>

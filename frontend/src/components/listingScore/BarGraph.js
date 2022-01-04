@@ -49,7 +49,6 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
         resultBenchmark = parseFloat(benchmark);
       }
     } else if (value === "Not Applicable" || value === "Applicable") {
-      // console.log("here++++++++++++++++")
       resultValue = value === "Not Applicable" ? 0 : 100;
       resultBenchmark = 100;
     }

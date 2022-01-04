@@ -11,6 +11,7 @@ import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
 import BarGrap from "../../components/listingScore/BarGraph";
+import ScrollButton from "../../components/ScrollButton";
 
 const TimeSeriesPages = ({}) => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
@@ -65,12 +66,12 @@ const TimeSeriesPages = ({}) => {
         {/* <InfoCardWithNoData name={name} /> */}
         <InfoCard name={name} value={value} info={info} />
         <BarGrap
-        name={name}
-        value={value}
-        info={info}
-        type={type}
-        benchmark={benchmark}
-        compareThen={compareThen}
+          name={name}
+          value={value}
+          info={info}
+          type={type}
+          benchmark={benchmark}
+          compareThen={compareThen}
         />
         <div className="time_series__bottom">
           <div className="time_series__bottom--heading">
@@ -108,7 +109,7 @@ const TimeSeriesPages = ({}) => {
                 <span className="icon">
                   <BsBagCheckFill />
                 </span>
-                <span className="text">Top Suggestion</span>
+                <span className="text">Recommendation For You</span>
               </div>
               <div>
                 {recommendations.map((item, index) => {
@@ -127,13 +128,16 @@ const TimeSeriesPages = ({}) => {
                 <span className="icon">
                   <BsBagCheckFill />
                 </span>
-                <span className="text">Top Suggestion</span>
+                <span className="text">Recommendation For You</span>
               </div>
 
               <div className="time_series__bottom--list">Working on it!!</div>
             </div>
           )}
         </div>
+      </div>
+      <div className="">
+        <ScrollButton />
       </div>
       <Footer />
     </>

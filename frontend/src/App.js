@@ -23,7 +23,7 @@ import FinancialDashBoard_A from "./pages/revenue/FinancialDashBoard_A";
 import FinancialDashBoard_B from "./pages/revenue/FinancialDashBoard_B";
 import Settings from "./pages/Settings";
 import Notification from "./pages/Notification";
-import Signup from "./pages/Signup";
+import Signup from "./pages/signup/Signup";
 import Greeting from "./pages/Greeting";
 import PreSignUp from "./pages/PreSignUp";
 
@@ -34,7 +34,7 @@ function App() {
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
-    // ! Ignore login page and provie user log(current page)
+    // ! Ignore login page and provied user log(current page)
     if (location.pathname !== "/") {
       (async function () {
         const { data: response } = await axios.post("/update/user-log", {
@@ -86,6 +86,7 @@ function App() {
                 heading={"Voosh VGN"}
                 isHomePage={true}
                 headerSize={"big"}
+                isDropdownNeeded={true}
               >
                 <LoginAftermathDashboard />
               </LayoutWrapper>
@@ -105,6 +106,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={false}
                 headerSize={"large"}
+                isDropdownNeeded={true}
               >
                 <FinancialDashBoard_A />
                 {/* <FinancialDashBoard_B /> */}
@@ -121,6 +123,7 @@ function App() {
               <LayoutWrapper
                 heading={"Operation Health"}
                 isClientBtnNeeded={true}
+                isDropdownNeeded={true}
               >
                 <OperationHealthDashboard />
               </LayoutWrapper>
@@ -145,6 +148,7 @@ function App() {
                 heading={"Listing Score"}
                 isHomePage={false}
                 isClientBtnNeeded={true}
+                isDropdownNeeded={false}
               >
                 <ListingScoreDashBoard />
               </LayoutWrapper>
@@ -178,6 +182,7 @@ function App() {
                 heading={"Customer Reviews"}
                 isHomePage={false}
                 isClientBtnNeeded={true}
+                isDropdownNeeded={true}
               >
                 <CustomerReviews />
               </LayoutWrapper>
@@ -192,6 +197,7 @@ function App() {
                 heading={"All Reviews"}
                 isHomePage={false}
                 isClientBtnNeeded={true}
+                isDropdownNeeded={true}
               >
                 <AllReviews />
               </LayoutWrapper>

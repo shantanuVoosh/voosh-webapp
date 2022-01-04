@@ -4,6 +4,8 @@ import { BsBagCheckFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import { getTopSuggestionsProvider } from "../../utils/getTopSuggestionsProvider";
+import ScrollButton from "../../components/ScrollButton";
+
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
@@ -148,7 +150,11 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+        <div className="">
+          <ScrollButton />
+        </div>
       </div>
+      
     </>
   );
 };

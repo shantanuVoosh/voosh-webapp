@@ -53,17 +53,35 @@ export function getCurrentMonthDate() {
 }
 
 export function currentWeekStartAndEndDate() {
-  const startDate = moment().add(-1, "days").startOf('isoWeek').format('D-MMM');
-  const endDate = moment().add(-1, "days").endOf('isoWeek').format('D-MMM')
+  const startDate = moment()
+    .add(-12, "hours")
+    .add(-1, "days")
+    .startOf("isoWeek")
+    .format("D-MMM");
+  const endDate = moment()
+    .add(-12, "hours")
+    .add(-1, "days")
+    .endOf("isoWeek")
+    .format("D-MMM");
   return { startDate, endDate };
 }
 
 export function PreviousWeekStartAndEndDate() {
-  const m = moment();
-  const startDate = m.add(-1, "days").add(-1, "weeks").startOf("isoWeek").format('D-MMM');
-  const endDate = m.add(-1, "days").add(-1, "weeks").endOf("isoWeek").format('D-MMM');
+  const startDate = moment()
+    .add(-12, "hours")
+    .add(-1, "days")
+    .add(-1, "weeks")
+    .startOf("isoWeek")
+    .format("D-MMM");
+  const endDate = moment()
+    .add(-12, "hours")
+    .add(-1, "days")
+    .add(-1, "weeks")
+    .endOf("isoWeek")
+    .format("D-MMM");
   return { startDate, endDate };
 }
-export function MonthStringProvider(date){
-  return moment(new Date(date)).format('MMM-YYYY')
+export function MonthStringProvider(date) {
+  console.log("date--------->", date);
+  return moment(new Date(date)).format("MMM-YYYY");
 }

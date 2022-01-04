@@ -9,7 +9,7 @@ const initialState = {
   restaurantList: [],
   isLoading: false,
   res_id: "",
-  date:"2022-1-2",
+  date:"",
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -33,6 +33,7 @@ export const dataReducer = (state = initialState, action) => {
         currentProductIndex: 0,
         restaurantList: payload.restaurantList,
         res_id: payload.res_id,
+        date:payload.date,
       };
     case SET_CURRENT_PRODUCT_INDEX:
       return {
@@ -74,6 +75,7 @@ export const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         data: payload.data,
+        date:payload.date,
       };
 
     default:

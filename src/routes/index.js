@@ -128,7 +128,8 @@ router.post("/login", async (req, res) => {
 
 // !Signup, if already registered ?
 router.post("/signup", async (req, res) => {
-  const newCollectionName = "onboard_products";
+  // const newCollectionName = "onboard_products";
+  const newCollectionName = "Onboard_New_Users_UAT";
   const {
     name,
     phone,

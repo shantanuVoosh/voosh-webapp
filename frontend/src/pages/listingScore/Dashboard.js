@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Card from "../../components/listingScore/Card";
 import CardWithNoData from "../../components/listingScore/CardWithNoData";
+import ScrollButton from "../../components/ScrollButton";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
@@ -38,6 +39,9 @@ const Dashboard = () => {
             <CardWithNoData key={index} name={name} info={info} />
           );
         })}
+      </div>
+      <div className="">
+        <ScrollButton />
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
 
-export const fetchAllData = (data, res_name, restaurantList = [],res_id) => {
+export const fetchAllData = (data, res_name, restaurantList = [],res_id, date) => {
   // console.log("res name", res_name);
   return {
     type: ActionTypes.FETCH_ALL_DATA,
@@ -13,11 +13,12 @@ export const fetchAllData = (data, res_name, restaurantList = [],res_id) => {
   };
 };
 
-export const fetchData = (data,) => {
+export const fetchData = (data,date) => {
   return {
     type: ActionTypes.FETCH_DATA,
     payload: {
       data,
+      date,
     },
   };
 }

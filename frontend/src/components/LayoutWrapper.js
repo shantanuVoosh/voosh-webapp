@@ -27,6 +27,7 @@ const LayoutWrapper = (props) => {
     isErrorPage = false,
     isClientBtnNeeded,
     headerSize = "small",
+    isDropdownNeeded,
   } = props;
 
   const { data } = useSelector((state) => state.data);
@@ -51,6 +52,7 @@ const LayoutWrapper = (props) => {
         isHomePage={isHomePage}
         restaurantName={res_name}
         headerSize={headerSize}
+        isDropdownNeeded={isDropdownNeeded}
       />
       <div className="container">
         <div className="layout_warraper-container">

@@ -45,8 +45,7 @@ function RequiredAuth({ children }) {
   const getDataFromApi = React.useCallback(async () => {
     const date = allResultTypeMap[resultType];
     // !for testing purpose
-    // const date = "2022-01-01";
-    console.log("date", date);
+    console.log("Date inside state:", date);
 
     if (resultType === "Previous Day") {
       return;
@@ -91,12 +90,12 @@ function RequiredAuth({ children }) {
         // ! call of the first time
         if (res_name === "" && res_id === "") {
           console.log("call data with res_name and res_id");
-          dispatch(fetchAllData(api_data2, name, restaurantList, id));
+          dispatch(fetchAllData(api_data2, name, restaurantList, id, date));
         }
         // ! only restaurant data will change or dispatch
         else {
           console.log("only data");
-          dispatch(fetchData(api_data2));
+          dispatch(fetchData(api_data2, date));
         }
         dispatch(isLoading(false));
       }
@@ -113,7 +112,7 @@ function RequiredAuth({ children }) {
       dispatch(loginFailure(err));
       dispatch(isLoading(false));
     }
-  }, [token, dispatch, resultType, res_id]);
+  }, [token, dispatch, resultType, res_id, res_name]);
 
   React.useEffect(() => {
     if (isAuthenticated && token) {

@@ -74,6 +74,15 @@ a:link {
   color: $color-primary-1;
 }
 
+// make it as btn
+.back_to_top-btn{
+  color: $color-primary-1;
+  text-decoration: underline;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+
 .rise-fall_icon {
   margin-bottom: -4px;
 }

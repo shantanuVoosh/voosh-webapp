@@ -29,6 +29,7 @@ const Header = ({
   isErrorPage = false,
   headerSize,
   fakeData,
+  isDropdownNeeded,
 }) => {
   const {
     resultType,
@@ -56,14 +57,17 @@ const Header = ({
     let result = "";
     if (resultType === "This Week") {
       const { startDate, endDate } = currentWeekStartAndEndDate();
+      console.log(currentWeekStartAndEndDate())
       result = `${startDate} to ${endDate}`;
     } else if (resultType === "Previous Week") {
       const { startDate, endDate } = PreviousWeekStartAndEndDate();
+      console.log(PreviousWeekStartAndEndDate())
       result = `${startDate} to ${endDate}`;
     } else if (resultType === "This Month" || resultType === "Previous Month") {
-      const stringDate = MonthStringProvider(resultType);
+      const stringDate = MonthStringProvider(date);
       result = stringDate;
     }
+    console.log("result:", result);
     return result;
   };
 
@@ -101,8 +105,8 @@ const Header = ({
     document.addEventListener("mousedown", handleOnClickAnywhere);
     document.addEventListener("scroll", handleOnScroll);
     return () => {
-      document.addEventListener("scroll", handleOnScroll);
       document.removeEventListener("mousedown", handleOnClickAnywhere);
+      document.removeEventListener("scroll", handleOnScroll);
     };
   });
 
@@ -257,7 +261,11 @@ const Header = ({
               )}
             </div>
 
-            <div className="header__btn btn" onClick={onOpenResultType}>
+            <div
+              className="header__btn btn"
+              onClick={onOpenResultType}
+              style={{ display: isDropdownNeeded ? "" : "none" }}
+            >
               <div className="result-type_list">
                 <div
                   className={isResultTypeOpne ? "dropdown" : "hide-dropdown"}
@@ -290,8 +298,8 @@ const Header = ({
               {/* {console.log("allResultType",allResultType, resultType)} */}
               <span className="header__btn--text">
                 {resultType}
-                {/* <br />
-                <span className="date">{customDateString(dateInsideState)}</span> */}
+                <br />
+                <span className="date">{customDateString(dateInsideState)}</span>
               </span>
               <span
                 className="header__btn--icon"
