@@ -58,11 +58,11 @@ const Header = ({
     if (resultType === "This Week") {
       const { startDate, endDate } = currentWeekStartAndEndDate();
       console.log(currentWeekStartAndEndDate())
-      result = `${startDate} to ${endDate}`;
+      result = `${startDate} - ${endDate}`;
     } else if (resultType === "Previous Week") {
       const { startDate, endDate } = PreviousWeekStartAndEndDate();
       console.log(PreviousWeekStartAndEndDate())
-      result = `${startDate} to ${endDate}`;
+      result = `${startDate} - ${endDate}`;
     } else if (resultType === "This Month" || resultType === "Previous Month") {
       const stringDate = MonthStringProvider(date);
       result = stringDate;

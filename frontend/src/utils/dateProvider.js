@@ -57,12 +57,12 @@ export function currentWeekStartAndEndDate() {
     .add(-12, "hours")
     .add(-1, "days")
     .startOf("isoWeek")
-    .format("D-MMM");
+    .format("D MMM'YY");
   const endDate = moment()
     .add(-12, "hours")
     .add(-1, "days")
     .endOf("isoWeek")
-    .format("D-MMM");
+    .format("D MMM'YY");
   return { startDate, endDate };
 }
 
@@ -72,13 +72,13 @@ export function PreviousWeekStartAndEndDate() {
     .add(-1, "days")
     .add(-1, "weeks")
     .startOf("isoWeek")
-    .format("D-MMM");
+    .format("D MMM'YY");
   const endDate = moment()
     .add(-12, "hours")
     .add(-1, "days")
     .add(-1, "weeks")
     .endOf("isoWeek")
-    .format("D-MMM");
+    .format("D MMM'YY");
   return { startDate, endDate };
 }
 export function MonthStringProvider(date) {

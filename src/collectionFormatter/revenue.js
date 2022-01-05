@@ -10,6 +10,7 @@ const documentName = "operationsdb";
 const previousDay12HoursAgo = () => {
   const m = moment();
   const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
+  console.log(result, 'result');
   return result;
 };
 

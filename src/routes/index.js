@@ -126,10 +126,53 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/user-save-details", async (req, res) => {
+  // ?Main Collection
+  // const newCollectionName = "onboard_products";
+  // ? Test Collection
+  const newCollectionName = "Onboard_New_Users_UAT";
+
+  const { name, phone, email, restaurant_name } = req.body;
+
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+
+    const user = await client
+      .db(documentName)
+      .collection(newCollectionName)
+      .insertOne({
+        name,
+        phone,
+        email,
+        restaurant_name,
+        form_submit_date: new Date(),
+      });
+
+    return res.json({
+      status: "success",
+      message: `User Basic Details Saved Successfully!`,
+    });
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: `Error while signup :${err}`,
+    });
+  }
+});
+
 // !Signup, if already registered ?
 router.post("/signup", async (req, res) => {
+  // * only for this Route
+  const fetch = (...args) =>
+    import("node-fetch").then(({ default: fetch }) => fetch(...args));
+  // ?Main Collection
   // const newCollectionName = "onboard_products";
+  // ? Test Collection
   const newCollectionName = "Onboard_New_Users_UAT";
+  const swiggyURL =
+    "https://partner.swiggy.com/registration/v2/registration-status?userId=";
   const {
     name,
     phone,
@@ -139,16 +182,22 @@ router.post("/signup", async (req, res) => {
     swiggy_password,
     zomato_register_phone,
   } = req.body;
-  console.log("inside api!");
-  console.log("name", name);
-  console.log("phone", phone);
-  console.log("email", email);
-  console.log("restaurant_name", restaurant_name);
-  console.log("swiggy_register_phone", swiggy_register_phone);
-  console.log("swiggy_password", swiggy_password);
-  console.log("zomato_register_phone", zomato_register_phone);
+
+  // ? Check if the number is already registered
 
   try {
+    const swiggyResponse = await (await fetch(`${swiggyURL}${swiggy_register_phone}`)).json();
+
+    if (
+      swiggyResponse.statusCode === -1 ||
+      swiggyResponse.statusMessage === "Invalid Mobile Number"
+    ) {
+      return res.json({
+        status: "error",
+        message: `Tis number is not registered with Swiggy!`,
+      });
+    }
+
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
@@ -236,7 +285,8 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
 
     console.log(
       "Current User:\n",
-      "id:", id,
+      "id:",
+      id,
       "res_id:",
       res_id,
       "phone:",

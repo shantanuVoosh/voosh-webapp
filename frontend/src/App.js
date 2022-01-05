@@ -24,6 +24,8 @@ import FinancialDashBoard_B from "./pages/revenue/FinancialDashBoard_B";
 import Settings from "./pages/Settings";
 import Notification from "./pages/Notification";
 import Signup from "./pages/signup/Signup";
+import SignupA from "./pages/signup/SignupA";
+import SignupB from "./pages/signup/SignupB";
 import Greeting from "./pages/Greeting";
 import PreSignUp from "./pages/PreSignUp";
 
@@ -63,7 +65,9 @@ function App() {
           path="/signup"
           element={
             <RedirectRoute>
-              <Signup />
+              {/* <Signup /> */}
+              {/* <SignupA /> */}
+              <SignupB />
             </RedirectRoute>
           }
         />

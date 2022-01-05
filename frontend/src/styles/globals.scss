@@ -41,11 +41,11 @@ a:link {
 
 // Page Container
 .container {
-  height: 100%;
   position: relative;
   padding: 0 0.5rem;
   max-width: 500px;
   min-height: 100vh;
+  max-height: 100%;
   margin-bottom: 3rem;
   z-index: 0;
 }

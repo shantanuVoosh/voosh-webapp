@@ -136,11 +136,20 @@
       .date {
         position: absolute;
         color: $red;
+        color: $color-white-1;
         min-width: 80px;
-        font-size: 8px;
-        top: 2px;
-        left: 25px;
-        font-weight: 700;
+        font-size: 12px;
+        top: 39px;
+        left: 9px;
+        font-style: italic;
+        @include breakpoint-up(xxsmall) {
+          font-size: $text-medium;
+        }
+        @include breakpoint-up(xsmall) {
+          top: 45px;
+          left: 18px;
+          font-size: $text-medium;
+        }
       }
     }
     &--icon {
