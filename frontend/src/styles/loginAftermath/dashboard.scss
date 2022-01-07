@@ -78,10 +78,17 @@
 // ?Top value
 .card-statistics {
   &__value {
+    margin-top: 6px;
     text-align: right;
     display: flex;
     justify-content: flex-end;
     margin-right: 0.8rem;
+    @include breakpoint-up(xxsmall) {
+      margin-top: 9px;
+    }
+    @include breakpoint-up(xsmall) {
+      margin-top: 6px;
+    }
     .icon-box {
       display: flex;
       align-items: center;
@@ -91,6 +98,10 @@
     .value {
       font-weight: 700;
       font-size: 18px;
+
+      @include breakpoint-up(xxsmall) {
+        font-size: 21px;
+      }
 
       @include breakpoint-up(xsmall) {
         font-size: 24px;

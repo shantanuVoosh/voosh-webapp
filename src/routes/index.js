@@ -182,9 +182,9 @@ router.post("/signup", async (req, res) => {
   const fetch = (...args) =>
     import("node-fetch").then(({ default: fetch }) => fetch(...args));
   // ?Main Collection
-  // const newCollectionName = "onboard_products";
+  const newCollectionName = "onboard_products";
   // ? Test Collection
-  const newCollectionName = "Onboard_New_Users_UAT";
+  // const newCollectionName = "Onboard_New_Users_UAT";
   const swiggyURL =
     "https://partner.swiggy.com/registration/v2/registration-status?userId=";
   const {
@@ -328,11 +328,11 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       const getAllRestaurantsData = await getAllRestaurants(phone);
       restaurantList = [...getAllRestaurantsData];
     }
-    console.log("Restaurant List:", restaurantList);
+    // console.log("Restaurant List:", restaurantList);
     console.log(client_res_id, "client_res_id");
     let api_data2;
 
-    if (client_res_id.length) {
+    if (client_res_id!==res_id) {
       console.log("client_res_id-----------------??:", client_res_id);
 
       api_data2 = await getAllDataFromApi(
@@ -478,18 +478,18 @@ router.get("/get-revenue", async (req, res) => {
 router.get("/api/data", async (req, res) => {
   // const {res_id, number, resultType} = req.body;
 
-  const res_id = 256302;
-  const number = 52;
-  // const resultType = "week";
+  const res_id = 327857;
+  const number = 1;
+  const resultType = "week";
   // const res_id = 272065;
   // const number = 51;
   // const resultType = "week";
   // const res_id = 272065;
   // const number = 12;
   // const resultType = "month";
-  const startDate = "2022-01-01";
-  const endDate = "2022-01-05";
-  const resultType = "Custom Range";
+  const startDate = "2021-12-01";
+  const endDate = "2022-01-06";
+  // const resultType = "Custom Range";
 
   const oh = await operationHealthDataFormatter(
     res_id,
@@ -535,8 +535,8 @@ async function getAllDataFromApi(
   res_id,
   number,
   resultType,
-  startDate,
-  endDate
+  startDate="2021-12-01",
+  endDate="2022-01-06",
 ) {
   console.log("-----------------");
   console.log(res_id, "res_id");

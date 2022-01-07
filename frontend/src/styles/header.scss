@@ -25,7 +25,6 @@
     right: -11px;
     border-radius: 100%;
   }
-
 }
 
 .header {
@@ -93,6 +92,27 @@
       @include breakpoint-up(xsmall) {
         font-size: $heading-mid;
       }
+    }
+  }
+
+  &__date {
+    color: $red;
+    color: $color-white-1;
+    min-width: 80px;
+    font-size: $text-medium;
+    top: 39px;
+    left: 9px;
+    border: 1px solid $color-white-1;
+    font-style: italic;
+    border-radius: $radius-2;
+    padding: 10px 10px;
+    @include breakpoint-up(xxsmall) {
+      $text-large: 16px;
+    }
+    @include breakpoint-up(xsmall) {
+      top: 45px;
+      left: 18px;
+      font-size: $text-medium;
     }
   }
 
@@ -218,6 +238,8 @@
 
   .dropdown {
     position: absolute;
+    overflow: scroll;
+    max-height: 131px;
     top: 11px;
     right: -161px;
     height: auto;
@@ -297,7 +319,7 @@
     position: absolute;
     height: auto;
     width: auto;
-        min-width: 270px;
+    min-width: 270px;
     padding: 8px;
     top: 43px;
     right: 47px;
@@ -307,6 +329,13 @@
     border-radius: 10px;
     border-top-right-radius: 0;
     box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.25);
+
+    .close-dropdown {
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
 
     .item:not(:last-child) {
       // text-align: right;

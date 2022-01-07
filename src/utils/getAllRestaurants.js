@@ -4,7 +4,7 @@ const { MongoClient } = require("mongodb");
 
 async function getAllRestaurants(phoneNumber = 9886850338) {
   const documentName = "operationsdb";
-  const collectionName = "Non_Voosh_Listing_Dashboard_Products";
+  const collectionName = "non_voosh_dashboard_products";
   console.log("---------- <getAllRestaurants> ----------------");
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -14,7 +14,7 @@ async function getAllRestaurants(phoneNumber = 9886850338) {
     const data = await db
       .collection(collectionName)
       .find({
-        "Swiggy Login Ph No": `${phoneNumber}`,
+        "swiggy_register_phone": Number(phoneNumber),
       })
       .toArray();
 
@@ -24,9 +24,9 @@ async function getAllRestaurants(phoneNumber = 9886850338) {
     );
 
     const restaurantList = data.map((item, index) => {
-      const res_id = item["Swiggy Res Id"];
-      const res_name = item["Partner Restaurant Name "];
-      console.log(` res_id: ${res_id} - res_name: ${res_name}`);
+      const res_id = item["swiggy_res_id"];
+      const res_name = item["nomenclature"];
+      // console.log(` res_id: ${res_id} - res_name: ${res_name}`);
 
       return { res_id, res_name };
     });

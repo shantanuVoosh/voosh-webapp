@@ -30,16 +30,19 @@ const Greeting = () => {
             <p style={{ marginBottom: "10px", fontSize: "2.3rem" }}>
               Congratulations!!
             </p>{" "}
+           
             <br />
             {/* //? Congratulations pic */}
             <p style={{ marginBottom: "10px", fontSize: "1.4rem" }}>
               "Thank you for successfully taking the first step towards growing
               your online business. Sit back and relax, while we crunch data for
               you and competition.
-              <br />
-               We expect to have everything ready in 3 days.
-              Keep exploring and we will reach out with much more soon!"
-            </p>{" "}
+            </p>
+            <br />
+            <p style={{  fontSize: "1.3rem", fontWeight:"400", color:"#666666" }}>
+              We expect to have everything ready in 3 days. Keep exploring and
+              we will reach out with much more soon!"
+            </p>
             <br />
           </div>
           <div
@@ -51,12 +54,16 @@ const Greeting = () => {
           <a href="tel:9015317006" className="greeting-btn">
             Reach out to us!
           </a>
-          <a
-            href="https://drive.google.com/file/d/1787w-RudEjIppa9h1GKa-3OYiENa2mW4/"
-            className="greeting-btn"
-          >
-            Download APK
-          </a>
+          <div
+              className="handshake-icon"
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <FaHandshake size={60} />
+            </div>
         </div>
       </div>
     </div>

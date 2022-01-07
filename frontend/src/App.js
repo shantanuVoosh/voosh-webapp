@@ -66,8 +66,8 @@ function App() {
           element={
             <RedirectRoute>
               {/* <Signup /> */}
-              {/* <SignupA /> */}
-              <SignupB />
+              <SignupA />
+              {/* <SignupB /> */}
             </RedirectRoute>
           }
         />
@@ -153,6 +153,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={false}
+                onlyShowDate={true}
               >
                 <ListingScoreDashBoard />
               </LayoutWrapper>

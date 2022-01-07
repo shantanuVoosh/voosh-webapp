@@ -20,6 +20,13 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
+import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Stack from "@mui/material/Stack";
+import MobileDateRangePicker from "@mui/lab/MobileDateRangePicker";
+import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
+
 import { GoogleLogout } from "react-google-login";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
@@ -258,7 +265,7 @@ const Header = ({
 
             <Box
               sx={{
-                minWidth: 120,
+                minWidth: 150,
                 minHeight: 30,
                 backgroundColor: "#fff",
                 borderRadius: "50px",
@@ -266,9 +273,11 @@ const Header = ({
                 // border: '1px dashed grey'
               }}
             >
-              <FormControl fullWidth
+              <FormControl
+                fullWidth
                 sx={{
-                  border: '1px dashed grey',
+                  // border: '1px dashed grey',
+                  outline: "none",
                 }}
               >
                 <InputLabel
@@ -293,6 +302,27 @@ const Header = ({
                   <MenuItem value={10}>Ten</MenuItem>
                   <MenuItem value={20}>Twenty</MenuItem>
                   <MenuItem value={30}>Thirty</MenuItem>
+                  <MenuItem value={40}>
+                    {" "}
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <Stack spacing={3}>
+                        <MobileDateRangePicker
+                          startText="Mobile start"
+                          value={5}
+                          onChange={(newValue) => {
+                            console.log(newValue);
+                          }}
+                          renderInput={(startProps, endProps) => (
+                            <React.Fragment>
+                              <TextField {...startProps} />
+                              <Box sx={{ mx: 2 }}> to </Box>
+                              <TextField {...endProps} />
+                            </React.Fragment>
+                          )}
+                        />
+                      </Stack>
+                    </LocalizationProvider>
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Box>

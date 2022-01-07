@@ -60,7 +60,7 @@ const TimeSeriesPages = ({}) => {
 
   return (
     <>
-      <Header heading={name} isHomePage={false} />
+      <Header heading={name} isHomePage={false} onlyShowDate={true} />
       <div className="container">
         <SectionButtons />
         {/* <InfoCardWithNoData name={name} /> */}

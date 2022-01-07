@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
+import { VscClose } from "react-icons/vsc";
 import { IoChevronDownSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -43,6 +44,7 @@ const Header = ({
   headerSize,
   fakeData,
   isDropdownNeeded,
+  onlyShowDate,
 }) => {
   const {
     resultType,
@@ -51,6 +53,7 @@ const Header = ({
     date: dateInsideState,
     startDate,
     endDate,
+    res_id: selected_res_id,
   } = useSelector((state) => state.data);
 
   const location = useLocation();
@@ -147,6 +150,7 @@ const Header = ({
   React.useEffect(() => {
     console.log(location.pathname, "path name from header");
     const pathname = location.pathname;
+    setResultTypeOpen(false);
     console.log(pathname === "/revenue");
 
     // !On Revenue page
@@ -155,9 +159,9 @@ const Header = ({
       setAllResultType([
         "Previous Day",
         "This Week",
+        "Previous Week",
         "This Month",
         "Previous Month",
-        "Previous Week",
         // Todo: testing purpose
         "Custom Range",
       ]);
@@ -167,9 +171,9 @@ const Header = ({
       dispatch(setResultType("This Week"));
       setAllResultType([
         "This Week",
+        "Previous Week",
         "This Month",
         "Previous Month",
-        "Previous Week",
         // Todo: testing purpose
         "Custom Range",
       ]);
@@ -180,14 +184,14 @@ const Header = ({
     dispatch(setResultType(type));
     setValue([null, null]);
     setShowDatePicker(false);
-    setResultTypeOpen((prevState) => !prevState);
+    setResultTypeOpen(false);
   };
 
   const setRestaurantClicked = (res_name, res_id) => {
     dispatch(setRestaurantNameAndId(res_name, res_id));
     setValue([null, null]);
     setShowDatePicker(false);
-    setRestaurantListOpen((prevState) => !prevState);
+    setRestaurantListOpen(false);
   };
 
   // !Header for All Pages Except Error Page
@@ -236,7 +240,7 @@ const Header = ({
                               className={
                                 "item--name" +
                                 ` ${
-                                  selected_res_name === res_name
+                                  selected_res_id === res_id
                                     ? "selected"
                                     : ""
                                 }`
@@ -246,8 +250,8 @@ const Header = ({
                                 setRestaurantClicked(res_name, res_id);
                               }}
                             >
-                              {res_name.length > 20
-                                ? res_name.substring(0, 20) + "..."
+                              {res_name.length > 8
+                                ? res_name.substring(0, 12) + "..."+res_id
                                 : res_name}
                             </span>
                           </div>
@@ -281,110 +285,141 @@ const Header = ({
               )}
             </div>
             <>
-              {/* //! btn */}
-              <div
-                className="header__btn btn"
-                onClick={() => setResultTypeOpen((prevState) => !prevState)}
-                style={{ display: isDropdownNeeded ? "" : "none" }}
-              >
-                <span className="header__btn--text">
-                  {resultType}
-                  <br />
+              {onlyShowDate ? (
+                <div className="header__date">
                   <span className="date">
                     {customDateString(dateInsideState)}
                   </span>
-                </span>
-                <span
-                  className="header__btn--icon"
-                  // ! No use till now
-                  ref={resultTypeRef}
-                >
-                  <IoChevronDownSharp />
-                </span>
-              </div>
-              {/* //! drop-down */}
-              <div className="result-type_list">
-                <div
-                  className={isResultTypeOpen ? "dropdown" : "hide-dropdown"}
-                >
-                  {allResultType.map((type, index) => {
-                    return (
-                      <div
-                        className="item"
-                        key={index}
-                        onClick={() => {
-                          if (type !== "Custom Range") {
-                            setResultTypeOpen((prev) => !prev);
-                            setResultTypeClicked(type);
-                          }
-                        }}
-                      >
-                        <span
-                          className={
-                            "item--name" +
-                            ` ${type === resultType ? "selected" : ""}`
-                          }
-                          onClick={(e) => {
-                            // Todo: testing purpose
-                            if (type === "Custom Range") {
-                              setShowDatePicker((prevState) => !prevState);
-                            }
-                            // ! this not Custom Range(this week, Prev week ..etc etc)
-                            else {
-                              setResultTypeOpen((prev) => !prev);
-                              setResultTypeClicked(type);
-                            }
-                          }}
+                </div>
+              ) : (
+                <>
+                  {/* //! btn */}
+                  <div
+                    className="header__btn btn"
+                    onClick={() => setResultTypeOpen((prevState) => !prevState)}
+                    style={{ display: isDropdownNeeded ? "" : "none" }}
+                  >
+                    <span className="header__btn--text">
+                      {resultType}
+                      <br />
+                      <span className="date">
+                        {customDateString(dateInsideState)}
+                      </span>
+                    </span>
+                    <span
+                      className="header__btn--icon"
+                      // ! No use till now
+                      ref={resultTypeRef}
+                    >
+                      <IoChevronDownSharp />
+                    </span>
+                  </div>
+                  {/* //! drop-down */}
+                  <div
+                    className="result-type_list"
+                    style={{ display: isDropdownNeeded ? "" : "none" }}
+                  >
+                    <div
+                      className={
+                        isResultTypeOpen ? "dropdown" : "hide-dropdown"
+                      }
+                    >
+                      <div className="close-dropdown">
+                        <div
+                          className=""
+                          onClick={() => setResultTypeOpen(false)}
                         >
-                          {type}
-                        </span>
-                        {/*  // Todo: testing purpose  */}
-                        {showDatePicker && type === "Custom Range" && (
-                          <div className="">
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <MobileDateRangePicker
-                                maxDate={
-                                  new Date(getPreviousDay12HoursAgoDate())
+                          <VscClose />
+                        </div>
+                      </div>
+                      <div className="items">
+                        {allResultType.map((type, index) => {
+                          return (
+                            <div
+                              className="item"
+                              key={index}
+                              onClick={() => {
+                                if (type !== "Custom Range") {
+                                  setResultTypeClicked(type);
                                 }
-                                minDate={new Date("2021-01-01")}
-                                startText="start"
-                                value={value}
-                                endText="end"
-                                onChange={(newValue) => {
-                                  // ! newValue is an array of start and end date
-                                  setValue(newValue);
-                                  const startDate = newValue[0];
-                                  const endDate = newValue[1];
-                                  // ! now set the result type to custom range
-                                  // !and in redux state set the start and end date
-                                  if (startDate !== null && endDate !== null) {
-                                    setResultTypeOpen(false);
-                                    dispatch(
-                                      setResultTypeWithStartDateAndEndDate(
-                                        type,
-                                        getCustomDateInFormat(startDate),
-                                        getCustomDateInFormat(endDate)
-                                      )
+                              }}
+                            >
+                              <span
+                                className={
+                                  "item--name" +
+                                  ` ${type === resultType ? "selected" : ""}`
+                                }
+                                onClick={(e) => {
+                                  // Todo: testing purpose
+                                  if (type === "Custom Range") {
+                                    setShowDatePicker(
+                                      (prevState) => !prevState
                                     );
-                                    // setValue([null, null]);
+                                  }
+                                  // ! this not Custom Range(this week, Prev week ..etc etc)
+                                  else {
+                                    setResultTypeClicked(type);
                                   }
                                 }}
-                                renderInput={(startProps, endProps) => (
-                                  <React.Fragment>
-                                    <TextField {...startProps} />
-                                    <Box sx={{ mx: 0 }}> to </Box>
-                                    <TextField {...endProps} />
-                                  </React.Fragment>
-                                )}
-                              />
-                            </LocalizationProvider>
-                          </div>
-                        )}
+                              >
+                                {type}
+                              </span>
+                              {/*  // Todo: testing purpose  */}
+                              {showDatePicker && type === "Custom Range" && (
+                                <div className="">
+                                  <LocalizationProvider
+                                    dateAdapter={AdapterDateFns}
+                                  >
+                                    <MobileDateRangePicker
+                                      maxDate={
+                                        new Date(getPreviousDay12HoursAgoDate())
+                                      }
+                                      inputFormat={"dd/MM/yyyy"}
+                                      minDate={new Date("2021-01-01")}
+                                      startText="start"
+                                      value={value}
+                                      endText="end"
+                                      onChange={(newValue) => {
+                                        // ! newValue is an array of start and end date
+                                        setValue(newValue);
+                                        const startDate = newValue[0];
+                                        const endDate = newValue[1];
+                                        // ! now set the result type to custom range
+                                        // !and in redux state set the start and end date
+                                        if (
+                                          startDate !== null &&
+                                          endDate !== null
+                                        ) {
+                                          setResultTypeOpen(false);
+                                          dispatch(
+                                            setResultTypeWithStartDateAndEndDate(
+                                              type,
+                                              getCustomDateInFormat(startDate),
+                                              getCustomDateInFormat(endDate)
+                                            )
+                                          );
+                                          // setValue([null, null]);
+                                        }
+                                      }}
+                                      renderInput={(startProps, endProps) => (
+                                        <React.Fragment>
+                                          <TextField {...startProps} />
+                                          <Box sx={{ mx: 0 }}> to </Box>
+                                          <TextField {...endProps} />
+                                        </React.Fragment>
+                                      )}
+                                    />
+                                  </LocalizationProvider>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           </div>
         </header>

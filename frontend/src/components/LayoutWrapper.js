@@ -1,7 +1,5 @@
 import React from "react";
 import Header from "./Header";
-// ! change it, when test is successful
-// import Header from "./HeaderNewTest";
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
 import SectionButtons from "./SectionButtons";
@@ -30,6 +28,7 @@ const LayoutWrapper = (props) => {
     isClientBtnNeeded,
     headerSize = "small",
     isDropdownNeeded,
+    onlyShowDate=false,
   } = props;
 
   const { data } = useSelector((state) => state.data);
@@ -55,6 +54,7 @@ const LayoutWrapper = (props) => {
         restaurantName={res_name}
         headerSize={headerSize}
         isDropdownNeeded={isDropdownNeeded}
+        onlyShowDate={onlyShowDate}
       />
       <div className="container">
         <div className="layout_warraper-container">
