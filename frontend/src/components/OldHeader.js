@@ -6,24 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setResultType,
   setRestaurantNameAndId,
-  setResultTypeWithStartDateAndEndDate,
 } from "../redux/Data/actions/actions";
 import {
   currentWeekStartAndEndDate,
   PreviousWeekStartAndEndDate,
   MonthStringProvider,
-  getCustomDateInFormat,
-  getPreviousDay12HoursAgoDate,
 } from "../utils/dateProvider";
-import moment from "moment";
-
-import TextField from "@mui/material/TextField";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import MobileDateRangePicker from "@mui/lab/MobileDateRangePicker";
-import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 
 import { GoogleLogout } from "react-google-login";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
@@ -49,55 +37,39 @@ const Header = ({
     res_name: selected_res_name,
     restaurantList: restaurant_list,
     date: dateInsideState,
-    startDate,
-    endDate,
   } = useSelector((state) => state.data);
 
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [isRestaurantListOpen, setRestaurantListOpen] = React.useState(false);
-  const [isResultTypeOpen, setResultTypeOpen] = React.useState(false);
+  const [isResultTypeOpne, setResultTypeOpen] = React.useState(false);
   const [allResultType, setAllResultType] = React.useState([
     "This Week",
     "Previous Week",
     "This Month",
     "Previous Month",
-    // Todo: testing purpose
-    "Custom Range",
   ]);
   const resultTypeRef = React.useRef(null);
   const restaurantListRef = React.useRef(null);
 
-  // Todo: testing purpose
-  const [value, setValue] = React.useState([null, null]);
-
+  
   // ! Stying the date below the dropdown
   const customDateString = (date) => {
     let result = "";
     if (resultType === "This Week") {
       const { startDate, endDate } = currentWeekStartAndEndDate();
-      // console.log(currentWeekStartAndEndDate());
+      console.log(currentWeekStartAndEndDate());
       result = `${startDate} - ${endDate}`;
     } else if (resultType === "Previous Week") {
       const { startDate, endDate } = PreviousWeekStartAndEndDate();
-      // console.log(PreviousWeekStartAndEndDate());
+      console.log(PreviousWeekStartAndEndDate());
       result = `${startDate} - ${endDate}`;
     } else if (resultType === "This Month" || resultType === "Previous Month") {
       const stringDate = MonthStringProvider(date);
       result = stringDate;
-    } else if (resultType === "Custom Range") {
-      result = `${moment(new Date(startDate)).format("D MMM'YY")} - ${moment(
-        new Date(endDate)
-      ).format("D MMM'YY")}`;
-      console.log("***************");
-      console.log(startDate, endDate);
-      console.log(result);
-      console.log("***************");
     }
-
-    // console.log("result:", result);
+    console.log("result:", result);
     return result;
   };
 
@@ -111,27 +83,23 @@ const Header = ({
 
   //! Help's to Close the dropdown menu
   const handleOnClickAnywhere = (e) => {
-    console.log(e.target.classList);
-    // if (
-    //   e.target.classList.contains("item") ||
-    //   e.target.classList.contains("item--name") ||
-    //   e.target.classList.contains("result-type_list") ||
-    //   e.target.classList.contains("MuiOutlinedInput-input") ||
-    //   e.target.classList.contains("rest_list")
-    // ) {
-    //   return;
-    // }
-    // setRestaurantListOpen(false);
-    // setResultTypeOpen(false);
-  };
+    if (
+      e.target.classList.contains("item") ||
+      e.target.classList.contains("item--name") ||
+      e.target.classList.contains("result-type_list") ||
+      e.target.classList.contains("rest_list")
+    ) {
+      return;
+    }
 
-  console.log(isResultTypeOpen, "isResultTypeOpen");
+    setRestaurantListOpen(false);
+    setResultTypeOpen(false);
+  };
 
   //! Help's to Close the dropdown menu
   const handleOnScroll = () => {
     setRestaurantListOpen(false);
     setResultTypeOpen(false);
-    setShowDatePicker(false);
   };
 
   React.useEffect(() => {
@@ -146,47 +114,45 @@ const Header = ({
   // ! When we visit the revenue page, set the result type to "Prev Day Only"
   React.useEffect(() => {
     console.log(location.pathname, "path name from header");
-    const pathname = location.pathname;
-    console.log(pathname === "/revenue");
+    const pathnam = location.pathname;
+    console.log(pathnam === "/revenue");
 
     // !On Revenue page
-    if (pathname === "/revenue") {
+    if (pathnam === "/revenue") {
       dispatch(setResultType("Previous Day"));
-      setAllResultType([
-        "Previous Day",
-        "This Week",
-        "This Month",
-        "Previous Month",
-        "Previous Week",
-        // Todo: testing purpose
-        "Custom Range",
-      ]);
+      setAllResultType(["Previous Day"]);
     }
     // ! go back old dropdown
-    else if (pathname !== "/revenue" && resultType === "Previous Day") {
+    else if (pathnam !== "/revenue" || resultType === "Previous Day") {
       dispatch(setResultType("This Week"));
       setAllResultType([
         "This Week",
         "This Month",
         "Previous Month",
         "Previous Week",
-        // Todo: testing purpose
-        "Custom Range",
       ]);
     }
   }, [location.pathname]);
 
+  // ! Restaurant List Dropdown
+  const openRestaurantList = () => {
+    console.log("open restaurant list");
+    setRestaurantListOpen((prevState) => !prevState);
+  };
+
+  // ! Result Type Dropdown
+  const onOpenResultType = () => {
+    setResultTypeOpen((prevState) => !prevState);
+  };
+
+  // Todo : dont know why im using this!
   const setResultTypeClicked = (type) => {
     dispatch(setResultType(type));
-    setValue([null, null]);
-    setShowDatePicker(false);
     setResultTypeOpen((prevState) => !prevState);
   };
 
   const setRestaurantClicked = (res_name, res_id) => {
     dispatch(setRestaurantNameAndId(res_name, res_id));
-    setValue([null, null]);
-    setShowDatePicker(false);
     setRestaurantListOpen((prevState) => !prevState);
   };
 
@@ -218,7 +184,6 @@ const Header = ({
                   </h1>
                 </>
               ) : (
-                // ! left side
                 // ? iif Home Page then show the Restaurant Name~
                 <>
                   <div className="rest_list">
@@ -242,7 +207,7 @@ const Header = ({
                                 }`
                               }
                               onClick={() => {
-                                // setRestaurantListOpen(false);
+                                setRestaurantListOpen(false);
                                 setRestaurantClicked(res_name, res_id);
                               }}
                             >
@@ -257,9 +222,7 @@ const Header = ({
                   </div>
                   <h1
                     className="header__text--heading"
-                    onClick={() =>
-                      setRestaurantListOpen((prevState) => !prevState)
-                    }
+                    onClick={openRestaurantList}
                     // onClick={isHomePage && openRestaurantList}
                   >
                     {restaurantName.length > 18
@@ -271,121 +234,65 @@ const Header = ({
 
                   <span
                     className="header__text--icon btn"
-                    onClick={() =>
-                      setRestaurantListOpen((prevState) => !prevState)
-                    }
+                    onClick={openRestaurantList}
+                    ref={restaurantListRef}
                   >
                     <IoChevronDownSharp />
                   </span>
                 </>
               )}
             </div>
-            <>
-              {/* //! btn */}
-              <div
-                className="header__btn btn"
-                onClick={() => setResultTypeOpen((prevState) => !prevState)}
-                style={{ display: isDropdownNeeded ? "" : "none" }}
-              >
-                <span className="header__btn--text">
-                  {resultType}
-                  <br />
-                  <span className="date">
-                    {customDateString(dateInsideState)}
-                  </span>
-                </span>
-                <span
-                  className="header__btn--icon"
-                  // ! No use till now
-                  ref={resultTypeRef}
-                >
-                  <IoChevronDownSharp />
-                </span>
-              </div>
-              {/* //! drop-down */}
+
+            <div
+              className="header__btn btn"
+              onClick={onOpenResultType}
+              style={{ display: isDropdownNeeded ? "" : "none" }}
+            >
               <div className="result-type_list">
                 <div
-                  className={isResultTypeOpen ? "dropdown" : "hide-dropdown"}
+                  className={isResultTypeOpne ? "dropdown" : "hide-dropdown"}
                 >
                   {allResultType.map((type, index) => {
                     return (
-                      <div
-                        className="item"
-                        key={index}
-                        onClick={() => {
-                          if (type !== "Custom Range") {
-                            setResultTypeOpen((prev) => !prev);
-                            setResultTypeClicked(type);
-                          }
-                        }}
-                      >
+                      <div className="item" key={index}>
+                        {/* //! inside drop down */}
+                        {/* <span>
+                          {dateInsideState}
+                        </span> */}
                         <span
                           className={
                             "item--name" +
                             ` ${type === resultType ? "selected" : ""}`
                           }
-                          onClick={(e) => {
-                            // Todo: testing purpose
-                            if (type === "Custom Range") {
-                              setShowDatePicker((prevState) => !prevState);
-                            }
-                            // ! this not Custom Range(this week, Prev week ..etc etc)
-                            else {
-                              setResultTypeOpen((prev) => !prev);
-                              setResultTypeClicked(type);
-                            }
+                          onClick={() => {
+                            setResultTypeOpen(false);
+                            setResultTypeClicked(type);
                           }}
                         >
                           {type}
                         </span>
-                        {/*  // Todo: testing purpose  */}
-                        {showDatePicker && type === "Custom Range" && (
-                          <div className="">
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <MobileDateRangePicker
-                                maxDate={
-                                  new Date(getPreviousDay12HoursAgoDate())
-                                }
-                                minDate={new Date("2021-01-01")}
-                                startText="start"
-                                value={value}
-                                endText="end"
-                                onChange={(newValue) => {
-                                  // ! newValue is an array of start and end date
-                                  setValue(newValue);
-                                  const startDate = newValue[0];
-                                  const endDate = newValue[1];
-                                  // ! now set the result type to custom range
-                                  // !and in redux state set the start and end date
-                                  if (startDate !== null && endDate !== null) {
-                                    setResultTypeOpen(false);
-                                    dispatch(
-                                      setResultTypeWithStartDateAndEndDate(
-                                        type,
-                                        getCustomDateInFormat(startDate),
-                                        getCustomDateInFormat(endDate)
-                                      )
-                                    );
-                                    // setValue([null, null]);
-                                  }
-                                }}
-                                renderInput={(startProps, endProps) => (
-                                  <React.Fragment>
-                                    <TextField {...startProps} />
-                                    <Box sx={{ mx: 0 }}> to </Box>
-                                    <TextField {...endProps} />
-                                  </React.Fragment>
-                                )}
-                              />
-                            </LocalizationProvider>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
                 </div>
               </div>
-            </>
+              {/* {console.log("allResultType",allResultType, resultType)} */}
+              {/* {console.log("allResultType",allResultType, resultType)} */}
+              <span className="header__btn--text">
+                {resultType}
+                <br />
+                <span className="date">
+                  {customDateString(dateInsideState)}
+                </span>
+              </span>
+              <span
+                className="header__btn--icon"
+                // ! No use till now
+                ref={resultTypeRef}
+              >
+                <IoChevronDownSharp />
+              </span>
+            </div>
           </div>
         </header>
       </>

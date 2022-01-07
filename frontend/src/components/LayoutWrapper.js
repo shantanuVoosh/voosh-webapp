@@ -1,5 +1,7 @@
 import React from "react";
 import Header from "./Header";
+// ! change it, when test is successful
+// import Header from "./HeaderNewTest";
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
 import SectionButtons from "./SectionButtons";

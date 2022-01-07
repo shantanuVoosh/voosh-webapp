@@ -49,6 +49,11 @@ const revenueMongoDBData = async (
       swiggy_res_id: parseInt(res_id),
       date: { $gte: startDate, $lte: endDate },
     };
+  } else if (resultType === "Previous Day") {
+    query = {
+      swiggy_res_id: parseInt(res_id),
+      date: `${previousDay12HoursAgo()}`,
+    };
   } else {
     return {
       dataPresent: false,
@@ -59,63 +64,44 @@ const revenueMongoDBData = async (
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
+    // ! if previous day is need so will add different query, other wise will use same query
     const db = client.db(documentName);
-    const revenue = await db
-      .collection("swiggy_revenue_products")
-      .aggregate([
-        {
-          $match: query,
-        },
-        {
-          $group: {
-            _id: "$swiggy_res_id",
-            revenue: {
-              $sum: "$final_revenue",
-            },
-          },
-        },
-      ])
-      .toArray();
+    const revenue =
+      resultType !== "Previous Day"
+        ? await db
+            .collection("swiggy_revenue_products")
+            .aggregate([
+              {
+                $match: query,
+              },
+              {
+                $group: {
+                  _id: "$swiggy_res_id",
+                  revenue: {
+                    $sum: "$final_revenue",
+                  },
+                },
+              },
+            ])
+            .toArray()
+        : await db
+            .collection("swiggy_revenue_products")
+            .aggregate([
+              {
+                $match: {
+                  date: `${previousDay12HoursAgo()}`,
+                  swiggy_res_id: parseInt(res_id),
+                },
+              },
+            ])
+            .toArray();
 
     client.close();
     return {
-      revenue_score: revenue[0]?.revenue,
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      error: err,
-    };
-  }
-};
-
-const getPreviousDaySales = async (res_id) => {
-  console.log("for prev day sale/revenue: yyyy-mm-dd", previousDay12HoursAgo());
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = client.db(documentName);
-    const previousDayRevenue = await db
-      .collection("swiggy_revenue_products")
-      .aggregate([
-        {
-          $match: {
-            date: `${previousDay12HoursAgo()}`,
-            swiggy_res_id: parseInt(res_id),
-          },
-        },
-      ])
-      .toArray();
-
-    // console.log(
-    //   "previousDaySales:",
-    //   previousDayRevenue,
-    //   "previousDayDate:",
-    //   getPreviousDay12HoursAgo()
-    // );
-    return {
-      previousDayRevenue: previousDayRevenue[0]?.final_revenue,
+      revenue_score:
+        resultType !== "Previous Day"
+          ? revenue[0]?.revenue
+          : revenue[0]?.final_revenue,
     };
   } catch (err) {
     console.log(err);
@@ -151,6 +137,7 @@ const revenueFinancical = async (res_id, number, resultType) => {
         {
           $match: {
             swiggy_res_id: parseInt(res_id),
+            // ! manually added Nov Month
             month_no: getPrevMonth(),
             // month_no: 11,
           },
@@ -179,13 +166,20 @@ const revenueFinancical = async (res_id, number, resultType) => {
   }
 };
 
-const revenuDataFormatter = async (
+const allRevenue = async (
   res_id,
   number,
   resultType,
   startDate,
   endDate
 ) => {
+  // ? ye previous month ka data fetch krna hai
+  const { revenue_financical, rdc_score } = await revenueFinancical(
+    res_id,
+    number,
+    resultType
+  );
+
   const { revenue_score } = await revenueMongoDBData(
     res_id,
     number,
@@ -193,20 +187,7 @@ const revenuDataFormatter = async (
     startDate,
     endDate
   );
-  const { revenue_financical, rdc_score } = await revenueFinancical(
-    res_id,
-    number,
-    resultType
-  );
-
-  const { previousDayRevenue } = await getPreviousDaySales(res_id);
-
-  // console.log("revenue_score:", revenue_score);
-  // console.log("revenue_financical:", revenue_financical);
-  // console.log(
-  //   "previousDayRevenue:------------------------->",
-  //   previousDayRevenue
-  // );
+   console.log(revenue_score, "revenue_score");
 
   const totalSales = isObjectEmpty(revenue_financical)
     ? "Please wait! We are working on It."
@@ -278,7 +259,6 @@ const revenuDataFormatter = async (
   const revenueFinalResult = {
     // ? suppose this this 1st day oft the month so the revenue is 0
     value: revenue_score ? revenue_score : 0,
-    previousDayRevenue: previousDayRevenue,
 
     financicalData: {
       totalSales: totalSales,
@@ -293,8 +273,7 @@ const revenuDataFormatter = async (
 };
 
 module.exports = {
-  revenueMongoDBData,
-  revenuDataFormatter,
+  allRevenue,
 };
 
 function isObjectEmpty(obj) {

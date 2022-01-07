@@ -5,7 +5,7 @@ import SectionButtons from "../../components/SectionButtons";
 import { Doughnut } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import ColorList from "../../components/revenue/ColorList";
-const thisPageResulyType = "prev month";
+import axios from "axios";
 
 const FinancialDashBoard = () => {
   const [showMoreContent, setShowMoreContent] = React.useState(false);
@@ -21,6 +21,26 @@ const FinancialDashBoard = () => {
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
   console.log("deductionTitles =>", deductionTitles);
+
+
+  const getRevenueData = React.useCallback(async() => {
+
+    const { data: response } = await axios.post("/get/revenue-data");
+    return response;
+    console.log("revenueData =>", response);
+
+
+  },[])
+
+
+
+
+  React.useEffect(() => {
+
+    getRevenueData()
+
+
+  }, [resultType]);
 
   let revenueResult = revenue.value;
   const pieColors = [

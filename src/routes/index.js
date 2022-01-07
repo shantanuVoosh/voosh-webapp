@@ -10,6 +10,20 @@ const {
 } = require("../controller/googleAuth");
 const { checkAuthentication } = require("../controller/checkAuth");
 
+const {
+  operationHealthDataFormatter,
+} = require("../collectionFormatter/operationalHealth");
+const {
+  listingScoreDataFormatter,
+} = require("../collectionFormatter/listingScore");
+const { revenueMongoDBData } = require("../collectionFormatter/revenue");
+
+const {
+  customerReviewsDataFormatter,
+} = require("../collectionFormatter/customerReviews");
+const { revenuDataFormatter } = require("../collectionFormatter/revenue");
+const { allRevenue } = require("../collectionFormatter/allRevenue");
+
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 
@@ -20,7 +34,7 @@ const secret = "secret";
 router.post("/login", async (req, res) => {
   const { phoneNumber, password } = req.body;
   console.log("---------- <login> ----------------");
-  const cooleactionName = "Non_Voosh_Listing_Dashboard_Products";
+  const colleactionName = "non_voosh_dashboard_products";
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -28,18 +42,18 @@ router.post("/login", async (req, res) => {
     });
     const userPresent = await client
       .db(documentName)
-      .collection(cooleactionName)
+      .collection(colleactionName)
       .findOne({
-        "Swiggy Login Ph No": phoneNumber,
+        swiggy_register_phone: Number(phoneNumber),
       });
     const userRes_IdPresent = await client
       .db(documentName)
-      .collection(cooleactionName)
+      .collection(colleactionName)
       .findOne({
-        "Swiggy Res Id": phoneNumber,
+        swiggy_res_id: Number(phoneNumber),
       });
 
-    console.log("phoneNumber or res_id:", phoneNumber);
+    console.log("swiggy_register_phone or swiggy_res_id:", phoneNumber);
     console.log("userRes_IdPresent:", userRes_IdPresent);
     console.log("userPresent:", userPresent);
 
@@ -60,18 +74,18 @@ router.post("/login", async (req, res) => {
       if (userPresent) {
         verifyUser = await client
           .db(documentName)
-          .collection(cooleactionName)
+          .collection(colleactionName)
           .findOne({
-            "Swiggy Login Ph No": phoneNumber,
-            "Swiggy Password": password,
+            swiggy_register_phone: Number(phoneNumber),
+            swiggy_password: password,
           });
       } else {
         verifyUser = await client
           .db(documentName)
-          .collection(cooleactionName)
+          .collection(colleactionName)
           .findOne({
-            "Swiggy Res Id": phoneNumber,
-            "Swiggy Password": password,
+            swiggy_res_id: Number(phoneNumber),
+            swiggy_password: password,
           });
       }
 
@@ -81,9 +95,9 @@ router.post("/login", async (req, res) => {
 
         // ? multriple res id will be present in the database
         const id = verifyUser["_id"];
-        const res_id = verifyUser["Swiggy Res Id"];
-        const phone = verifyUser["Swiggy Login Ph No"];
-        const res_name = verifyUser["Partner Restaurant Name "];
+        const res_id = verifyUser["swiggy_res_id"];
+        const phone = verifyUser["swiggy_register_phone"];
+        const res_name = verifyUser["restaurant_name"];
         console.log(
           "Current User:\n",
           "Id:",
@@ -186,16 +200,23 @@ router.post("/signup", async (req, res) => {
   // ? Check if the number is already registered
 
   try {
-    const swiggyResponse = await (await fetch(`${swiggyURL}${swiggy_register_phone}`)).json();
+    console.log(swiggy_register_phone.length, "swiggy_register_phone");
+    console.log(swiggy_register_phone !== "");
+    // ? if we have the swiggy_register_phone, then check for the user
+    if (swiggy_register_phone !== "") {
+      const swiggyResponse = await (
+        await fetch(`${swiggyURL}${swiggy_register_phone}`)
+      ).json();
 
-    if (
-      swiggyResponse.statusCode === -1 ||
-      swiggyResponse.statusMessage === "Invalid Mobile Number"
-    ) {
-      return res.json({
-        status: "error",
-        message: `Tis number is not registered with Swiggy!`,
-      });
+      if (
+        swiggyResponse.statusCode === -1 ||
+        swiggyResponse.statusMessage === "Invalid Mobile Number"
+      ) {
+        return res.json({
+          status: "error",
+          message: `This number is not registered with Swiggy!`,
+        });
+      }
     }
 
     const client = await MongoClient.connect(VooshDB, {
@@ -281,7 +302,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     const { res_id, id, res_name, phone } = req.payload;
     const date = req.body.date;
 
-    const { number, resultType, client_res_id } = req.body;
+    const { number, resultType, client_res_id, startDate, endDate } = req.body;
 
     console.log(
       "Current User:\n",
@@ -317,10 +338,18 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       api_data2 = await getAllDataFromApi(
         parseInt(client_res_id),
         number,
-        resultType
+        resultType,
+        startDate,
+        endDate
       );
     } else {
-      api_data2 = await getAllDataFromApi(parseInt(res_id), number, resultType);
+      api_data2 = await getAllDataFromApi(
+        parseInt(res_id),
+        number,
+        resultType,
+        startDate,
+        endDate
+      );
 
       console.log("res_id-----------------?:", res_id);
     }
@@ -416,25 +445,41 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
   }
 });
 
-const {
-  operationHealthDataFormatter,
-} = require("../collectionFormatter/operationalHealth");
-const {
-  listingScoreDataFormatter,
-} = require("../collectionFormatter/listingScore");
-const { revenueMongoDBData } = require("../collectionFormatter/revenue");
-
-const {
-  customerReviewsDataFormatter,
-} = require("../collectionFormatter/customerReviews");
-const { revenuDataFormatter } = require("../collectionFormatter/revenue");
+// ! revenue test route can use for single page
+router.get("/get-revenue", async (req, res) => {
+  const res_id = 256302;
+  // const number = 52;
+  // const resultType = "week";
+  // const res_id = 272065;
+  // const number = 51;
+  // const resultType = "week";
+  // const res_id = 272065;
+  const number = 12;
+  const resultType = "month";
+  const startDate = "2022-01-01";
+  const endDate = "2022-01-05";
+  // const resultType = "Custom Range";
+  // const resultType = "Previous Day";
+  const revenueData = allRevenue(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
+  console.log("revenueData", revenueData);
+  res.json({
+    status: "success",
+    allRevenue: await revenueData,
+  });
+});
 
 // ! Test Route
 router.get("/api/data", async (req, res) => {
   // const {res_id, number, resultType} = req.body;
 
-  // const res_id = 256302;
-  // const number = 52;
+  const res_id = 256302;
+  const number = 52;
   // const resultType = "week";
   // const res_id = 272065;
   // const number = 51;
@@ -442,44 +487,110 @@ router.get("/api/data", async (req, res) => {
   // const res_id = 272065;
   // const number = 12;
   // const resultType = "month";
+  const startDate = "2022-01-01";
+  const endDate = "2022-01-05";
+  const resultType = "Custom Range";
 
-  const oh = await operationHealthDataFormatter(res_id, number, resultType);
-  const ls = await listingScoreDataFormatter(res_id, number, resultType);
-  const customerReviews = await customerReviewsDataFormatter(
+  const oh = await operationHealthDataFormatter(
     res_id,
     number,
-    resultType
+    resultType,
+    startDate,
+    endDate
   );
-  const revenue = await revenueMongoDBData(res_id, number, resultType);
-  const f_revenue = await revenuDataFormatter(res_id, number, resultType);
+  // const ls = await listingScoreDataFormatter(res_id, number, resultType);
+  // const customerReviews = await customerReviewsDataFormatter(
+  //   res_id,
+  //   number,
+  //   resultType
+
+  // );
+  const revenue = await revenueMongoDBData(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
+  const f_revenue = await revenuDataFormatter(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
 
   res.json({
-    operationHealth: oh,
-    listingScore: ls,
+    // operationHealth: oh,
+    // listingScore: ls,
     revenue,
-    f_revenue,
-    customerReviews,
+    // f_revenue,
+    // customerReviews,
   });
 });
 
 module.exports = router;
 
-async function getAllDataFromApi(res_id, number, resultType) {
-  const oh = await operationHealthDataFormatter(res_id, number, resultType);
-  const ls = await listingScoreDataFormatter(res_id, number, resultType);
+async function getAllDataFromApi(
+  res_id,
+  number,
+  resultType,
+  startDate,
+  endDate
+) {
+  console.log("-----------------");
+  console.log(res_id, "res_id");
+  console.log(number, "number");
+  console.log(resultType, "resultType");
+  console.log(startDate, "startDate");
+  console.log(endDate, "endDate");
+  console.log("-----------------");
+
+  const oh = await operationHealthDataFormatter(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
+  const ls = await listingScoreDataFormatter(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
   const customerReviews = await customerReviewsDataFormatter(
     res_id,
     number,
-    resultType
+    resultType,
+    startDate,
+    endDate
   );
-  const revenue_score = await revenueMongoDBData(res_id, number, resultType);
-  const revenue = await revenuDataFormatter(res_id, number, resultType);
+  const revenue_score = await revenueMongoDBData(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
+  const revenue = await revenuDataFormatter(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
   return {
     name: "Swiggy",
     operationHealth: oh,
     listingScore: ls,
     revenue_score,
     revenue,
-    customerReviews,
+    // ! customerReviews wont work in this case
+    customerReviews:
+      resultType === "Custom Range"
+        ? { value: "working on It.", type: "average", compareType: "grater" }
+        : customerReviews,
   };
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
@@ -23,7 +23,7 @@ const StaticHeader = ({ name, addBtn }) => {
   return (
     <>
       <div className="header_bg"></div>
-      <div className={"static_header-wrapper " + `${addBtn ? "add_btn" : ""}`}>
+      <div className={`static_header-wrapper ${addBtn ? "add_btn" : ""}`}>
         <div className="static_header__text">
           <span
             className="static_header__text--icon"

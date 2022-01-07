@@ -6,7 +6,13 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-const operationalHealthMongoDBData = async (res_id, number, resultType) => {
+const operationalHealthMongoDBData = async (
+  res_id,
+  number,
+  resultType,
+  startDate,
+  endDate
+) => {
   // ? key is different in collection
   let query = {};
   let ratingQuery = {};
@@ -29,6 +35,17 @@ const operationalHealthMongoDBData = async (res_id, number, resultType) => {
     ratingQuery = {
       res_id: parseInt(res_id),
       month_no: parseInt(number),
+    };
+  }
+  // ? Custom date range
+  else if (resultType === "Custom Range") {
+    query = {
+      swiggy_res_id: parseInt(res_id),
+      date: { $gte: startDate, $lte: endDate },
+    };
+    ratingQuery = {
+      res_id: parseInt(res_id),
+      date: { $gte: startDate, $lte: endDate },
     };
   }
   //! if resultType is not week or month!
@@ -183,7 +200,7 @@ const operationalHealthMongoDBData = async (res_id, number, resultType) => {
     // console.log("----------*****----------");
     // console.log("igcc:", igcc);
     // console.log("----------*****----------");
-    // console.log("acceptance:", acceptance);
+    console.log("acceptance:", acceptance);
     // console.log("----------*****----------");
 
     // ? Error Handling Better krna hai, right now if value is not present in DB,
@@ -207,9 +224,21 @@ const operationalHealthMongoDBData = async (res_id, number, resultType) => {
   }
 };
 
-const operationHealthDataFormatter = async (res_id, number, resultType) => {
+const operationHealthDataFormatter = async (
+  res_id,
+  number,
+  resultType,
+  startDate,
+  endDate
+) => {
   try {
-    const data = await operationalHealthMongoDBData(res_id, number, resultType);
+    const data = await operationalHealthMongoDBData(
+      res_id,
+      number,
+      resultType,
+      startDate,
+      endDate
+    );
     // console.log("operationHealthDataFormatter res_id, num, resultType", res_id, number, resultType);
     // console.log("operationHealthDataFormatter data", data);
     const {
@@ -222,6 +251,16 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
       acceptance_score,
     } = data;
 
+    // Todo: test this
+    const ohManually = calculateOHScoreManually(
+      serviceability_score,
+      rdc_score,
+      igcc_score,
+      rating_score,
+      mfr_score,
+      acceptance_score
+    );
+
     // !If the values inside data is not present, then it will return undefined
     const operationalHealth = {
       dataPresent: true,
@@ -233,9 +272,16 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
         benchmark: 95,
         value:
           oh_score === undefined
-            ? "Please wait! We are working on It."
-            : oh_score * 2 * 10,
-        isDataPresent: oh_score === undefined ? false : true,
+            ? ohManually != 0 && ohManually === ohManually
+              ? ohManually
+              : 0
+            : oh_score * 16.67,
+        isDataPresent:
+          oh_score === undefined
+            ? ohManually != 0 && ohManually === ohManually
+              ? true
+              : false
+            : true,
       },
       operationHealthData: [
         // ?Swiggy_Kitchen_Servicibility
@@ -243,7 +289,7 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
           name: "Rest. Serviceability",
           type: "percentage",
           // info: "if your restaurent serviceability score is greater than 99% then it will get more orders",
-          info: "Operation Health >= 95% Gets more orders",
+          info: "Operation Health >= 99% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
           videoLink: Serviceability_video,
@@ -360,3 +406,83 @@ const operationHealthDataFormatter = async (res_id, number, resultType) => {
 module.exports = {
   operationHealthDataFormatter,
 };
+
+function calculateOHScoreManually(
+  serviceability_score,
+  rdc_score,
+  igcc_score,
+  rating_score,
+  mfr_score,
+  acceptance_score
+) {
+  console.log("*****************--------------------********************");
+  console.log("serviceability_score", serviceability_score);
+  console.log("rdc_score", rdc_score);
+  console.log("igcc_score", igcc_score);
+  console.log("rating_score", rating_score);
+  console.log("mfr_score", mfr_score);
+  console.log("acceptance_score", acceptance_score);
+  console.log("****************-------------------------*********************");
+  let score = 0;
+  let count = 0;
+  if (serviceability_score !== undefined) {
+    count += 1;
+    if (serviceability_score >= 95) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (rdc_score !== undefined) {
+    count += 1;
+    if (rdc_score < 5) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (rating_score !== undefined) {
+    count += 1;
+    if (rating_score >= 4.5) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (mfr_score !== undefined) {
+    count += 1;
+    if (mfr_score >= 95) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (igcc_score !== undefined) {
+    count += 1;
+    if (igcc_score <= 1) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (acceptance_score !== undefined) {
+    count += 1;
+    if (acceptance_score >= 99) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  console.log("score", score);
+  console.log("count", count);
+  // ! if Nan then no data is present
+  console.log(score * (200 / count));
+
+  return score * (200 / count);
+}

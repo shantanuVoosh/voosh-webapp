@@ -13,7 +13,6 @@ import cookie from "react-cookies";
 import {
   //? if today is 2022-1-1, then 2021-12-31 after 12 hours or 2021-12-30
   getPreviousDay12HoursAgoDate,
-
   getCurrentMonthDate,
   getPreviousWeekDate,
   getPreviousMonthDate,
@@ -38,6 +37,7 @@ function RequiredAuth({ children }) {
   const resultType = useSelector((state) => state.data.resultType);
   const res_name = useSelector((state) => state.data.res_name);
   const res_id = useSelector((state) => state.data.res_id);
+  const { startDate, endDate } = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -50,6 +50,13 @@ function RequiredAuth({ children }) {
     if (resultType === "Previous Day") {
       return;
     }
+    // if (resultType === "Custom Range") {
+
+    //   console.log("working so far............");
+    //   console.log("startDate:", startDate);
+    //   console.log("endDate:", endDate);
+    //   return;
+    // }
     try {
       dispatch(isLoading(true));
       // ? To identify if the slected option is week or month
@@ -58,6 +65,7 @@ function RequiredAuth({ children }) {
         "Previous Week": "week",
         "This Month": "month",
         "Previous Month": "month",
+        "Custom Range": "Custom Range",
       };
       //? date is already modified, just calculating the week number or month number
       const tempNumberMap = {
@@ -65,6 +73,7 @@ function RequiredAuth({ children }) {
         "Previous Week": getWeekNumberFromDate(date),
         "This Month": getMonthNumberFromDate(date),
         "Previous Month": getMonthNumberFromDate(date),
+        "Custom Range": null,
       };
 
       // const client_res_id = restaurantList.find((item) => item.name === res_name).id;
@@ -75,6 +84,8 @@ function RequiredAuth({ children }) {
         client_res_id: res_id,
         number: tempNumberMap[resultType],
         resultType: tempMonthMap[resultType],
+        startDate: startDate ? startDate : "",
+        endDate: endDate ? endDate : "",
       });
       console.log("voosh data", response);
 
@@ -112,7 +123,7 @@ function RequiredAuth({ children }) {
       dispatch(loginFailure(err));
       dispatch(isLoading(false));
     }
-  }, [token, dispatch, resultType, res_id, res_name]);
+  }, [token, dispatch, resultType, res_id, res_name, startDate, endDate]);
 
   React.useEffect(() => {
     if (isAuthenticated && token) {

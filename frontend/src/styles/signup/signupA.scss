@@ -93,7 +93,7 @@
       }
 
       .btn-continue {
-        background-color: #577BC1;
+        background-color: #577bc1;
         border: none;
         color: $color-white-1;
         padding: 0.8rem 1.2rem;
@@ -105,9 +105,9 @@
         border: none;
         color: $color-black-1;
         padding: 0.8rem 1.2rem;
-        
+
         border-radius: $radius-1;
-        span{
+        span {
           text-decoration: underline;
         }
       }
@@ -117,13 +117,7 @@
         padding: 0.8rem 1.2rem;
         width: 110px;
         border-radius: $radius-1;
-        background-color: $color-white-1;
-        // background: linear-gradient(
-        //   to right,
-        //   $color-primary-1,
-        //   $color-primary-2
-        // );
-        background-color: #577BC1;
+        background-color: #577bc1;
       }
       // border: none;
       // margin-top: 20px;
@@ -159,5 +153,19 @@
     font-size: 14px;
     font-weight: 600;
     color: $color-grey-6;
+  }
+}
+
+.signup_a__login-btn {
+  margin-top: 4rem;
+  font-size: 14px;
+  
+  &--heading {
+    color: $color-grey-3;
+  }
+  &--link {
+    color: $color-primary-1;
+    font-weight: 600;
+    text-decoration: underline;
   }
 }

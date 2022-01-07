@@ -77,8 +77,8 @@ export const getTopSuggestionsProvider = (OH, LS) => {
     return !(resultValue >= resultBenchmark) ? suggestions[0] : null;
   });
 
-  console.log("OG_suggestion", OG_suggestion);
-  console.log("LS_suggestion", LS_suggestion);
+  // console.log("OG_suggestion", OG_suggestion);
+  // console.log("LS_suggestion", LS_suggestion);
   const all_suggestions = [
     ...OG_suggestion.filter((item) => item !== null),
     ...LS_suggestion.filter((item) => item !== null && item !== undefined),

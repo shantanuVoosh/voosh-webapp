@@ -3,7 +3,13 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-const customerReviewsMongoDBData = async (res_id, number, resultType) => {
+const customerReviewsMongoDBData = async (
+  res_id,
+  number,
+  resultType,
+  startDate,
+  endDate
+) => {
   let feedbackQuery = {};
   let allFeedbacksQuery = {};
   let OrdersPerRatingQuery = {};
@@ -41,8 +47,8 @@ const customerReviewsMongoDBData = async (res_id, number, resultType) => {
     allFeedbacksQuery = {
       swiggy_res_id: parseInt(res_id),
       month_no: parseInt(number),
-      feedback:{$ne:NaN},
-      rating:{$lt:5},
+      feedback: { $ne: NaN },
+      rating: { $lt: 5 },
     };
     OrdersPerRatingQuery = {
       swiggy_res_id: parseInt(res_id),
@@ -52,7 +58,7 @@ const customerReviewsMongoDBData = async (res_id, number, resultType) => {
       res_id: parseInt(res_id),
       month_no: parseInt(number),
     };
-  } else {
+  }  else {
     return {
       dataPresent: false,
     };
@@ -177,12 +183,24 @@ const customerReviewsMongoDBData = async (res_id, number, resultType) => {
   }
 };
 
-const customerReviewsDataFormatter = async (res_id, number, resultType) => {
+const customerReviewsDataFormatter = async (
+  res_id,
+  number,
+  resultType,
+  startDate,
+  endDate
+) => {
   try {
-    const data = await customerReviewsMongoDBData(res_id, number, resultType);
+    const data = await customerReviewsMongoDBData(
+      res_id,
+      number,
+      resultType,
+      startDate,
+      endDate
+    );
     const { reviewOfProducts, allFeedbacks, OrdersPerRating, customerRatings } =
       data;
-      // console.log(reviewOfProducts.length, "line no. 188");
+    // console.log(reviewOfProducts.length, "line no. 188");
     //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
     const negative_review_items = reviewOfProducts.map((item) => {
       const { item_name } = item;
@@ -279,8 +297,10 @@ const customerReviewsDataFormatter = async (res_id, number, resultType) => {
             const { _id } = item;
             const { feedback, rating, order_id, order_date } = _id;
             return {
-                 // !Somehow this wont crash if the feedback is null
-                 feedback: `${feedback}`.replace(/(\r\n|\n|\r)/gm, " ").substring(2),
+              // !Somehow this wont crash if the feedback is null
+              feedback: `${feedback}`
+                .replace(/(\r\n|\n|\r)/gm, " ")
+                .substring(2),
               rating,
               order_id,
               order_date: order_date.split("-").join(""),

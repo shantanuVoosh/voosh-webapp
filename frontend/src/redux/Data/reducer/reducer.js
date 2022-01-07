@@ -10,6 +10,8 @@ const initialState = {
   isLoading: false,
   res_id: "",
   date:"",
+  startDate:"",
+  endDate:"",
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -19,6 +21,7 @@ export const dataReducer = (state = initialState, action) => {
     SET_CURRENT_PRODUCT_INDEX,
     CLEAR_DATA,
     SET_RESULT_TYPE,
+    SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE,
     IS_LOADING,
     SET_RESTAURANT_NAME_AND_ID,
   } = ActionTypes;
@@ -51,12 +54,25 @@ export const dataReducer = (state = initialState, action) => {
         resultType: "This Week",
         isLoading: false,
         res_id: "",
+        date:"",
+        startDate:"",
+        endDate:"",
       };
     case SET_RESULT_TYPE:
       return {
         ...state,
         resultType: payload.resultType,
+        startDate:"",
+        endDate:"",
       };
+
+    case SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE:
+      return {
+        ...state,
+        resultType: payload.resultType,
+        startDate: payload.startDate,
+        endDate: payload.endDate,
+      }
 
     case IS_LOADING:
       return {

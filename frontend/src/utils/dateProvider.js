@@ -85,3 +85,8 @@ export function MonthStringProvider(date) {
   console.log("date--------->", date);
   return moment(new Date(date)).format("MMM-YYYY");
 }
+
+// ! this is for Custom Date Range
+export function getCustomDateInFormat(date) {
+  return moment(new Date(date)).format("YYYY-MM-DD");
+}

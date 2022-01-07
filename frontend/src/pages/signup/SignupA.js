@@ -2,13 +2,16 @@ import React from "react";
 import axios from "axios";
 import logo_img from "../../styles/images/logo-img.png";
 import { useNavigate } from "react-router-dom";
-import { useForm, ErrorMessage } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import Loading from "../../components/Loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SignupA = () => {
   const navigate = useNavigate();
   const [stepNumber, setStepNumber] = React.useState(0);
+  const [showApkButton, setShowApkButton] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -19,22 +22,84 @@ const SignupA = () => {
     getData,
   } = useForm();
   const notify = (msg) => toast.error(msg);
+  const notifySuccess = (msg) => toast.success(msg);
 
-  //   ?On sumiting the form
+  React.useEffect(() => {
+    setShowApkButton(false);
+    setIsLoading(false);
+    setStepNumber(0);
+  }, []);
+
+  // !On sumiting the 1st form
   const onSubmitFormOne = async (data) => {
+    setIsLoading(true);
     setStepNumber(1);
     if (data.checkbox_1 === true) {
-      setValue("Swiggy Number", data["Phone Number"], { shouldValidate: true });
+      setValue("Swiggy Number", data["Phone Number"]);
     }
     if (data.checkbox_2 === true) {
-      setValue("Zomato Number", data["Phone Number"], { shouldValidate: true });
+      setValue("Zomato Number", data["Phone Number"]);
+    }
+
+    try {
+      const { data: response } = await axios.post("/user-save-details", {
+        name: data["Your Name"],
+        phone: data["Phone Number"],
+        email: data["Email"],
+        restaurant_name: data["Restaurant Name"],
+      });
+
+      if (response.status === "success") {
+        setStepNumber(1);
+        console.log(response.message);
+      } else {
+        notify(response.message);
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      notify(`Server Error, Please try again later`);
+      setIsLoading(false);
     }
   };
+
+  // !On sumiting the 2nd form
   const onSubmitFormTwo = async (data) => {
+    if (
+      `${data["Swiggy Number"]}`.length === 0 &&
+      `${data["Swiggy Password"]}`.length !== 0
+    ) {
+      notify("Please enter Swiggy Number");
+      return;
+    } else if (
+      `${data["Swiggy Number"]}`.length !== 0 &&
+      `${data["Swiggy Password"]}`.length === 0
+    ) {
+      notify("Please enter swiggy password");
+      return;
+    } else if (
+      `${data["Swiggy Number"]}`.length !== 0 &&
+      `${data["Swiggy Password"]}`.length <= 3
+    ) {
+      notify("Please enter a real swiggy password");
+      return;
+    }
+
     setStepNumber(2);
   };
+
+  // !On sumiting the 3rd form
   const onSubmitFormThree = async (data) => {
-    // console.log(data);
+    // ? if i use is loading then notify wont work
+    console.log(data);
+
+    if (
+      `${data["Swiggy Number"]}`.length === 0 &&
+      `${data["Zomato Number"]}`.length === 0
+    ) {
+      notify("Please enter atleast one phone number, either Swiggy or Zomato");
+      return;
+    }
 
     try {
       const { data: response } = await axios.post("/signup", {
@@ -48,22 +113,39 @@ const SignupA = () => {
       });
       console.log("Signup Success, response:", response);
       if (response.status === "success") {
-        // navigate("/greeting");
-        // ! show popup that u signed up successfully
-        // ! apk btn to download
-      }else{
-        setStepNumber(0);
-        reset();
+        setShowApkButton(true);
+        reset({
+          "Your Name": "",
+          "Phone Number": "",
+          Email: "",
+          "Restaurant Name": "",
+          "Swiggy Number": "",
+          "Swiggy Password": "",
+          "Zomato Number": "",
+        });
+        console.log("Signup Success, response:", response.message);
+        notifySuccess("Form Submitted Successfully!");
+      } else {
+        setStepNumber(1);
+        console.log("Signup Failed, response:", response.message);
         notify(response.message);
       }
-
     } catch (error) {
       console.log(error);
       setStepNumber(0);
       reset();
       notify("Something went wrong, please try again later");
+      // setIsLoading(false);
     }
   };
+
+  const onSuccessfullFormSubmit = () => {
+    navigate("/greeting");
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -80,7 +162,7 @@ const SignupA = () => {
             draggable
             pauseOnHover
           />
-          <div className="signup-header">
+          <div className="signup_a-header">
             <img
               src={logo_img}
               alt="logo"
@@ -89,6 +171,7 @@ const SignupA = () => {
             />
           </div>
 
+          {/* //? Step 1 Page  */}
           {stepNumber === 0 && (
             <>
               <div className="signup_a-header__heading">
@@ -97,14 +180,6 @@ const SignupA = () => {
               <div className="signup_a-header__sub-heading--small">
                 Grow your online business like never before. <br />
                 inside secrets of Online delivery
-                <div className="signup_a-header--login_btn">
-                  <span className="login--heading">
-                    Already have an account?
-                  </span>
-                  <span className="login--link" onClick={() => navigate("/")}>
-                    Log in
-                  </span>
-                </div>
               </div>
               <form
                 className="signup_a__form"
@@ -156,9 +231,6 @@ const SignupA = () => {
                         {...register("checkbox_1")}
                         type="checkbox"
                         defaultChecked={true}
-                        // onClick={(e) => {
-
-                        // }}
                       />
                       <span className="patner-name"> Swiggy</span>
                     </span>
@@ -232,19 +304,13 @@ const SignupA = () => {
               </form>
             </>
           )}
+
+          {/* //? Step 2 Page   */}
           {stepNumber === 1 && (
             <>
               <div className="signup_a-header__heading">Learn with Voosh</div>
               <div className="signup_a-header__sub-heading--small">
-                Educate Yourself and improve your online business
-                <div className="signup_a-header--login_btn">
-                  <span className="login--heading">
-                    Already have an account?
-                  </span>
-                  <span className="login--link" onClick={() => navigate("/")}>
-                    Log in
-                  </span>
-                </div>
+                Educate Yourself and improve your <br /> online business
               </div>
               <form
                 className="signup_a__form"
@@ -260,7 +326,7 @@ const SignupA = () => {
                     name="Swiggy Number"
                     placeholder="Swiggy Number"
                     {...register("Swiggy Number", {
-                      required: true,
+                      // required: true,
                       maxLength: 10,
                       minLength: 10,
                     })}
@@ -278,8 +344,8 @@ const SignupA = () => {
                     type="password"
                     placeholder="Swiggy Password"
                     {...register("Swiggy Password", {
-                      required: true,
-                      minLength: 3,
+                      // required: true,
+                      // minLength: 3,
                     })}
                   />
                   {errors["Swiggy Password"] && (
@@ -298,26 +364,35 @@ const SignupA = () => {
                   >
                     <span> Go Back </span>
                   </button>
+
                   <button className="btn-continue">
                     <span> Continue </span>
+                  </button>
+                </div>
+                <div className="form--btn_container jc--end">
+                  <button
+                    className="btn-previous"
+                    onClick={() => {
+                      setValue("Swiggy Number", "");
+                      setValue("Swiggy Password", "");
+                      setStepNumber(1);
+                    }}
+                  >
+                    <span>not on Swiggy</span>
                   </button>
                 </div>
               </form>
             </>
           )}
+
+          {/* //? Step 3 Page   */}
           {stepNumber === 2 && (
             <>
               <div className="signup_a-header__heading">Grow with Voosh</div>
               <div className="signup_a-header__sub-heading--small">
-                Personalized suggestions to make right tweaks for growth
-                <div className="signup_a-header--login_btn">
-                  <span className="login--heading">
-                    Already have an account?
-                  </span>
-                  <span className="login--link" onClick={() => navigate("/")}>
-                    Log in
-                  </span>
-                </div>
+                Personalized suggestions to make right
+                <br />
+                tweaks for growth
               </div>
               <form
                 className="signup_a__form"
@@ -332,7 +407,7 @@ const SignupA = () => {
                     name="Zomato Number"
                     placeholder="Zomato Number"
                     {...register("Zomato Number", {
-                      required: true,
+                      // required: true,
                       maxLength: 10,
                       minLength: 10,
                     })}
@@ -349,18 +424,52 @@ const SignupA = () => {
            //! 2(here will show the signup) */}
                 <div className="form--btn_container jc--sb">
                   <button
+                    disabled={showApkButton}
                     className="btn-previous"
                     onClick={() => setStepNumber(1)}
                   >
                     <span> Go Back </span>
                   </button>
 
-                  <button className="btn-signup">
-                    <span>Submit</span>
+                  <button
+                    className={`btn-continue ${
+                      showApkButton ? "disabled" : ""
+                    }`}
+                  >
+                    <span>{showApkButton ? "Submited!" : "Submit"} </span>
                   </button>
                 </div>
               </form>
             </>
+          )}
+
+          {/* //? Only display in 3rd page + form is submmited! */}
+          {stepNumber === 2 && (
+            <div className={`apk ${showApkButton ? "show_apk-btn" : ""}`}>
+              <a
+                href="https://drive.google.com/file/d/1787w-RudEjIppa9h1GKa-3OYiENa2mW4/"
+                target={"_blank"}
+                onClick={onSuccessfullFormSubmit}
+                rel="noreferrer"
+              >
+                Download APK
+              </a>
+            </div>
+          )}
+
+          {/* //? show on 1st page */}
+          {stepNumber === 0 && (
+            <div className="signup_a__login-btn">
+              <span className="signup_a__login-btn--heading">
+                Already have an account?
+              </span>
+              <span
+                className="signup_a__login-btn--link"
+                onClick={() => navigate("/")}
+              >
+                Log in
+              </span>
+            </div>
           )}
         </div>
       </div>

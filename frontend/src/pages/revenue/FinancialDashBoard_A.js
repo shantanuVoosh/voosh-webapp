@@ -23,8 +23,12 @@ const FinancialDashBoard = () => {
   console.log("deductionTitles =>", deductionTitles);
 
   let revenueResult = revenue.value;
+  const previousDayRevenue = revenue.previousDayRevenue
+  console.log("revenue =>", previousDayRevenue);
 
-  console.log("revenue =>", revenue.previousDayRevenue);
+  const finalRevenue = resultType!=="Previous Day" ? revenueResult : previousDayRevenue;
+
+  
 
   const pieColors = [
     "#370665",
@@ -86,12 +90,12 @@ const FinancialDashBoard = () => {
           <WhiteCard
             name={"Total Sales"}
             type={"Pecentage"}
-            value={revenue.previousDayRevenue}
+            value={finalRevenue}
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
             // color={"#262D30"}
             isDataPresent={
-              revenue.previousDayRevenue === undefined ? false : true
+              finalRevenue === undefined ? false : true
             }
           />
           <WhiteCard

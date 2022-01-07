@@ -47,7 +47,7 @@ a:link {
   min-height: 100vh;
   max-height: 100%;
   margin-bottom: 3rem;
-  z-index: 0;
+  // z-index: 1;
 }
 
 .green-value {
@@ -67,21 +67,26 @@ a:link {
   color: $green;
 }
 
-.white{
+.white {
   color: $color-white-1;
 }
-.orange{
+.orange {
   color: $color-primary-1;
 }
 
-// make it as btn
-.back_to_top-btn{
+// Scroll top Btn
+.back-to-top {
   color: $color-primary-1;
-  text-decoration: underline;
-  font-weight: 600;
-  margin-left: 8px;
-}
+  display: flex;
+  justify-content: start;
+  align-items: center;
 
+  .text {
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+}
 
 .rise-fall_icon {
   margin-bottom: -4px;

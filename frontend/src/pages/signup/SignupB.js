@@ -3,18 +3,9 @@ import axios from "axios";
 import logo_img from "../../styles/images/logo-img.png";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Loading from "../../components/Loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const Loading = () => {
-  return (
-    <div className="container">
-      <div className="loading-container">
-        <div className="spinner"></div>
-      </div>
-    </div>
-  );
-};
 
 const SignupB = () => {
   const navigate = useNavigate();
@@ -39,7 +30,7 @@ const SignupB = () => {
     setStepNumber(0);
   }, []);
 
-  // ?On sumiting the form 1st step
+  // !On sumiting the 1st form
   // !store the Basic info in the database
   const onSubmitFormOne = async (data) => {
     setIsLoading(true);
@@ -73,7 +64,7 @@ const SignupB = () => {
     }
   };
 
-  // ?On sumiting the form 2nd step
+  // !On sumiting the 2nd form
   // ! store the everything in the database
   const onSubmitFormTwo = async (data) => {
     // ? Some Possible errors
@@ -81,7 +72,7 @@ const SignupB = () => {
       `${data["Swiggy Number"]}`.length === 0 &&
       `${data["Zomato Number"]}`.length === 0
     ) {
-      notify("Please enter atleast one number");
+      notify("Please enter atleast one phone number, either Swiggy or Zomato");
       return;
     } else if (
       `${data["Swiggy Number"]}`.length === 0 &&
@@ -182,7 +173,7 @@ const SignupB = () => {
               onClick={() => navigate("/")}
             />
           </div>
-
+          {/* //? Step 1 */}
           {stepNumber === 0 && (
             <>
               <div className="signup_a-header__heading">
@@ -192,17 +183,11 @@ const SignupB = () => {
                 Grow your online business like never before. <br />
                 inside secrets of Online delivery
               </div>
-              <div className="signup_a-header--login-text">
-                <span className="heading">Already have an account?</span>
-                <span className="link" onClick={() => navigate("/")}>
-                  Log in
-                </span>
-              </div>
               <form
                 className="signup_a__form"
                 onSubmit={handleSubmit(onSubmitFormOne)}
               >
-                <div className="form-heading">{"Step 1/3: Basic Details"}</div>
+                <div className="form-heading">{"Step 1/2: Basic Details"}</div>
                 <div className="form-group">
                   {/* //! Name*/}
                   <input
@@ -238,6 +223,7 @@ const SignupB = () => {
                     <span className="text">Same For:</span>
                     <span>
                       <input
+                        defaultChecked={true}
                         className="form--input_checkbox"
                         {...register("checkbox_1")}
                         type="checkbox"
@@ -249,6 +235,7 @@ const SignupB = () => {
                     </span>
                     <span>
                       <input
+                        defaultChecked={true}
                         {...register("checkbox_2")}
                         type="checkbox"
                         onClick={(e) => {
@@ -311,6 +298,7 @@ const SignupB = () => {
               </form>
             </>
           )}
+          {/* //? Step 2 */}
           {stepNumber === 1 && (
             <>
               <div className="signup_a-header__heading">Learn with Voosh</div>
@@ -396,6 +384,7 @@ const SignupB = () => {
                 */}
                 <div className="form--btn_container jc--sb">
                   <button
+                    disabled={showApkButton}
                     className="btn-previous"
                     onClick={() => setStepNumber(0)}
                   >
@@ -413,16 +402,33 @@ const SignupB = () => {
               </form>
             </>
           )}
-          <div className={`apk ${showApkButton ? "show_apk-btn" : ""}`}>
-            <a
-              href="https://drive.google.com/file/d/1787w-RudEjIppa9h1GKa-3OYiENa2mW4/"
-              target={"_blank"}
-              onClick={onSuccessfullFormSubmit}
-              rel="noreferrer"
-            >
-              Download APK
-            </a>
-          </div>
+           {/* //? Only display in 3rd page + form is submmited! */}
+          {stepNumber === 1 && (
+            <div className={`apk ${showApkButton ? "show_apk-btn" : ""}`}>
+              <a
+                href="https://drive.google.com/file/d/1787w-RudEjIppa9h1GKa-3OYiENa2mW4/"
+                target={"_blank"}
+                onClick={onSuccessfullFormSubmit}
+                rel="noreferrer"
+              >
+                Download APK
+              </a>
+            </div>
+          )}
+           {/* //? show on 1st page */}
+          {stepNumber === 0 && (
+            <div className="signup_a__login-btn">
+              <span className="signup_a__login-btn--heading">
+                Already have an account?
+              </span>
+              <span
+                className="signup_a__login-btn--link"
+                onClick={() => navigate("/")}
+              >
+                Log in
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -67,3 +67,14 @@ export const setRestaurantNameAndId = (name, id) => {
     },
   };
 };
+
+export const setResultTypeWithStartDateAndEndDate = (type, startDate, endDate) => {
+  return {
+    type: ActionTypes.SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE,
+    payload: {
+      resultType: type,
+      startDate,
+      endDate,
+    },
+  };
+}
