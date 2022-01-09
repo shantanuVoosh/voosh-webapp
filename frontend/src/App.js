@@ -34,19 +34,21 @@ function App() {
   // const{res_name} = useSelector((state) => state.data.res_name);
   const location = useLocation();
 
+  console.log(process.env.REACT_APP_GA_TRACKING_ID, "ID");
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
     // ! Ignore login page and provied user log(current page)
-    if (location.pathname !== "/") {
-      (async function () {
-        const { data: response } = await axios.post("/update/user-log", {
-          token: token,
-          location: location.pathname,
-        });
-        // console.log(response);
-      })();
-    }
-  }, [location.pathname, token]);
+    // if (location.pathname !== "/") {
+    //   (async function () {
+    //     const { data: response } = await axios.post("/update/user-log", {
+    //       token: token,
+    //       location: location.pathname,
+    //     });
+    // console.log(response);
+    //   })();
+    // }
+  }, [location.pathname]);
 
   // ?Component that alerts if you click outside of it
 

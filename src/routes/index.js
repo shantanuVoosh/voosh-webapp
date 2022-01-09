@@ -10,19 +10,8 @@ const {
 } = require("../controller/googleAuth");
 const { checkAuthentication } = require("../controller/checkAuth");
 
-const {
-  operationHealthDataFormatter,
-} = require("../collectionFormatter/operationalHealth");
-const {
-  listingScoreDataFormatter,
-} = require("../collectionFormatter/listingScore");
-const { revenueMongoDBData } = require("../collectionFormatter/revenue");
-
-const {
-  customerReviewsDataFormatter,
-} = require("../collectionFormatter/customerReviews");
-const { revenuDataFormatter } = require("../collectionFormatter/revenue");
-const { allRevenue } = require("../collectionFormatter/allRevenue");
+const { getAllSwiggyData } = require("../DataProviders/getAllSwiggyData");
+const { getAllZomatoData } = require("../DataProviders/getAllZomatoData");
 
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
@@ -332,10 +321,10 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     console.log(client_res_id, "client_res_id");
     let api_data2;
 
-    if (client_res_id!==res_id) {
+    if (client_res_id !== res_id) {
       console.log("client_res_id-----------------??:", client_res_id);
 
-      api_data2 = await getAllDataFromApi(
+      api_data2 = await getAllSwiggyData(
         parseInt(client_res_id),
         number,
         resultType,
@@ -343,7 +332,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         endDate
       );
     } else {
-      api_data2 = await getAllDataFromApi(
+      api_data2 = await getAllSwiggyData(
         parseInt(res_id),
         number,
         resultType,
@@ -445,35 +434,6 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
   }
 });
 
-// ! revenue test route can use for single page
-router.get("/get-revenue", async (req, res) => {
-  const res_id = 256302;
-  // const number = 52;
-  // const resultType = "week";
-  // const res_id = 272065;
-  // const number = 51;
-  // const resultType = "week";
-  // const res_id = 272065;
-  const number = 12;
-  const resultType = "month";
-  const startDate = "2022-01-01";
-  const endDate = "2022-01-05";
-  // const resultType = "Custom Range";
-  // const resultType = "Previous Day";
-  const revenueData = allRevenue(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  console.log("revenueData", revenueData);
-  res.json({
-    status: "success",
-    allRevenue: await revenueData,
-  });
-});
-
 // ! Test Route
 router.get("/api/data", async (req, res) => {
   // const {res_id, number, resultType} = req.body;
@@ -529,68 +489,30 @@ router.get("/api/data", async (req, res) => {
   });
 });
 
+router.get("/api/zomato", async (req, res) => {
+  const res_id = 56834;
+  const number = 1;
+  const resultType = "week";
+  // const res_id = 272065;
+  // const number = 51;
+  // const resultType = "week";
+  // const res_id = 272065;
+  // const number = 12;
+  // const resultType = "month";
+  const startDate = "2021-12-01";
+  const endDate = "2022-01-06";
+  // const resultType = "Custom Range";
+
+  const api = await getAllZomatoData(
+    res_id,
+    number,
+    resultType,
+    startDate,
+    endDate
+  );
+  res.json({
+    api,
+  });
+});
+
 module.exports = router;
-
-async function getAllDataFromApi(
-  res_id,
-  number,
-  resultType,
-  startDate="2021-12-01",
-  endDate="2022-01-06",
-) {
-  console.log("-----------------");
-  console.log(res_id, "res_id");
-  console.log(number, "number");
-  console.log(resultType, "resultType");
-  console.log(startDate, "startDate");
-  console.log(endDate, "endDate");
-  console.log("-----------------");
-
-  const oh = await operationHealthDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  const ls = await listingScoreDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  const customerReviews = await customerReviewsDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  const revenue_score = await revenueMongoDBData(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  const revenue = await revenuDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  return {
-    name: "Swiggy",
-    operationHealth: oh,
-    listingScore: ls,
-    revenue_score,
-    revenue,
-    // ! customerReviews wont work in this case
-    customerReviews:
-      resultType === "Custom Range"
-        ? { value: "working on It.", type: "average", compareType: "grater" }
-        : customerReviews,
-  };
-}
