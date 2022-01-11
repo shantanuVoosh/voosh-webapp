@@ -301,3 +301,95 @@ function isObjectEmpty(obj) {
   if (obj === undefined || obj === null) return true;
   return Object.keys(obj).length === 0;
 }
+
+// ! only month wise data is available
+async function getBlaBla(res_id = 256302, number = 12, resultType = "month") {
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    // ? Previous month Swiggy Revenue
+    const swiggyReconsilation = await db
+      .collection("swiggy_revenue_reconsilation")
+      .findOne({
+        swiggy_res_id: res_id,
+        month_no: getPrevMonth(),
+      });
+
+    // ? RDC or total Cancellation for previous month
+    const rdc = await db
+      .collection("swiggy_rdc_products")
+      .aggregate([
+        {
+          $match: {
+            swiggy_res_id: parseInt(res_id),
+            month_no: getPrevMonth(),
+          },
+        },
+        {
+          $group: {
+            _id: "$swiggy_res_id",
+            rdc_score: { $sum: "$total_cancellation" },
+          },
+        },
+      ])
+      .toArray();
+    const totalCancellation = rdc[0]?.rdc_score;
+    const totalSales = swiggyReconsilation["total_customer_payable "];
+    const netPayout = swiggyReconsilation["net_payout_(E_-_F_-_G)"];
+    const deleveries = swiggyReconsilation["number_of_orders"];
+    const cancelledOrders = totalCancellation ? totalCancellation : 0;
+    const deductions = {
+      // ?latform Services Charges
+      "Platform Services Charges":
+        swiggyReconsilation?.["swiggy_platform_service_fee"] * 1.18 -
+        swiggyReconsilation?.["discount_on_swiggy_service_fee"] * 1.18,
+      // ? Cancellation Deduction
+      "Canellation Deduction":
+        swiggyReconsilation?.["merchant_cancellation_charges"] * 1.18 +
+        swiggyReconsilation?.["merchant_sare_of_cancelled_orders"],
+      // ? Other OFD deduction
+      "Other OFD deduction":
+        swiggyReconsilation?.["collection_charges"] * 1.18 +
+        swiggyReconsilation?.["access_charges"] * 1.18 +
+        swiggyReconsilation?.["call_center_service_fee"] * 1.18,
+
+      // ? Promotions
+      Promotions:
+        swiggyReconsilation?.["high_priority"] +
+        swiggyReconsilation?.["homepage_banner"],
+
+      // ? Previous Week Outstanding
+      "Previous Week Outstanding":
+        swiggyReconsilation?.["outstanding_for_previous_weeks"] +
+        swiggyReconsilation?.["excess_payout"],
+      
+      // ? Miscellaneous
+      Miscellaneous:
+        swiggyReconsilation?.["cash_pre-payment_to_merchant"] +
+        swiggyReconsilation?.["delivery_fee_sponsored_by_merchant"] +
+        swiggyReconsilation?.["refund_for_disputed_orders"] +
+        swiggyReconsilation?.["refund"] +
+        swiggyReconsilation?.["onboarding_fees"] +
+        Math.abs(swiggyReconsilation?.["long_distance_pack_fee"]),
+
+      // ? TCS
+      TCS: swiggyReconsilation?.["tcs"],
+      // ? TDS
+      TDS: swiggyReconsilation?.["tds"],
+
+    };
+
+    return {
+      totalSales,
+      netPayout,
+      deleveries,
+      cancelledOrders,
+      deductions,
+    };
+  } catch (err) {
+    console.log(err);
+  }
+}

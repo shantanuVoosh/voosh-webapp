@@ -240,9 +240,7 @@ const Header = ({
                               className={
                                 "item--name" +
                                 ` ${
-                                  selected_res_id === res_id
-                                    ? "selected"
-                                    : ""
+                                  selected_res_id === res_id ? "selected" : ""
                                 }`
                               }
                               onClick={() => {
@@ -251,7 +249,7 @@ const Header = ({
                               }}
                             >
                               {res_name.length > 8
-                                ? res_name.substring(0, 12) + "..."+res_id
+                                ? res_name.substring(0, 5) + "..." + res_id
                                 : res_name}
                             </span>
                           </div>
@@ -259,6 +257,8 @@ const Header = ({
                       })}
                     </div>
                   </div>
+
+                  {/* //? This the the heading */}
                   <h1
                     className="header__text--heading"
                     onClick={() =>
@@ -288,7 +288,8 @@ const Header = ({
               {onlyShowDate ? (
                 <div className="header__date">
                   <span className="date">
-                    {customDateString(dateInsideState)}
+                    As of{" "} 
+                    {customDateString(dateInsideState).split("-")[1]}
                   </span>
                 </div>
               ) : (

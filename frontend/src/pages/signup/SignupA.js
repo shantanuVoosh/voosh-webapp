@@ -5,13 +5,37 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Loading from "../../components/Loading";
 import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga4";
+import { Backdrop, Box, Modal, Fade, Button, Typography } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { VscChromeClose } from "react-icons/vsc";
 import "react-toastify/dist/ReactToastify.css";
+
+const Modelstyle = {
+  position: "absolute",
+  height: "400px",
+  display: "block",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  overflow: "scroll",
+};
 
 const SignupA = () => {
   const navigate = useNavigate();
   const [stepNumber, setStepNumber] = React.useState(0);
   const [showApkButton, setShowApkButton] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [modelOpen, setModelOpen] = React.useState(false);
+  const [tnc, setTnc] = React.useState(false);
+  const tncRef = React.useRef(null);
   const {
     register,
     handleSubmit,
@@ -19,10 +43,11 @@ const SignupA = () => {
     reset,
     getValues,
     setValue,
-    getData,
   } = useForm();
   const notify = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
+  const handelModelOpen = () => setModelOpen(true);
+  const handelModelClose = () => setModelOpen(false);
 
   React.useEffect(() => {
     setShowApkButton(false);
@@ -32,14 +57,30 @@ const SignupA = () => {
 
   // !On sumiting the 1st form
   const onSubmitFormOne = async (data) => {
-    setIsLoading(true);
-    setStepNumber(1);
+    console.log("data", data);
+    console.log(tnc);
+
+    ReactGA.event({
+      category: "Button Click",
+      action: "Signup Step 1",
+      label: "Step 1",
+    });
+
+    // ? we are chaing the tnc but form tnc check box is not working, so we check both, if tnc is true then we proceed
+    if (data.tnc === false && tnc === false) {
+      console.log("hi");
+      notify("Please accept the terms and conditions to continue");
+      return;
+    }
+
     if (data.checkbox_1 === true) {
       setValue("Swiggy Number", data["Phone Number"]);
     }
     if (data.checkbox_2 === true) {
       setValue("Zomato Number", data["Phone Number"]);
     }
+    setIsLoading(true);
+    setStepNumber(1);
 
     try {
       const { data: response } = await axios.post("/user-save-details", {
@@ -65,6 +106,12 @@ const SignupA = () => {
 
   // !On sumiting the 2nd form
   const onSubmitFormTwo = async (data) => {
+    ReactGA.event({
+      category: "Button Click",
+      action: "Signup Step 2",
+      label: "Step 2",
+    });
+
     if (
       `${data["Swiggy Number"]}`.length === 0 &&
       `${data["Swiggy Password"]}`.length !== 0
@@ -91,7 +138,13 @@ const SignupA = () => {
   // !On sumiting the 3rd form
   const onSubmitFormThree = async (data) => {
     // ? if i use is loading then notify wont work
+
     console.log(data);
+    ReactGA.event({
+      category: "Button Click",
+      action: "Signup Step 3",
+      label: "Step 3",
+    });
 
     if (
       `${data["Swiggy Number"]}`.length === 0 &&
@@ -140,6 +193,11 @@ const SignupA = () => {
   };
 
   const onSuccessfullFormSubmit = () => {
+    ReactGA.event({
+      category: "Button Click",
+      action: "Download Apk",
+      label: "Download button",
+    });
     navigate("/greeting");
   };
 
@@ -162,6 +220,113 @@ const SignupA = () => {
             draggable
             pauseOnHover
           />
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={modelOpen}
+            onClose={handelModelClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={modelOpen}>
+              <Box sx={Modelstyle}>
+                <Typography
+                  id="transition-modal-title"
+                  variant="h6"
+                  component="h2"
+                >
+                  Terms & Conditions
+                </Typography>
+                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Distinctio aspernatur, ea nesciunt nostrum iure perferendis
+                  blanditiis facilis corrupti, laborum, adipisci consectetur
+                  quisquam magni corporis optio rerum maxime quae quibusdam
+                  magnam. Lorem ipsum dolor sit amet consectetur, adipisicing
+                  elit. Distinctio aspernatur, ea nesciunt nostrum iure
+                  perferendis blanditiis facilis corrupti, laborum, adipisci
+                  consectetur quisquam magni corporis optio rerum maxime quae
+                  quibusdam Lorem ipsum dolor sit amet consectetur, adipisicing
+                  elit. Distinctio aspernatur, ea nesciunt nostrum iure
+                  perferendis blanditiis facilis corrupti, laborum, adipisci
+                  consectetur quisquam magni corporis optio rerum maxime quae
+                  quibusdam magnam. Lorem ipsum dolor sit amet consectetur,
+                  adipisicing elit. Distinctio aspernatur, ea nesciunt nostrum
+                  iure perferendis blanditiis facilis corrupti, laborum,
+                  adipisci consectetur quisquam magni corporis optio rerum
+                  maxime quae quibusdam Lorem ipsum dolor sit amet consectetur,
+                  adipisicing elit. Distinctio aspernatur, ea nesciunt nostrum
+                  iure perferendis blanditiis facilis corrupti, laborum,
+                  adipisci consectetur quisquam magni corporis optio rerum
+                  maxime quae quibusdam magnam. Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam magnam. Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam magnam. Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam magnam. Lorem ipsum dolor sit amet
+                  consectetur, adipisicing elit. Distinctio aspernatur, ea
+                  nesciunt nostrum iure perferendis blanditiis facilis corrupti,
+                  laborum, adipisci consectetur quisquam magni corporis optio
+                  rerum maxime quae quibusdam magnam.
+                </Typography>
+                <div
+                  className="model-checkbox"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <input
+                    type="checkbox"
+                    name="tnc-checkbox"
+                    value={tnc}
+                    checked={tnc}
+                    ref={tncRef}
+                    onChange={(e) => {
+                      setTnc((prevState) => !prevState);
+                    }}
+                  />
+                  <Button
+                    onClick={() => {
+                      setTnc((prevState) => !prevState);
+                      handelModelClose();
+                    }}
+                  >
+                    Accept And Continue
+                  </Button>
+                </div>
+                <Button
+                  onClick={() => {
+                    console.log(tnc);
+                    handelModelClose();
+                    console.log(tnc);
+                  }}
+                >
+                  Close
+                </Button>
+              </Box>
+            </Fade>
+          </Modal>
+
           <div className="signup_a-header">
             <img
               src={logo_img}
@@ -186,109 +351,145 @@ const SignupA = () => {
                 onSubmit={handleSubmit(onSubmitFormOne)}
               >
                 <div className="form-heading">{"Step 1/3: Basic Details"}</div>
-                <div className="form-group">
-                  {/* //! Name*/}
-                  <input
-                    className="form--input"
-                    type="text"
-                    placeholder="Your Name"
-                    {...register("Your Name", { required: true, minLength: 3 })}
-                  />
-                  {errors["Your Name"] && (
-                    <p className="form_error red">
-                      Name should be atleast 3 characters long
-                    </p>
-                  )}
 
-                  {/* //! Phone Num */}
-                  <input
-                    className="form--input"
-                    type="tel"
-                    placeholder="Phone Number"
-                    {...register("Phone Number", {
-                      required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                  {errors["Phone Number"] && (
-                    <p className="form_error red">
-                      Enter your 10 digit mobile number
-                    </p>
-                  )}
+                <div className="form-group__container">
+                  <div className="form-group">
+                    {/* //! Name*/}
+                    <input
+                      className="form--input"
+                      type="text"
+                      placeholder="Your Name"
+                      {...register("Your Name", {
+                        required: true,
+                        minLength: 3,
+                      })}
+                    />
+                    {errors["Your Name"] && (
+                      <p className="form_error red">
+                        Name should be atleast 3 characters long
+                      </p>
+                    )}
 
-                  <div className="same_as_btn">
-                    <span className="text">Same For:</span>
-                    <span
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <input
-                        className="form--input_checkbox"
-                        {...register("checkbox_1")}
-                        type="checkbox"
-                        defaultChecked={true}
-                      />
-                      <span className="patner-name"> Swiggy</span>
-                    </span>
-                    <span
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <input
-                        className="form--input_checkbox"
-                        {...register("checkbox_2")}
-                        type="checkbox"
-                        defaultChecked={true}
-                      />
-                      <span className="patner-name"> Zomato</span>
-                    </span>
+                    {/* //! Phone Num */}
+                    <input
+                      className="form--input"
+                      type="tel"
+                      placeholder="Phone Number"
+                      {...register("Phone Number", {
+                        required: true,
+                        maxLength: 10,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors["Phone Number"] && (
+                      <p className="form_error red">
+                        Enter your 10 digit mobile number
+                      </p>
+                    )}
+
+                    <div className="same_as_btn">
+                      <span className="text">Same For:</span>
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <input
+                          className="form--input_checkbox"
+                          {...register("checkbox_1")}
+                          type="checkbox"
+                          defaultChecked={true}
+                        />
+                        <span className="patner-name"> Swiggy</span>
+                      </span>
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <input
+                          className="form--input_checkbox"
+                          {...register("checkbox_2")}
+                          type="checkbox"
+                          defaultChecked={true}
+                        />
+                        <span className="patner-name"> Zomato</span>
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="form-group">
-                  {/* //! Email */}
-                  <input
-                    className="form--input"
-                    type="email"
-                    // required
-                    placeholder="Email"
-                    form--btn
-                    {...register("Email", {
-                      required: "Email is required",
-                      pattern: {
-                        value:
-                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        message: "Please enter a valid email",
-                      },
-                    })}
-                  />
-                  {errors["Email"] && (
-                    <p className="form_error red">
-                      Provide a valid email address
-                    </p>
-                  )}
+                  <div className="form-group">
+                    {/* //! Email */}
+                    <input
+                      className="form--input"
+                      type="email"
+                      // required
+                      placeholder="Email"
+                      {...register("Email", {
+                        required: "Email is required",
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: "Please enter a valid email",
+                        },
+                      })}
+                    />
+                    {errors["Email"] && (
+                      <p className="form_error red">
+                        Provide a valid email address
+                      </p>
+                    )}
 
-                  {/*//! Restaurant Name */}
-                  <input
-                    className="form--input"
-                    type="text"
-                    placeholder="Restaurant Name"
-                    {...register("Restaurant Name", {
-                      required: true,
-                      minLength: 1,
-                    })}
-                  />
-                  {errors["Restaurant Name"] && (
-                    <p className="form_error red">
-                      Name should be atleast 1 characters long
-                    </p>
-                  )}
+                    {/*//! Restaurant Name */}
+                    <input
+                      className="form--input"
+                      type="text"
+                      placeholder="Restaurant Name"
+                      {...register("Restaurant Name", {
+                        required: true,
+                        minLength: 1,
+                      })}
+                    />
+                    {errors["Restaurant Name"] && (
+                      <p className="form_error red">
+                        Name should be atleast 1 characters long
+                      </p>
+                    )}
+                  </div>
+                  {/* //? Terms and Conditions! */}
+                  <div className="form-group">
+                    <div className="same_as_btn">
+                      {/* <span className="text">Terms And Conditions:</span> */}
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <input
+                          className="form--input_checkbox"
+                          type="checkbox"
+                          value={tnc}
+                          checked={tnc}
+                          {...register("tnc")}
+                          onClick={(e) => {
+                            setTnc((prevState) => !prevState);
+                          }}
+                        />
+                        <span
+                          className="patner-name tnc"
+                          onClick={handelModelOpen}
+                        >
+                          Read all Terms & Conditions
+                        </span>
+                        {/* <div className="tnc">Read all Terms & Conditions</div> */}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -317,42 +518,44 @@ const SignupA = () => {
                 onSubmit={handleSubmit(onSubmitFormTwo)}
               >
                 <div className="form-heading">{"Step 2/3: Swiggy"}</div>
-                <div className="form-group">
-                  {/* //!Swiggy Rest. Phone */}
+                <div className="form-group__container">
+                  <div className="form-group">
+                    {/* //!Swiggy Rest. Phone */}
 
-                  <input
-                    className="form--input"
-                    type="tel"
-                    name="Swiggy Number"
-                    placeholder="Swiggy Number"
-                    {...register("Swiggy Number", {
-                      // required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                  {errors["Swiggy Number"] && (
-                    <p className="form_error red">
-                      Provide a valid number, your Swiggy Registered Phone
-                      Number
-                    </p>
-                  )}
-                  {/* //!Swiggy Password */}
+                    <input
+                      className="form--input"
+                      type="tel"
+                      name="Swiggy Number"
+                      placeholder="Swiggy Number"
+                      {...register("Swiggy Number", {
+                        // required: true,
+                        maxLength: 10,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors["Swiggy Number"] && (
+                      <p className="form_error red">
+                        Provide a valid number, your Swiggy Registered Phone
+                        Number
+                      </p>
+                    )}
+                    {/* //!Swiggy Password */}
 
-                  <input
-                    className="form--input"
-                    type="password"
-                    placeholder="Swiggy Password"
-                    {...register("Swiggy Password", {
-                      // required: true,
-                      // minLength: 3,
-                    })}
-                  />
-                  {errors["Swiggy Password"] && (
-                    <p className="form_error red">
-                      Your Swiggy password should be atleast 3 characters long
-                    </p>
-                  )}
+                    <input
+                      className="form--input"
+                      type="password"
+                      placeholder="Swiggy Password"
+                      {...register("Swiggy Password", {
+                        // required: true,
+                        // minLength: 3,
+                      })}
+                    />
+                    {errors["Swiggy Password"] && (
+                      <p className="form_error red">
+                        Your Swiggy password should be atleast 3 characters long
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -376,6 +579,11 @@ const SignupA = () => {
                       setValue("Swiggy Number", "");
                       setValue("Swiggy Password", "");
                       setStepNumber(1);
+                      ReactGA.event({
+                        category: "Button Click",
+                        action: "Skip Button Click",
+                        label: "Swiggy Skip Button Click",
+                      });
                     }}
                   >
                     <span>not on Swiggy</span>
@@ -399,25 +607,27 @@ const SignupA = () => {
                 onSubmit={handleSubmit(onSubmitFormThree)}
               >
                 <div className="form-heading">{"Step 3/3: Zomato"}</div>
-                <div className="form-group">
-                  {/* //!Swiggy Rest. Phone */}
-                  <input
-                    className="form--input"
-                    type="tel"
-                    name="Zomato Number"
-                    placeholder="Zomato Number"
-                    {...register("Zomato Number", {
-                      // required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                  {errors["Zomato Number"] && (
-                    <p className="form_error red">
-                      Provide a valid number, your Swiggy Registered Phone
-                      Number
-                    </p>
-                  )}
+                <div className="form-group__container">
+                  <div className="form-group">
+                    {/* //!Swiggy Rest. Phone */}
+                    <input
+                      className="form--input"
+                      type="tel"
+                      name="Zomato Number"
+                      placeholder="Zomato Number"
+                      {...register("Zomato Number", {
+                        // required: true,
+                        maxLength: 10,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors["Zomato Number"] && (
+                      <p className="form_error red">
+                        Provide a valid number, your Swiggy Registered Phone
+                        Number
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -432,6 +642,7 @@ const SignupA = () => {
                   </button>
 
                   <button
+                    disabled={showApkButton}
                     className={`btn-continue ${
                       showApkButton ? "disabled" : ""
                     }`}
@@ -471,6 +682,18 @@ const SignupA = () => {
               </span>
             </div>
           )}
+          {/* //! Show this on every Page */}
+          <div
+            className="signup_a__contact_us-btn"
+            style={{ marginTop: stepNumber !== 0 ? "4rem" : "" }}
+          >
+            <span className="signup_a__contact_us-btn--heading">
+              Having problem?
+            </span>
+            <a href="tel:9015317006" className="signup_a__contact_us-btn--link">
+              Contact Us!
+            </a>
+          </div>
         </div>
       </div>
     </>

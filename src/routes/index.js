@@ -307,7 +307,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     console.log("Number:", number, "ResultType:", resultType, "Date:", date);
 
     let restaurantList = [];
-    //? then it is a res_id soit will only have one restaurant
+    //? then it is a res_id so it will only have one restaurant
     if (`${phone}`.length < 10 || phone === null || phone === undefined) {
       restaurantList = [{ res_name, res_id }];
     }
@@ -319,12 +319,15 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     }
     // console.log("Restaurant List:", restaurantList);
     console.log(client_res_id, "client_res_id");
-    let api_data2;
+    let swiggyData;
 
     if (client_res_id !== res_id) {
-      console.log("client_res_id-----------------??:", client_res_id);
+      console.log(
+        "client_res_id(new res_id from the res_id list)----------------->>:",
+        client_res_id
+      );
 
-      api_data2 = await getAllSwiggyData(
+      swiggyData = await getAllSwiggyData(
         parseInt(client_res_id),
         number,
         resultType,
@@ -332,7 +335,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         endDate
       );
     } else {
-      api_data2 = await getAllSwiggyData(
+      swiggyData = await getAllSwiggyData(
         parseInt(res_id),
         number,
         resultType,
@@ -340,7 +343,10 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         endDate
       );
 
-      console.log("res_id-----------------?:", res_id);
+      console.log(
+        "res_id(old res_id or static one! )-----------------?:",
+        res_id
+      );
     }
 
     console.log("---------- <Get All Data Success End> ----------------");
@@ -349,7 +355,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         res_name: res_name,
         restaurantList: restaurantList,
         res_id: res_id,
-        api_data2: [api_data2, { name: "Zomato" }],
+        api_data2: [swiggyData, { name: "Zomato" }],
       },
       status: "success",
     });
@@ -513,6 +519,103 @@ router.get("/api/zomato", async (req, res) => {
   res.json({
     api,
   });
+});
+router.get("/api/swiggy-rev", async (req, res) => {
+  const res_id = 256302
+  const number = 12
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    // ? Previous month Swiggy Revenue
+    const swiggyReconsilation = await db
+      .collection("swiggy_revenue_reconsilation")
+      .findOne({
+        swiggy_res_id: res_id,
+        month_no: 12,
+      });
+
+    // ? RDC or total Cancellation for previous month
+    const rdc = await db
+      .collection("swiggy_rdc_products")
+      .aggregate([
+        {
+          $match: {
+            swiggy_res_id: parseInt(res_id),
+            month_no: 12,
+          },
+        },
+        {
+          $group: {
+            _id: "$swiggy_res_id",
+            rdc_score: { $sum: "$total_cancellation" },
+          },
+        },
+      ])
+      .toArray();
+    const totalCancellation = rdc[0]?.rdc_score;
+    const totalSales = swiggyReconsilation["total_customer_payable "];
+    const netPayout = swiggyReconsilation["net_payout_(E_-_F_-_G)"];
+    const deleveries = swiggyReconsilation["number_of_orders"];
+    const cancelledOrders = totalCancellation ? totalCancellation : 0;
+    const deductions = {
+      // ?latform Services Charges
+      "Platform Services Charges":
+        swiggyReconsilation?.["swiggy_platform_service_fee"] * 1.18 -
+        swiggyReconsilation?.["discount_on_swiggy_service_fee"] * 1.18,
+      // ? Cancellation Deduction
+      "Canellation Deduction":
+        swiggyReconsilation?.["merchant_cancellation_charges"] * 1.18 +
+        swiggyReconsilation?.["merchant_sare_of_cancelled_orders"],
+      // ? Other OFD deduction
+      "Other OFD deduction":
+        swiggyReconsilation?.["collection_charges"] * 1.18 +
+        swiggyReconsilation?.["access_charges"] * 1.18 +
+        swiggyReconsilation?.["call_center_service_fee"] * 1.18,
+
+      // ? Promotions
+      Promotions:
+        swiggyReconsilation?.["high_priority"] +
+        swiggyReconsilation?.["homepage_banner"],
+
+      // ? Previous Week Outstanding
+      "Previous Week Outstanding":
+        swiggyReconsilation?.["outstanding_for_previous_weeks"] +
+        swiggyReconsilation?.["excess_payout"],
+      
+      // ? Miscellaneous
+      Miscellaneous:
+        swiggyReconsilation?.["cash_pre-payment_to_merchant"] +
+        swiggyReconsilation?.["delivery_fee_sponsored_by_merchant"] +
+        swiggyReconsilation?.["refund_for_disputed_orders"] +
+        swiggyReconsilation?.["refund"] +
+        swiggyReconsilation?.["onboarding_fees"] +
+        Math.abs(swiggyReconsilation?.["long_distance_pack_fee"]),
+
+      // ? TCS
+      TCS: swiggyReconsilation?.["tcs"],
+      // ? TDS
+      TDS: swiggyReconsilation?.["tds"],
+
+    };
+
+    res.json({
+      totalSales,
+      netPayout,
+      deleveries,
+      cancelledOrders,
+      deductions,
+
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
+      message: "Error while getting data: " + err,
+    });
+  }
 });
 
 module.exports = router;

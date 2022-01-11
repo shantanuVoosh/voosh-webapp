@@ -19,7 +19,7 @@ const Card = ({
   let resultValue = 0;
   let resultBenchmark = 0;
 
-  console.log(name, value, benchmark, compareThen, type);
+  // console.log(name, value, benchmark, compareThen, type);
 
   // Todo: String Working
   if (type === "string") {
@@ -58,13 +58,14 @@ const Card = ({
       resultValue = value === "Not Applicable" ? 0 : 100;
       resultBenchmark = 100;
     }
-  } else if (type === "High Medium Low") {
   } else if (type === "percentage") {
     if (compareThen === "High Medium Low") {
       resultBenchmark = benchmark;
       if (value === "High") {
         resultValue = 90;
       } else if (value === "Medium") {
+        
+        console.log("here", name, value, benchmark, compareThen, type);
         resultValue = 70;
       } else if (value === "Low") {
         resultValue = 50;
@@ -78,7 +79,7 @@ const Card = ({
 
   showColor = resultValue >= resultBenchmark ? "green" : "red";
 
-  console.log(resultValue, resultBenchmark, "resultValue", "resultBenchmark");
+  // console.log(resultValue, resultBenchmark, "resultValue", "resultBenchmark");
 
   return (
     <div className="listing_score_card">
@@ -91,15 +92,23 @@ const Card = ({
 
         <div className={`value ${showColor}`}>
           {value}
+          {type === "percentage" && name !== "Number of Rating" ? "%" : ""}
         </div>
       </div>
-      <Link
-        to={`${name.replace(/\s/g, "")}`}
-        className="listing_score_card__btn"
-      >
-        <span className="listing_score_card__btn--text">Know more</span>
-        <AiOutlineRight className="listing_score_card__btn--icon" />
-      </Link>
+      {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
+      {(name === "Number of Rating" ||
+        name === "Images" ||
+        name === "Rating" ||
+        name === "Best Seller Score" ||
+        name === "Item Description") && (
+        <Link
+          to={`${name.replace(/\s/g, "")}`}
+          className="listing_score_card__btn"
+        >
+          <span className="listing_score_card__btn--text">Know more</span>
+          <AiOutlineRight className="listing_score_card__btn--icon" />
+        </Link>
+      )}
     </div>
   );
 };

@@ -13,6 +13,28 @@ const BarGraph = ({ compareThen, value, benchmark }) => {
       legend: {
         display: false,
       },
+      datalabels: {
+        display: true,
+        color: "black",
+        align: "end",
+        padding: {
+          right: 2
+        },
+        labels: {
+          padding: { top: 10 },
+          title: {
+            font: {
+              weight: "bold"
+            }
+          },
+          value: {
+            color: "green"
+          }
+        },
+        formatter: function (value) {
+          return "\n" + value;
+        }
+      }
     },
 
     scales: {

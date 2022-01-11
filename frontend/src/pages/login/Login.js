@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPlayer from "react-player";
+import MetaTags from "react-meta-tags";
 
 import {
   loginFailure,
@@ -95,6 +96,7 @@ const Login = () => {
   return (
     <>
       <div className="container">
+       
         <div className="login-container">
           <ToastContainer
             position="top-right"

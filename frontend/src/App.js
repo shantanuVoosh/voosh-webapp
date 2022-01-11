@@ -28,16 +28,14 @@ import SignupA from "./pages/signup/SignupA";
 import SignupB from "./pages/signup/SignupB";
 import Greeting from "./pages/Greeting";
 import PreSignUp from "./pages/PreSignUp";
+// import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
+import MetaTags from "react-meta-tags";
 
 function App() {
-  const { token } = useSelector((state) => state.auth);
-  // const{res_name} = useSelector((state) => state.data.res_name);
   const location = useLocation();
 
-  console.log(process.env.REACT_APP_GA_TRACKING_ID, "ID");
-
   React.useEffect(() => {
-    window.scrollTo(0, 0);
     // ! Ignore login page and provied user log(current page)
     // if (location.pathname !== "/") {
     //   (async function () {
@@ -48,6 +46,16 @@ function App() {
     // console.log(response);
     //   })();
     // }
+    ReactGA.initialize([
+      {
+        trackingId: "G-BNX0KV0H7M",
+      },
+    ]);
+    ReactGA.send({
+      hitType: "pageview",
+      page: window.location.pathname + window.location.search,
+    });
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   // ?Component that alerts if you click outside of it
@@ -59,6 +67,14 @@ function App() {
           path="/"
           element={
             <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Login</title>
+                <meta
+                  name="voosh web app, login page"
+                  content="voosh login page"
+                />
+                <meta property="og:title" content="web app" />
+              </MetaTags>
               <Login />
             </RedirectRoute>
           }
@@ -67,6 +83,14 @@ function App() {
           path="/signup"
           element={
             <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Signup</title>
+                <meta
+                  name="voosh web app, Signup page"
+                  content="voosh signup page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               {/* <Signup /> */}
               <SignupA />
               {/* <SignupB /> */}
@@ -77,17 +101,63 @@ function App() {
           path="/greeting"
           element={
             <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Greeting</title>
+                <meta
+                  name="voosh web app, Signup page"
+                  content="voosh signup page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <Greeting />
             </RedirectRoute>
           }
         />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/notification" element={<Notification />} />
-        <Route path="/pre-signup" element={<PreSignUp />} />
+        <Route
+          path="/settings"
+          element={
+            <>
+              <MetaTags>
+                <title>Voosh | Settings</title>
+                <meta
+                  name="voosh web app, Settings page"
+                  content="voosh Settings page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <Settings />
+            </>
+          }
+        />
+        <Route
+          path="/notification"
+          element={
+            <>
+              <MetaTags>
+                <title>Voosh | Notification</title>
+                <meta
+                  name="voosh web app, Notification page"
+                  content="voosh Notification page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <Notification />
+            </>
+          }
+        />
+        {/* <Route path="/pre-signup" element={<PreSignUp />} /> */}
         <Route
           path="/dashboard"
           element={
             <RequiredAuth>
+              <MetaTags>
+                <title>Voosh | Home-Dashboard</title>
+                <meta
+                  name="voosh web app, Home-Dashboard page"
+                  content="voosh Home-Dashboard page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"Voosh VGN"}
                 isHomePage={true}
@@ -101,12 +171,32 @@ function App() {
         />
         <Route
           path="/dashboard-sample"
-          element={<LoginAftermathDashboardWithNoData />}
+          element={
+            <>
+              <MetaTags>
+                <title>Voosh | Sample-Dashboard</title>
+                <meta
+                  name="voosh web app, Sample-Dashboard page"
+                  content="voosh Sample-Dashboard page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <LoginAftermathDashboardWithNoData />
+            </>
+          }
         />
         <Route
           path="revenue"
           element={
             <RequiredAuth>
+              <MetaTags>
+                <title>Voosh | Revenue-Dashboard</title>
+                <meta
+                  name="voosh web app, Revenue Dashboard page"
+                  content="voosh Revenue Dashboard page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"Revenue Dashboard"}
                 isHomePage={false}
@@ -126,6 +216,14 @@ function App() {
           path="/operationHealth"
           element={
             <RequiredAuth>
+               <MetaTags>
+                <title>Voosh | Operation-Health</title>
+                <meta
+                  name="voosh web app, Operation Health page"
+                  content="voosh Operation Health page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"Operation Health"}
                 isClientBtnNeeded={true}
@@ -136,10 +234,12 @@ function App() {
             </RequiredAuth>
           }
         />
+
         {/* //! no LayoutWrapper cuz dynamic routes will have diffrent heading */}
         <Route
           path="/operationHealth/:id"
           element={
+            // ? add meta tags in TimeSeries component
             <RequiredAuth>
               <TimeSeriesPages />
             </RequiredAuth>
@@ -150,6 +250,14 @@ function App() {
           path="/listingScore"
           element={
             <RequiredAuth>
+                <MetaTags>
+                <title>Voosh | Listing-Score</title>
+                <meta
+                  name="voosh web app, Listing Score page"
+                  content="voosh Listing Score page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"Listing Score"}
                 isHomePage={false}
@@ -185,6 +293,14 @@ function App() {
           path="/customerReviews"
           element={
             <RequiredAuth>
+              <MetaTags>
+                <title>Voosh | Customer-Reviews</title>
+                <meta
+                  name="voosh web app, customerReviews page"
+                  content="voosh customerReviews page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"Customer Reviews"}
                 isHomePage={false}
@@ -200,6 +316,14 @@ function App() {
           path="/allReviews"
           element={
             <RequiredAuth>
+               <MetaTags>
+                <title>Voosh | All-Reviews</title>
+                <meta
+                  name="voosh web app, All-Reviews page"
+                  content="voosh All-Reviews page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <LayoutWrapper
                 heading={"All Reviews"}
                 isHomePage={false}
@@ -215,6 +339,14 @@ function App() {
           path="*"
           element={
             <>
+              <MetaTags>
+                <title>Voosh | Error-404</title>
+                <meta
+                  name="voosh web app, Error page"
+                  content="voosh error, page not found"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <Error />
             </>
           }

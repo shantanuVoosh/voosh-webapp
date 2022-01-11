@@ -47,8 +47,9 @@ const FinancialDashBoard = () => {
     plugins: {
       legend: {
         display: true,
-        // position: 'right',
+        position: 'top',
         // position: 'bottom',
+       
       },
       title: {
         display: true,

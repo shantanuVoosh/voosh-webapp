@@ -9,7 +9,7 @@ import ScrollButton from "../../components/ScrollButton";
 
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
+  const {resultType} = useSelector((state) => state.data);
 
   const operationHealth = data[currentProductIndex]["operationHealth"];
   const { operationHealthMain, operationHealthData } = operationHealth;
@@ -28,8 +28,6 @@ const Dashboard = () => {
       ? getTopSuggestions.slice(0, 5)
       : getTopSuggestions;
   const topSuggestions = [...getTopSuggestions];
-
-  // console.log(topSuggestions, "top suggestions");
 
   return (
     <>

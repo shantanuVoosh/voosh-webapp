@@ -11,6 +11,7 @@ import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
 import BarGraph from "../../components/BarGraph";
 import ScrollButton from "../../components/ScrollButton";
+import MetaTags from "react-meta-tags";
 
 // TODO: fix the issue of the data not being loaded
 // TODO: cant visit the page directly (state is empty but path i can use)
@@ -74,7 +75,16 @@ const TimeSeriesPages = ({}) => {
 
   return (
     <>
-      <Header heading={currentName} isHomePage={false} isDropdownNeeded={true}/>
+      <MetaTags>
+        <title>Voosh | Operation-Health | {name}</title>
+        <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+        <meta property="og:title" content="web app" />
+      </MetaTags>
+      <Header
+        heading={currentName}
+        isHomePage={false}
+        isDropdownNeeded={true}
+      />
       <div className="container">
         <SectionButtons />
         <InfoCard

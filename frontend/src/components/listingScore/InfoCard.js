@@ -42,7 +42,6 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
       resultValue = value === "Not Applicable" ? 0 : 100;
       resultBenchmark = 100;
     }
-  } else if (type === "High Medium Low") {
   } else if (type === "percentage") {
     if (compareThen === "High Medium Low") {
       resultBenchmark = benchmark;
@@ -59,13 +58,18 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
     }
   }
   // Todo: Dont Touch this
+  console.log(type)
+  console.log(type === "percentage" && name !== "Number of Rating" ? "%" : "")
 
   showColor = resultValue > resultBenchmark ? "green" : "red";
 
   return (
     <div className="info-card">
       <div className="name">{name}</div>
-      <div className={`${showColor} value`}>{`${value}`}</div>
+      <div className={`${showColor} value`}>
+        {`${value}`}
+        {type === "percentage" && name !== "Number of Rating" ? "%" : ""}
+      </div>
     </div>
   );
 };

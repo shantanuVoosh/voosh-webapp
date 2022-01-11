@@ -1,10 +1,11 @@
 import React from "react";
-import { useNavigate, } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
 import { clearData } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
+import ReactGA from "react-ga4";
 const APP_TOKEN = "voosh-token";
 
 // ? name-> name of the page , addBtn-> add button to add logout button or not
@@ -18,6 +19,11 @@ const StaticHeader = ({ name, addBtn }) => {
     dispatch(clearData());
     cookie.remove(APP_TOKEN, { path: "/" });
     navigate("/");
+    ReactGA.event({
+      category: "Button Click",
+      action: "Clicked for Logout",
+      label: "Signout from voosh",
+    });
   };
 
   return (

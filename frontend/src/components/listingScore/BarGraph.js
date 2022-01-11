@@ -55,17 +55,22 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
   }
 
   // Todo:
-  else if (type === "High Medium Low") {
-  } else if (type === "percentage") {
+ else if (type === "percentage") {
     if (compareThen === "High Medium Low") {
       resultBenchmark = benchmark;
-      if (value === "High") {
-        resultValue = 90;
-      } else if (value === "Medium") {
-        resultValue = 70;
-      } else if (value === "Low") {
-        resultValue = 50;
+      if(name==="Number of Rating"){
+        if (value === "High") {
+          resultValue = 90;
+        } else if (value === "Medium") {
+          resultValue = 70;
+        } else if (value === "Low") {
+          resultValue = 50;
+        }
+      }else if(name==="Images"){
+        resultValue = value;
+        resultBenchmark = benchmark;
       }
+      
     } else {
       resultValue = value;
       resultBenchmark = benchmark;
@@ -77,7 +82,8 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
   const options = {
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        position: 'top',
       },
     },
 
@@ -98,15 +104,15 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
     },
   };
   //
-
+  
   console.log("name", name, resultValue, resultBenchmark, "------------->");
   const barData = {
     labels: [`${resultType === "week" ? "7 Days" : "Month"}`, "Target"],
     datasets: [
       {
         // ! value and benchmark will be change according to the data
-        data: [resultValue, resultBenchmark],
-        // label: "",
+        label: name,
+        data: [resultValue, resultBenchmark,],
         backgroundColor: [`${colorOfBar}`, "#2A327D"],
         barThickness: 60,
         // fill: false,

@@ -153,7 +153,7 @@ const SignupB = () => {
   return (
     <>
       <div className="container">
-        <div className="signup_a-container">
+        <div className="signup_b-container">
           <ToastContainer
             position="top-right"
             autoClose={5000}
@@ -169,25 +169,26 @@ const SignupB = () => {
             <img
               src={logo_img}
               alt="logo"
-              className="signup_a-header__logo"
+              className="signup_b-header__logo"
               onClick={() => navigate("/")}
             />
           </div>
           {/* //? Step 1 */}
           {stepNumber === 0 && (
             <>
-              <div className="signup_a-header__heading">
+              <div className="signup_b-header__heading">
                 Register with Voosh
               </div>
-              <div className="signup_a-header__sub-heading--small">
+              <div className="signup_b-header__sub-heading--small">
                 Grow your online business like never before. <br />
                 inside secrets of Online delivery
               </div>
               <form
-                className="signup_a__form"
+                className="signup_b__form"
                 onSubmit={handleSubmit(onSubmitFormOne)}
               >
                 <div className="form-heading">{"Step 1/2: Basic Details"}</div>
+                {/* //! only one from group is there! */}
                 <div className="form-group">
                   {/* //! Name*/}
                   <input
@@ -301,81 +302,83 @@ const SignupB = () => {
           {/* //? Step 2 */}
           {stepNumber === 1 && (
             <>
-              <div className="signup_a-header__heading">Learn with Voosh</div>
-              <div className="signup_a-header__sub-heading--small">
+              <div className="signup_b-header__heading">Learn with Voosh</div>
+              <div className="signup_b-header__sub-heading--small">
                 Educate Yourself and improve your online business
               </div>
-              <div className="signup_a-header--login-text">
+              <div className="signup_b-header--login-text">
                 <span className="heading">Already have an account?</span>
                 <span className="link" onClick={() => navigate("/")}>
                   Log in
                 </span>
               </div>
               <form
-                className="signup_a__form"
+                className="signup_b__form"
                 onSubmit={handleSubmit(onSubmitFormTwo)}
               >
                 <div className="form-heading">
                   {"Step 2/2: Partner Details"}
                 </div>
-                <div className="form-group">
-                  {/* //!Swiggy Rest. Phone */}
+                <div className="form-group__container">
+                  <div className="form-group">
+                    {/* //!Swiggy Rest. Phone */}
 
-                  <input
-                    className="form--input"
-                    type="tel"
-                    name="Swiggy Number"
-                    placeholder="Swiggy Number"
-                    {...register("Swiggy Number", {
-                      // ? if the user dont have swiggy reg phone number
-                      // required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                  {errors["Swiggy Number"] && (
-                    <p className="form_error red">
-                      Provide a valid number, your Swiggy Registered Phone
-                      Number
-                    </p>
-                  )}
-                  {/* //!Swiggy Password */}
+                    <input
+                      className="form--input"
+                      type="tel"
+                      name="Swiggy Number"
+                      placeholder="Swiggy Number"
+                      {...register("Swiggy Number", {
+                        // ? if the user dont have swiggy reg phone number
+                        // required: true,
+                        maxLength: 10,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors["Swiggy Number"] && (
+                      <p className="form_error red">
+                        Provide a valid number, your Swiggy Registered Phone
+                        Number
+                      </p>
+                    )}
+                    {/* //!Swiggy Password */}
 
-                  <input
-                    className="form--input"
-                    type="password"
-                    placeholder="Swiggy Password"
-                    {...register("Swiggy Password", {
-                      // required: true,
-                      // minLength: 3,
-                    })}
-                  />
-                  {errors["Swiggy Password"] && (
-                    <p className="form_error red">
-                      Your Swiggy password should be atleast 3 characters long
-                    </p>
-                  )}
-                </div>
-                <div className="form-group">
-                  {/* //!Swiggy Rest. Phone */}
-                  <input
-                    className="form--input"
-                    type="tel"
-                    name="Zomato Number"
-                    placeholder="Zomato Number"
-                    {...register("Zomato Number", {
-                      // ? if the user dont have zomato reg phone number
-                      // required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                  {errors["Zomato Number"] && (
-                    <p className="form_error red">
-                      Provide a valid number, your Swiggy Registered Phone
-                      Number
-                    </p>
-                  )}
+                    <input
+                      className="form--input"
+                      type="password"
+                      placeholder="Swiggy Password"
+                      {...register("Swiggy Password", {
+                        // required: true,
+                        // minLength: 3,
+                      })}
+                    />
+                    {errors["Swiggy Password"] && (
+                      <p className="form_error red">
+                        Your Swiggy password should be atleast 3 characters long
+                      </p>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    {/* //!Swiggy Rest. Phone */}
+                    <input
+                      className="form--input"
+                      type="tel"
+                      name="Zomato Number"
+                      placeholder="Zomato Number"
+                      {...register("Zomato Number", {
+                        // ? if the user dont have zomato reg phone number
+                        // required: true,
+                        maxLength: 10,
+                        minLength: 10,
+                      })}
+                    />
+                    {errors["Zomato Number"] && (
+                      <p className="form_error red">
+                        Provide a valid number, your Swiggy Registered Phone
+                        Number
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* 
@@ -402,7 +405,7 @@ const SignupB = () => {
               </form>
             </>
           )}
-           {/* //? Only display in 3rd page + form is submmited! */}
+          {/* //? Only display in 3rd page + form is submmited! */}
           {stepNumber === 1 && (
             <div className={`apk ${showApkButton ? "show_apk-btn" : ""}`}>
               <a
@@ -415,14 +418,14 @@ const SignupB = () => {
               </a>
             </div>
           )}
-           {/* //? show on 1st page */}
+          {/* //? show on 1st page */}
           {stepNumber === 0 && (
-            <div className="signup_a__login-btn">
-              <span className="signup_a__login-btn--heading">
+            <div className="signup_b__login-btn">
+              <span className="signup_b__login-btn--heading">
                 Already have an account?
               </span>
               <span
-                className="signup_a__login-btn--link"
+                className="signup_b__login-btn--link"
                 onClick={() => navigate("/")}
               >
                 Log in

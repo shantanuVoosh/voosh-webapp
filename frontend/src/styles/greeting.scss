@@ -1,0 +1,75 @@
+.greeting-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.greeting-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0 auto;
+  margin-top: 2.5rem;
+
+  &__logo {
+    height: 75px;
+    width: 151px;
+    margin-left: -21px;
+  }
+  &__logo-2 {
+    margin: 0.7rem 0;
+  }
+  &__heading {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}
+
+.greeting-body {
+  margin-top: 2rem;
+  text-align: center;
+
+  &__text {
+    color: $color-grey-6;
+
+    &--paragraph {
+      max-width: 400px;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 2;
+    }
+    &--paragraph-bold {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+  }
+}
+
+.greeting-btn {
+  width: 90%;
+  max-width: 200px;
+  text-align: center;
+  border: none;
+  margin-top: 20px;
+  text-align: center;
+  background-color: $color-white-1;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+  color: $color-white-1;
+  padding: 0.7rem;
+  font-size: $text-small;
+  border-radius: $radius-3;
+  @include breakpoint-up(xxsmall) {
+    font-size: $text-medium;
+  }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: $color-white-1;
+  }
+}

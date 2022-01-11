@@ -12,6 +12,7 @@ import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
 import BarGrap from "../../components/listingScore/BarGraph";
 import ScrollButton from "../../components/ScrollButton";
+import MetaTags from "react-meta-tags";
 
 const TimeSeriesPages = ({}) => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
@@ -60,11 +61,16 @@ const TimeSeriesPages = ({}) => {
 
   return (
     <>
+      <MetaTags>
+        <title>Voosh | Listing-Score | {name}</title>
+        <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+        <meta property="og:title" content="web app" />
+      </MetaTags>
       <Header heading={name} isHomePage={false} onlyShowDate={true} />
       <div className="container">
         <SectionButtons />
         {/* <InfoCardWithNoData name={name} /> */}
-        <InfoCard name={name} value={value} info={info} />
+        <InfoCard name={name} value={value} info={info} type={type} />
         <BarGrap
           name={name}
           value={value}

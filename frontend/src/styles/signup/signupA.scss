@@ -1,6 +1,5 @@
 .signup_a-container {
   width: 100%;
-  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,6 +41,15 @@
   align-items: center;
   width: 80%;
   padding: 1rem 0;
+
+  .form-group__container{
+    min-height: 310px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+
   .form-group {
     margin-bottom: 1rem;
     display: flex;
@@ -168,4 +176,23 @@
     font-weight: 600;
     text-decoration: underline;
   }
+}
+.signup_a__contact_us-btn {
+  font-size: 14px;
+  
+  &--heading {
+    color: $color-grey-3;
+  }
+  &--link {
+    color: $color-primary-1;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
+.tnc{
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-grey-6;
+  text-decoration: underline;
 }

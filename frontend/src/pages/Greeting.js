@@ -7,64 +7,52 @@ const Greeting = () => {
   const navigate = useNavigate();
   return (
     <div className="container">
-      <div className="signup-container">
-        <div className="signup-header">
+      <div className="greeting-container">
+        <div className="greeting-header">
           <img
             src={logo_img}
             alt="logo"
-            className="signup-header__logo"
+            className="greeting-header__logo"
             onClick={() => navigate("/")}
           />
         </div>
-        <div
-          className="greeting-container"
-          style={{
-            width: "80%",
-            display: "flex",
-            flexDirection: "column",
-            // justifyContent:"center"
-          }}
-        >
-          <div className="text" style={{ marginTop: "50px" }}>
-            {/* //? Heading */}
-            <p style={{ marginBottom: "10px", fontSize: "2.3rem" }}>
-              Congratulations!!
-            </p>{" "}
-           
-            <br />
-            {/* //? Congratulations pic */}
-            <p style={{ marginBottom: "10px", fontSize: "1.4rem" }}>
+        <FaHandshake size={80}  className="greeting-header__logo-2" />
+        <div className="greeting-header__heading">Congratulations!!</div>
+        <div className="greeting-body">
+          <div className="greeting-body__text">
+            <p className="greeting-body__text--paragraph">
               "Thank you for successfully taking the first step towards growing
               your online business. Sit back and relax, while we crunch data for
               you and competition.
             </p>
             <br />
-            <p style={{  fontSize: "1.3rem", fontWeight:"400", color:"#666666" }}>
+            <p className="greeting-body__text--paragraph">
               We expect to have everything ready in 3 days. Keep exploring and
               we will reach out with much more soon!"
             </p>
             <br />
+            <p className="greeting-body__text--paragraph-bold">
+              <span className="red">Warning!!</span> please don not remove the app!
+            </p>
           </div>
-          <div
-            className="greeting-btn"
-            onClick={() => navigate("/dashboard-sample")}
-          >
-            Let me Explore!!
-          </div>
-          <a href="tel:9015317006" className="greeting-btn">
-            Reach out to us!
-          </a>
-          <div
-              className="handshake-icon"
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <FaHandshake size={60} />
-            </div>
         </div>
+        <div
+          className="greeting-btn"
+          onClick={() => navigate("/dashboard-sample")}
+        >
+          Let me Explore!!
+        </div>
+        <a href="tel:9015317006" className="greeting-btn">
+          Reach out to us!
+        </a>
+        <div
+          className="handshake-icon"
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        ></div>
       </div>
     </div>
   );
