@@ -11,6 +11,9 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { VscChromeClose } from "react-icons/vsc";
+import { ImQuotesLeft, ImQuotesRight } from "react-icons/im";
+import { CgQuoteO, CgQuote } from "react-icons/cg";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const Modelstyle = {
@@ -61,17 +64,18 @@ const SignupA = () => {
     console.log(tnc);
 
     ReactGA.event({
-      category: "Button Click",
+      category: "Continue Button Clicked",
       action: "Signup Step 1",
       label: "Step 1",
     });
 
-    // ? we are chaing the tnc but form tnc check box is not working, so we check both, if tnc is true then we proceed
-    if (data.tnc === false && tnc === false) {
-      console.log("hi");
-      notify("Please accept the terms and conditions to continue");
-      return;
-    }
+    // ? we are changing the tnc(State) but form tnc check box is not working,
+    // ? so we check both, if tnc is true then we proceed
+    // ! Temporary Removed Terms and Conditions
+    // if (data.tnc === false && tnc === false) {
+    //   notify("Please accept the terms and conditions to continue");
+    //   return;
+    // }
 
     if (data.checkbox_1 === true) {
       setValue("Swiggy Number", data["Phone Number"]);
@@ -107,7 +111,7 @@ const SignupA = () => {
   // !On sumiting the 2nd form
   const onSubmitFormTwo = async (data) => {
     ReactGA.event({
-      category: "Button Click",
+      category: "Continue Button Clicked",
       action: "Signup Step 2",
       label: "Step 2",
     });
@@ -130,8 +134,35 @@ const SignupA = () => {
     ) {
       notify("Please enter a real swiggy password");
       return;
+    } else if (data["Swiggy Number"] !== "" && data["Swiggy Password"] !== "") {
+      // ? check if the number is already registered
+      try {
+        // setIsLoading(true);
+        const { data: response } = await axios.post("/check-swiggy-number", {
+          swiggy_register_phone: data["Swiggy Number"],
+        });
+        if (response.status === "error") {
+          ReactGA.event({
+            category: "Number Check",
+            action: "Wrong Swiggy Number Provided",
+            label: "Wrong Swiggy Number",
+          });
+          // setIsLoading(false);
+          notify(response.message);
+          return;
+        } else {
+          // setIsLoading(false);
+          // ? if the number is not registered then we proceed
+          setStepNumber(2);
+        }
+      } catch (err) {
+        // setIsLoading(false);
+        console.log(err);
+        notify("Server Error, Please try again later");
+        return;
+      }
     }
-
+    // ? cuz skip button is clicked
     setStepNumber(2);
   };
 
@@ -195,7 +226,7 @@ const SignupA = () => {
   const onSuccessfullFormSubmit = () => {
     ReactGA.event({
       category: "Button Click",
-      action: "Download Apk",
+      action: "Download Apk Button Clicked",
       label: "Download button",
     });
     navigate("/greeting");
@@ -401,6 +432,18 @@ const SignupA = () => {
                           {...register("checkbox_1")}
                           type="checkbox"
                           defaultChecked={true}
+                          onChange={(e) => {
+                            console.log(e.target.checked);
+                            ReactGA.event({
+                              category: "Same number for Swiggy checkbox",
+                              action: `
+                              Same number is 
+                              ${
+                                e.target.checked ? " Checked" : " Unchecked"
+                              } for Swiggy`,
+                              label: "Same number for Swiggy checkbox",
+                            });
+                          }}
                         />
                         <span className="patner-name"> Swiggy</span>
                       </span>
@@ -416,6 +459,18 @@ const SignupA = () => {
                           {...register("checkbox_2")}
                           type="checkbox"
                           defaultChecked={true}
+                          onChange={(e) => {
+                            console.log(e.target.checked);
+                            ReactGA.event({
+                              category: "Same number for Zomato checkbox",
+                              action: `
+                              Same number is 
+                              ${
+                                e.target.checked ? " Checked" : " Unchecked"
+                              } for Zomato`,
+                              label: "Same number for Zomato checkbox",
+                            });
+                          }}
                         />
                         <span className="patner-name"> Zomato</span>
                       </span>
@@ -460,9 +515,9 @@ const SignupA = () => {
                     )}
                   </div>
                   {/* //? Terms and Conditions! */}
-                  <div className="form-group">
+                  {/* // ! Temporary Removed Terms and Conditions */}
+                  {/* <div className="form-group">
                     <div className="same_as_btn">
-                      {/* <span className="text">Terms And Conditions:</span> */}
                       <span
                         style={{
                           display: "flex",
@@ -486,10 +541,9 @@ const SignupA = () => {
                         >
                           Read all Terms & Conditions
                         </span>
-                        {/* <div className="tnc">Read all Terms & Conditions</div> */}
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -509,16 +563,20 @@ const SignupA = () => {
           {/* //? Step 2 Page   */}
           {stepNumber === 1 && (
             <>
-              <div className="signup_a-header__heading">Learn with Voosh</div>
+              <div className="signup_a-header__heading">
+                Your data is secure
+              </div>
               <div className="signup_a-header__sub-heading--small">
-                Educate Yourself and improve your <br /> online business
+                "We do not share your data with
+                <br />
+                anyone"
               </div>
               <form
                 className="signup_a__form"
                 onSubmit={handleSubmit(onSubmitFormTwo)}
               >
                 <div className="form-heading">{"Step 2/3: Swiggy"}</div>
-                <div className="form-group__container">
+                <div className="form-group__container jc--sb">
                   <div className="form-group">
                     {/* //!Swiggy Rest. Phone */}
 
@@ -556,6 +614,24 @@ const SignupA = () => {
                       </p>
                     )}
                   </div>
+
+                  <div className="customer-review-card">
+                    <div className="customer-review-card__body">
+                      <span className="quote-icon_open">
+                        <CgQuote />
+                      </span>
+                      <span className="text">
+                        I have been using this app for a long time and it is
+                        really great.
+                      </span>
+                      <span className="quote-icon_close">
+                        <CgQuote />
+                      </span>
+                    </div>
+                    <div className="customer-review-card__heading">
+                      Chettinad Food House
+                    </div>
+                  </div>
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -563,7 +639,15 @@ const SignupA = () => {
                 <div className="form--btn_container jc--sb">
                   <button
                     className="btn-previous"
-                    onClick={() => setStepNumber(0)}
+                    onClick={() => {
+                      ReactGA.event({
+                        category: "Go Back Button",
+                        action: "Go Back to Basic details",
+                        label: "bO BACK BUTTON",
+                      });
+
+                      setStepNumber(0);
+                    }}
                   >
                     <span> Go Back </span>
                   </button>
@@ -576,13 +660,14 @@ const SignupA = () => {
                   <button
                     className="btn-previous"
                     onClick={() => {
+                      console.log("here---->");
                       setValue("Swiggy Number", "");
                       setValue("Swiggy Password", "");
                       setStepNumber(1);
                       ReactGA.event({
                         category: "Button Click",
-                        action: "Skip Button Click",
-                        label: "Swiggy Skip Button Click",
+                        action: "Not on Swiggy Button Clicked",
+                        label: "not on Swiggy Button Click",
                       });
                     }}
                   >
@@ -607,8 +692,8 @@ const SignupA = () => {
                 onSubmit={handleSubmit(onSubmitFormThree)}
               >
                 <div className="form-heading">{"Step 3/3: Zomato"}</div>
-                <div className="form-group__container">
-                  <div className="form-group">
+                <div className="form-group__container jc--sb">
+                  <div className="form-group ">
                     {/* //!Swiggy Rest. Phone */}
                     <input
                       className="form--input"
@@ -628,6 +713,23 @@ const SignupA = () => {
                       </p>
                     )}
                   </div>
+                  <div className="customer-review-card">
+                    <div className="customer-review-card__body">
+                      <span className="quote-icon_open">
+                        <CgQuote />
+                      </span>
+                      <span className="text">
+                        I have been using this app for a long time and it is
+                        really great.
+                      </span>
+                      <span className="quote-icon_close">
+                        <CgQuote />
+                      </span>
+                    </div>
+                    <div className="customer-review-card__heading">
+                      Chettinad Food House
+                    </div>
+                  </div>
                 </div>
 
                 {/* //! 0-next(if all thing are filled) , 1(same as 0) , 
@@ -635,8 +737,17 @@ const SignupA = () => {
                 <div className="form--btn_container jc--sb">
                   <button
                     disabled={showApkButton}
-                    className="btn-previous"
-                    onClick={() => setStepNumber(1)}
+                    className={
+                      "btn-previous " + `${showApkButton ? "disabled" : ""}`
+                    }
+                    onClick={() => {
+                      ReactGA.event({
+                        category: "Go Back Button",
+                        action: "Go back to Swiggy Details",
+                        label: "Go back from Zomato",
+                      });
+                      setStepNumber(1);
+                    }}
                   >
                     <span> Go Back </span>
                   </button>
@@ -676,7 +787,14 @@ const SignupA = () => {
               </span>
               <span
                 className="signup_a__login-btn--link"
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  navigate("/");
+                  ReactGA.event({
+                    category: "Redirect To Login",
+                    action: "Redirect To Login",
+                    label: "Already have an account? Redirect To Login",
+                  });
+                }}
               >
                 Log in
               </span>
@@ -690,7 +808,17 @@ const SignupA = () => {
             <span className="signup_a__contact_us-btn--heading">
               Having problem?
             </span>
-            <a href="tel:9015317006" className="signup_a__contact_us-btn--link">
+            <a
+              href="tel:9015317006"
+              className="signup_a__contact_us-btn--link"
+              onClick={() => {
+                ReactGA.event({
+                  category: "Contact Us",
+                  action: "Contact Us Button Click",
+                  label: "Contact Us",
+                });
+              }}
+            >
               Contact Us!
             </a>
           </div>

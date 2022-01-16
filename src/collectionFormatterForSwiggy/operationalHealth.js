@@ -252,17 +252,18 @@ const operationHealthDataFormatter = async (
     } = data;
 
     // Todo: test this
-    const ohManually = calculateOHScoreManually(
+    const ohManually = calculateOHScoreManually({
       serviceability_score,
       rdc_score,
       igcc_score,
       rating_score,
       mfr_score,
-      acceptance_score
-    );
+      acceptance_score,
+    });
 
     // !If the values inside data is not present, then it will return undefined
     const operationalHealth = {
+      // Todo: is this needed? dataPresent
       dataPresent: true,
       // ? Operational Health Score
       operationHealthMain: {
@@ -311,7 +312,8 @@ const operationHealthDataFormatter = async (
           videoLink: RDC_video,
           recommendations: [
             "Ensure Restaurant open at the given timings to swiggy and zomato",
-            "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
+            "Ensure stock of best seller items always ready.",
+            // "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
           ],
           value:
             rdc_score === undefined
@@ -407,14 +409,14 @@ module.exports = {
   operationHealthDataFormatter,
 };
 
-function calculateOHScoreManually(
+function calculateOHScoreManually({
   serviceability_score,
   rdc_score,
   igcc_score,
   rating_score,
   mfr_score,
-  acceptance_score
-) {
+  acceptance_score,
+}) {
   console.log("*****************--------------------********************");
   console.log("serviceability_score", serviceability_score);
   console.log("rdc_score", rdc_score);

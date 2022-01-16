@@ -288,8 +288,12 @@ const Header = ({
               {onlyShowDate ? (
                 <div className="header__date">
                   <span className="date">
-                    As of{" "} 
-                    {customDateString(dateInsideState).split("-")[1]}
+                    {resultType !== "This Month" &&
+                      resultType !== "Previous Month" &&
+                      customDateString(dateInsideState).split("-")[1]}
+                    {(resultType === "This Month" ||
+                      resultType === "Previous Month") &&
+                      customDateString(dateInsideState)}
                   </span>
                 </div>
               ) : (

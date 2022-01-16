@@ -6,36 +6,82 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
+// ! serviceability_score fix krna hai cuz right now it is config manually
 const operationalHealthMongoDBData = async (
   res_id,
   number,
   resultType,
   startDate,
-  endDate
+  endDate,
+  year
 ) => {
   let query = {};
+  let rdc_query = {};
   let mfr_query = {};
+  let ratings_query = {};
+  // ! temp use
+  let serviceability_query = {};
 
+  // ? Query for week
   if (resultType === "week") {
-    query = {
+    rdc_query = {
       zomato_res_id: `${res_id}`,
       week_no: parseInt(number),
+      year: parseInt(year),
     };
     mfr_query = {
       zomato_res_Id: `${res_id}`,
       week_no: parseInt(number),
+      year: parseInt(year),
     };
-  } else if (resultType === "month") {
-    query = {
+    ratings_query = {
+      zomato_id: parseInt(res_id),
+      week_no: parseInt(number),
+      // week_no:2,
+      year_no: parseInt(year),
+    };
+    // ! temp use
+    serviceability_query = {
+      // nomenclature:"Chettinad food house",
+      nomenclature:
+        parseInt(res_id) === 256302 || parseInt(res_id) === 56834
+          ? "Chettinad food house"
+          : "No nomenclature",
+      week_no: parseInt(number),
+      year_no: parseInt(year),
+    };
+  }
+  // ? Query for month
+  else if (resultType === "month") {
+    rdc_query = {
       zomato_res_id: `${res_id}`,
       month_no: parseInt(number),
+      year: parseInt(year),
     };
     mfr_query = {
       zomato_res_Id: `${res_id}`,
-      week_no: parseInt(number),
+      month_no: parseInt(number),
+      year: parseInt(year),
     };
-  } else if (resultType === "Cumstom Range") {
-    query = {
+    ratings_query = {
+      zomato_id: parseInt(res_id),
+      month_no: parseInt(number),
+      year_no: parseInt(year),
+    };
+    // ! temp use
+    serviceability_query = {
+      // nomenclature:"Chettinad food house",
+      nomenclature:
+        parseInt(res_id) === 256302 || parseInt(res_id) === 56834
+          ? "Chettinad food house"
+          : "No nomenclature",
+      month_no: parseInt(number),
+      year_no: parseInt(year),
+    };
+  }
+  // ? Query for Custom Range
+  else if (resultType === "Cumstom Range") {
+    rdc_query = {
       zomato_res_id: `${res_id}`,
       date: { $gte: startDate, $lte: endDate },
     };
@@ -43,7 +89,9 @@ const operationalHealthMongoDBData = async (
       zomato_res_Id: `${res_id}`,
       date: { $gte: startDate, $lte: endDate },
     };
-  } else {
+  }
+  // ? Error while providing wrong query
+  else {
     query = {
       dataPresent: false,
     };
@@ -54,15 +102,34 @@ const operationalHealthMongoDBData = async (
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    console.log(query);
-    console.log(mfr_query);
+    // console.log(query, "query");
+    // console.log(mfr_query, "mfr_query");
+    // console.log(serviceability_query, "serviceability_query");
+    // console.log(rdc_query, "rdc_query");
+    console.log(ratings_query, "ratings_query");
+
+    // ! Operational Health Serviceability
+    const serviceability = await db
+      .collection("zomato_kitchen_servicibility_products")
+      .aggregate([
+        {
+          $match: serviceability_query,
+        },
+        {
+          $group: {
+            _id: "$nomenclature",
+            oh_serviceability: { $avg: "$kicthen_servicibility" },
+          },
+        },
+      ])
+      .toArray();
 
     // !Operational Health RDC
     const rdc_score = await db
       .collection("zomato_rdc_products_test")
       .aggregate([
         {
-          $match: query,
+          $match: rdc_query,
         },
         {
           $group: {
@@ -70,6 +137,23 @@ const operationalHealthMongoDBData = async (
             rdc_score: { $avg: "$rdc" },
           },
         },
+      ])
+      .toArray();
+
+    // ! Operational Health Rating
+    const rating = await db
+      .collection("zomato_static_rating_products")
+      .aggregate([
+        {
+          $match: ratings_query,
+        },
+        // {
+        //   $group: {
+        //     _id: "$zomato_id",
+        //     rating_score: { $avg: "$delivery_ratings" },
+
+        //   },
+        // },
       ])
       .toArray();
 
@@ -90,8 +174,10 @@ const operationalHealthMongoDBData = async (
       .toArray();
 
     console.log("*****************--------------------********************");
+    console.log("serviceability: ", serviceability);
     console.log("rdc_score", rdc_score);
     console.log("mfr_score", mfr_score);
+    console.log("rating", rating);
     console.log(
       "****************-------------------------*********************"
     );
@@ -99,6 +185,7 @@ const operationalHealthMongoDBData = async (
     client.close();
 
     return {
+      serviceability_score: serviceability[0]?.oh_serviceability,
       rdc_score: rdc_score[0]?.rdc_score,
       mfr_score: mfr_score[0]?.mfr_score,
     };
@@ -115,7 +202,8 @@ const operationHealthDataFormatter = async (
   number,
   resultType,
   startDate,
-  endDate
+  endDate,
+  year
 ) => {
   try {
     const data = await operationalHealthMongoDBData(
@@ -123,12 +211,56 @@ const operationHealthDataFormatter = async (
       number,
       resultType,
       startDate,
-      endDate
+      endDate,
+      year
     );
-    const { rdc_score, mfr_score } = data;
+    const { rdc_score, mfr_score, serviceability_score, oh_score } = data;
+
+    const ohManually = calculateOHScoreManually({
+      rdc_score,
+      mfr_score,
+      serviceability_score,
+    });
+
+    console.log("ohManually", ohManually);
 
     const operationHealth = {
+      operationHealthMain: {
+        name: "Operation Health",
+        type: "percentage",
+        info: "Operation Health >= 95% Gets more orders",
+        benchmark: 95,
+        value:
+          oh_score === undefined
+            ? ohManually != 0 && ohManually === ohManually
+              ? ohManually
+              : 0
+            : oh_score * 16.67,
+        isDataPresent:
+          oh_score === undefined
+            ? ohManually != 0 && ohManually === ohManually
+              ? true
+              : false
+            : true,
+      },
       operationHealthData: [
+        // ?Swiggy_Kitchen_Servicibility
+        {
+          name: "Rest. Serviceability",
+          type: "percentage",
+          // info: "if your restaurent serviceability score is greater than 99% then it will get more orders",
+          info: "Operation Health >= 99% Gets more orders",
+          benchmark: 99,
+          compareThen: "grater",
+          videoLink: Serviceability_video,
+          recommendations: ["Get the serviceability notification service"],
+          value:
+            serviceability_score === undefined
+              ? "Please wait! We are working on It."
+              : parseInt(serviceability_score),
+          isDataPresent: serviceability_score === undefined ? false : true,
+        },
+        // ?Swiggy_RDC
         {
           name: "Rest. Cancellations",
           type: "percentage",
@@ -147,6 +279,7 @@ const operationHealthDataFormatter = async (
               : parseInt(rdc_score * 100),
           isDataPresent: rdc_score === undefined ? false : true,
         },
+        // ?Swiggy_MFR
         {
           name: "MFR Accuracy",
           type: "percentage",
@@ -179,3 +312,83 @@ const operationHealthDataFormatter = async (
 module.exports = {
   operationHealthDataFormatter,
 };
+
+function calculateOHScoreManually({
+  serviceability_score,
+  rdc_score,
+  igcc_score,
+  rating_score,
+  mfr_score,
+  acceptance_score,
+}) {
+  console.log("*****************--------------------********************");
+  console.log("serviceability_score", serviceability_score);
+  console.log("rdc_score", rdc_score);
+  console.log("igcc_score", igcc_score);
+  console.log("rating_score", rating_score);
+  console.log("mfr_score", mfr_score);
+  console.log("acceptance_score", acceptance_score);
+  console.log("****************-------------------------*********************");
+  let score = 0;
+  let count = 0;
+  if (serviceability_score !== undefined) {
+    count += 1;
+    if (serviceability_score >= 95) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (rdc_score !== undefined) {
+    count += 1;
+    if (rdc_score < 5) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (rating_score !== undefined) {
+    count += 1;
+    if (rating_score >= 4.5) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (mfr_score !== undefined) {
+    count += 1;
+    if (mfr_score >= 95) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (igcc_score !== undefined) {
+    count += 1;
+    if (igcc_score <= 1) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  if (acceptance_score !== undefined) {
+    count += 1;
+    if (acceptance_score >= 99) {
+      score += 0.5;
+    } else {
+      score += 0;
+    }
+  }
+
+  console.log("score", score);
+  console.log("count", count);
+  // ! if Nan then no data is present
+  console.log(score * (200 / count));
+
+  return score * (200 / count);
+}

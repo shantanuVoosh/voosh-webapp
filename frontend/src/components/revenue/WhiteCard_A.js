@@ -3,9 +3,13 @@ import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
+import moment from "moment";
 
 const WhiteCard = (props) => {
-  const resultType = useSelector((state) => state.resultType);
+  const customDate = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .format("MMMM'YY");
   const {
     name,
     type,
@@ -26,7 +30,7 @@ const WhiteCard = (props) => {
           <div className="value error-value">
             {/* {"No successful order yesterday"} */}
             {"Working on it..."}
-            </div>
+          </div>
           <div className="financial_a-card__text--info">
             <p>{info}</p>
           </div>
@@ -42,7 +46,10 @@ const WhiteCard = (props) => {
   return (
     <div className="financial_a-card">
       <div className="financial_a-card__text">
-        <h5 className="financial_a-card__text--heading">{name}</h5>
+        <div className="financial_a-card__text--heading">
+          <h5 className="text">{name}</h5>
+          {name !== "Total Sales" && <span className="date">{customDate}</span>}
+        </div>
         <div className="value" style={{ color: `${color}` }}>
           {value.toLocaleString("en-IN", {
             maximumFractionDigits: 2,

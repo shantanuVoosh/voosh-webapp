@@ -8,6 +8,7 @@ import {
   isLoading,
   setRestaurantNameAndId,
   fetchAllData,
+  setResultType,
 } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import {
@@ -47,9 +48,8 @@ function RequiredAuth({ children }) {
     // !for testing purpose
     console.log("Date inside state:", date);
 
-    if (resultType === "Previous Day") {
-      return;
-    }
+
+    
     // if (resultType === "Custom Range") {
 
     //   console.log("working so far............");
@@ -61,6 +61,9 @@ function RequiredAuth({ children }) {
       dispatch(isLoading(true));
       // ? To identify if the slected option is week or month
       const tempMonthMap = {
+        // ? we have prev day sales in all colleaction but, if ravenue pagew is
+        // ? reloaded then we have to fetch data from api again
+        "Previous Day": "week",
         "This Week": "week",
         "Previous Week": "week",
         "This Month": "month",
@@ -69,6 +72,7 @@ function RequiredAuth({ children }) {
       };
       //? date is already modified, just calculating the week number or month number
       const tempNumberMap = {
+        "Previous Day": getWeekNumberFromDate(date),
         "This Week": getWeekNumberFromDate(date),
         "Previous Week": getWeekNumberFromDate(date),
         "This Month": getMonthNumberFromDate(date),

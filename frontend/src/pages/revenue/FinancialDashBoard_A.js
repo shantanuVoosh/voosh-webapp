@@ -6,29 +6,40 @@ import { Doughnut } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import ColorList from "../../components/revenue/ColorList";
 import ScrollButton from "../../components/ScrollButton";
-const thisPageResulyType = "prev month";
+
+import moment from "moment";
 
 const FinancialDashBoard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
+  const { resultType } = useSelector((state) => state.data);
   const revenue = data[currentProductIndex]["revenue"];
-
-  const { financicalData } = revenue;
-  const { totalSales, cancelledOrders, netPayout, deleveries, deductions } =
-    financicalData;
+  const customDate = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .format("MMMM'YY");
+  // ? this value is not constant
+  const { revenue_score } = data[currentProductIndex]["revenue_score"];
+  const {
+    previousDayRevenue,
+    financicalData: {
+      isDataPresent,
+      totalSales,
+      cancelledOrders,
+      netPayout,
+      deleveries,
+      deductions,
+    },
+  } = data[currentProductIndex]["previousMonthRevenue"];
 
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
   console.log("deductionTitles =>", deductionTitles);
 
-  let revenueResult = revenue.value;
-  const previousDayRevenue = revenue.previousDayRevenue
   console.log("revenue =>", previousDayRevenue);
 
-  const finalRevenue = resultType!=="Previous Day" ? revenueResult : previousDayRevenue;
-
-  
+  const finalRevenue =
+    resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
 
   const pieColors = [
     "#370665",
@@ -47,9 +58,8 @@ const FinancialDashBoard = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'top',
+        position: "top",
         // position: 'bottom',
-       
       },
       title: {
         display: true,
@@ -85,18 +95,23 @@ const FinancialDashBoard = () => {
   };
   return (
     <>
+    {/* //! use for only prev month */}
       <div className="financial_a">
         {/* //? Orange, White cards */}
         <div className="financial_a-cards">
           <WhiteCard
             name={"Total Sales"}
             type={"Pecentage"}
-            value={finalRevenue}
+            value={resultType === "Previous Month" ? totalSales : finalRevenue}
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
             // color={"#262D30"}
             isDataPresent={
-              finalRevenue === undefined ? false : true
+             ( resultType === "Previous Month"
+                ? totalSales
+                : finalRevenue) === undefined
+                ? false
+                : true
             }
           />
           <WhiteCard
@@ -104,7 +119,6 @@ const FinancialDashBoard = () => {
             type={"Pecentage"}
             value={netPayout}
             info={"Total Sales includes all taxes"}
-            benchmark={"103847.68"}
             color={"#27AE60"}
             isDataPresent={true}
           />
@@ -113,14 +127,14 @@ const FinancialDashBoard = () => {
             type={"Pecentage"}
             value={totalSales - netPayout}
             info={"Total Sales includes all taxes"}
-            benchmark={"103847.68"}
             color={"#f05a48"}
             isDataPresent={true}
           />
         </div>
         <div className="financial_a-breakdown">
           <div className="financial_a-breakdown__heading">
-            Channel Breakdown
+            <h5 className="text">Channel Breakdown</h5>
+            <div className="date">{customDate}</div>
           </div>
           <SectionButtons />
           {/* //? Swiggy or Zomato, Cards */}
@@ -189,7 +203,7 @@ const FinancialDashBoard = () => {
                   <ColorList
                     key={index}
                     name={name}
-                    value={value}
+                    value={Math.abs(value)}
                     color={pieColors[index]}
                   />
                 );

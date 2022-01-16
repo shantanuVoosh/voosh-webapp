@@ -96,8 +96,9 @@ const Card = ({
         </div>
       </div>
       {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
-      {(name === "Number of Rating" ||
+      {(
         name === "Images" ||
+        // name === "Number of Rating" ||
         name === "Rating" ||
         name === "Best Seller Score" ||
         name === "Item Description") && (

@@ -37,33 +37,20 @@
       }
     }
 
-    &:nth-child(2) {
-      &::after {
-        position: absolute;
-        content: "(November'21)";
-        color: $red;
-        top: 31px;
-        left: 11px;
-        font-size: 8px;
-        font-weight: 700;
-      }
-    }
-    &:nth-child(3) {
-      &::after {
-        position: absolute;
-        content: "(November'21)";
-        color: $red;
-        top: 31px;
-        left: 11px;
-        font-size: 8px;
-        font-weight: 700;
-      }
-    }
-
     &__text {
       &--heading {
-        font-size: $text-medium;
-        color: $color-grey-3;
+        display: flex;
+        flex-direction: column;
+        .text {
+          font-size: $text-medium;
+          color: $color-grey-3;
+        }
+
+        .date {
+          color: $red;
+          font-size: 9px;
+          font-weight: 700;
+        }
 
         // @include breakpoint-up(xxsmall) {
         //   font-size: $text-large;
@@ -191,14 +178,18 @@
   }
 
   &__heading {
-    font-weight: 700;
-    font-size: 1.3rem;
-
-    &::after {
-      content: "(November'21)";
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    .text {
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .date {
       color: $red;
       font-size: 12px;
       margin-left: 5px;
+      font-weight: 700;
     }
   }
 

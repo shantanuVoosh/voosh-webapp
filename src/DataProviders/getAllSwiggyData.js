@@ -13,6 +13,7 @@ const {
 } = require("../collectionFormatterForSwiggy/customerReviews");
 const {
   revenuDataFormatter,
+  revenuDataOfPreviousMonth,
 } = require("../collectionFormatterForSwiggy/revenue");
 
 async function getAllSwiggyData(
@@ -65,12 +66,13 @@ async function getAllSwiggyData(
     startDate,
     endDate
   );
+  const revenue_previous_month = await revenuDataOfPreviousMonth(res_id);
   return {
     name: "Swiggy",
     operationHealth: oh,
     listingScore: ls,
     revenue_score,
-    revenue,
+    previousMonthRevenue: revenue_previous_month,
     // ! customerReviews wont work in this case
     customerReviews:
       resultType === "Custom Range"

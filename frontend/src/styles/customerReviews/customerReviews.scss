@@ -130,6 +130,11 @@
   flex-direction: column;
   justify-content: flex-start;
   min-height: 100vh;
+  .no-reviews{
+    padding: 3rem 0;
+    text-align: center;
+    color: $color-grey-3;
+  }
 }
 
 .review-card {

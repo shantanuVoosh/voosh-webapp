@@ -3,6 +3,7 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
+// ! not using this function
 const listingScoreMongoDBData = async (res_id, number, resultType) => {
   // ? key is different in collection
 
@@ -84,11 +85,69 @@ const listingScoreMongoDBData = async (res_id, number, resultType) => {
   }
 };
 
+// ! new Listing Score data with most recent data
+// ? Only res_id is required, we are sorting most recent year, month, week
+const listingScoreMostRecentMongoDBData = async (res_id) => {
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    listingScoreData = await db
+      .collection("swiggy_weekly_listing_score_products")
+      .aggregate([
+        {
+          $match: {
+            swiggy_res_id: `${res_id}`,
+          },
+        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    //! if resultType is not week or month!
+
+    // console.log("------******------");
+    // console.log(
+    //   "listingScoreData--------------------------.................:",
+    //   listingScoreData
+    // );
+    // console.log("------******------");
+    const listingScore = listingScoreData[0];
+
+    client.close();
+    return {
+      score: listingScore?.score,
+      safety_tag: listingScore?.safety_tag,
+      rating: listingScore?.rating,
+      number_of_rating: listingScore?.number_of_rating,
+      offer_1: listingScore?.offer_1,
+      offer_2: listingScore?.offer_2,
+      beverages_category: listingScore?.beverages_category,
+      desserts: listingScore?.["desserts/sweet_category"],
+      image: listingScore?.["image_%"],
+      bestsellers_score_in_recommended:
+        listingScore?.[
+          "bestseller_%_in_recommended_vs_without_recommended_data"
+        ],
+      description: listingScore?.["description_%"],
+      listingScoreDate: listingScore?.start_date,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: err,
+    };
+  }
+};
+
 const listingScoreDataFormatter = async (res_id, number, resultType) => {
   try {
-    const data = await listingScoreMongoDBData(res_id, number, resultType);
-    // console.log("listingScoreDataFormatter res_id, number, resultType", res_id, number, resultType);
-    // console.log("listingScoreMongoDBData:", data);
+    // const data = await listingScoreMongoDBData(res_id, number, resultType);
+    
+    const data = await listingScoreMostRecentMongoDBData(res_id);
     const {
       score,
       safety_tag,
@@ -101,10 +160,13 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       image,
       bestsellers_score_in_recommended,
       description,
+      listingScoreDate,
     } = data;
     // console.log("lsitingscore data:", data);
     // !If the values inside data is not present, then it will return undefined
     const listing = {
+      // Todo: can we put like this?
+      listingScoreDate: listingScoreDate?listingScoreDate:"",
       listingScoreMain: {
         value:
           score === undefined
@@ -295,7 +357,6 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       ],
     };
     return listing;
-    
   } catch (err) {
     console.log(err);
     return {

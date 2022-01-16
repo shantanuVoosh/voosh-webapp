@@ -321,7 +321,9 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     console.log(client_res_id, "client_res_id");
     let swiggyData;
 
-    if (client_res_id !== res_id) {
+    // ?if client is set, then we are selection new restaurant
+    // ?if not then it is running
+    if (client_res_id !== "" && client_res_id !== res_id) {
       console.log(
         "client_res_id(new res_id from the res_id list)----------------->>:",
         client_res_id
@@ -365,6 +367,41 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     res.json({
       status: "error",
       message: `Error while getting data :${err}`,
+    });
+  }
+});
+
+// ! check swiggy Number
+router.post("/check-swiggy-number", async (req, res) => {
+  const { swiggy_register_phone } = req.body;
+  const fetch = (...args) =>
+    import("node-fetch").then(({ default: fetch }) => fetch(...args));
+  const swiggyURL =
+    "https://partner.swiggy.com/registration/v2/registration-status?userId=";
+  try {
+    console.log(swiggy_register_phone);
+    const swiggyResponse = await (
+      await fetch(`${swiggyURL}${swiggy_register_phone}`)
+    ).json();
+
+    if (
+      swiggyResponse.statusCode === -1 ||
+      swiggyResponse.statusMessage === "Invalid Mobile Number"
+    ) {
+      return res.json({
+        status: "error",
+        message: `This Number is not registered With Swiggy!`,
+      });
+    } else {
+      return res.json({
+        status: "success",
+        message: swiggyResponse.statusMessage,
+      });
+    }
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: `Error while checking swiggy number :${err}`,
     });
   }
 });
@@ -441,88 +478,31 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
 });
 
 // ! Test Route
-router.get("/api/data", async (req, res) => {
-  // const {res_id, number, resultType} = req.body;
 
-  const res_id = 327857;
-  const number = 1;
-  const resultType = "week";
-  // const res_id = 272065;
-  // const number = 51;
-  // const resultType = "week";
-  // const res_id = 272065;
-  // const number = 12;
-  // const resultType = "month";
-  const startDate = "2021-12-01";
-  const endDate = "2022-01-06";
-  // const resultType = "Custom Range";
-
-  const oh = await operationHealthDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  // const ls = await listingScoreDataFormatter(res_id, number, resultType);
-  // const customerReviews = await customerReviewsDataFormatter(
-  //   res_id,
-  //   number,
-  //   resultType
-
-  // );
-  const revenue = await revenueMongoDBData(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  const f_revenue = await revenuDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-
-  res.json({
-    // operationHealth: oh,
-    // listingScore: ls,
-    revenue,
-    // f_revenue,
-    // customerReviews,
-  });
-});
-
-router.get("/api/zomato", async (req, res) => {
-  const res_id = 56834;
-  const number = 1;
-  const resultType = "week";
-  // const res_id = 272065;
-  // const number = 51;
-  // const resultType = "week";
-  // const res_id = 272065;
-  // const number = 12;
-  // const resultType = "month";
-  const startDate = "2021-12-01";
-  const endDate = "2022-01-06";
-  // const resultType = "Custom Range";
-
-  const api = await getAllZomatoData(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
-  res.json({
-    api,
-  });
-});
 router.get("/api/swiggy-rev", async (req, res) => {
-  const res_id = 256302
-  const number = 12
+  const res_id = 256302;
+  const number = 12;
+  const moment = require("moment");
+  // ! provide a date which is 1 month 10 days ago
+  // ! then get month number from that date
+  const prevMonthPlus10Days = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .format("DD-MM-YYYY");
+  //in* 11-10-2022
+  //op- 01-12-2021
+
+  const customYearNumber = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .year();
+  //? Dec -11(month starts from 0-11)
+  const customMonthNumber =
+    moment(new Date()).add(-1, "months").add(-10, "days").month() + 1;
+
+  console.log("customYearNumber", customYearNumber);
+  console.log("customMonthNumber", customMonthNumber);
+
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -534,7 +514,8 @@ router.get("/api/swiggy-rev", async (req, res) => {
       .collection("swiggy_revenue_reconsilation")
       .findOne({
         swiggy_res_id: res_id,
-        month_no: 12,
+        month_no: customMonthNumber,
+        year_no: customYearNumber,
       });
 
     // ? RDC or total Cancellation for previous month
@@ -544,7 +525,7 @@ router.get("/api/swiggy-rev", async (req, res) => {
         {
           $match: {
             swiggy_res_id: parseInt(res_id),
-            month_no: 12,
+            month_no: customMonthNumber,
           },
         },
         {
@@ -555,6 +536,22 @@ router.get("/api/swiggy-rev", async (req, res) => {
         },
       ])
       .toArray();
+    // ? If data is not available send this
+    if (swiggyReconsilation === null || swiggyReconsilation === undefined) {
+      res.json({
+        isDataPresent: false,
+        totalCancellation: 0,
+        totalSales: 0,
+        netPayout: 0,
+        deleveries: 0,
+        cancelledOrders: 0,
+        deductions: {},
+      });
+      return;
+    }
+
+    // ? If data is available send this
+
     const totalCancellation = rdc[0]?.rdc_score;
     const totalSales = swiggyReconsilation["total_customer_payable "];
     const netPayout = swiggyReconsilation["net_payout_(E_-_F_-_G)"];
@@ -562,53 +559,130 @@ router.get("/api/swiggy-rev", async (req, res) => {
     const cancelledOrders = totalCancellation ? totalCancellation : 0;
     const deductions = {
       // ?latform Services Charges
-      "Platform Services Charges":
-        swiggyReconsilation?.["swiggy_platform_service_fee"] * 1.18 -
-        swiggyReconsilation?.["discount_on_swiggy_service_fee"] * 1.18,
+      "Platform Services Charges": parseFloat(
+        (
+          swiggyReconsilation?.["swiggy_platform_service_fee"] * 1.18 -
+          swiggyReconsilation?.["discount_on_swiggy_service_fee"] * 1.18
+        ).toFixed(2)
+      ),
       // ? Cancellation Deduction
-      "Canellation Deduction":
-        swiggyReconsilation?.["merchant_cancellation_charges"] * 1.18 +
-        swiggyReconsilation?.["merchant_sare_of_cancelled_orders"],
+      "Canellation Deduction": parseFloat(
+        (
+          swiggyReconsilation?.["merchant_cancellation_charges"] * 1.18 +
+          swiggyReconsilation?.["merchant_sare_of_cancelled_orders"]
+        ).toFixed(2)
+      ),
       // ? Other OFD deduction
-      "Other OFD deduction":
-        swiggyReconsilation?.["collection_charges"] * 1.18 +
-        swiggyReconsilation?.["access_charges"] * 1.18 +
-        swiggyReconsilation?.["call_center_service_fee"] * 1.18,
+      "Other OFD deduction": parseFloat(
+        (
+          swiggyReconsilation?.["collection_charges"] * 1.18 +
+          swiggyReconsilation?.["access_charges"] * 1.18 +
+          swiggyReconsilation?.["call_center_service_fee"] * 1.18
+        ).toFixed(2)
+      ),
 
       // ? Promotions
-      Promotions:
-        swiggyReconsilation?.["high_priority"] +
-        swiggyReconsilation?.["homepage_banner"],
+      Promotions: parseFloat(
+        (
+          swiggyReconsilation?.["high_priority"] +
+          swiggyReconsilation?.["homepage_banner"]
+        ).toFixed(2)
+      ),
 
       // ? Previous Week Outstanding
-      "Previous Week Outstanding":
-        swiggyReconsilation?.["outstanding_for_previous_weeks"] +
-        swiggyReconsilation?.["excess_payout"],
-      
+      "Previous Week Outstanding": parseFloat(
+        (
+          swiggyReconsilation?.["outstanding_for_previous_weeks"] +
+          swiggyReconsilation?.["excess_payout"]
+        ).toFixed(2)
+      ),
+
       // ? Miscellaneous
-      Miscellaneous:
-        swiggyReconsilation?.["cash_pre-payment_to_merchant"] +
-        swiggyReconsilation?.["delivery_fee_sponsored_by_merchant"] +
-        swiggyReconsilation?.["refund_for_disputed_orders"] +
-        swiggyReconsilation?.["refund"] +
-        swiggyReconsilation?.["onboarding_fees"] +
-        Math.abs(swiggyReconsilation?.["long_distance_pack_fee"]),
+      Miscellaneous: parseFloat(
+        (
+          swiggyReconsilation?.["cash_pre-payment_to_merchant"] +
+          swiggyReconsilation?.["delivery_fee_sponsored_by_merchant"] +
+          swiggyReconsilation?.["refund_for_disputed_orders"] +
+          swiggyReconsilation?.["refund"] +
+          swiggyReconsilation?.["onboarding_fees"] +
+          Math.abs(swiggyReconsilation?.["long_distance_pack_fee"])
+        ).toFixed(2)
+      ),
 
       // ? TCS
-      TCS: swiggyReconsilation?.["tcs"],
+      TCS: parseFloat((swiggyReconsilation?.["tcs"]).toFixed(2)),
       // ? TDS
-      TDS: swiggyReconsilation?.["tds"],
-
+      TDS: parseFloat((swiggyReconsilation?.["tds"]).toFixed(2)),
     };
 
     res.json({
+      swiggyReconsilation,
       totalSales,
       netPayout,
       deleveries,
       cancelledOrders,
       deductions,
-
     });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
+      message: "Error while getting data: " + err,
+    });
+  }
+});
+router.get("/api/zomato", async (req, res) => {
+  const res_id = 56834;
+  const number = 1;
+  const resultType = "week";
+  const startDate = "2021-12-01";
+  const endDate = "2022-01-06";
+
+  try {
+    const ZomatoData = await getAllZomatoData(res_id, number, resultType);
+
+    res.json({
+      ZomatoData,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
+      message: "Error while getting data: " + err,
+    });
+  }
+});
+
+router.get("/api/ls-test", async (req, res) => {
+  const documentName = "operationsdb";
+  const VooshDB =
+    "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
+
+  // ! Get the most recent data
+  // ? year->current year, sort month descending, and sort week descending
+  const client = await MongoClient.connect(VooshDB, {
+    useNewUrlParser: true,
+  });
+  const db = client.db(documentName);
+
+  const lss = await db
+    .collection("swiggy_weekly_listing_score_products")
+    .aggregate([
+      {
+        $match: {
+          swiggy_res_id: `256302`,
+        },
+      },
+      { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+      { $limit: 1 },
+    ])
+    .toArray();
+
+  res.json({
+    lss,
+  });
+
+  try {
   } catch (err) {
     console.log(err);
     res.json({

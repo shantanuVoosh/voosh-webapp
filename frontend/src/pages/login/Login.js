@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPlayer from "react-player";
 import MetaTags from "react-meta-tags";
-
+import ReactGA from "react-ga4";
 import {
   loginFailure,
   loginSuccess,
@@ -72,22 +72,42 @@ const Login = () => {
         cookie.save(APP_TOKEN, response.token, { path: "/" });
         dispatch(loginSuccess(response.token));
         navigate("/dashboard");
+        ReactGA.event({
+          category: "Login Success",
+          action: "Clicked on Login",
+          label: "Login",
+        });
       } else {
         console.log("Failure response:", response.error);
         notify(response.error);
         dispatch(loginFailure());
         cookie.remove(APP_TOKEN);
         navigate("/");
+        ReactGA.event({
+          category: "Login failed",
+          action: "Clicked on Login",
+          label: "Login",
+        });
       }
     } catch (err) {
       // !if request failed
       dispatch(loginFailure({ error: err }));
       console.log("Login Failed:", err);
       navigate("/");
+      ReactGA.event({
+        category: "Login failed",
+        action: "Clicked on Login",
+        label: "due to server error",
+      });
     }
   };
 
   const redirectToSignUp = () => {
+    ReactGA.event({
+      category: "Go To Sign Up",
+      action: "Clicked on Sign Up",
+      label: "Sign Up",
+    });
     navigate("/signup");
   };
 
@@ -96,7 +116,6 @@ const Login = () => {
   return (
     <>
       <div className="container">
-       
         <div className="login-container">
           <ToastContainer
             position="top-right"

@@ -42,19 +42,22 @@
   width: 80%;
   padding: 1rem 0;
 
-  .form-group__container{
+  .form-group__container {
     min-height: 310px;
     width: 100%;
     display: flex;
     flex-direction: column;
+    &.jc--sb {
+      justify-content: space-between;
+    }
   }
-
 
   .form-group {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     width: 100%;
+
   }
   .form-heading {
     text-align: center;
@@ -107,6 +110,10 @@
         padding: 0.8rem 1.2rem;
         width: 110px;
         border-radius: $radius-1;
+        &.disabled {
+          background-color: $color-grey-1;
+          color: $color-grey-3;
+        }
       }
       .btn-previous {
         background-color: transparent;
@@ -117,6 +124,9 @@
         border-radius: $radius-1;
         span {
           text-decoration: underline;
+        }
+        &.disabled {
+          color: $color-grey-3;
         }
       }
       .btn-signup {
@@ -167,7 +177,7 @@
 .signup_a__login-btn {
   margin-top: 4rem;
   font-size: 14px;
-  
+
   &--heading {
     color: $color-grey-3;
   }
@@ -179,7 +189,7 @@
 }
 .signup_a__contact_us-btn {
   font-size: 14px;
-  
+
   &--heading {
     color: $color-grey-3;
   }
@@ -190,9 +200,37 @@
   }
 }
 
-.tnc{
+.tnc {
   font-size: 14px;
   font-weight: 600;
   color: $color-grey-6;
   text-decoration: underline;
+}
+
+.customer-review-card {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem .8rem 0.7rem .8rem;
+
+  border-radius: $radius-1;
+  min-height: 130px;
+  // background-color: #fffdde;
+  &__heading {
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+    // font-style: italic;
+    text-align: right;
+  }
+  &__body {
+    .quote-icon_open{
+      margin-left: -0.8rem;
+    }
+    .text {
+      color: $color-grey-4;
+      font-style: italic;
+    }
+  }
 }

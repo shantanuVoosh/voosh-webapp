@@ -67,7 +67,8 @@ const CustomerReviews = () => {
         <div className="customer_review__sub-heading">
           {negative.length > 0 && (
             <div className="customer_review__sub-heading--text">
-              Major Complains By Customer In {resultType}
+              Major Complains By Customer In{" "}
+              {resultType !== "Custom Range" ? resultType : "In this Range"}
             </div>
           )}
         </div>

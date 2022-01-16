@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Line, Bar } from "react-chartjs-2";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 const BarGraph = ({ compareThen, value, benchmark }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
@@ -13,28 +14,6 @@ const BarGraph = ({ compareThen, value, benchmark }) => {
       legend: {
         display: false,
       },
-      datalabels: {
-        display: true,
-        color: "black",
-        align: "end",
-        padding: {
-          right: 2
-        },
-        labels: {
-          padding: { top: 10 },
-          title: {
-            font: {
-              weight: "bold"
-            }
-          },
-          value: {
-            color: "green"
-          }
-        },
-        formatter: function (value) {
-          return "\n" + value;
-        }
-      }
     },
 
     scales: {
@@ -63,14 +42,24 @@ const BarGraph = ({ compareThen, value, benchmark }) => {
         // label: "",
         backgroundColor: [`${colorOfBar}`, "#2A327D"],
         barThickness: 60,
-        // fill: false,
+        datalabels: {
+          color: "black",
+          anchor: "end",
+          align: "top",
+          offset: -2.2,
+        },
       },
     ],
   };
 
   return (
     <div className="bar-graph">
-      <Bar className="bar" data={barData} options={options} />
+      <Bar
+        className="bar"
+        plugins={[ChartDataLabels]}
+        data={barData}
+        options={options}
+      />
     </div>
   );
 };

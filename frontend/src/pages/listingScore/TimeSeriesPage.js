@@ -13,10 +13,11 @@ import ReactPlayer from "react-player";
 import BarGrap from "../../components/listingScore/BarGraph";
 import ScrollButton from "../../components/ScrollButton";
 import MetaTags from "react-meta-tags";
+import Loading from "../../components/Loading";
 
 const TimeSeriesPages = ({}) => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
+  const {resultType, isLoading} = useSelector((state) => state.data);
   const location = useLocation();
 
   if (data.length <= 0) return null;
@@ -42,6 +43,8 @@ const TimeSeriesPages = ({}) => {
     return itemName === serachName;
   });
 
+  
+
   if (pageData === undefined) return <Error />;
 
   const timeSeriesData = listingScoreData.find(
@@ -58,6 +61,21 @@ const TimeSeriesPages = ({}) => {
     videoLink,
     suggestions: recommendations,
   } = timeSeriesData;
+
+  if (isLoading) {
+    return (
+      <>
+        <MetaTags>
+        <title>Voosh | Listing-Score | {name}</title>
+        <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+        <meta property="og:title" content="web app" />
+        </MetaTags>
+        <Header isErrorPage={true} />
+        <Loading />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>

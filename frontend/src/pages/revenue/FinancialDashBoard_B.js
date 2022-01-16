@@ -6,43 +6,41 @@ import { Doughnut } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import ColorList from "../../components/revenue/ColorList";
 import axios from "axios";
+import moment from "moment";
 
 const FinancialDashBoard = () => {
   const [showMoreContent, setShowMoreContent] = React.useState(false);
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
+  const { resultType } = useSelector((state) => state.data);
   const revenue = data[currentProductIndex]["revenue"];
-
-  const { financicalData } = revenue;
-  const { totalSales, cancelledOrders, netPayout, deleveries, deductions } =
-    financicalData;
+  const customDate = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .format("MMMM'YY");
+  // ? this value is not constant
+  const { revenue_score } = data[currentProductIndex]["revenue_score"];
+  const {
+    previousDayRevenue,
+    financicalData: {
+      isDataPresent,
+      totalSales,
+      cancelledOrders,
+      netPayout,
+      deleveries,
+      deductions,
+    },
+  } = data[currentProductIndex]["previousMonthRevenue"];
 
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
   console.log("deductionTitles =>", deductionTitles);
 
+  console.log("revenue =>", previousDayRevenue);
 
-  const getRevenueData = React.useCallback(async() => {
+  const finalRevenue =
+    resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
 
-    const { data: response } = await axios.post("/get/revenue-data");
-    return response;
-    console.log("revenueData =>", response);
-
-
-  },[])
-
-
-
-
-  React.useEffect(() => {
-
-    getRevenueData()
-
-
-  }, [resultType]);
-
-  let revenueResult = revenue.value;
   const pieColors = [
     "#370665",
     "#FE645A",
@@ -110,7 +108,7 @@ const FinancialDashBoard = () => {
             showMoreContent={true}
             name={"Total Sales"}
             type={"Pecentage"}
-            value={revenueResult}
+            value={finalRevenue}
             info={"Total Sales includes all taxes"}
             benchmark={"103847.68"}
             color={"#27AE60"}

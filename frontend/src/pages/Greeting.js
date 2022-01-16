@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import logo_img from "../styles/images/logo-img.png";
 import { FaHandshake } from "react-icons/fa";
+import ReactGA from "react-ga4";
 
 const Greeting = () => {
   const navigate = useNavigate();
@@ -38,11 +39,26 @@ const Greeting = () => {
         </div>
         <div
           className="greeting-btn"
-          onClick={() => navigate("/dashboard-sample")}
+          onClick={() => {
+            navigate("/dashboard-sample")
+            ReactGA.event({
+              category: "Let me Explore Button",
+              action: "Let me Explore Button Clicked",
+              label: "Let me Explore",
+            });
+          }}
         >
           Let me Explore!!
         </div>
-        <a href="tel:9015317006" className="greeting-btn">
+        <a href="tel:9015317006" className="greeting-btn"
+        onClick={() => {
+          ReactGA.event({
+            category: "Reach out to us Button",
+            action: "Reach out to us Button Clicked",
+            label: "Reach out to us",
+          });
+        }}
+        >
           Reach out to us!
         </a>
         <div

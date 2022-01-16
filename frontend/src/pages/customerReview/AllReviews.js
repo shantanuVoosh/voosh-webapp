@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import ReviewCard from "../../components/customerReviews/ReviewCard";
 
 const AllReviews = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, currentProductIndex, resultType } = useSelector(
+    (state) => state.data
+  );
 
   const customerReviews = data[currentProductIndex]["customerReviews"];
   const { all_reviews } = customerReviews;
@@ -12,10 +14,17 @@ const AllReviews = () => {
   return (
     <>
       <div className="review-container">
+        {(all_reviews === undefined || all_reviews.length <= 0) && (
+          <div className="no-reviews">
+            No Reviews{" "}
+            {resultType !== "Custom Range" ? resultType : "In this Range"}
+          </div>
+        )}
+        {/* //? If feedback or comments are present! */}
         {all_reviews !== undefined &&
           all_reviews.length > 0 &&
           all_reviews.map((review, index) => {
-            const {order_id, feedback, rating, date} = review;
+            const { order_id, feedback, rating, date } = review;
             return (
               <ReviewCard
                 key={index}

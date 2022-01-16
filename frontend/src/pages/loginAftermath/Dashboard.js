@@ -6,17 +6,22 @@ import ReactPlayer from "react-player";
 import { getTopSuggestionsProvider } from "../../utils/getTopSuggestionsProvider";
 import ScrollButton from "../../components/ScrollButton";
 
-
 const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const {resultType} = useSelector((state) => state.data);
+  const { resultType } = useSelector((state) => state.data);
 
   const operationHealth = data[currentProductIndex]["operationHealth"];
   const { operationHealthMain, operationHealthData } = operationHealth;
 
   const { listingScoreMain, listingScoreData } =
     data[currentProductIndex]["listingScore"];
-  const revenue = data[currentProductIndex]["revenue"];
+  const { revenue_score } = data[currentProductIndex]["revenue_score"];
+
+  // Todo: temp solution for Prev Month Revenue
+  const {
+    previousDayRevenue,
+    financicalData: { totalSales },
+  } = data[currentProductIndex]["previousMonthRevenue"];
 
   // ! get top 5 suggestions
   let getTopSuggestions = getTopSuggestionsProvider(
@@ -39,12 +44,14 @@ const Dashboard = () => {
           info={"Dive into sales, deduction, commisions, etc."}
           cardStatistics={{
             // ! if prev month is null then show 0
-            value: revenue.value,
+            value: resultType === "Previous Month" ? totalSales : revenue_score,
             change: null,
             benchmark: null,
             changeTypeDirection: "up",
             type: "money",
-            isDataPresent: revenue.value !== "data not present",
+            isDataPresent:
+              (resultType === "Previous Month" ? totalSales : revenue_score) !==
+              undefined,
           }}
         />
         {/* //? Operation Health */}
@@ -142,7 +149,9 @@ const Dashboard = () => {
                 <span className="text_1">Your business is doing great!</span>
                 <br />
                 <span className="text_2">
-                  No Recommendation for you in this {resultType}.
+                  No Recommendation for you in this{" "}
+                  {resultType !== "Custom Range" ? resultType : "In this Range"}
+                  .
                 </span>
               </div>
             </div>
@@ -152,7 +161,6 @@ const Dashboard = () => {
           <ScrollButton />
         </div>
       </div>
-      
     </>
   );
 };

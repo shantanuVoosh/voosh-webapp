@@ -9,8 +9,10 @@ import SectionButtons from "../../components/SectionButtons";
 import Error from "../../components/Error";
 import { BsBagCheckFill } from "react-icons/bs";
 import ReactPlayer from "react-player";
-import BarGraph from "../../components/BarGraph";
+import BarGraph from "../../components/operationHealth/BarGraph";
 import ScrollButton from "../../components/ScrollButton";
+import Loading from "../../components/Loading";
+
 import MetaTags from "react-meta-tags";
 
 // TODO: fix the issue of the data not being loaded
@@ -19,7 +21,7 @@ import MetaTags from "react-meta-tags";
 // TODO: aager path ka name match nhi hua, then show the Error page
 
 const TimeSeriesPages = ({}) => {
-  const resultType = useSelector((state) => state.data.resultType);
+  const { resultType, isLoading } = useSelector((state) => state.data);
   const location = useLocation();
 
   // ?can be usefull to grab data for this Graph
@@ -52,6 +54,7 @@ const TimeSeriesPages = ({}) => {
       return itemName === serachName;
     });
     // console.log(d)
+   
     if (d === undefined) return <Error />;
 
     name = d.name;
@@ -72,6 +75,21 @@ const TimeSeriesPages = ({}) => {
     videoLink,
     recommendations,
   } = timeSeriesData;
+
+  if (isLoading) {
+    return (
+      <>
+        <MetaTags>
+          <title>Voosh | Operation-Health | {name}</title>
+          <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+          <meta property="og:title" content="web app" />
+        </MetaTags>
+        <Header isErrorPage={true} />
+        <Loading />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>

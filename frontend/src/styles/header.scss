@@ -102,13 +102,13 @@
     font-size: $text-medium;
     top: 39px;
     left: 9px;
-    border: 1px solid $color-white-1;
+    // border: 1px solid $color-white-1;
     font-style: italic;
     border-radius: $radius-2;
-    padding: 10px 10px;
-    @include breakpoint-up(xxsmall) {
-      $text-large: 16px;
-    }
+    padding: 5px 5px;
+    // @include breakpoint-up(xxsmall) {
+    //   $text-large: 16px;
+    // }
     @include breakpoint-up(xsmall) {
       top: 45px;
       left: 18px;
@@ -146,19 +146,21 @@
       }
       .date {
         position: absolute;
+        text-align: center;
         color: $red;
         color: $color-white-1;
-        min-width: 80px;
+        min-width: 105px;
         font-size: 12px;
         top: 39px;
         left: 9px;
         font-style: italic;
         @include breakpoint-up(xxsmall) {
-          font-size: $text-medium;
+          font-size: $text-small;
         }
         @include breakpoint-up(xsmall) {
+          min-width: 120px;
           top: 45px;
-          left: 18px;
+          left: 16px;
           font-size: $text-medium;
         }
       }
