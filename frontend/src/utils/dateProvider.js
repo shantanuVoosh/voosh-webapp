@@ -28,7 +28,7 @@ export const getPreviousDay12HoursAgoDate = () => {
 // * if current month is 2022-01-02, then 2021-12-26
 // * if current month is 2022-01-03, then 2021-12-27
 export const getPreviousWeekDate = () => {
-  const m = moment();
+  const m = moment(getPreviousDay12HoursAgoDate());
   // const m = moment().add(1, "days");
   //   console.log("This will be the curr adte", m.format("YYYY-MM-DD"));
   const result = m.add(-7, "days").format("YYYY-MM-DD");

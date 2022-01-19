@@ -25,17 +25,17 @@ const operationalHealthMongoDBData = async (
   // ? Query for week
   if (resultType === "week") {
     rdc_query = {
-      zomato_res_id: `${res_id}`,
+      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
       week_no: parseInt(number),
       year: parseInt(year),
     };
     mfr_query = {
-      zomato_res_Id: `${res_id}`,
+      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
       week_no: parseInt(number),
       year: parseInt(year),
     };
     ratings_query = {
-      zomato_id: parseInt(res_id),
+      zomato_id: parseInt(res_id === 256302 ? 56834 : res_id),
       week_no: parseInt(number),
       // week_no:2,
       year_no: parseInt(year),
@@ -54,17 +54,17 @@ const operationalHealthMongoDBData = async (
   // ? Query for month
   else if (resultType === "month") {
     rdc_query = {
-      zomato_res_id: `${res_id}`,
+      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
       month_no: parseInt(number),
       year: parseInt(year),
     };
     mfr_query = {
-      zomato_res_Id: `${res_id}`,
+      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
       month_no: parseInt(number),
       year: parseInt(year),
     };
     ratings_query = {
-      zomato_id: parseInt(res_id),
+      zomato_id: parseInt(res_id === 256302 ? 56834 : res_id),
       month_no: parseInt(number),
       year_no: parseInt(year),
     };
@@ -82,11 +82,11 @@ const operationalHealthMongoDBData = async (
   // ? Query for Custom Range
   else if (resultType === "Cumstom Range") {
     rdc_query = {
-      zomato_res_id: `${res_id}`,
+      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
       date: { $gte: startDate, $lte: endDate },
     };
     mfr_query = {
-      zomato_res_Id: `${res_id}`,
+      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
       date: { $gte: startDate, $lte: endDate },
     };
   }
@@ -279,6 +279,23 @@ const operationHealthDataFormatter = async (
               : parseInt(rdc_score * 100),
           isDataPresent: rdc_score === undefined ? false : true,
         },
+        // Todo: Empty data
+        // ?Swiggy_Static_ratings
+        {
+          name: "Rating",
+          type: "average",
+          // info: "get more then 4.5 star rating to get more orders",
+          info: "Rating > 4.5 Gets better orders",
+          benchmark: 4.5,
+          compareThen: "grater",
+          videoLink: Ratings_video,
+          recommendations: [
+            "Improve reviews by understanding the problem areas",
+            "Contact Voosh for Rating Booster service",
+          ],
+          value: "Please wait! We are working on It.",
+          isDataPresent: false,
+        },
         // ?Swiggy_MFR
         {
           name: "MFR Accuracy",
@@ -297,6 +314,35 @@ const operationHealthDataFormatter = async (
               ? "Please wait! We are working on It."
               : parseInt(mfr_score),
           isDataPresent: mfr_score === undefined ? false : true,
+        },
+        // Todo: Empty data
+        // ? IGCC
+        {
+          name: "Customer Complaints",
+          type: "percentage",
+          // info: "if your customer complaints score is less than 1 then it will get more orders",
+          info: "Complains <=1 Gets more orders",
+          benchmark: 1,
+          compareThen: "less",
+          recommendations: [
+            "Paste a menu + item poster at the packaging area",
+            "Retrain packagers on high order days",
+          ],
+          value: "Please wait! We are working on It.",
+          isDataPresent: false,
+        },
+        // Todo: Empty data
+        // ?Swiggy_Acceptance
+        {
+          name: "Acceptance",
+          type: "percentage",
+          // info: "if your acceptance score is grater than 99% then it will get more orders",
+          info: "Acceptance = 100% Gets more orders",
+          benchmark: 99,
+          compareThen: "grater",
+          recommendations: ["Enable Auto acceptance"],
+          value: "Please wait! We are working on It.",
+          isDataPresent: false,
         },
       ],
     };
@@ -387,6 +433,8 @@ function calculateOHScoreManually({
 
   console.log("score", score);
   console.log("count", count);
+  if (count === 0) return 0;
+
   // ! if Nan then no data is present
   console.log(score * (200 / count));
 

@@ -3,16 +3,32 @@ import { BsBagCheck, BsBarChartLine } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import SectionButtons from "../SectionButtons";
 import { useSelector, useDispatch } from "react-redux";
-import CardStatisticsWithNoData from "./CardStatisticsWithNoData";
+import CardStatistics from "./CardStatistics";
 
 const Card = ({ iconName, name, info, cardStatistics }) => {
   const navigate = useNavigate();
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, resultType } = useSelector((state) => state.data);
   const buttons = data.map((item) => item.name);
   const navBtnRef = data.map((_, index) => React.createRef(null));
 
   // ! Defaults index is 0
-  const [index, setIndex] = React.useState(0);
+  const [Navindex, setNavindex] = React.useState(0);
+  const currentProductData = data[Navindex];
+
+  console.log(
+    currentProductData,
+    "currentProductData-----------------------------"
+  );
+
+  const {
+    operationHealth: { operationHealthMain, operationHealthData },
+    listingScore: { listingScoreMain, listingScoreData },
+    revenue_score: { revenue_score },
+    previousMonthRevenue: {
+      previousDayRevenue,
+      financicalData: { totalSales },
+    },
+  } = currentProductData;
 
   const handelClick = () => {
     // Removing white space, and first letter in smaller case
@@ -25,10 +41,7 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
 
   const handelChange = (index) => {
     console.log("handelChange Pending");
-    if (index !== 0) {
-      return null;
-    }
-    setIndex(index);
+    setNavindex(index);
   };
 
   return (
@@ -54,14 +67,12 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
         </div>
         {/* //? right side */}
         <div className="home-card-right">
-          <div className="section-btns section-btns-dashboard">
+          <div className="nav-btns">
             {buttons.map((button, index) => (
               <span
                 key={index}
                 ref={navBtnRef[index]}
-                className={
-                  "nav-btn" + (index === currentProductIndex ? " active" : "")
-                }
+                className={"btn" + (index === Navindex ? " active" : "")}
                 onClick={(e) => handelChange(index)}
                 disabled={index !== 0}
               >
@@ -69,7 +80,60 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
               </span>
             ))}
           </div>
-            <CardStatisticsWithNoData cardStatistics={cardStatistics} />
+          {/* //! Revenue */}
+          {name === "Revenue" && (
+            <CardStatistics
+              cardStatistics={{
+                // Todo: temp solution for Prev Month Revenue
+                // ! if prev month is null then show 0
+                value:
+                  resultType === "Previous Month" ? totalSales : revenue_score,
+                change: null,
+                benchmark: null,
+                changeTypeDirection: "up",
+                type: "money",
+                isDataPresent:
+                  (resultType === "Previous Month"
+                    ? totalSales
+                    : revenue_score) !== undefined,
+              }}
+            />
+          )}
+          {/* //! Operation Health */}
+          {name === "Operation Health" && (
+            <CardStatistics
+              cardStatistics={{
+                value: operationHealthMain.value,
+                benchmark: operationHealthMain.benchmark,
+                type: operationHealthMain.type,
+                changeTypeDirection: !operationHealthMain.isDataPresent
+                  ? "up"
+                  : operationHealthMain.value >= operationHealthMain.benchmark
+                  ? "up"
+                  : "down",
+                change: operationHealthMain.benchmark,
+                isDataPresent: operationHealthMain.isDataPresent,
+              }}
+            />
+          )}
+          {/* //! Listing Score */}
+          {name === "Listing Score" && (
+            <CardStatistics
+              cardStatistics={{
+                value: listingScoreMain.value,
+                benchmark: listingScoreMain.benchmark,
+                type: listingScoreMain.type,
+                changeTypeDirection: !listingScoreMain.isDataPresent
+                  ? "up"
+                  : listingScoreMain.value >= listingScoreMain.benchmark
+                  ? "up"
+                  : "down",
+                // changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
+                change: listingScoreMain.benchmark,
+                isDataPresent: listingScoreMain.isDataPresent,
+              }}
+            />
+          )}
         </div>
       </div>
     </>

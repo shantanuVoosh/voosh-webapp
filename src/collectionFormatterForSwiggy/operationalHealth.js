@@ -480,9 +480,9 @@ function calculateOHScoreManually({
       score += 0;
     }
   }
-
   console.log("score", score);
   console.log("count", count);
+  if (count === 0) return 0;
   // ! if Nan then no data is present
   console.log(score * (200 / count));
 

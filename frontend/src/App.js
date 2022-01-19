@@ -28,9 +28,11 @@ import SignupA from "./pages/signup/SignupA";
 import SignupB from "./pages/signup/SignupB";
 import Greeting from "./pages/Greeting";
 import PreSignUp from "./pages/PreSignUp";
+import OnboardingDashboard from "./pages/onboardingDashboard/Dashboard";
 // import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
+import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
 
 function App() {
   const location = useLocation();
@@ -77,6 +79,24 @@ function App() {
               </MetaTags>
               <Login />
             </RedirectRoute>
+          }
+        />
+        {/* //Todo: New Onboarding dashboard */}
+        <Route
+          path="/test"
+          element={
+            // <RedirectRoute>
+            <OnboardingDashboard />
+            // </RedirectRoute>
+          }
+        />
+        {/* //Todo: New Onboarding dashboard */}
+        <Route
+          path="/newsignup"
+          element={
+            // <RedirectRoute>
+            <NewSignup />
+            // </RedirectRoute>
           }
         />
         <Route
@@ -216,7 +236,7 @@ function App() {
           path="/operationHealth"
           element={
             <RequiredAuth>
-               <MetaTags>
+              <MetaTags>
                 <title>Voosh | Operation-Health</title>
                 <meta
                   name="voosh web app, Operation Health page"
@@ -250,7 +270,7 @@ function App() {
           path="/listingScore"
           element={
             <RequiredAuth>
-                <MetaTags>
+              <MetaTags>
                 <title>Voosh | Listing-Score</title>
                 <meta
                   name="voosh web app, Listing Score page"
@@ -316,7 +336,7 @@ function App() {
           path="/allReviews"
           element={
             <RequiredAuth>
-               <MetaTags>
+              <MetaTags>
                 <title>Voosh | All-Reviews</title>
                 <meta
                   name="voosh web app, All-Reviews page"

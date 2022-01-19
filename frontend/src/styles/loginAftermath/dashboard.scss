@@ -68,6 +68,66 @@
   }
 }
 
+.home-card-right {
+  .nav-btns {
+    padding: 0 5px;
+    margin-top: 1px;
+    margin-bottom: 10px;
+    margin-right: 8px;
+
+    .btn {
+      position: relative;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: $text-small;
+      letter-spacing: 0.5px;
+      color: $color-grey-2;
+
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-medium;
+      }
+
+      &:first-child {
+        margin-right: 1rem;
+        &:hover {
+          color: $color-black-1;
+        }
+      }
+
+      &:hover {
+        color: $color-black-1;
+      }
+    }
+
+    .btn::after {
+      content: " ";
+      position: absolute;
+      top: 22px;
+      left: 0%;
+      width: 0%;
+      height: 2.5px;
+      opacity: 0;
+      transition: all ease-in-out 0.3s;
+      background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+    }
+
+    .active {
+      color: $color-black-1;
+      &.btn::after {
+        cursor: pointer;
+        width: 100%;
+        opacity: 1;
+      }
+    }
+    // ?coming soon remove it when zomato is available
+    .btn:hover::after {
+      cursor: pointer;
+      width: 100%;
+      opacity: 1;
+    }
+  }
+}
+
 // ?Right side
 .home-card-right {
   display: flex;
@@ -156,7 +216,6 @@
     }
   }
 
-
   .recomendation {
     width: 100%;
     margin-top: 2rem;
@@ -199,12 +258,12 @@
   }
 }
 
-.no_recomendation{
-  .text_1{
+.no_recomendation {
+  .text_1 {
     // color: $green;
     font-size: 18px;
   }
-  .text_2{
+  .text_2 {
     color: $color-grey-3;
     font-size: 16px;
   }

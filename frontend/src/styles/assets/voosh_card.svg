@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="884" height="1019" viewBox="0 0 884 1019">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.613" y2="0.664" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffa20f"/>
+      <stop offset="1" stop-color="#ff5920"/>
+    </linearGradient>
+  </defs>
+  <rect id="Rectangle_3" data-name="Rectangle 3" width="884" height="1019" fill="none"/>
+  <g id="Rectangle_2" data-name="Rectangle 2" transform="matrix(0.995, 0.105, -0.105, 0.995, 247.565, 141.048)" fill="#fff" stroke="rgba(255,18,83,0.18)" stroke-width="5">
+    <rect width="519" height="726" rx="27" stroke="none"/>
+    <rect x="2.5" y="2.5" width="514" height="721" rx="24.5" fill="none"/>
+  </g>
+  <g id="Rectangle_1" data-name="Rectangle 1" transform="matrix(0.995, 0.105, -0.105, 0.995, 278.715, 179.515)" fill="#fff" stroke="#ff5920" stroke-width="5">
+    <rect width="450" height="658" rx="21" stroke="none"/>
+    <rect x="2.5" y="2.5" width="445" height="653" rx="18.5" fill="#fff"/>
+  </g>
+  <path id="Path_1" data-name="Path 1" d="M127.055-121.253c3.727-15.169,15.1-20.851,24.223-7.364l90.3,276.388c8.219,28.257-13.308,34.306-29.859,34.59L43.322,190C6.4,185.7,14.232,162.971,24.27,154.115l97.511-58.063Z" transform="translate(463.818 349.353) rotate(59)" fill="url(#linear-gradient)"/>
+  <g id="Ellipse_1" data-name="Ellipse 1" transform="matrix(0.995, 0.105, -0.105, 0.995, 682.933, 705.649)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="50" cy="51" rx="50" ry="51" stroke="none"/>
+    <ellipse cx="50" cy="51" rx="49.5" ry="50.5" fill="none"/>
+  </g>
+  <g id="Ellipse_2" data-name="Ellipse 2" transform="matrix(0.995, 0.105, -0.105, 0.995, 41.933, 185.649)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="59.5" cy="61.5" rx="59.5" ry="61.5" stroke="none"/>
+    <ellipse cx="59.5" cy="61.5" rx="59" ry="61" fill="none"/>
+  </g>
+  <g id="Ellipse_3" data-name="Ellipse 3" transform="matrix(0.995, 0.105, -0.105, 0.995, 53.545, 578.302)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="32.5" cy="30.5" rx="32.5" ry="30.5" stroke="none"/>
+    <ellipse cx="32.5" cy="30.5" rx="32" ry="30" fill="none"/>
+  </g>
+  <g id="Ellipse_6" data-name="Ellipse 6" transform="matrix(0.995, 0.105, -0.105, 0.995, 822.035, 604.308)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <circle cx="17.5" cy="17.5" r="17.5" stroke="none"/>
+    <circle cx="17.5" cy="17.5" r="17" fill="none"/>
+  </g>
+  <g id="Ellipse_4" data-name="Ellipse 4" transform="matrix(0.995, 0.105, -0.105, 0.995, 90.545, 560.508)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="18" cy="16" rx="18" ry="16" stroke="none"/>
+    <ellipse cx="18" cy="16" rx="17.5" ry="15.5" fill="none"/>
+  </g>
+  <g id="Ellipse_7" data-name="Ellipse 7" transform="matrix(0.995, 0.105, -0.105, 0.995, 760.545, 355.032)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="18" cy="16" rx="18" ry="16" stroke="none"/>
+    <ellipse cx="18" cy="16" rx="17.5" ry="15.5" fill="none"/>
+  </g>
+  <g id="Ellipse_5" data-name="Ellipse 5" transform="matrix(0.995, 0.105, -0.105, 0.995, 86.024, 620.244)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="18" cy="16" rx="18" ry="16" stroke="none"/>
+    <ellipse cx="18" cy="16" rx="17.5" ry="15.5" fill="none"/>
+  </g>
+  <g id="Ellipse_8" data-name="Ellipse 8" transform="matrix(0.995, 0.105, -0.105, 0.995, 766.157, 341.768)" fill="#ffd4e0" stroke="#ffd4e0" stroke-width="1">
+    <ellipse cx="18" cy="16" rx="18" ry="16" stroke="none"/>
+    <ellipse cx="18" cy="16" rx="17.5" ry="15.5" fill="none"/>
+  </g>
+</svg>

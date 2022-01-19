@@ -43,6 +43,7 @@ const Dashboard = () => {
           name={"Revenue"}
           info={"Dive into sales, deduction, commisions, etc."}
           cardStatistics={{
+            // Todo: temp solution for Prev Month Revenue
             // ! if prev month is null then show 0
             value: resultType === "Previous Month" ? totalSales : revenue_score,
             change: null,

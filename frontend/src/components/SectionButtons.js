@@ -9,9 +9,9 @@ const SectionButtons = () => {
   const navBtnRef = data.map((_, index) => React.createRef(null));
 
   const handelChange = (index) => {
-    if(index !== 0) {
-      return null
-    }
+    // if(index !== 0) {
+    //   return null
+    // }
     dispatch(seetCurrentProductIndex(index));
   };
 
@@ -26,8 +26,8 @@ const SectionButtons = () => {
           ref={navBtnRef[index]}
           className={
             "nav-btn" 
-            // + 
-            // (index === currentProductIndex ? " active" : "")
+            + 
+            (index === currentProductIndex ? " active" : "")
           }
           
           onClick={(e) => handelChange(index)}

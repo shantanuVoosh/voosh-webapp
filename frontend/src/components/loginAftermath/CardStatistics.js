@@ -8,7 +8,7 @@ const CardStatistics = ({ cardStatistics }) => {
     benchmark,
     changeTypeDirection,
     type,
-    isDataPresent
+    isDataPresent,
   } = cardStatistics;
   // ? handle Error if no data
   if (!isDataPresent) {
