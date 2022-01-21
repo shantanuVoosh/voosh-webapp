@@ -302,12 +302,32 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
+
+      // * secure-text
+      &--secure-text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #ffe6d1;
+        border-radius: $radius-1 + 6px;
+        padding: 0.8rem 0.8rem;
+        color: $color-primary-1;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        .text {
+          color: $color-grey-4;
+          opacity: 1;
+          font-size: $text-medium;
+        }
+      }
+
       // *Inputs
       &--input-feild {
         margin-bottom: 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         .form-input {
           width: 100%;
           margin-top: 0.8rem;

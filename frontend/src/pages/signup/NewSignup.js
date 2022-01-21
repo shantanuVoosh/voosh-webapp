@@ -13,7 +13,17 @@ import {
 } from "firebase/auth";
 import axios from "axios";
 import firebase from "../../utils/firebase";
+import { useDispatch } from "react-redux";
+import {
+  loginFailure,
+  loginSuccess,
+  tempLoginSuccess,
+} from "../../redux/Auth/actions/authAction";
+import { setListingIdWithRestaurantDetails } from "../../redux/Data/actions/actions";
+import cookie from "react-cookies";
 import "react-toastify/dist/ReactToastify.css";
+const APP_TOKEN = "voosh-token";
+const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const NewSignup = () => {
   const auth = getAuth();
@@ -23,6 +33,7 @@ const NewSignup = () => {
   const [otpErrorMessage, setOtpErrorMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -63,6 +74,15 @@ const NewSignup = () => {
   const onSubmitPhone = (data) => {
     // setShowPage(1);
     // return;
+    // ! testing purpose
+    if (
+      data["phone-number"] === "9448467130" ||
+      data["phone-number"] === "1234554321" ||
+      data["phone-number"] === "1234567890"
+    ) {
+      setShowPage(1);
+      return;
+    }
 
     console.log(data);
     configureRecaptcha();
@@ -85,6 +105,49 @@ const NewSignup = () => {
   };
   const onSubmitOTP = async (data) => {
     // return;
+    // ! testing purpose CFH DATA
+    if (otp === "123456") {
+      try {
+        const { data: response } = await axios.post("/login-voosh", {
+          phoneNumber: data["phone-number"] ,
+        });
+        console.log("response:", response);
+        if (response.status === "success") {
+          console.log(response);
+          if (response.isAuth) {
+            // ?set token
+            cookie.save(APP_TOKEN, response.token, { path: "/" });
+            dispatch(loginSuccess(response.token));
+            const restaurant = response.restaurantDetails;
+            // listing_id: "P0081"
+            // restaurant_name: "Chettinad Food House"
+            // swiggy_res_id: 256302
+            // zomato_res_id: 56834
+            dispatch(
+              setListingIdWithRestaurantDetails({
+                listingID: restaurant.listing_id,
+                swiggy_res_id: restaurant.swiggy_res_id,
+                zomato_res_id: restaurant.zomato_res_id,
+                restaurant_name: restaurant.restaurant_name,
+              })
+            );
+            navigate("/dashboard");
+          }
+        } else {
+          console.log("loginFailure", response.error);
+          dispatch(loginFailure());
+          dispatch(loginFailure());
+          cookie.remove(APP_TOKEN);
+          cookie.remove(TEMP_APP_TOKEN);
+        }
+      } catch (e) {
+        // !Db error, or Network error etc
+        console.log(e);
+      }
+
+      return;
+    }
+
     console.log(data);
     console.log(otp);
     if (`${otp}`.length === 0) {
@@ -113,15 +176,43 @@ const NewSignup = () => {
             });
             console.log("response:", response);
             if (response.status === "success") {
-              console.log("user registered");
               console.log(response);
+
+              // ! NvDP User
+              if (response.isAuth) {
+                cookie.save(APP_TOKEN, response.token, { path: "/" });
+                dispatch(loginSuccess(response.token));
+                const restaurant = response.restaurantDetails;
+                dispatch(setListingIdWithRestaurantDetails({ restaurant }));
+                navigate("/dashboard");
+              }
+              // ! Non NvDP User
+              else {
+                if (response.isAuthTemp) {
+                  cookie.save(TEMP_APP_TOKEN, response.token, { path: "/" });
+                  dispatch(tempLoginSuccess(response.token));
+                  navigate("/onboarding-dashboard");
+                }
+                // ? error while recivind data
+                else {
+                  console.log("loginFailure: error while recivinG data");
+                  dispatch(loginFailure());
+                  cookie.remove(APP_TOKEN);
+                  cookie.remove(TEMP_APP_TOKEN);
+                }
+              }
+            } else {
+              console.log("loginFailure", response.error);
+              dispatch(loginFailure());
+              cookie.remove(APP_TOKEN);
+              cookie.remove(TEMP_APP_TOKEN);
             }
           } catch (e) {
             // !Db error, or Network error etc
             console.log(e);
+            setIsLoading(false);
           }
 
-          navigate("/test");
           setIsLoading(false);
         })
         .catch((error) => {
@@ -147,7 +238,7 @@ const NewSignup = () => {
           <div className="s-form__title">
             <div className="s-form__title--text">Get Started</div>
             <div className="s-form__title--sub-text">
-              Enter your phone number to get started
+              Enter your phone number
             </div>
           </div>
           <div className="s-form__input-feilds">
@@ -175,7 +266,7 @@ const NewSignup = () => {
           </div>
           <div className="s-form__btn">
             {/* //Todo: id="sign-in-button" */}
-            <button className="btn btn-verify">Verify Number</button>
+            <button className="btn btn-verify">Send OTP</button>
           </div>
         </form>
       </div>
@@ -303,7 +394,7 @@ const NewSignup = () => {
             </div>
             <div className="s-form__btn">
               {/* //Todo: id="sign-in-button" */}
-              <button className="btn btn-verify">Verify Number</button>
+              <button className="btn btn-verify">Send OTP</button>
             </div>
           </form>
         </div>

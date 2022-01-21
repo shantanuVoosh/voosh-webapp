@@ -1,6 +1,13 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
 
-export const fetchAllData = (data, res_name, restaurantList = [],res_id, date) => {
+export const fetchAllData = ({
+  data,
+  res_name,
+  restaurantList = [],
+  res_id,
+  date,
+  allRestaurants,
+}) => {
   // console.log("res name", res_name);
   return {
     type: ActionTypes.FETCH_ALL_DATA,
@@ -8,12 +15,14 @@ export const fetchAllData = (data, res_name, restaurantList = [],res_id, date) =
       data,
       res_name,
       restaurantList,
+      allRestaurants,
       res_id,
+      date,
     },
   };
 };
 
-export const fetchData = (data,date) => {
+export const fetchData = ({ data, date }) => {
   return {
     type: ActionTypes.FETCH_DATA,
     payload: {
@@ -21,8 +30,7 @@ export const fetchData = (data,date) => {
       date,
     },
   };
-}
-
+};
 
 export const seetCurrentProductIndex = (index) => {
   return {
@@ -67,8 +75,28 @@ export const setRestaurantNameAndId = (name, id) => {
     },
   };
 };
+export const setListingIdWithRestaurantDetails = ({
+  listingID,
+  swiggy_res_id,
+  zomato_res_id,
+  restaurant_name,
+}) => {
+  return {
+    type: ActionTypes.SET_LISTING_ID,
+    payload: {
+      listingID: listingID,
+      swiggy_res_id,
+      zomato_res_id,
+      res_name: restaurant_name,
+    },
+  };
+};
 
-export const setResultTypeWithStartDateAndEndDate = (type, startDate, endDate) => {
+export const setResultTypeWithStartDateAndEndDate = (
+  type,
+  startDate,
+  endDate
+) => {
   return {
     type: ActionTypes.SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE,
     payload: {
@@ -77,4 +105,4 @@ export const setResultTypeWithStartDateAndEndDate = (type, startDate, endDate) =
       endDate,
     },
   };
-}
+};

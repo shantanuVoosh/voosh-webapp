@@ -155,13 +155,14 @@
         left: 9px;
         font-style: italic;
         @include breakpoint-up(xxsmall) {
-          font-size: $text-small;
+          // font-size: $text-small;
         }
         @include breakpoint-up(xsmall) {
           min-width: 120px;
           top: 45px;
           left: 16px;
-          font-size: $text-medium;
+          // font-size: $text-medium;
+          font-size: 13px;
         }
       }
     }

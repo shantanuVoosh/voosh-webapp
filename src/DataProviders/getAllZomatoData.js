@@ -214,11 +214,15 @@ async function getAllZomatoData(
         },
       ],
     },
-    customerReviews: {
-      value: "working on It.",
-      type: "average",
-      compareType: "grater",
-    },
+    // customerReviews: {
+    //   value: "working on It.",
+    //   type: "average",
+    //   compareType: "grater",
+    // },
+    customerReviews:
+      resultType === "Custom Range"
+        ? { value: "working on It.", type: "average", compareType: "grater" }
+        : customerReviews,
 
     previousMonthRevenue: {
       previousDayRevenue: 0,

@@ -1,5 +1,5 @@
 .s-bg {
-  background: url("../images/bg-image.jpg") no-repeat center center fixed;
+  background: url("../images/bg-image-2.jpg") no-repeat center center fixed;
   height: 100vh;
   width: auto;
   background-size: cover;
@@ -25,7 +25,7 @@
   flex-basis: auto
   */
   img {
-    height: 80px;
+    height: 93px;
     // margin: 0 auto;
   }
 }
@@ -61,27 +61,34 @@
 
   &__input-feilds {
     width: 100%;
-    margin-top: 0.8rem;
+    margin-top: 1.2rem;
+
     border-radius: 5px;
     border: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     max-width: 400px;
 
     .in-number {
       width: 20%;
       padding: 1rem;
-      border-radius: $radius-1;
+      border-radius: $radius-1 + 6px;
       border: none;
       background-color: $color-white-2;
+      font-weight: 700;
+      font-size: 18px;
+      color: $color-grey-3;
     }
     .form-input {
       width: 75%;
-      padding: 1rem;
-      border-radius: $radius-1;
+      padding: 1.1rem;
+      border-radius: $radius-1 + 6px;
       border: none;
       background-color: $color-white-2;
+      font-weight: 600;
+      font-size: 1rem;
+      color: $color-grey-3;
     }
   }
 
@@ -99,7 +106,8 @@
     margin-top: auto;
     .btn {
       max-width: 400px;
-      width: 90%;
+      width: 95%;
+      font-size: 18px;
       background: linear-gradient(
         to right,
         $color-primary-orange-red,
@@ -107,9 +115,10 @@
       );
       color: $color-white-1;
       border: none;
-      padding: 0.8rem 1.2rem;
-      border-radius: $radius-1;
-      margin-bottom: 1rem;
+      padding: 1.1rem 1.2rem;
+      border-radius: $radius-1 + 6px;
+      margin-bottom: 1.8rem;
+      box-shadow: 0px 1.5px 5px $color-primary-orange-red;
     }
   }
 }

@@ -23,7 +23,14 @@ const customerReviewsMongoDBData = async (
       week_no: parseInt(number),
       year: parseInt(year),
     };
+    customerRatingsQuery = {
+      zomato_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      // week_no:2,
+      year_no: parseInt(year),
+    };
   }
+
   // ? Query for month
   else if (resultType === "month") {
     OrdersPerRatingQuery = {
@@ -31,19 +38,40 @@ const customerReviewsMongoDBData = async (
       month_no: parseInt(number),
       year: parseInt(year),
     };
+    customerRatingsQuery = {
+      zomato_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+      year_no: parseInt(year),
+    };
   } else {
     return {
       dataPresent: false,
     };
   }
 
-  console.log(OrdersPerRatingQuery)
+  console.log(OrdersPerRatingQuery);
 
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
+
+    // ? Customer Ratings
+    const customerRatings = await db
+      .collection("zomato_static_rating_products")
+      .aggregate([
+        {
+          $match: customerRatingsQuery,
+        },
+        {
+          $group: {
+            _id: "$zomato_res_id",
+            customer_rating: { $avg: "$delivery_ratings" },
+          },
+        },
+      ])
+      .toArray();
 
     // ? Rating Split
     const OrdersPerRating = await db
@@ -83,13 +111,14 @@ const customerReviewsMongoDBData = async (
     // console.log("------******------");
     // console.log("allFeedbacks:", allFeedbacks);
     // console.log("------******------");
-    // console.log("customerRatings:", customerRatings);
+    console.log("customerRatings:", customerRatings);
     // console.log("------******------");
     console.log("OrdersPerRating:", OrdersPerRating);
     console.log("------******------");
 
     client.close();
     return {
+      customerRatings: customerRatings[0]?.customer_rating,
       OrdersPerRating:
         OrdersPerRating.length > 0
           ? OrdersPerRating[0]
@@ -99,7 +128,7 @@ const customerReviewsMongoDBData = async (
               "3_star": 0,
               "2_star": 0,
               "1_star": 0,
-            //   total_ratings: 0,
+              total_ratings: 0,
             },
     };
   } catch (err) {
@@ -124,9 +153,17 @@ const customerReviewsDataFormatter = async (
       endDate,
       year
     );
-    const { OrdersPerRating } = data;
+    const { OrdersPerRating, customerRatings } = data;
 
     const customerReviews = {
+      value:
+        customerRatings === undefined
+          ? "working on It."
+          : parseFloat(customerRatings.toFixed(1)),
+      type: "average",
+      compareType: "grater",
+      benchmark: 4,
+
       OrdersPerRating: {
         "5_star": OrdersPerRating["5_star"],
         "4_star": OrdersPerRating["4_star"],
@@ -134,6 +171,8 @@ const customerReviewsDataFormatter = async (
         "2_star": OrdersPerRating["2_star"],
         "1_star": OrdersPerRating["1_star"],
       },
+      all_reviews: [],
+      negative: [],
     };
 
     return customerReviews;

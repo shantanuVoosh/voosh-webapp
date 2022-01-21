@@ -2,7 +2,10 @@ const router = require("express").Router();
 const { MongoClient } = require("mongodb");
 const { getTimeLog } = require("../utils/dateProvide");
 const jwt = require("jsonwebtoken");
-const { getAllRestaurants } = require("../utils/getAllRestaurants");
+const {
+  getAllRestaurants,
+  getAllSwiggyAndZomatoRestaurants,
+} = require("../utils/getAllRestaurants");
 
 // Todo: when Use it, jst change the name!
 const {
@@ -19,7 +22,7 @@ const VooshDB =
 const documentName = "operationsdb";
 const secret = "secret";
 
-// !Login By Phone Number
+// !Login old
 router.post("/login", async (req, res) => {
   const { phoneNumber, password } = req.body;
   console.log("---------- <login> ----------------");
@@ -288,10 +291,27 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     // TODO get all data from mongodb specified resturant
     // ? res_id & documnetName needed,
     // ?or by default is set as some static value
-    const { res_id, id, res_name, phone } = req.payload;
+    const {
+      res_id,
+      id,
+      res_name,
+      phone,
+      listing_id,
+      restaurant_name,
+      swiggy_res_id,
+      zomato_res_id,
+    } = req.payload;
     const date = req.body.date;
 
-    const { number, resultType, client_res_id, startDate, endDate } = req.body;
+    const {
+      number,
+      resultType,
+      startDate,
+      endDate,
+      zomato_res_id: z_res_id,
+      swiggy_res_id: s_res_id,
+      listingID,
+    } = req.body;
 
     console.log(
       "Current User:\n",
@@ -302,77 +322,89 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       "phone:",
       phone,
       "Restaurant Name:",
-      res_name
+      res_name,
+      "date:",
+      date,
+      "number:",
+      number,
+      "resultType:",
+      resultType,
+      "startDate:",
+      startDate,
+      "endDate:",
+      endDate,
+      "zomato_res_id:",
+      zomato_res_id,
+      "swiggy_res_id:",
+      swiggy_res_id,
+      "listingID:",
+      listingID
     );
-    console.log("Number:", number, "ResultType:", resultType, "Date:", date);
 
-    let restaurantList = [];
-    //? then it is a res_id so it will only have one restaurant
-    if (`${phone}`.length < 10 || phone === null || phone === undefined) {
-      restaurantList = [{ res_name, res_id }];
-    }
+    console.log("************************************************");
+    console.log(z_res_id, s_res_id, "z_res_id, s_res_id");
+    console.log(zomato_res_id, swiggy_res_id, "zomato_res_id, swiggy_res_id");
+    console.log("************************************************");
 
-    //? then it is a phone number so multiple restaurants
-    else {
-      const getAllRestaurantsData = await getAllRestaurants(phone);
-      restaurantList = [...getAllRestaurantsData];
-    }
-    // console.log("Restaurant List:", restaurantList);
-    console.log(client_res_id, "client_res_id");
+    let newRestaurantList = [];
+
+    const getAllSwiggyAndZomatoRestaurantsData =
+      await getAllSwiggyAndZomatoRestaurants(phone);
+    newRestaurantList = [...getAllSwiggyAndZomatoRestaurantsData];
+
     let swiggyData;
     let zomatoData;
 
     // ?if client is set, then we are selection new restaurant
     // ?if not then it is running for the first time
-    if (client_res_id !== "" && client_res_id !== res_id) {
-      console.log(
-        "client_res_id(new res_id from the res_id list)----------------->>:",
-        client_res_id
-      );
-
+    if (
+      s_res_id !== "" &&
+      z_res_id !== "" &&
+      zomato_res_id !== z_res_id &&
+      swiggy_res_id !== s_res_id
+    ) {
+      console.log("new call");
       swiggyData = await getAllSwiggyData(
-        parseInt(client_res_id),
+        parseInt(s_res_id),
         number,
         resultType,
         startDate,
         endDate
       );
       zomatoData = await getAllZomatoData(
-        parseInt(client_res_id),
+        parseInt(z_res_id),
         number,
         resultType,
         startDate,
         endDate
       );
     } else {
+      console.log("old call");
       swiggyData = await getAllSwiggyData(
-        parseInt(res_id),
+        parseInt(swiggy_res_id),
         number,
         resultType,
         startDate,
         endDate
       );
       zomatoData = await getAllZomatoData(
-        parseInt(res_id),
+        parseInt(zomato_res_id),
         number,
         resultType,
         startDate,
         endDate
-      );
-
-      console.log(
-        "res_id(old res_id or static one! )-----------------?:",
-        res_id
       );
     }
 
     console.log("---------- <Get All Data Success End> ----------------");
     res.json({
       data: {
-        res_name: res_name,
-        restaurantList: restaurantList,
+        res_name: restaurant_name,
+        newRestaurantList: newRestaurantList,
         res_id: res_id,
         api_data2: [swiggyData, zomatoData],
+        listingID:
+          listingID !== "" ? listingID : listing_id,
       },
       status: "success",
     });
@@ -476,42 +508,84 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
 // ?if yes, then send the token
 // ?if no, then send the onboarding product -> no,create a new user |*|-> yes, send user data
 
+// ! signup and login
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
   // const onboardProductsColleaction = "onboard_products";
-  const onboardProductsColleaction = "test_users";
+  const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  // const onboardProductsColleaction = "test_users";
   const nvdpColleaction = "non_voosh_dashboard_products";
 
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
+    // ? You Me and Tea
+    // ?CFH
+    let customPhoneNumber =
+      parseInt(phoneNumber) === 1234567890
+        ? 9886850338
+        : parseInt(phoneNumber) === 1234554321
+        ? 9448467130
+        : parseInt(phoneNumber);
+
+    console.log(customPhoneNumber, typeof customPhoneNumber);
 
     const db = client.db(documentName);
-    const isUserPresentInNVDP = await db
-      .collection(nvdpColleaction)
-      .findOne({ phone: parseInt(phoneNumber) });
+    // ! manually connection this number to CFH
+    const isUserPresentInNVDP = await db.collection(nvdpColleaction).findOne({
+      phone: parseInt(customPhoneNumber),
+    });
 
     // ! if user present in NVDP then send the token
     if (isUserPresentInNVDP !== null || isUserPresentInNVDP) {
-      const {
-        phone,
-        swiggy_res_id: res_id,
-        _id: id,
-        restaurant_name: res_name,
-      } = isUserPresentInNVDP;
-      const token = jwt.sign({ id, res_id, phone, res_name }, secret, {
-        expiresIn: 3000 * 3, //50min->3000
-      });
+      const { phone, _id: id } = isUserPresentInNVDP;
+
+      const getAllSwiggyAndZomatoRestaurantsData =
+        await getAllSwiggyAndZomatoRestaurants(phone);
+      newRestaurantList = [...getAllSwiggyAndZomatoRestaurantsData];
+      // ? cuz the number is on nvdp so ek obj tho sure hoga!
+      const { listing_id, restaurant_name, swiggy_res_id, zomato_res_id } =
+        newRestaurantList[0];
+
+      const token = jwt.sign(
+        {
+          id,
+          phone,
+          listing_id,
+          restaurant_name,
+          swiggy_res_id,
+          zomato_res_id,
+        },
+        secret,
+        {
+          expiresIn: 3000 * 3, //50min->3000
+        }
+      );
 
       return res.json({
         status: "success",
+        isAuth: true,
+        isAuthTemp: false,
         token: token,
+        restaurantList: newRestaurantList,
+        restaurantDetails: {
+          listing_id,
+          restaurant_name,
+          swiggy_res_id,
+          zomato_res_id,
+        },
       });
     }
 
     // ! not present in NVDP then check on Onboard Products
+    // Todo create toke for every response
     else {
+      const token = jwt.sign({ phone: phoneNumber, tempUser: true }, secret, {
+        // expiresIn: 3000 * 3, //50min*3->3000
+        expiresIn: 3000, //50min
+      });
+
       const isUserPresentInOnboardProducts = await db
         .collection(onboardProductsColleaction)
         .findOne({ phone: parseInt(phoneNumber) });
@@ -519,17 +593,20 @@ router.post("/login-voosh", async (req, res) => {
       //? if user present in onboard products then grab the data!
       if (isUserPresentInOnboardProducts !== null) {
         const { zomato_register_phone, swiggy_register_phone } =
-        isUserPresentInOnboardProducts;
+          isUserPresentInOnboardProducts;
         //? if numbers are not present in swiggy or zomato then set flag to false or true
+
         res.json({
           status: "success",
           message: "User already exists",
-          isAuth: true,
+          isAuthTemp: true,
           isSwiggyNumberPresent:
             `${swiggy_register_phone}`.length === 10 ? true : false,
           isZomatoNumberPresent:
             `${zomato_register_phone}`.length === 10 ? true : false,
-          isDataReady: true,
+          user: isUserPresentInOnboardProducts,
+          isDataReady: false,
+          token: token,
         });
       }
       // ? if phone not present, create entery in db
@@ -548,9 +625,10 @@ router.post("/login-voosh", async (req, res) => {
         res.json({
           status: "success",
           message: "New user created",
-          isAuth: true,
+          isAuthTemp: true,
           isSwiggyNumberPresent: false,
           isZomatoNumberPresent: false,
+          token: token,
         });
       }
     }
@@ -559,13 +637,180 @@ router.post("/login-voosh", async (req, res) => {
     console.log("Error while saving user: " + err);
     res.json({
       status: "error",
-      isAuth: false,
+      isAuthTemp: false,
       message: "Error while saving user, Server Error",
       isSwiggyNumberPresent: false,
       isZomatoNumberPresent: false,
       isDataReady: false,
     });
   }
+});
+
+router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
+  console.log("hit onboard data");
+  const { phone, tempUser } = req.payload;
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    // const onboardProductsColleaction = "onboard_products";
+    const onboardProductsColleaction = "test_users";
+
+    const userData = await db
+      .collection(onboardProductsColleaction)
+      .findOne({ phone: parseInt(phone) });
+
+    const { swiggy_register_phone, zomato_register_phone } = userData;
+
+    console.log("userData", userData);
+    res.json({
+      status: "success",
+      phone,
+      isAuthTemp: tempUser,
+      userDetails: userData,
+      dataSubmitted:
+        swiggy_register_phone !== "" || zomato_register_phone !== ""
+          ? true
+          : false,
+    });
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: "Error while sending data from server data",
+      error: err,
+      dataSubmitted: false,
+    });
+  }
+});
+
+//! Udate onbord Users
+router.post(
+  "/user/update/onboard-data",
+  checkAuthentication,
+  async (req, res) => {
+    console.log("hit onboard data");
+    const { phone, tempUser } = req.payload;
+    const {
+      name,
+      email,
+      restaurant_name,
+      swiggy_register_phone,
+      zomato_register_phone,
+    } = req.body;
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      // const onboardProductsColleaction = "onboard_products";
+      const onboardProductsColleaction = "test_users";
+
+      const query = { phone: parseInt(phone) };
+      const update = {
+        $set: {
+          name,
+          email,
+          restaurant_name,
+          swiggy_register_phone,
+          zomato_register_phone,
+        },
+      };
+      db.collection(onboardProductsColleaction).updateOne(
+        query,
+        update,
+        (err, result) => {
+          if (err) {
+            res.json({
+              status: "error",
+              message: "Error while saving user, Server Error",
+              error: err,
+            });
+          } else {
+            res.json({
+              status: "success",
+              message: "User data updated",
+              isAuthTemp: tempUser,
+              userDetails: result,
+            });
+          }
+        }
+      );
+    } catch (err) {
+      res.json({
+        status: "error",
+        message: "Error while sending data from server data",
+        error: err,
+      });
+    }
+  }
+);
+
+//! test route
+router.post("/test-101", async (req, res) => {
+  // const { phone } = req.body;
+  // const nvdpColleaction = "non_voosh_dashboard_products";
+  // const zomatoNvdpColleaction = "zomato_nvdp";
+  // try {
+  //   const client = await MongoClient.connect(VooshDB, {
+  //     useNewUrlParser: true,
+  //   });
+  //   const db = client.db(documentName);
+  //   const userData = await db.collection(nvdpColleaction).findOne({ phone });
+  //   if (userData) {
+  //     const { kitchen_id } = userData;
+  //     const swiggyData = await db
+  //       .collection(nvdpColleaction)
+  //       .find({ kitchen_id: kitchen_id })
+  //       .toArray();
+  //     const zomatoData = await db
+  //       .collection(zomatoNvdpColleaction)
+  //       .find({ kitchen_id: kitchen_id })
+  //       .toArray();
+  //     const sLid = swiggyData.map((i) => i.listing_id);
+  //     const zLid = zomatoData.map((i) => i.listing_id);
+  //     const allIds = [...new Set([...sLid, ...zLid])];
+  //     const finalData = allIds.map((Lid, i) => {
+  //       const s_data = swiggyData.find((item) => item.listing_id === Lid);
+  //       const z_data = zomatoData.find((item) => item.listing_id === Lid);
+  //       const swiggy_res_id = s_data?.swiggy_res_id;
+  //       const zomato_res_id = z_data?.zomato_res_id;
+  //       const restaurant_name =
+  //         s_data !== undefined
+  //           ? s_data.restaurant_name
+  //           : z_data.zomato_nomenclature;
+  //       return {
+  //         restaurant_name,
+  //         listing_id: Lid,
+  //         swiggy_res_id: swiggy_res_id === undefined ? null : swiggy_res_id,
+  //         zomato_res_id: zomato_res_id === undefined ? null : zomato_res_id,
+  //         // swiggy: {
+  //         //   ...s_data,
+  //         // },
+  //         // zomato: {
+  //         //   ...z_data,
+  //         // },
+  //       };
+  //     });
+  //     res.json({
+  //       // swiggy: swiggyData,
+  //       // zomato: zomatoData,
+  //       // sLid,
+  //       // zLid,
+  //       // allIds,
+  //       finalData,
+  //     });
+  //   } else {
+  //     res.json({
+  //       user: userData,
+  //     });
+  //   }
+  // } catch (err) {
+  //   // ? if error happens
+  //   res.json({
+  //     Error: err,
+  //   });
+  // }
 });
 
 module.exports = router;

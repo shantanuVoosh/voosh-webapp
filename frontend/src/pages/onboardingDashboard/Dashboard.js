@@ -11,12 +11,38 @@ import vooshCardSvg from "../../styles/assets/voosh_card.svg";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { loginFailure } from "../../redux/Auth/actions/authAction";
+import cookie from "react-cookies";
+import Loading from "../../components/Loading";
+import { BsShieldFillCheck } from "react-icons/bs";
+import { GrCircleAlert } from "react-icons/gr";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+
+const APP_TOKEN = "voosh-token";
+const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const Dashboard = () => {
+  const { isTemporaryAuthenticated, temporaryToken } = useSelector(
+    (state) => state.auth
+  );
   const [numberOfVideoWatch, setNumberOfVideoWatch] = React.useState(1);
   const [displayPageNumber, setDisplayPageNumber] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [dataSubmitted, setDataSubmitted] = React.useState(false);
+  const [currentUserDetails, setCurrentUserDetails] = React.useState({
+    name: "",
+    email: "",
+    restaurantName: "",
+    phoneNumber: 7008237257,
+  });
+
+  // Todo if form is submitted,
   const {
     register,
     handleSubmit,
@@ -30,9 +56,41 @@ const Dashboard = () => {
   const notifySuccess = (msg) => toast.success(msg);
 
   React.useEffect(() => {
-    // setDisplayPageNumber(0);
+    const getUserOnboardData = async () => {
+      setIsLoading(true);
+      try {
+        const { data: response } = await axios.post("/user/onboard-data", {
+          token: temporaryToken,
+        });
+        console.log(response);
+        if (response.status === "success") {
+          const { userDetails } = response;
+          setCurrentUserDetails({
+            name: userDetails.name,
+            email: userDetails.email,
+            restaurantName: userDetails.restaurant_name,
+            phoneNumber: userDetails.phone,
+          });
+          console.log("response success", response);
+          setDataSubmitted(response.dataSubmitted);
+        } else {
+          navigate("/");
+          cookie.remove(TEMP_APP_TOKEN);
+          dispatch(loginFailure());
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        navigate("/");
+        cookie.remove(TEMP_APP_TOKEN);
+        dispatch(loginFailure());
+        setIsLoading(false);
+      }
+    };
+    getUserOnboardData();
+    setDisplayPageNumber(0);
     // setNumberOfVideoWatch(1);
-  }, []);
+  }, [temporaryToken]);
 
   // Todo from the state we or DB we can know the Name Email and Rest Name
   const userDetails = {
@@ -48,13 +106,17 @@ const Dashboard = () => {
     console.log(data);
     console.log(userDetails, "1st form submit");
     if (data.checkbox_1 === true) {
-      setValue("swiggy-number", userDetails.phoneNumber);
+      setValue("swiggy-number", currentUserDetails.phoneNumber);
     } else if (data.checkbox_1 === false) {
       setValue("swiggy-number", "");
     }
-    // if (data.checkbox_2 === true) {
-    //   setValue("Zomato Number", data["Phone Number"]);
-    // }
+    if (data.checkbox_2 === true) {
+      setValue("zomato-number", currentUserDetails.phoneNumber);
+    }
+
+    // Todo prev page se !
+    setValue("checkbox_not-in-swiggy", false);
+    setValue("checkbox_not-in-zomato", false);
     setDisplayPageNumber(2);
   };
   const onSubmitFormTwo = async (data) => {
@@ -109,6 +171,66 @@ const Dashboard = () => {
     }
   };
 
+  const onSubmitFormThree = async (data) => {
+    console.log("data:", data);
+    const isNotInSwiggyChecked = data["checkbox_not-in-swiggy"];
+    const isNotInZomatoChecked = data["checkbox_not-in-zomato"];
+    const swiggyNumber = data["swiggy-number"];
+    const zomatoNumber = data["zomato-number"];
+
+    if (isNotInSwiggyChecked && isNotInZomatoChecked) {
+      notifyError(
+        "Provide atleast one phone number either in Swiggy or Zomato!"
+      );
+      return;
+    }
+    if (swiggyNumber === "" && zomatoNumber === "") {
+      notifyError(
+        "Provide atleast one phone number either in Swiggy or Zomato!"
+      );
+      return;
+    }
+
+    //! Todo save or udate the current user
+    try {
+      // checkbox_1: true
+      // checkbox_2: true
+      // checkbox_not-in-swiggy: true
+      // checkbox_not-in-zomato: false
+      // email: "shanu09.sm@gmail.com"
+      // phone-number: undefined
+      // restaurant-name: "dummy"
+      // swiggy-number: ""
+      // swiggy-password: ""
+      // user-name: "555"
+      // zomato-number: 7008237257
+
+      const { data: response } = await axios.post("/user/update/onboard-data", {
+        token: temporaryToken,
+        name: data["user-name"],
+        email: data["email"],
+        restaurant_name: data["restaurant-name"],
+        phone: currentUserDetails.phoneNumber,
+        swiggy_register_phone: swiggyNumber,
+        zomato_register_phone: zomatoNumber,
+      });
+      console.log(response);
+      if (response.status === "success") {
+        console.log("response success", response);
+        notifySuccess(response.message);
+        setDisplayPageNumber(0);
+        setDataSubmitted(true);
+      } else {
+        console.log("response error", response);
+        notifyError(response.message);
+      }
+    } catch (err) {
+      console.log(err);
+      notifyError("Server Error or Internet Problem, Please try again later");
+      displayPageNumber(0);
+    }
+  };
+
   const DashboardPage = () => {
     return (
       <div className="container onboard-container">
@@ -116,61 +238,68 @@ const Dashboard = () => {
           <img src={logo_img} alt="logo" className="onboard-logo--image" />
         </div>
         {/* //! dashboard */}
-        <div className="onboard-preview-dashboard">
-          <div className="onboard-preview-dashboard__top">
-            <div className="onboard-preview-dashboard__top--icon">
-              <IoHomeOutline size={30} />
-            </div>
-            <div className="onboard-preview-dashboard__top--rest-name">
-              Register your restaurant
-            </div>
-            <div className="onboard-preview-dashboard__top--info">
-              Linik your <span>Swiggy</span> and <span>Zomato</span> Id's
-            </div>
-          </div>
-          <div className="onboard-preview-dashboard__mid">
-            <span className="onboard-preview-dashboard__mid--left-bar"></span>
-            <span className="onboard-preview-dashboard__mid--text"> Get </span>
-            <span className="onboard-preview-dashboard__mid--right-bar"></span>
-          </div>
-          <div className="onboard-preview-dashboard__bottom">
-            {/* //? all bottom menu btns */}
-            <div className="onboard-preview-dashboard__bottom--menu-btns">
-              <div className="menu-btn">
-                <div className="icon">
-                  <CgLoadbarSound size={32} />
-                </div>
-                <div className="text">Get all round analysis</div>
+        {!dataSubmitted && (
+          <div className="onboard-preview-dashboard">
+            <div className="onboard-preview-dashboard__top">
+              <div className="onboard-preview-dashboard__top--icon">
+                <IoHomeOutline size={30} />
               </div>
-              <div className="menu-btn">
-                <div className="icon">
-                  <MdAnchor size={32} />
-                </div>
-                <div className="text">Expert help and insights</div>
+              <div className="onboard-preview-dashboard__top--rest-name">
+                Register your restaurant
               </div>
-              <div className="menu-btn">
-                <div className="icon">
-                  <GiCommercialAirplane size={32} />
-                </div>
-                <div className="text">Maximum results</div>
+              <div className="onboard-preview-dashboard__top--info">
+                Linik your <span>Swiggy</span> and <span>Zomato</span> Id's
               </div>
             </div>
-            <div
-              className="onboard-preview-dashboard__bottom--btn add-now-btn"
-              onClick={() => setDisplayPageNumber(1)}
-            >
-              Add Now
+            <div className="onboard-preview-dashboard__mid">
+              <span className="onboard-preview-dashboard__mid--left-bar"></span>
+              <span className="onboard-preview-dashboard__mid--text">
+                {" "}
+                Get{" "}
+              </span>
+              <span className="onboard-preview-dashboard__mid--right-bar"></span>
+            </div>
+            <div className="onboard-preview-dashboard__bottom">
+              {/* //? all bottom menu btns */}
+              <div className="onboard-preview-dashboard__bottom--menu-btns">
+                <div className="menu-btn">
+                  <div className="icon">
+                    <CgLoadbarSound size={32} />
+                  </div>
+                  <div className="text">Get all round analysis</div>
+                </div>
+                <div className="menu-btn">
+                  <div className="icon">
+                    <MdAnchor size={32} />
+                  </div>
+                  <div className="text">Expert help and insights</div>
+                </div>
+                <div className="menu-btn">
+                  <div className="icon">
+                    <GiCommercialAirplane size={32} />
+                  </div>
+                  <div className="text">Maximum results</div>
+                </div>
+              </div>
+              <div
+                className="onboard-preview-dashboard__bottom--btn add-now-btn"
+                onClick={() => setDisplayPageNumber(1)}
+              >
+                Add Now
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* //! if get the data the show we are analysing yor data */}
-        <div className="onboard-alalysing">
-          <div className="icon">
-            <CgLoadbarSound size={40} />
+        {dataSubmitted && (
+          <div className="onboard-alalysing">
+            <div className="icon">
+              <CgLoadbarSound size={40} />
+            </div>
+            <div className="text">We are analysing your Restaurant data</div>
           </div>
-          <div className="text">We are analysing your Restaurant data</div>
-        </div>
+        )}
 
         {/* //! Gray Card */}
         <div className="onboard-certified-card">
@@ -203,7 +332,7 @@ const Dashboard = () => {
           <div className="dashboard-bottom__videos">
             <div className="single-video">
               <ReactPlayer
-                // className="single-video"
+                className="single-video"
                 url="https://www.youtube.com/watch?v=MIsi4vdzjgk"
                 controls
                 playbackRate={1}
@@ -214,7 +343,7 @@ const Dashboard = () => {
             </div>
             <div className="single-video">
               <ReactPlayer
-                // className="single-video"
+                className="single-video"
                 url="https://www.youtube.com/watch?v=QN1GGCNMOY4"
                 controls
                 playbackRate={1}
@@ -241,14 +370,14 @@ const Dashboard = () => {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
                 eius consectetur molestiae vero reprehenderit rem.
               </div>
-              <div className="info-tab">
+              {/* <div className="info-tab">
                 <span className="name">name</span>
                 <span className="date">15 Jan 2022</span>
                 <span className="time">5mins</span>
               </div>
               <div className="onboard-quick-reads__article--read-more">
                 Read More
-              </div>
+              </div> */}
             </div>
             <div className="right">
               <div className="onboard-quick-reads__article--img">Image</div>
@@ -262,14 +391,14 @@ const Dashboard = () => {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
                 eius consectetur molestiae vero reprehenderit rem.
               </div>
-              <div className="info-tab">
+              {/* <div className="info-tab">
                 <span className="name">name</span>
                 <span className="date">15 Jan 2022</span>
                 <span className="time">5mins</span>
               </div>
               <div className="onboard-quick-reads__article--read-more">
                 Read More
-              </div>
+              </div> */}
             </div>
             <div className="right">
               <div className="onboard-quick-reads__article--img">Image</div>
@@ -307,6 +436,11 @@ const Dashboard = () => {
             className="page-body__form"
             onSubmit={handleSubmit(onSubmitFormOne)}
           >
+            <div className="page-body__form--secure-text">
+              <BsShieldFillCheck size={15} />
+              <span className="text"> Your data is secure with us</span>
+              <IoIosInformationCircleOutline size={20} />
+            </div>
             {/* //! Restaurant Name */}
             <div className="page-body__form--input-feild">
               <input
@@ -339,7 +473,7 @@ const Dashboard = () => {
                 type="tel"
                 name="phone-number"
                 placeholder="Phone Number"
-                defaultValue={userDetails.phoneNumber}
+                defaultValue={currentUserDetails.phoneNumber}
                 disabled={true}
                 {...register("phone-number", {
                   // required: true,
@@ -387,6 +521,50 @@ const Dashboard = () => {
                 </span>
               </span>
             </div>
+            {/* //! Restaurant Name */}
+            <div className="page-body__form--input-feild">
+              <input
+                className="form-input"
+                type="text"
+                placeholder="Your Name"
+                {...register("user-name", {
+                  required: true,
+                  minLength: 3,
+                })}
+              />
+            </div>
+            <div className="page-body__form--error">
+              {errors["user-name"] && (
+                <p className="error red">
+                  Name should be atleast 1 characters long
+                </p>
+              )}
+            </div>
+            {/* //! Restaurant Name */}
+            <div className="page-body__form--input-feild ">
+              <input
+                className="form-input"
+                type="email"
+                // required
+                placeholder="Email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value:
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "Please enter a valid email",
+                  },
+                })}
+              />
+            </div>
+            <div
+              className="page-body__form--error"
+              style={{ marginBottom: "4rem" }}
+            >
+              {errors["email"] && (
+                <p className="error red">Provide a valid email address</p>
+              )}
+            </div>
 
             {/*// ?Proceed Button */}
             <div className="page-body__form--btn">
@@ -431,7 +609,13 @@ const Dashboard = () => {
             className="page-body__form"
             onSubmit={handleSubmit(onSubmitFormTwo)}
           >
+            <div className="page-body__form--secure-text">
+              <BsShieldFillCheck size={15} />
+              <span className="text"> Your data is secure with us</span>
+              <IoIosInformationCircleOutline size={20} />
+            </div>
             {/* //!Swiggy Rest. Phone */}
+
             <div className="page-body__form--input-feild">
               <input
                 className="form-input"
@@ -531,6 +715,10 @@ const Dashboard = () => {
     );
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <ToastContainer
@@ -554,7 +742,7 @@ const Dashboard = () => {
             <div className="page-btns">
               <span
                 className="previous"
-                onClick={() => setDisplayPageNumber(1)}
+                onClick={() => setDisplayPageNumber(2)}
               >
                 <GrFormPreviousLink size={30} />
               </span>
@@ -576,8 +764,13 @@ const Dashboard = () => {
               </div>
               <form
                 className="page-body__form"
-                onSubmit={handleSubmit(onSubmitFormTwo)}
+                onSubmit={handleSubmit(onSubmitFormThree)}
               >
+                <div className="page-body__form--secure-text">
+                  <BsShieldFillCheck size={15} />
+                  <span className="text"> Your data is secure with us</span>
+                  <IoIosInformationCircleOutline size={20} />
+                </div>
                 {/* //!Zomato Rest. Phone */}
                 <div className="page-body__form--input-feild">
                   <input
@@ -604,26 +797,17 @@ const Dashboard = () => {
                 <div
                   className="page-body__form--skip-btn"
                   onClick={() => {
-
-                    // Todo: check is swiggy is also skipped or not, 
-                    // ? if yes the alter him atlest five one number
-                    // ? if no clear zomato feild
-                    // const data = getValues();
-                    // const isCheckboxChecked = data["checkbox_not-in-zomato"];
-
-                    // if (!isCheckboxChecked) {
-                    //   setValue("checkbox_not-in-swiggy", true);
-                    //   setValue("swiggy-number", "");
-                    //   setValue("swiggy-password", "");
-                    // } else {
-                    //   setValue("checkbox_not-in-swiggy", false);
-                    //   setValue("swiggy-number", "");
-                    //   setValue("swiggy-password", "");
-                    // }
-
-                    // console.log(data, "data insde skip");
-
-                    // setDisplayPageNumber(3);
+                    const data = getValues();
+                    // console.log(data);
+                    const isCheckboxChecked = data["checkbox_not-in-zomato"];
+                    console.log(isCheckboxChecked, "isCheckboxChecked");
+                    if (!isCheckboxChecked) {
+                      setValue("checkbox_not-in-zomato", true);
+                      setValue("zomato-number", "");
+                    } else {
+                      setValue("checkbox_not-in-zomato", false);
+                      setValue("zomato-number", "");
+                    }
                   }}
                 >
                   <input

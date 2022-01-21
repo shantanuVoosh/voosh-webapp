@@ -20,7 +20,14 @@ const CustomerReviews = () => {
     obj[rating] = OrdersPerRating[key];
     return obj;
   });
-
+  console.log(
+    negative,
+    OrdersPerRating,
+    value,
+    totalRatings,
+    "-----------------"
+  );
+  console.log(ratings, "ratings");
   // console.log(ratings, "ratings", value, "value");
   const colors = ["#2A327D", "#00C689", "#FFCA00", "#FFB039", "#FE645A"];
 
@@ -47,7 +54,7 @@ const CustomerReviews = () => {
                     className="bar-fill"
                     style={{
                       width: `${
-                        totalRatings === 0
+                        totalRatings === 0 || totalRatings === undefined
                           ? 0
                           : Math.floor(
                               (Object.values(rating)[0] / totalRatings) * 100

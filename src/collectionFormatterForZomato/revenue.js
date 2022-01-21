@@ -16,21 +16,21 @@ const revenueMongoDBData = async (
   // ? Query for week
   if (resultType === "week") {
     query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
+      zomato_res_id: parseInt(res_id),
       week_no: parseInt(number),
     };
   }
   // ? Query for month
   else if (resultType === "month") {
     query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
+      zomato_res_id: parseInt(res_id),
       month_no: parseInt(number),
     };
   }
   // ? Custom date range
   else if (resultType === "Custom Range") {
     query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
+      zomato_res_id: parseInt(res_id),
       date: { $gte: startDate, $lte: endDate },
     };
   } else {
@@ -45,7 +45,7 @@ const revenueMongoDBData = async (
     });
     const db = client.db(documentName);
     const revenue = await db
-      .collection("zomato_revenue_products_test")
+      .collection("zomato_revenue_products")
       .aggregate([
         {
           $match: query,

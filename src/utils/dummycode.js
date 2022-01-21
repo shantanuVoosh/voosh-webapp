@@ -312,3 +312,113 @@
 //       isZomatoNumberPresent: false,
 //     });
 //   }
+
+// !Login By Phone Number
+router.post("/login", async (req, res) => {
+    const { phoneNumber, password } = req.body;
+    console.log("---------- <login> ----------------");
+    const colleactionName = "non_voosh_dashboard_products";
+  
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const userPresent = await client
+        .db(documentName)
+        .collection(colleactionName)
+        .findOne({
+          swiggy_register_phone: Number(phoneNumber),
+        });
+      const userRes_IdPresent = await client
+        .db(documentName)
+        .collection(colleactionName)
+        .findOne({
+          swiggy_res_id: Number(phoneNumber),
+        });
+  
+      console.log("swiggy_register_phone or swiggy_res_id:", phoneNumber);
+      console.log("userRes_IdPresent:", userRes_IdPresent);
+      console.log("userPresent:", userPresent);
+  
+      if (userPresent === null && userRes_IdPresent === null) {
+        console.log("---------- <login End> ----------------");
+  
+        return res.json({
+          error:
+            "Phone Number or Restaurant Id is not Present, Provide A Valid Phone Number or Restaurant Id!",
+          status: "error",
+          isAuth: false,
+        });
+      }
+      // ! if Phone Number is present, check for password
+      else {
+        let verifyUser = null;
+  
+        if (userPresent) {
+          verifyUser = await client
+            .db(documentName)
+            .collection(colleactionName)
+            .findOne({
+              swiggy_register_phone: Number(phoneNumber),
+              swiggy_password: password,
+            });
+        } else {
+          verifyUser = await client
+            .db(documentName)
+            .collection(colleactionName)
+            .findOne({
+              swiggy_res_id: Number(phoneNumber),
+              swiggy_password: password,
+            });
+        }
+  
+        //! Both Email and Password are valid
+        if (verifyUser) {
+          console.log("verifyUser", verifyUser);
+  
+          // ? multriple res id will be present in the database
+          const id = verifyUser["_id"];
+          const res_id = verifyUser["swiggy_res_id"];
+          const phone = verifyUser["swiggy_register_phone"];
+          const res_name = verifyUser["restaurant_name"];
+          console.log(
+            "Current User:\n",
+            "Id:",
+            id,
+            "Res_Id:",
+            res_id,
+            "Phone:",
+            phone,
+            "Res_Name:",
+            res_name
+          );
+          const token = jwt.sign({ id, res_id, phone, res_name }, secret, {
+            expiresIn: 3000 * 3, //50min->3000
+          });
+  
+          console.log("---------- <login End on Success> ----------------");
+  
+          return res.json({
+            status: "success",
+            token: token,
+          });
+        }
+        // ! Password miss match
+        else {
+          console.log("---------- <login End on Error> ----------------");
+          return res.json({
+            status: "error",
+            error: `Password was incorrect, Please try again!`,
+            isAuth: false,
+          });
+        }
+      }
+    } catch (err) {
+      // !if request failed
+      res.json({
+        status: "error",
+        message: `Error while login :${err}`,
+        isAuth: false,
+      });
+    }
+  });

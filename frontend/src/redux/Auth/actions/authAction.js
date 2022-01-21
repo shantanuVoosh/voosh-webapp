@@ -2,29 +2,39 @@ import { ActionTypes } from "../actionTypes/actionType";
 
 // ! Phone number login
 export const loginSuccess = (token) => {
-    return {
-      type: ActionTypes.LOGIN_SUCCESS,
-      payload: {
-        token,
-      },
-    };
+  return {
+    type: ActionTypes.LOGIN_SUCCESS,
+    payload: {
+      token,
+    },
   };
-  
-  export const loginFailure = (error) => {
-    return {
-      type: ActionTypes.LOGIN_FAILURE,
-      payload: {
-        error,
-      },
-    };
+};
+
+// ? error not used
+export const loginFailure = (error) => {
+  return {
+    type: ActionTypes.LOGIN_FAILURE,
+    payload: {
+      error,
+    },
   };
-  
-  export const signoutSuccess = () => {
-    return {
-      type: ActionTypes.SIGNOUT_SUCCESS,
-    };
+};
+// ! TEMP login
+export const tempLoginSuccess = (token) => {
+  return {
+    type: ActionTypes.TEMP_LOGIN_SUCCESS,
+    payload: {
+      token,
+    },
   };
-  
+};
+
+export const signoutSuccess = () => {
+  return {
+    type: ActionTypes.SIGNOUT_SUCCESS,
+  };
+};
+
 // ! Google login
 // export const loginSuccessByGoogle = (token) => {
 //   return {

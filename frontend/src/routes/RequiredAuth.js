@@ -24,6 +24,7 @@ import {
 } from "../utils/dateProvider";
 const APP_TOKEN_BY_GOOGLE = "voosh-token-by-google";
 const APP_TOKEN = "voosh-token";
+const TEMP_APP_TOKEN = "temp-voosh-token";
 const allResultTypeMap = {
   "Previous Day": getPreviousDay12HoursAgoDate(),
   "This Week": getPreviousDay12HoursAgoDate(),
@@ -34,11 +35,13 @@ const allResultTypeMap = {
 
 // !Protecting routes
 function RequiredAuth({ children }) {
-  const { isAuthenticated, token } = useSelector((state) => state.auth);
+  const { isAuthenticated, token, isTemporaryAuthenticated, temporaryToken } =
+    useSelector((state) => state.auth);
   const resultType = useSelector((state) => state.data.resultType);
   const res_name = useSelector((state) => state.data.res_name);
   const res_id = useSelector((state) => state.data.res_id);
-  const { startDate, endDate } = useSelector((state) => state.data);
+  const { startDate, endDate, zomato_res_id, swiggy_res_id, listingID, currentProductIndex } =
+    useSelector((state) => state.data);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -47,9 +50,6 @@ function RequiredAuth({ children }) {
     const date = allResultTypeMap[resultType];
     // !for testing purpose
     console.log("Date inside state:", date);
-
-
-    
     // if (resultType === "Custom Range") {
 
     //   console.log("working so far............");
@@ -90,6 +90,9 @@ function RequiredAuth({ children }) {
         resultType: tempMonthMap[resultType],
         startDate: startDate ? startDate : "",
         endDate: endDate ? endDate : "",
+        zomato_res_id,
+        swiggy_res_id,
+        listingID,
       });
       console.log("voosh data", response);
 
@@ -101,16 +104,38 @@ function RequiredAuth({ children }) {
           restaurantList,
           res_id: id,
           api_data2,
+          newRestaurantList,
         } = response.data;
         // ! call of the first time
-        if (res_name === "" && res_id === "") {
+        console.log(newRestaurantList, "new list");
+        if (currentProductIndex===-1) {
           console.log("call data with res_name and res_id");
-          dispatch(fetchAllData(api_data2, name, restaurantList, id, date));
+          dispatch(
+            fetchAllData({
+              data: api_data2,
+              res_name: name,
+              restaurantList: restaurantList,
+              allRestaurants: newRestaurantList,
+              res_id: id,
+              date: date,
+            })
+          );
         }
         // ! only restaurant data will change or dispatch
         else {
           console.log("only data");
-          dispatch(fetchData(api_data2, date));
+          dispatch(fetchData({ data: api_data2, date }));
+          // dispatch(
+          //   fetchAllData({
+          //     data: api_data2,
+          //     res_name: name,
+          //     restaurantList: restaurantList,
+          //     allRestaurants: newRestaurantList,
+          //     res_id: id,
+          //     date: date,
+          //   })
+          // );
+          
         }
         dispatch(isLoading(false));
       }
@@ -118,6 +143,7 @@ function RequiredAuth({ children }) {
       else {
         dispatch(loginFailure());
         cookie.remove(APP_TOKEN);
+        cookie.remove(TEMP_APP_TOKEN);
         Navigate("/");
         dispatch(isLoading(false));
       }
@@ -125,9 +151,21 @@ function RequiredAuth({ children }) {
       // *Error while fetching data
       console.log("err", err);
       dispatch(loginFailure(err));
+      cookie.remove(APP_TOKEN);
+      cookie.remove(TEMP_APP_TOKEN);
       dispatch(isLoading(false));
     }
-  }, [token, dispatch, resultType, res_id, res_name, startDate, endDate]);
+  }, [
+    token,
+    dispatch,
+    resultType,
+    zomato_res_id,
+    swiggy_res_id,
+    listingID,
+    startDate,
+    endDate,
+    res_name,
+  ]);
 
   React.useEffect(() => {
     if (isAuthenticated && token) {
@@ -135,8 +173,20 @@ function RequiredAuth({ children }) {
     }
   }, [isAuthenticated, token, getDataFromApi, resultType, res_id]);
 
+  // return isAuthenticated ? (
+  //   children
+  // ) : (
+  //   <Navigate to="/" replace state={{ path: location.pathname }}></Navigate>
+  // );
+  // isTemporaryAuthenticated, temporaryToken
   return isAuthenticated ? (
     children
+  ) : isTemporaryAuthenticated ? (
+    <Navigate
+      to="/onboarding-dashboard"
+      replace
+      state={{ path: location.pathname }}
+    ></Navigate>
   ) : (
     <Navigate to="/" replace state={{ path: location.pathname }}></Navigate>
   );

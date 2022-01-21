@@ -8,6 +8,24 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
     showColor = value <= benchmark ? "green-value" : "red-value";
   }
   console.log(name, value, benchmark, compareThen, "info card");
+
+  if (value === "Please wait! We are working on It.") {
+    return (
+      <div className="info-card  ">
+        <div
+          className={
+            "name " +
+            `${name === "Current Rating" ? "customer_review_ratings" : ""}`
+          }
+        >
+          {name.length > 15 ? name.substring(0, 15) + "..." : name}
+        </div>
+
+        <div className={`${showColor} value`}>Working on it!</div>
+      </div>
+    );
+  }
+
   return (
     <div className="info-card  ">
       <div

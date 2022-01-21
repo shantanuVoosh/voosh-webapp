@@ -65,7 +65,7 @@ function App() {
   return (
     <div className="main-container">
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={
             <RedirectRoute>
@@ -80,25 +80,19 @@ function App() {
               <Login />
             </RedirectRoute>
           }
-        />
+        /> */}
         {/* //Todo: New Onboarding dashboard */}
         <Route
-          path="/test"
+          path="/"
           element={
-            // <RedirectRoute>
-            <OnboardingDashboard />
-            // </RedirectRoute>
+            <RedirectRoute>
+              <NewSignup />
+            </RedirectRoute>
           }
         />
         {/* //Todo: New Onboarding dashboard */}
-        <Route
-          path="/newsignup"
-          element={
-            // <RedirectRoute>
-            <NewSignup />
-            // </RedirectRoute>
-          }
-        />
+        <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
+        <Route path="/test" element={<OnboardingDashboard />} />
         <Route
           path="/signup"
           element={

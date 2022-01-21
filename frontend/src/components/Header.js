@@ -8,6 +8,7 @@ import {
   setResultType,
   setRestaurantNameAndId,
   setResultTypeWithStartDateAndEndDate,
+  setListingIdWithRestaurantDetails,
 } from "../redux/Data/actions/actions";
 import {
   currentWeekStartAndEndDate,
@@ -17,7 +18,6 @@ import {
   getPreviousDay12HoursAgoDate,
 } from "../utils/dateProvider";
 import moment from "moment";
-
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -49,11 +49,13 @@ const Header = ({
   const {
     resultType,
     res_name: selected_res_name,
-    restaurantList: restaurant_list,
+    // restaurantList: restaurant_list,
+    allRestaurants: restaurant_list,
     date: dateInsideState,
     startDate,
     endDate,
-    res_id: selected_res_id,
+    // res_id: selected_res_id,
+    listingId: selected_listing_id,
   } = useSelector((state) => state.data);
 
   const location = useLocation();
@@ -187,8 +189,9 @@ const Header = ({
     setResultTypeOpen(false);
   };
 
-  const setRestaurantClicked = (res_name, res_id) => {
-    dispatch(setRestaurantNameAndId(res_name, res_id));
+  const setNewRestaurantByListingID = (restaurant) => {
+    // dispatch(setRestaurantNameAndId(res_name, res_id));
+    dispatch(setListingIdWithRestaurantDetails({...restaurant, listingID: restaurant.listing_id}));
     setValue([null, null]);
     setShowDatePicker(false);
     setRestaurantListOpen(false);
@@ -232,7 +235,12 @@ const Header = ({
                       }
                     >
                       {restaurant_list.map((restaurant, index) => {
-                        const { res_id, res_name } = restaurant;
+                        const {
+                          listing_id,
+                          restaurant_name,
+                          swiggy_res_id,
+                          zomato_res_id,
+                        } = restaurant;
 
                         return (
                           <div className="item" key={index}>
@@ -240,17 +248,22 @@ const Header = ({
                               className={
                                 "item--name" +
                                 ` ${
-                                  selected_res_id === res_id ? "selected" : ""
+                                  selected_listing_id === listing_id
+                                    ? "selected"
+                                    : ""
                                 }`
                               }
                               onClick={() => {
                                 // setRestaurantListOpen(false);
-                                setRestaurantClicked(res_name, res_id);
+                                // setNewRestaurantByListingID(res_id, res_name);
+                                setNewRestaurantByListingID(restaurant);
                               }}
                             >
-                              {res_name.length > 8
-                                ? res_name.substring(0, 5) + "..." + res_id
-                                : res_name}
+                              {restaurant_name.length > 8
+                                ? restaurant_name.substring(0, 5) +
+                                  "..." +
+                                  listing_id
+                                : restaurant_name}
                             </span>
                           </div>
                         );

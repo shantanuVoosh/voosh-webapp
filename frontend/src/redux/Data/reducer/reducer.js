@@ -7,11 +7,17 @@ const initialState = {
   currentProductIndex: -1,
   resultType: "This Week",
   restaurantList: [],
+  // Todo new value for test
+  allRestaurants: [],
+  phone: "",
+  swiggy_res_id: "",
+  zomato_res_id: "",
+  listingID: "",
   isLoading: false,
   res_id: "",
-  date:"",
-  startDate:"",
-  endDate:"",
+  date: "",
+  startDate: "",
+  endDate: "",
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -24,6 +30,7 @@ export const dataReducer = (state = initialState, action) => {
     SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE,
     IS_LOADING,
     SET_RESTAURANT_NAME_AND_ID,
+    SET_LISTING_ID,
   } = ActionTypes;
   const { type, payload } = action;
 
@@ -35,8 +42,9 @@ export const dataReducer = (state = initialState, action) => {
         res_name: payload.res_name,
         currentProductIndex: 0,
         restaurantList: payload.restaurantList,
+        allRestaurants: payload.allRestaurants,
         res_id: payload.res_id,
-        date:payload.date,
+        date: payload.date,
       };
     case SET_CURRENT_PRODUCT_INDEX:
       return {
@@ -51,19 +59,24 @@ export const dataReducer = (state = initialState, action) => {
         res_name: "",
         currentProductIndex: -1,
         restaurantList: [],
+        allRestaurants: [],
+        phone: "",
+        swiggy_res_id: "",
+        zomato_res_id: "",
+        listingID: "",
         resultType: "This Week",
         isLoading: false,
         res_id: "",
-        date:"",
-        startDate:"",
-        endDate:"",
+        date: "",
+        startDate: "",
+        endDate: "",
       };
     case SET_RESULT_TYPE:
       return {
         ...state,
         resultType: payload.resultType,
-        startDate:"",
-        endDate:"",
+        startDate: "",
+        endDate: "",
       };
 
     case SET_RESULT_TYPE_WITH_START_DATE_AND_END_DATE:
@@ -72,7 +85,7 @@ export const dataReducer = (state = initialState, action) => {
         resultType: payload.resultType,
         startDate: payload.startDate,
         endDate: payload.endDate,
-      }
+      };
 
     case IS_LOADING:
       return {
@@ -91,7 +104,17 @@ export const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         data: payload.data,
-        date:payload.date,
+        date: payload.date,
+        currentProductIndex: 0,
+      };
+
+    case SET_LISTING_ID:
+      return {
+        ...state,
+        swiggy_res_id: payload.swiggy_res_id,
+        zomato_res_id: payload.zomato_res_id,
+        listingID: payload.listingID,
+        res_name: payload.res_name,
       };
 
     default:

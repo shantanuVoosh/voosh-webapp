@@ -5,7 +5,8 @@ const { RDC_video, Serviceability_video, MFR_video, Ratings_video } =
 const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
-
+// Todo mfr, rdc, rating
+// - res id added servicebility
 // ! serviceability_score fix krna hai cuz right now it is config manually
 const operationalHealthMongoDBData = async (
   res_id,
@@ -24,69 +25,78 @@ const operationalHealthMongoDBData = async (
 
   // ? Query for week
   if (resultType === "week") {
-    rdc_query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
+    serviceability_query = {
+      zomato_res_id: parseInt(res_id),
       week_no: parseInt(number),
-      year: parseInt(year),
-    };
-    mfr_query = {
-      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
-      week_no: parseInt(number),
-      year: parseInt(year),
-    };
-    ratings_query = {
-      zomato_id: parseInt(res_id === 256302 ? 56834 : res_id),
-      week_no: parseInt(number),
-      // week_no:2,
       year_no: parseInt(year),
     };
-    // ! temp use
-    serviceability_query = {
-      // nomenclature:"Chettinad food house",
-      nomenclature:
-        parseInt(res_id) === 256302 || parseInt(res_id) === 56834
-          ? "Chettinad food house"
-          : "No nomenclature",
+
+    mfr_query = {
+      zomato_res_Id: parseInt(res_id),
       week_no: parseInt(number),
+      year: parseInt(year),
+    };
+
+    rdc_query = {
+      zomato_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      year: parseInt(year),
+    };
+
+    ratings_query = {
+      zomato_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      // week_no:2,
       year_no: parseInt(year),
     };
   }
   // ? Query for month
   else if (resultType === "month") {
-    rdc_query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
-      month_no: parseInt(number),
-      year: parseInt(year),
-    };
-    mfr_query = {
-      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
-      month_no: parseInt(number),
-      year: parseInt(year),
-    };
-    ratings_query = {
-      zomato_id: parseInt(res_id === 256302 ? 56834 : res_id),
+    serviceability_query = {
+      zomato_res_id: parseInt(res_id),
       month_no: parseInt(number),
       year_no: parseInt(year),
     };
-    // ! temp use
-    serviceability_query = {
-      // nomenclature:"Chettinad food house",
-      nomenclature:
-        parseInt(res_id) === 256302 || parseInt(res_id) === 56834
-          ? "Chettinad food house"
-          : "No nomenclature",
+    mfr_query = {
+      zomato_res_Id: parseInt(res_id),
+      month_no: parseInt(number),
+      year: parseInt(year),
+    };
+
+    rdc_query = {
+      zomato_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+      year: parseInt(year),
+    };
+
+    ratings_query = {
+      zomato_res_id: parseInt(res_id),
       month_no: parseInt(number),
       year_no: parseInt(year),
     };
   }
   // ? Query for Custom Range
   else if (resultType === "Cumstom Range") {
-    rdc_query = {
-      zomato_res_id: `${res_id === 256302 ? 56834 : res_id}`,
+    serviceability_query = {
+      zomato_res_id: parseInt(res_id),
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    };
+
+    mfr_query = {
+      zomato_res_Id: parseInt(res_id),
       date: { $gte: startDate, $lte: endDate },
     };
-    mfr_query = {
-      zomato_res_Id: `${res_id === 256302 ? 56834 : res_id}`,
+
+    rdc_query = {
+      zomato_res_id: parseInt(res_id),
+      date: { $gte: startDate, $lte: endDate },
+    };
+
+    ratings_query = {
+      zomato_res_id: parseInt(res_id),
       date: { $gte: startDate, $lte: endDate },
     };
   }
@@ -117,7 +127,7 @@ const operationalHealthMongoDBData = async (
         },
         {
           $group: {
-            _id: "$nomenclature",
+            _id: "$zomato_res_id",
             oh_serviceability: { $avg: "$kicthen_servicibility" },
           },
         },
@@ -126,7 +136,7 @@ const operationalHealthMongoDBData = async (
 
     // !Operational Health RDC
     const rdc_score = await db
-      .collection("zomato_rdc_products_test")
+      .collection("zomato_rdc_products")
       .aggregate([
         {
           $match: rdc_query,
@@ -147,19 +157,18 @@ const operationalHealthMongoDBData = async (
         {
           $match: ratings_query,
         },
-        // {
-        //   $group: {
-        //     _id: "$zomato_id",
-        //     rating_score: { $avg: "$delivery_ratings" },
-
-        //   },
-        // },
+        {
+          $group: {
+            _id: "$zomato_res_id",
+            rating_score: { $avg: "$delivery_ratings" },
+          },
+        },
       ])
       .toArray();
 
     // !Operational Health MFR
     const mfr_score = await db
-      .collection("zomato_mfr_products_test")
+      .collection("zomato_mfr_products")
       .aggregate([
         {
           $match: mfr_query,
@@ -178,6 +187,7 @@ const operationalHealthMongoDBData = async (
     console.log("rdc_score", rdc_score);
     console.log("mfr_score", mfr_score);
     console.log("rating", rating);
+    
     console.log(
       "****************-------------------------*********************"
     );
@@ -188,6 +198,7 @@ const operationalHealthMongoDBData = async (
       serviceability_score: serviceability[0]?.oh_serviceability,
       rdc_score: rdc_score[0]?.rdc_score,
       mfr_score: mfr_score[0]?.mfr_score,
+      rating_score: rating[0]?.rating_score,
     };
   } catch (err) {
     console.log(err);
@@ -214,12 +225,19 @@ const operationHealthDataFormatter = async (
       endDate,
       year
     );
-    const { rdc_score, mfr_score, serviceability_score, oh_score } = data;
+    const {
+      rdc_score,
+      mfr_score,
+      serviceability_score,
+      oh_score,
+      rating_score,
+    } = data;
 
     const ohManually = calculateOHScoreManually({
       rdc_score,
       mfr_score,
       serviceability_score,
+      rating_score,
     });
 
     console.log("ohManually", ohManually);
@@ -293,8 +311,11 @@ const operationHealthDataFormatter = async (
             "Improve reviews by understanding the problem areas",
             "Contact Voosh for Rating Booster service",
           ],
-          value: "Please wait! We are working on It.",
-          isDataPresent: false,
+          value:
+            rating_score === undefined
+              ? "Please wait! We are working on It."
+              : rating_score,
+          isDataPresent: rating_score === undefined ? false : true,
         },
         // ?Swiggy_MFR
         {
