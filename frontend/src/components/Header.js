@@ -29,7 +29,6 @@ import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 import { GoogleLogout } from "react-google-login";
 import { signoutSuccess } from "../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
-import { Spin as Hamburger } from "hamburger-react";
 
 // TODO: remove the hardcoded clientId
 const APP_TOKEN = "voosh-token";

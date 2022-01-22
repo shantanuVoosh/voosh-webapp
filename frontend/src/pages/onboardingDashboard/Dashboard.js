@@ -19,8 +19,13 @@ import { loginFailure } from "../../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
 import Loading from "../../components/Loading";
 import { BsShieldFillCheck } from "react-icons/bs";
-import { GrCircleAlert } from "react-icons/gr";
 import { IoIosInformationCircleOutline } from "react-icons/io";
+import {
+  MdDashboard,
+  MdSettings,
+  MdOutlineNotifications,
+} from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -100,6 +105,7 @@ const Dashboard = () => {
     phoneNumber: "0123456789",
   };
 
+  // ? handel form basic details
   const onSubmitFormOne = (data) => {
     // Todo data will be empty cuz we not changing the any field(Disabled)
     // ? Use User Details to update the data or to continue...
@@ -119,6 +125,8 @@ const Dashboard = () => {
     setValue("checkbox_not-in-zomato", false);
     setDisplayPageNumber(2);
   };
+
+  // ? handel form swiggy details
   const onSubmitFormTwo = async (data) => {
     console.log("data:", data);
 
@@ -171,6 +179,7 @@ const Dashboard = () => {
     }
   };
 
+  // ? handel form zomato details
   const onSubmitFormThree = async (data) => {
     console.log("data:", data);
     const isNotInSwiggyChecked = data["checkbox_not-in-swiggy"];
@@ -231,6 +240,7 @@ const Dashboard = () => {
     }
   };
 
+  // ? onboarded Dashboard
   const DashboardPage = () => {
     return (
       <div className="container onboard-container">
@@ -322,9 +332,9 @@ const Dashboard = () => {
           <div className="part-two">
             <div
               className="bar"
-              style={{ width: `${(numberOfVideoWatch / 5) * 100}%` }}
+              style={{ width: `${(numberOfVideoWatch / 4) * 100}%` }}
             ></div>
-            <div className="text">1/5 videos watched!</div>
+            <div className="text">1/4 videos watched!</div>
           </div>
         </div>
         {/* //! Samll mein col xsmall other row */}
@@ -339,7 +349,7 @@ const Dashboard = () => {
                 width="100%"
                 height="200px"
               />
-              <div className="text">What is serviciabilty </div>
+              <div className="text">What is serviciabilty? </div>
             </div>
             <div className="single-video">
               <ReactPlayer
@@ -350,7 +360,29 @@ const Dashboard = () => {
                 width="310px"
                 height="200px"
               />
-              <div className="text">What is Rating </div>
+              <div className="text">What is Rating? </div>
+            </div>
+            <div className="single-video">
+              <ReactPlayer
+                className="single-video"
+                url="https://www.youtube.com/watch?v=w3RqWoQa19M"
+                controls
+                playbackRate={1}
+                width="100%"
+                height="200px"
+              />
+              <div className="text">What is RDC? </div>
+            </div>
+            <div className="single-video">
+              <ReactPlayer
+                className="single-video"
+                url="https://www.youtube.com/watch?v=RD6PiwwMRRg"
+                controls
+                playbackRate={1}
+                width="310px"
+                height="200px"
+              />
+              <div className="text">What is MFR? </div>
             </div>
           </div>
           {/* <div className="">
@@ -361,14 +393,14 @@ const Dashboard = () => {
         {/* //! Quick Reads */}
         <div className="onboard-quick-reads">
           {/* //? article */}
-          <h1>Quick Reads</h1>
+          <h1>What Voosh Offers You?</h1>
           <div className="onboard-quick-reads__article">
             {/* //? text */}
             <div className="left">
-              <div className="head">Voosh is trusted by Millions</div>
+              <div className="head">Consumer Insights</div>
               <div className="sub-head">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
-                eius consectetur molestiae vero reprehenderit rem.
+                Our concepts are developed through data. We identify the most
+                craved cuisines and create sub-brands your customers want.
               </div>
               {/* <div className="info-tab">
                 <span className="name">name</span>
@@ -379,17 +411,17 @@ const Dashboard = () => {
                 Read More
               </div> */}
             </div>
-            <div className="right">
+            {/* <div className="right">
               <div className="onboard-quick-reads__article--img">Image</div>
-            </div>
+            </div> */}
           </div>
           <div className="onboard-quick-reads__article">
             {/* //? text */}
             <div className="left">
-              <div className="head">Voosh is trusted by Millions</div>
+              <div className="head">Expert Branding</div>
               <div className="sub-head">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
-                eius consectetur molestiae vero reprehenderit rem.
+                Voosh offers you fully realised high-level branding that is
+                capable of competing with bigger food chains.
               </div>
               {/* <div className="info-tab">
                 <span className="name">name</span>
@@ -400,15 +432,38 @@ const Dashboard = () => {
                 Read More
               </div> */}
             </div>
-            <div className="right">
+            {/* <div className="right">
               <div className="onboard-quick-reads__article--img">Image</div>
+            </div> */}
+          </div>
+          <div className="onboard-quick-reads__article">
+            {/* //? text */}
+            <div className="left">
+              <div className="head">Low Risks</div>
+              <div className="sub-head">
+                Low-Risk, high-return opportunity to take your business to the
+                next level!
+              </div>
+              {/* <div className="info-tab">
+                <span className="name">name</span>
+                <span className="date">15 Jan 2022</span>
+                <span className="time">5mins</span>
+              </div>
+              <div className="onboard-quick-reads__article--read-more">
+                Read More
+              </div> */}
             </div>
+            {/* <div className="right">
+              <div className="onboard-quick-reads__article--img">Image</div>
+            </div> */}
           </div>
         </div>
+        <ScrollButton />
       </div>
     );
   };
 
+  // ? basic details form-1
   const RenderPageOne = () => {
     return (
       <div className="container onboard-form">
@@ -582,6 +637,7 @@ const Dashboard = () => {
     );
   };
 
+  // ? swiggy details form-2
   const RenderPageTwo = () => {
     return (
       <div className="container onboard-form">
@@ -715,6 +771,141 @@ const Dashboard = () => {
     );
   };
 
+  // ? zomato details form-3
+  const RenderPageThree = () => {
+    return (
+      <div className="container onboard-form">
+        <div className="page-btns">
+          <span className="previous" onClick={() => setDisplayPageNumber(2)}>
+            <GrFormPreviousLink size={30} />
+          </span>
+          <span className="text">
+            STEP {displayPageNumber} / {3}
+          </span>
+          <span className="close">
+            <RiCloseCircleLine
+              size={30}
+              onClick={() => setDisplayPageNumber(0)}
+            />
+          </span>
+        </div>
+        <div className="page-body">
+          <div className="page-body__title">
+            <div className="page-body__title--text">
+              Please link your Zomato ID
+            </div>
+          </div>
+          <form
+            className="page-body__form"
+            onSubmit={handleSubmit(onSubmitFormThree)}
+          >
+            <div className="page-body__form--secure-text">
+              <BsShieldFillCheck size={15} />
+              <span className="text"> Your data is secure with us</span>
+              <IoIosInformationCircleOutline size={20} />
+            </div>
+            {/* //!Zomato Rest. Phone */}
+            <div className="page-body__form--input-feild">
+              <input
+                className="form-input"
+                type="tel"
+                name="zomato-number"
+                placeholder="Zomato Number"
+                {...register("zomato-number", {
+                  // required: true,
+                  maxLength: 10,
+                  minLength: 10,
+                })}
+              />
+            </div>
+            <div className="page-body__form--error">
+              {errors["zomato-number"] && (
+                <p className="error red">
+                  Provide a valid number, your Zomato Registered Phone Number
+                </p>
+              )}
+            </div>
+
+            <div
+              className="page-body__form--skip-btn"
+              onClick={() => {
+                const data = getValues();
+                // console.log(data);
+                const isCheckboxChecked = data["checkbox_not-in-zomato"];
+                console.log(isCheckboxChecked, "isCheckboxChecked");
+                if (!isCheckboxChecked) {
+                  setValue("checkbox_not-in-zomato", true);
+                  setValue("zomato-number", "");
+                } else {
+                  setValue("checkbox_not-in-zomato", false);
+                  setValue("zomato-number", "");
+                }
+              }}
+            >
+              <input
+                {...register("checkbox_not-in-zomato")}
+                type="checkbox"
+                className="checkbox-not-in-swiggy"
+                style={{
+                  marginRight: ".3rem",
+                }}
+              />
+              <span>
+                I dont have a{" "}
+                <span
+                  style={{
+                    fontWeight: "600",
+                  }}
+                >
+                  Zomato
+                </span>{" "}
+                account
+              </span>
+            </div>
+
+            {/*// ?Proceed Button */}
+            <div className="page-body__form--btn">
+              <button className="btn">Proceed</button>
+              <div className="contact-us">
+                <span className="text">Need help?</span>
+                <a href="tel:9015317006" className="orange text-bold">
+                  Call Us
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const Footer = () => {
+    return (
+      <footer className="footer">
+        <Link to={"/onboarding-dashboard"} className="footer__item">
+          <span className="icon">
+            <MdDashboard />
+          </span>
+          <span className="text">Dashboard</span>
+        </Link>
+
+        <Link to={"/notification"} className="footer__item">
+          <span className="icon">
+            <MdOutlineNotifications />
+          </span>
+          <span className="text">Notification</span>
+        </Link>
+
+        <Link to={"/settings"} className="footer__item">
+          <span className="icon">
+            <MdSettings />
+          </span>
+          <span className="text">Settings</span>
+        </Link>
+      </footer>
+    );
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -736,116 +927,8 @@ const Dashboard = () => {
       {displayPageNumber === 0 && <DashboardPage />}
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
-      {displayPageNumber === 3 && (
-        <>
-          <div className="container onboard-form">
-            <div className="page-btns">
-              <span
-                className="previous"
-                onClick={() => setDisplayPageNumber(2)}
-              >
-                <GrFormPreviousLink size={30} />
-              </span>
-              <span className="text">
-                STEP {displayPageNumber} / {3}
-              </span>
-              <span className="close">
-                <RiCloseCircleLine
-                  size={30}
-                  onClick={() => setDisplayPageNumber(0)}
-                />
-              </span>
-            </div>
-            <div className="page-body">
-              <div className="page-body__title">
-                <div className="page-body__title--text">
-                  Please link your Zomato ID
-                </div>
-              </div>
-              <form
-                className="page-body__form"
-                onSubmit={handleSubmit(onSubmitFormThree)}
-              >
-                <div className="page-body__form--secure-text">
-                  <BsShieldFillCheck size={15} />
-                  <span className="text"> Your data is secure with us</span>
-                  <IoIosInformationCircleOutline size={20} />
-                </div>
-                {/* //!Zomato Rest. Phone */}
-                <div className="page-body__form--input-feild">
-                  <input
-                    className="form-input"
-                    type="tel"
-                    name="zomato-number"
-                    placeholder="Zomato Number"
-                    {...register("zomato-number", {
-                      // required: true,
-                      maxLength: 10,
-                      minLength: 10,
-                    })}
-                  />
-                </div>
-                <div className="page-body__form--error">
-                  {errors["zomato-number"] && (
-                    <p className="error red">
-                      Provide a valid number, your Zomato Registered Phone
-                      Number
-                    </p>
-                  )}
-                </div>
-
-                <div
-                  className="page-body__form--skip-btn"
-                  onClick={() => {
-                    const data = getValues();
-                    // console.log(data);
-                    const isCheckboxChecked = data["checkbox_not-in-zomato"];
-                    console.log(isCheckboxChecked, "isCheckboxChecked");
-                    if (!isCheckboxChecked) {
-                      setValue("checkbox_not-in-zomato", true);
-                      setValue("zomato-number", "");
-                    } else {
-                      setValue("checkbox_not-in-zomato", false);
-                      setValue("zomato-number", "");
-                    }
-                  }}
-                >
-                  <input
-                    {...register("checkbox_not-in-zomato")}
-                    type="checkbox"
-                    className="checkbox-not-in-swiggy"
-                    style={{
-                      marginRight: ".3rem",
-                    }}
-                  />
-                  <span>
-                    I dont have a{" "}
-                    <span
-                      style={{
-                        fontWeight: "600",
-                      }}
-                    >
-                      Zomato
-                    </span>{" "}
-                    account
-                  </span>
-                </div>
-
-                {/*// ?Proceed Button */}
-                <div className="page-body__form--btn">
-                  <button className="btn">Proceed</button>
-                  <div className="contact-us">
-                    <span className="text">Need help?</span>
-                    <a href="tel:9015317006" className="orange text-bold">
-                      Call Us
-                    </a>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </>
-      )}
+      {displayPageNumber === 3 && <RenderPageThree />}
+      {displayPageNumber === 0 && <Footer />}
     </>
   );
 };

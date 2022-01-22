@@ -97,10 +97,12 @@ const NewSignup = () => {
         console.log("otp sent");
         setShowPage(1);
         setIsLoading(false);
+        notifySuccess("OTP sent");
       })
       .catch((error) => {
         console.log("otp not sent", error);
         setIsLoading(false);
+        notifyError("OTP not sent, network error");
       });
   };
   const onSubmitOTP = async (data) => {
@@ -109,11 +111,10 @@ const NewSignup = () => {
     if (otp === "123456") {
       try {
         const { data: response } = await axios.post("/login-voosh", {
-          phoneNumber: data["phone-number"] ,
+          phoneNumber: data["phone-number"],
         });
         console.log("response:", response);
         if (response.status === "success") {
-          console.log(response);
           if (response.isAuth) {
             // ?set token
             cookie.save(APP_TOKEN, response.token, { path: "/" });
@@ -183,7 +184,12 @@ const NewSignup = () => {
                 cookie.save(APP_TOKEN, response.token, { path: "/" });
                 dispatch(loginSuccess(response.token));
                 const restaurant = response.restaurantDetails;
-                dispatch(setListingIdWithRestaurantDetails({ restaurant }));
+                dispatch(
+                  setListingIdWithRestaurantDetails({
+                    ...restaurant,
+                    listingID: restaurant.listing_id,
+                  })
+                );
                 navigate("/dashboard");
               }
               // ! Non NvDP User
@@ -223,116 +229,6 @@ const NewSignup = () => {
         });
     }
   };
-
-  // *Grabs the Phone Number
-  const PageOne = () => {
-    return (
-      <div
-        className="s-bg"
-        style={{ display: `${showPage === 0 ? "" : "none"}` }}
-      >
-        <div className="s-logo">
-          <img src={logo_img} alt="logo" className="onboard-logo--image" />
-        </div>
-        <form className="s-form" onSubmit={handleSubmit(onSubmitPhone)}>
-          <div className="s-form__title">
-            <div className="s-form__title--text">Get Started</div>
-            <div className="s-form__title--sub-text">
-              Enter your phone number
-            </div>
-          </div>
-          <div className="s-form__input-feilds">
-            {/* //! Phone Number */}
-            <input className="in-number" defaultValue={"+91"} disabled={true} />
-
-            {/* //Todo: Temp */}
-            <div id="sign-in-button"></div>
-            <input
-              className="form-input"
-              type="tel"
-              name="phone-number"
-              placeholder="Phone Number"
-              {...register("phone-number", {
-                required: true,
-                maxLength: 10,
-                minLength: 10,
-              })}
-            />
-          </div>
-          <div className="s-form__error-msg">
-            {errors["phone-number"] && (
-              <p className="error red">Enter your 10 digit mobile number</p>
-            )}
-          </div>
-          <div className="s-form__btn">
-            {/* //Todo: id="sign-in-button" */}
-            <button className="btn btn-verify">Send OTP</button>
-          </div>
-        </form>
-      </div>
-    );
-  };
-
-  // *Grabs the OTP
-  const PageTwo = () => {
-    return (
-      <div className="s-bg">
-        <div className="s-logo">
-          <img src={logo_img} alt="logo" className="onboard-logo--image" />
-        </div>
-        <form className="s-form" onSubmit={handleSubmit(onSubmitPhone)}>
-          <div className="s-form__title">
-            <div className="s-form__title--text">Get Started</div>
-            <div className="s-form__title--sub-text">
-              Enter your phone number to get started
-            </div>
-          </div>
-          <div className="s-form__input-feilds">
-            {/* //! Phone Number */}
-            <input className="in-number" defaultValue={"+91"} disabled={true} />
-            <input
-              className="form-input"
-              type="tel"
-              name="phone-number"
-              placeholder="Phone Number"
-              {...register("phone-number", {
-                required: true,
-                maxLength: 10,
-                minLength: 10,
-              })}
-            />
-          </div>
-          <div className="s-form__error-msg">
-            {errors["phone-number"] && (
-              <p className="error red">Enter your 10 digit mobile number</p>
-            )}
-          </div>
-          <div className="s-form__input-feilds">
-            {/* //! OTP */}
-            <input
-              className="form-input"
-              type="tel"
-              name="otp"
-              placeholder="OTP"
-              {...register("otp", {
-                required: true,
-                maxLength: 6,
-                minLength: 6,
-              })}
-            />
-          </div>
-          <div className="s-form__error-msg"></div>
-          <div className="s-form__btn">
-            <button className="btn btn-verify">Verify Number</button>
-          </div>
-        </form>
-      </div>
-    );
-  };
-
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
 
   return (
     <div>
@@ -394,7 +290,7 @@ const NewSignup = () => {
             </div>
             <div className="s-form__btn">
               {/* //Todo: id="sign-in-button" */}
-              <button className="btn btn-verify">Send OTP</button>
+              <button className="btn btn-verify">GET OTP</button>
             </div>
           </form>
         </div>
@@ -406,7 +302,13 @@ const NewSignup = () => {
           className="s2"
           style={{ display: `${showPage === 1 ? "" : "none"}` }}
         >
-          <div className="previous-page" onClick={() => setShowPage(0)}>
+          <div
+            className="previous-page"
+            onClick={() => {
+              setShowPage(0);
+              setOtpError("");
+            }}
+          >
             <GrFormPreviousLink size={30} />
           </div>
           <form className="s2-form" onSubmit={handleSubmit(onSubmitOTP)}>

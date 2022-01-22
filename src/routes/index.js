@@ -403,8 +403,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         newRestaurantList: newRestaurantList,
         res_id: res_id,
         api_data2: [swiggyData, zomatoData],
-        listingID:
-          listingID !== "" ? listingID : listing_id,
+        listingID: listingID !== "" ? listingID : listing_id,
       },
       status: "success",
     });
@@ -512,34 +511,42 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
   // const onboardProductsColleaction = "onboard_products";
-  const onboardProductsColleaction = "Onboard_New_Users_UAT";
-  // const onboardProductsColleaction = "test_users";
+  // const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  const onboardProductsColleaction = "test_users";
   const nvdpColleaction = "non_voosh_dashboard_products";
 
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
+
+    // !testing purpose
     // ? You Me and Tea
     // ?CFH
-    let customPhoneNumber =
-      parseInt(phoneNumber) === 1234567890
-        ? 9886850338
-        : parseInt(phoneNumber) === 1234554321
-        ? 9448467130
-        : parseInt(phoneNumber);
+    const test_number = {
+      1234567890: 9886850338,
+      1234554321: 9448467130,
+    };
+    let customPhoneNumber;
+
+    if (test_number[phoneNumber]) {
+      customPhoneNumber = test_number[phoneNumber];
+    } else {
+      customPhoneNumber = phoneNumber;
+    }
 
     console.log(customPhoneNumber, typeof customPhoneNumber);
 
     const db = client.db(documentName);
     // ! manually connection this number to CFH
     const isUserPresentInNVDP = await db.collection(nvdpColleaction).findOne({
-      phone: parseInt(customPhoneNumber),
+      owner_number: parseInt(customPhoneNumber),
     });
+    console.log("isUserPresentInNVDP", isUserPresentInNVDP);
 
     // ! if user present in NVDP then send the token
     if (isUserPresentInNVDP !== null || isUserPresentInNVDP) {
-      const { phone, _id: id } = isUserPresentInNVDP;
+      const { owner_number:phone, _id: id } = isUserPresentInNVDP;
 
       const getAllSwiggyAndZomatoRestaurantsData =
         await getAllSwiggyAndZomatoRestaurants(phone);
@@ -712,8 +719,8 @@ router.post(
           name,
           email,
           restaurant_name,
-          swiggy_register_phone,
-          zomato_register_phone,
+          swiggy_register_phone: parseInt(swiggy_register_phone),
+          zomato_register_phone: parseInt(zomato_register_phone),
         },
       };
       db.collection(onboardProductsColleaction).updateOne(

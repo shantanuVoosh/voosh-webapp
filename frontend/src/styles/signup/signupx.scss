@@ -1,11 +1,15 @@
 .s-bg {
-  background: url("../images/bg-image-2.jpg") no-repeat center center fixed;
+  background: url("../images/bg-image.jpg") no-repeat center center fixed;
   height: 100vh;
   width: auto;
   background-size: cover;
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  @include breakpoint-up(small) {
+    background: url("../images/bg-image-2.jpg") no-repeat center center fixed;
+    background-size: contain;
+  }
 }
 
 // .s-container {
@@ -107,7 +111,7 @@
     .btn {
       max-width: 400px;
       width: 95%;
-      font-size: 18px;
+      font-size: 16.5px;
       background: linear-gradient(
         to right,
         $color-primary-orange-red,
@@ -115,7 +119,7 @@
       );
       color: $color-white-1;
       border: none;
-      padding: 1.1rem 1.2rem;
+      padding: 1rem 1.2rem;
       border-radius: $radius-1 + 6px;
       margin-bottom: 1.8rem;
       box-shadow: 0px 1.5px 5px $color-primary-orange-red;

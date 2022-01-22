@@ -44,19 +44,20 @@ async function getAllRestaurants(phoneNumber = 9886850338) {
 
 async function getAllSwiggyAndZomatoRestaurants(phone) {
   const nvdpColleaction = "non_voosh_dashboard_products";
+  const swiggyNvdpColleaction = "swiggy_nvdp";
   const zomatoNvdpColleaction = "zomato_nvdp";
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    const userData = await db.collection(nvdpColleaction).findOne({ phone });
+    const userData = await db.collection(nvdpColleaction).findOne({ owner_number:phone });
 
     if (userData) {
       const { kitchen_id } = userData;
 
       const swiggyData = await db
-        .collection(nvdpColleaction)
+        .collection(swiggyNvdpColleaction)
         .find({ kitchen_id: kitchen_id })
         .toArray();
 
@@ -77,7 +78,7 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
         const zomato_res_id = z_data?.zomato_res_id;
         const restaurant_name =
           s_data !== undefined
-            ? s_data.restaurant_name
+            ? s_data.nomenclature
             : z_data.zomato_nomenclature;
 
         return {
@@ -93,6 +94,8 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
           // },
         };
       });
+
+      console.log("finalData:", finalData);
 
       return finalData;
     }
