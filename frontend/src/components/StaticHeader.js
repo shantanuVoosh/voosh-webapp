@@ -7,6 +7,7 @@ import { clearData } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import ReactGA from "react-ga4";
 const APP_TOKEN = "voosh-token";
+const TEMP_APP_TOKEN = "temp-voosh-token";
 
 // ? name-> name of the page , addBtn-> add button to add logout button or not
 const StaticHeader = ({ name, addBtn }) => {
@@ -18,6 +19,7 @@ const StaticHeader = ({ name, addBtn }) => {
     dispatch(signoutSuccess());
     dispatch(clearData());
     cookie.remove(APP_TOKEN, { path: "/" });
+    cookie.remove(TEMP_APP_TOKEN);
     navigate("/");
     ReactGA.event({
       category: "Button Click",

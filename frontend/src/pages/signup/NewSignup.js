@@ -78,7 +78,8 @@ const NewSignup = () => {
     if (
       data["phone-number"] === "9448467130" ||
       data["phone-number"] === "1234554321" ||
-      data["phone-number"] === "1234567890"
+      data["phone-number"] === "1234567890" ||
+      data["phone-number"] === "0123456789"
     ) {
       setShowPage(1);
       return;
@@ -102,7 +103,7 @@ const NewSignup = () => {
       .catch((error) => {
         console.log("otp not sent", error);
         setIsLoading(false);
-        notifyError("OTP not sent, network error");
+        notifyError("OTP not sent, Please refresh the page and try again!");
       });
   };
   const onSubmitOTP = async (data) => {
@@ -255,10 +256,11 @@ const NewSignup = () => {
             <img src={logo_img} alt="logo" className="onboard-logo--image" />
           </div>
           <form className="s-form" onSubmit={handleSubmit(onSubmitPhone)}>
+            <div className="s-form__grey-top"></div>
             <div className="s-form__title">
               <div className="s-form__title--text">Get Started</div>
               <div className="s-form__title--sub-text">
-                Enter your phone number to get started
+                Enter your phone number
               </div>
             </div>
             <div className="s-form__input-feilds">
@@ -305,6 +307,7 @@ const NewSignup = () => {
           <div
             className="previous-page"
             onClick={() => {
+              // window.location.reload();
               setShowPage(0);
               setOtpError("");
             }}
@@ -330,10 +333,10 @@ const NewSignup = () => {
                 required
                 className="react-otp-input"
                 inputStyles={{
-                  width: "2.1rem",
-                  height: "2.1rem",
+                  width: "2.2rem",
+                  height: "2.2rem",
                   fontSize: "1.3rem",
-                  marginRight: "15px",
+                  marginRight: "12px",
                   borderRadius: 4,
                   border: "1px solid rgba(0,0,0,0.3)",
                 }}

@@ -58,7 +58,7 @@ const customerReviewsMongoDBData = async (
       res_id: parseInt(res_id),
       month_no: parseInt(number),
     };
-  }  else {
+  } else {
     return {
       dataPresent: false,
     };
@@ -77,6 +77,7 @@ const customerReviewsMongoDBData = async (
         {
           $match: feedbackQuery,
         },
+        { $sort: { sum: -1 } },
       ])
       .toArray();
 

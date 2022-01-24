@@ -148,9 +148,20 @@ const Dashboard = () => {
       );
       return;
     }
+    // ? length of swiggy number is not 10
+    if (swiggyNumber.length < 10) {
+      notifyError("Please a 10 digit Swiggy number!");
+      return;
+    }
     // ? check the swiggy password presnt but not the swiggy number
     if (swiggyPassword.length !== 0 && swiggyNumber.length === 0) {
       notifyError("Please enter your Swiggy number!");
+      return;
+    }
+
+    // ?check the swiggy password more then 3 characters
+    if (swiggyPassword.length === 0) {
+      notifyError("Please enter Swiggy password!");
       return;
     }
     // ?check the swiggy password more then 3 characters
@@ -197,6 +208,11 @@ const Dashboard = () => {
       notifyError(
         "Provide atleast one phone number either in Swiggy or Zomato!"
       );
+      return;
+    }
+     // ? length of swiggy number is not 10
+     if (zomatoNumber.length < 10) {
+      notifyError("Please a 10 digit Zomato number!");
       return;
     }
 
@@ -491,11 +507,6 @@ const Dashboard = () => {
             className="page-body__form"
             onSubmit={handleSubmit(onSubmitFormOne)}
           >
-            <div className="page-body__form--secure-text">
-              <BsShieldFillCheck size={15} />
-              <span className="text"> Your data is secure with us</span>
-              <IoIosInformationCircleOutline size={20} />
-            </div>
             {/* //! Restaurant Name */}
             <div className="page-body__form--input-feild">
               <input
@@ -546,15 +557,19 @@ const Dashboard = () => {
             <div className="page-body__form--check-box">
               <span className="text">Same Number:</span>
               <span className="box-feild">
-                <input
-                  className="checkbox-input"
-                  {...register("checkbox_1")}
-                  type="checkbox"
-                  defaultChecked={true}
-                  onChange={(e) => {
-                    console.log(e.target.checked);
-                  }}
-                />
+                <span className="checkbox-container">
+                  <input
+                    className="checkbox-input"
+                    {...register("checkbox_1")}
+                    type="checkbox"
+                    defaultChecked={true}
+                    onChange={(e) => {
+                      console.log(e.target.checked);
+                    }}
+                  />
+                  <span className="checkbox-checkmark"></span>
+                </span>
+
                 <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
                   {" "}
                   Swiggy
@@ -576,8 +591,8 @@ const Dashboard = () => {
                 </span>
               </span>
             </div>
-            {/* //! Restaurant Name */}
-            <div className="page-body__form--input-feild">
+            {/* //! Name */}
+            {/* <div className="page-body__form--input-feild">
               <input
                 className="form-input"
                 type="text"
@@ -594,9 +609,9 @@ const Dashboard = () => {
                   Name should be atleast 1 characters long
                 </p>
               )}
-            </div>
-            {/* //! Restaurant Name */}
-            <div className="page-body__form--input-feild ">
+            </div> */}
+            {/* //! Email */}
+            {/* <div className="page-body__form--input-feild ">
               <input
                 className="form-input"
                 type="email"
@@ -619,7 +634,7 @@ const Dashboard = () => {
               {errors["email"] && (
                 <p className="error red">Provide a valid email address</p>
               )}
-            </div>
+            </div> */}
 
             {/*// ?Proceed Button */}
             <div className="page-body__form--btn">
@@ -666,9 +681,9 @@ const Dashboard = () => {
             onSubmit={handleSubmit(onSubmitFormTwo)}
           >
             <div className="page-body__form--secure-text">
-              <BsShieldFillCheck size={15} />
+              <BsShieldFillCheck size={20} className="icon" />
               <span className="text"> Your data is secure with us</span>
-              <IoIosInformationCircleOutline size={20} />
+              <IoIosInformationCircleOutline size={25} className="icon" />
             </div>
             {/* //!Swiggy Rest. Phone */}
 
@@ -681,7 +696,7 @@ const Dashboard = () => {
                 {...register("swiggy-number", {
                   // required: true,
                   maxLength: 10,
-                  minLength: 10,
+                  // minLength: 10,
                 })}
               />
             </div>
@@ -743,7 +758,7 @@ const Dashboard = () => {
                 }}
               />
               <span>
-                I dont have a{" "}
+                I don't have a{" "}
                 <span
                   style={{
                     fontWeight: "600",
@@ -771,7 +786,7 @@ const Dashboard = () => {
     );
   };
 
-  // ? zomato details form-3
+  // ? zomato  details form-3
   const RenderPageThree = () => {
     return (
       <div className="container onboard-form">
@@ -800,9 +815,9 @@ const Dashboard = () => {
             onSubmit={handleSubmit(onSubmitFormThree)}
           >
             <div className="page-body__form--secure-text">
-              <BsShieldFillCheck size={15} />
+              <BsShieldFillCheck size={20} className="icon" />
               <span className="text"> Your data is secure with us</span>
-              <IoIosInformationCircleOutline size={20} />
+              <IoIosInformationCircleOutline size={25} className="icon" />
             </div>
             {/* //!Zomato Rest. Phone */}
             <div className="page-body__form--input-feild">
@@ -814,7 +829,7 @@ const Dashboard = () => {
                 {...register("zomato-number", {
                   // required: true,
                   maxLength: 10,
-                  minLength: 10,
+                  // minLength: 10,
                 })}
               />
             </div>
@@ -851,7 +866,7 @@ const Dashboard = () => {
                 }}
               />
               <span>
-                I dont have a{" "}
+                I don't have a{" "}
                 <span
                   style={{
                     fontWeight: "600",

@@ -37,25 +37,31 @@
 .s-form {
   //   flex: 1 1 auto;
   min-height: 280px;
-  padding: 1rem 0.5rem;
+  padding: 1rem 1.8rem;
   background-color: $color-white-1;
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   display: flex;
   flex-flow: column;
   align-items: center;
+  &__grey-top {
+    background-color: $color-grey-1;
+    height: 5px;
+    width: 45px;
+    border-radius: 25px;
+    margin-bottom: 1rem;
+  }
 
   &__title {
     max-width: 400px;
     width: 100%;
     &--text {
-      font-size: 1.5rem;
+      font-size: 28px;
       font-weight: 700;
       text-align: left;
-      letter-spacing: 1;
     }
     &--sub-text {
-      font-size: 1rem;
+      font-size: 16px;
       color: $color-grey-3;
       font-weight: 400;
       text-align: left;
@@ -66,23 +72,31 @@
   &__input-feilds {
     width: 100%;
     margin-top: 1.2rem;
-
     border-radius: 5px;
     border: none;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     max-width: 400px;
+    // color: $color-grey-3;
+
+    input[type="text"] {
+      font-size: 18px;
+      line-height: 14px;
+    }
 
     .in-number {
       width: 20%;
-      padding: 1rem;
+      padding:  1rem .5rem;
       border-radius: $radius-1 + 6px;
       border: none;
       background-color: $color-white-2;
-      font-weight: 700;
       font-size: 18px;
+      // line-height: 35px;
       color: $color-grey-3;
+      @include breakpoint-up(xxsmall) {
+        padding: 1rem;
+      }
     }
     .form-input {
       width: 75%;
@@ -90,9 +104,16 @@
       border-radius: $radius-1 + 6px;
       border: none;
       background-color: $color-white-2;
-      font-weight: 600;
-      font-size: 1rem;
+      font-size: 18px;
+      // line-height: 35px;
       color: $color-grey-3;
+      
+
+      &::placeholder {
+        color: $color-grey-3;
+        font-size: 18px;
+        // font-weight: 600;
+      }
     }
   }
 
@@ -111,7 +132,7 @@
     .btn {
       max-width: 400px;
       width: 95%;
-      font-size: 16.5px;
+    
       background: linear-gradient(
         to right,
         $color-primary-orange-red,
@@ -119,10 +140,17 @@
       );
       color: $color-white-1;
       border: none;
-      padding: 1rem 1.2rem;
       border-radius: $radius-1 + 6px;
+      margin-top: 1rem;
       margin-bottom: 1.8rem;
-      box-shadow: 0px 1.5px 5px $color-primary-orange-red;
+      // box-shadow: 0px 1.5px 5px $color-primary-orange-red;
+      padding: 1.1rem 1.2rem;
+      box-shadow: 0px 9px 17px rgba(255, 175, 82, 0.3);
+      font-weight: 600;
+      // line-height: 35px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
   }
 }
@@ -130,18 +158,23 @@
 // page 2
 .s2 {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 1rem;
 
   .previous-page {
-    padding: 1rem 0.5rem;
+    padding-top: 1rem;
     max-width: 400px;
-    margin: 0 auto;
+    // margin: 0 auto;
     color: $color-primary-2;
   }
 
   .s2-form {
     min-height: 300px;
     height: auto;
-    padding: 1rem 0.5rem;
+    
+    padding-top: 1rem;
     background-color: $color-white-1;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -149,6 +182,7 @@
     flex-flow: column;
     align-items: center;
     justify-content: flex-start;
+    flex-grow: 1;
     &__title {
       max-width: 400px;
       width: 100%;

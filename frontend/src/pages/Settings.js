@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import StaticHeader from "../components/StaticHeader";
 const APP_TOKEN = "voosh-token";
+const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const Settings = () => {
   const dispatch = useDispatch();
