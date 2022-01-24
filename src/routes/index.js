@@ -546,7 +546,7 @@ router.post("/login-voosh", async (req, res) => {
 
     // ! if user present in NVDP then send the token
     if (isUserPresentInNVDP !== null || isUserPresentInNVDP) {
-      const { owner_number:phone, _id: id } = isUserPresentInNVDP;
+      const { owner_number: phone, _id: id } = isUserPresentInNVDP;
 
       const getAllSwiggyAndZomatoRestaurantsData =
         await getAllSwiggyAndZomatoRestaurants(phone);
@@ -593,9 +593,27 @@ router.post("/login-voosh", async (req, res) => {
         expiresIn: 3000, //50min
       });
 
+      // // ! Temp Use
+      // // Todo : defferd dashboard
+      // console.log(parseInt(phoneNumber) === 0123401234, phoneNumber, typeof phoneNumber);
+      // if (parseInt(phoneNumber) === 0123401234) {
+      //   res.json({
+      //     status: "success",
+      //     message: "Test User",
+      //     isAuthTemp: true,
+      //     isSwiggyNumberPresent: false,
+      //     isZomatoNumberPresent: false,
+      //     token: token,
+      //   });
+      //   console.log("Test User");
+      //   return 
+      // }
+
       const isUserPresentInOnboardProducts = await db
         .collection(onboardProductsColleaction)
         .findOne({ phone: parseInt(phoneNumber) });
+
+        console.log("isUserPresentInOnboardProducts", isUserPresentInOnboardProducts);
 
       //? if user present in onboard products then grab the data!
       if (isUserPresentInOnboardProducts !== null) {

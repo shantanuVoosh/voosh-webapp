@@ -1,0 +1,68 @@
+   {/* //! tEMP */}
+        <div className="onboard-quick-reads">
+          {/* //? article */}
+          <h1>What Voosh Offers You?</h1>
+          <div className="onboard-quick-reads__article">
+            {/* //? text */}
+            <div className="left">
+              <div className="head">Consumer Insights</div>
+              <div className="sub-head">
+                Our concepts are developed through data. We identify the most
+                craved cuisines and create sub-brands your customers want.
+              </div>
+              {/* <div className="info-tab">
+                <span className="name">name</span>
+                <span className="date">15 Jan 2022</span>
+                <span className="time">5mins</span>
+              </div>
+              <div className="onboard-quick-reads__article--read-more">
+                Read More
+              </div> */}
+            </div>
+            {/* <div className="right">
+              <div className="onboard-quick-reads__article--img">Image</div>
+            </div> */}
+          </div>
+          <div className="onboard-quick-reads__article">
+            {/* //? text */}
+            <div className="left">
+              <div className="head">Expert Branding</div>
+              <div className="sub-head">
+                Voosh offers you fully realised high-level branding that is
+                capable of competing with bigger food chains.
+              </div>
+              {/* <div className="info-tab">
+                <span className="name">name</span>
+                <span className="date">15 Jan 2022</span>
+                <span className="time">5mins</span>
+              </div>
+              <div className="onboard-quick-reads__article--read-more">
+                Read More
+              </div> */}
+            </div>
+            {/* <div className="right">
+              <div className="onboard-quick-reads__article--img">Image</div>
+            </div> */}
+          </div>
+          <div className="onboard-quick-reads__article">
+            {/* //? text */}
+            <div className="left">
+              <div className="head">Low Risks</div>
+              <div className="sub-head">
+                Low-Risk, high-return opportunity to take your business to the
+                next level!
+              </div>
+              {/* <div className="info-tab">
+                <span className="name">name</span>
+                <span className="date">15 Jan 2022</span>
+                <span className="time">5mins</span>
+              </div>
+              <div className="onboard-quick-reads__article--read-more">
+                Read More
+              </div> */}
+            </div>
+            {/* <div className="right">
+              <div className="onboard-quick-reads__article--img">Image</div>
+            </div> */}
+          </div>
+        </div>

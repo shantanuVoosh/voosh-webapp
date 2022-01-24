@@ -9,9 +9,8 @@
 }
 
 .onboard-preview-dashboard {
-  margin: 0rem 0.5rem;
+  margin: 1rem 0.5rem 2rem 0.5rem;
   padding: 2rem 0.5rem;
-  margin-top: 1rem;
   background: linear-gradient(
     91.75deg,
     $color-primary-orange-red,
@@ -19,10 +18,9 @@
   );
   border-radius: $radius-2;
   color: $color-white-1;
-  margin-bottom: 2rem;
   box-shadow: 0px 15px 20px rgba($color: #ff2f2a, $alpha: 0.3);
   @include breakpoint-up(xxsmall) {
-    margin: 0rem 1.5rem;
+    margin: 1rem 1.5rem 2rem 1.5rem;
     padding: 2rem 1rem;
   }
 
@@ -223,11 +221,12 @@
 // ! Videos onboarding LEFT
 
 .onboard-quick-reads {
+  margin-top: 1rem;
   padding: 0.5rem 0rem;
   h1 {
     font-size: $heading-big;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   &__article {
@@ -236,28 +235,141 @@
 
     .left {
       .head {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 24px;
+        font-weight: 600;
         margin-bottom: 0.5rem;
+        max-width: 200px;
+        line-height: 24px;
       }
       .sub-head {
         font-size: 16px;
         font-weight: 300;
+        max-width: 250px;
         margin-bottom: 0.5rem;
+        color: $color-grey-4;
+        font-size: 15px;
+        font-weight: 300;
+        @include breakpoint-up(xxsmall) {
+          max-width: 280px;
+        }
       }
       .info-tab {
+        font-size: 14px;
+        font-weight: 600;
         span {
-          margin-right: 1rem;
+          margin-right: 0.5rem;
         }
+        .name {
+        }
+        .date {
+        }
+        .time {
+        }
+      }
+      .article-read-more {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
       }
     }
     .right {
-      min-width: 120px;
-      width: 30%;
+      height: auto;
+      margin-left: auto;
+      max-width: 120px;
+      max-height: 90px;
+      @include breakpoint-up(xxsmall) {
+        max-width: 140px;
+        max-height: 100px;
+      }
+      @include breakpoint-up(xsmall) {
+        max-width: 160px;
+        max-height: 120px;
+      }
+      .article--img {
+        height: 100%;
+        width: 100%;
+        border-radius: 20px;
+        background: linear-gradient(to bottom, #ff2f2a, #ffa20f);
+        overflow: hidden;
+        background-size: cover;
+        background-position: center center;
+      }
     }
   }
 }
 
+.onborad-customer-reviews {
+  width: 100%;
+  min-height: 380px;
+  margin-bottom: 2rem;
+  background: #fff4ef;
+  position: relative;
+  overflow-x: scroll;
+
+  // ? qoutes section
+  .quote-right {
+    position: absolute;
+    bottom: 0;
+    left: -26px;
+    color: pink;
+    opacity: 0.3;
+    transform: rotateY(180deg);
+  }
+  .quote-left {
+    position: absolute;
+    top: -16px;
+    right: -34px;
+    color: pink;
+    opacity: 0.3;
+    transform: rotateY(180deg);
+  }
+
+  &__title {
+    position: relative;
+    font-size: 24px;
+    font-weight: 700;
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  &__all-reviews {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    overflow-x: scroll;
+    background: #fff4ef;
+
+    .single-review-card {
+      position: relative;
+      min-height: 180px;
+      max-width: 300px;
+      min-width: 250px;
+      padding: 1rem;
+      margin: 0 1rem;
+      border-radius: 20px;
+      background-color: $color-white-1;
+      box-shadow: 0px 9px 17px rgba(218, 217, 216, 0.3);
+      .head {
+        img {
+          height: 50px;
+          border-radius: 50%;
+        }
+      }
+      .body {
+        .review {
+          color: $color-grey-3;
+          font-size: 15px;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+//* Form Styles
 // ! Onboarding Form
 
 .onboard-form {
@@ -354,6 +466,7 @@
         input[type="text"] {
           font-size: 18px;
           line-height: 14px;
+          font-weight: 700;
         }
 
         .form-input {
@@ -387,6 +500,7 @@
             color: $color-grey-3;
             font-size: 18px;
             // font-weight: 600;
+            font-weight: 700;
           }
         }
       }
@@ -429,7 +543,7 @@
         margin-top: auto;
         text-align: center;
         width: 100%;
-        
+
         .btn {
           max-width: 400px;
           width: 90%;

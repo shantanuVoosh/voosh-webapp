@@ -74,12 +74,18 @@ const NewSignup = () => {
   const onSubmitPhone = (data) => {
     // setShowPage(1);
     // return;
+    const phoneNumber = data["phone-number"];
+    if (phoneNumber.length < 10) {
+      notifyError("Please enter a valid phone number");
+      return;
+    }
+
     // ! testing purpose
     if (
       data["phone-number"] === "9448467130" ||
       data["phone-number"] === "1234554321" ||
       data["phone-number"] === "1234567890" ||
-      data["phone-number"] === "0123456789"
+      data["phone-number"] === "0123401234"
     ) {
       setShowPage(1);
       return;
@@ -134,6 +140,12 @@ const NewSignup = () => {
               })
             );
             navigate("/dashboard");
+          }
+
+          if (response.isAuthTemp) {
+            cookie.save(TEMP_APP_TOKEN, response.token, { path: "/" });
+            dispatch(tempLoginSuccess(response.token));
+            navigate("/onboarding-dashboard");
           }
         } else {
           console.log("loginFailure", response.error);
@@ -281,7 +293,7 @@ const NewSignup = () => {
                 {...register("phone-number", {
                   required: true,
                   maxLength: 10,
-                  minLength: 10,
+                  // minLength: 10,
                 })}
               />
             </div>

@@ -26,6 +26,11 @@ import {
   MdOutlineNotifications,
 } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import { BsChevronDoubleRight } from "react-icons/bs";
+import random_food_image1 from "../../styles/images/food-1.jpg";
+import random_food_image2 from "../../styles/images/food-2.jpg";
+import random_food_image3 from "../../styles/images/food-3.jpg";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -210,8 +215,8 @@ const Dashboard = () => {
       );
       return;
     }
-     // ? length of swiggy number is not 10
-     if (zomatoNumber.length < 10) {
+    // ? length of swiggy number is not 10
+    if (zomatoNumber.length < 10) {
       notifyError("Please a 10 digit Zomato number!");
       return;
     }
@@ -406,74 +411,177 @@ const Dashboard = () => {
       </div> */}
         </div>
 
-        {/* //! Quick Reads */}
+        {/* //! Quick reads */}
         <div className="onboard-quick-reads">
           {/* //? article */}
-          <h1>What Voosh Offers You?</h1>
+          <h1>Quick Reads</h1>
           <div className="onboard-quick-reads__article">
             {/* //? text */}
             <div className="left">
-              <div className="head">Consumer Insights</div>
+              <div className="head">Voosh is trusted by millions</div>
               <div className="sub-head">
-                Our concepts are developed through data. We identify the most
-                craved cuisines and create sub-brands your customers want.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Quibusdam...
               </div>
-              {/* <div className="info-tab">
+              <div className="info-tab">
                 <span className="name">name</span>
                 <span className="date">15 Jan 2022</span>
                 <span className="time">5mins</span>
               </div>
-              <div className="onboard-quick-reads__article--read-more">
-                Read More
-              </div> */}
+              <div className="article-read-more red">
+                Read More <BsChevronDoubleRight size={10} />
+              </div>
             </div>
-            {/* <div className="right">
-              <div className="onboard-quick-reads__article--img">Image</div>
-            </div> */}
+            <div className="right">
+              <img
+                className="article--img"
+                src={random_food_image1}
+                alt={"food"}
+              />
+            </div>
           </div>
           <div className="onboard-quick-reads__article">
             {/* //? text */}
             <div className="left">
-              <div className="head">Expert Branding</div>
+              <div className="head">Voosh is trusted by millions</div>
               <div className="sub-head">
-                Voosh offers you fully realised high-level branding that is
-                capable of competing with bigger food chains.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Quibusdam...
               </div>
-              {/* <div className="info-tab">
+              <div className="info-tab">
                 <span className="name">name</span>
                 <span className="date">15 Jan 2022</span>
                 <span className="time">5mins</span>
               </div>
-              <div className="onboard-quick-reads__article--read-more">
-                Read More
-              </div> */}
+              <div className="article-read-more red">
+                Read More <BsChevronDoubleRight size={10} />
+              </div>
             </div>
-            {/* <div className="right">
-              <div className="onboard-quick-reads__article--img">Image</div>
-            </div> */}
+            <div className="right">
+              <img
+                className="article--img"
+                src={random_food_image2}
+                alt={"food"}
+              />
+            </div>
           </div>
           <div className="onboard-quick-reads__article">
             {/* //? text */}
             <div className="left">
-              <div className="head">Low Risks</div>
+              <div className="head">Voosh is trusted by millions</div>
               <div className="sub-head">
-                Low-Risk, high-return opportunity to take your business to the
-                next level!
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Quibusdam...
               </div>
-              {/* <div className="info-tab">
+              <div className="info-tab">
                 <span className="name">name</span>
                 <span className="date">15 Jan 2022</span>
                 <span className="time">5mins</span>
               </div>
-              <div className="onboard-quick-reads__article--read-more">
-                Read More
-              </div> */}
+              <div className="article-read-more red">
+                Read More <BsChevronDoubleRight size={12} />
+              </div>
             </div>
-            {/* <div className="right">
-              <div className="onboard-quick-reads__article--img">Image</div>
-            </div> */}
+            <div className="right">
+              <img
+                className="article--img"
+                src={random_food_image3}
+                alt={"food-1"}
+              />
+            </div>
           </div>
         </div>
+
+        {/* //! Review Cards */}
+        <div className="onborad-customer-reviews">
+          <span className="quote-right">
+            <RiDoubleQuotesR size={180} />
+          </span>
+          <span className="quote-left">
+            <RiDoubleQuotesL size={180} />
+          </span>
+          <h1 className="onborad-customer-reviews__title">
+            Our Customer Love Us
+          </h1>
+          <div className="onborad-customer-reviews__all-reviews">
+            <div className="single-review-card">
+              <div className="head">
+                <img
+                  src="https://randomuser.me/api/portraits/med/men/15.jpg"
+                  alt="user"
+                />
+              </div>
+              <div className="body">
+                <div className="review">
+                  {" "}
+                  "Voosh has completely changed the way i lived"
+                </div>
+                <div className="user-name">-Gaurav Rukhana</div>
+              </div>
+            </div>
+            <div className="single-review-card">
+              <div className="head">
+                <img
+                  src="https://randomuser.me/api/portraits/med/men/1.jpg"
+                  alt="user"
+                />
+              </div>
+              <div className="body">
+                <div className="review">
+                  {" "}
+                  "Voosh has completely changed the way i lived"
+                </div>
+                <div className="user-name">-Gaurav Rukhana</div>
+              </div>
+            </div>
+            <div className="single-review-card">
+              <div className="head">
+                <img
+                  src="https://randomuser.me/api/portraits/med/men/12.jpg"
+                  alt="user"
+                />
+              </div>
+              <div className="body">
+                <div className="review">
+                  {" "}
+                  "Voosh has completely changed the way i lived"
+                </div>
+                <div className="user-name">-Gaurav Rukhana</div>
+              </div>
+            </div>
+            <div className="single-review-card">
+              <div className="head">
+                <img
+                  src="https://randomuser.me/api/portraits/med/men/5.jpg"
+                  alt="user"
+                />
+              </div>
+              <div className="body">
+                <div className="review">
+                  {" "}
+                  Voosh has completely changed the way i lived
+                </div>
+                <div className="user-name">-Gaurav Rukhana</div>
+              </div>
+            </div>
+            <div className="single-review-card">
+              <div className="head">
+                <img
+                  src="https://randomuser.me/api/portraits/med/men/13.jpg"
+                  alt="user"
+                />
+              </div>
+              <div className="body">
+                <div className="review">
+                  {" "}
+                  Voosh has completely changed the way i lived
+                </div>
+                <div className="user-name">-Gaurav Rukhana</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <ScrollButton />
       </div>
     );
