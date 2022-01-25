@@ -430,6 +430,8 @@ router.post("/check-swiggy-number", async (req, res) => {
       await fetch(`${swiggyURL}${swiggy_register_phone}`)
     ).json();
 
+    console.log(swiggyResponse);
+
     if (
       swiggyResponse.statusCode === -1 ||
       swiggyResponse.statusMessage === "Invalid Mobile Number"
@@ -606,14 +608,17 @@ router.post("/login-voosh", async (req, res) => {
       //     token: token,
       //   });
       //   console.log("Test User");
-      //   return 
+      //   return
       // }
 
       const isUserPresentInOnboardProducts = await db
         .collection(onboardProductsColleaction)
         .findOne({ phone: parseInt(phoneNumber) });
 
-        console.log("isUserPresentInOnboardProducts", isUserPresentInOnboardProducts);
+      console.log(
+        "isUserPresentInOnboardProducts",
+        isUserPresentInOnboardProducts
+      );
 
       //? if user present in onboard products then grab the data!
       if (isUserPresentInOnboardProducts !== null) {
@@ -836,6 +841,45 @@ router.post("/test-101", async (req, res) => {
   //     Error: err,
   //   });
   // }
+});
+
+router.post("/test-listing", async (req, res) => {
+  const { res_id } = req.body;
+  const collectionName = "zomato_audit_score";
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    const userData = await db
+      .collection(collectionName)
+      .findOne({ zomto_res_id: res_id });
+
+    const result = {
+      delivery_no_review: userData?.delivery_no_review,
+      delivery_review: userData?.delivery_review,
+      offer_1: userData?.offer_1,
+      offer_2: userData?.offer_2,
+      offer_3: userData?.offer_3,
+      offer_4: userData?.offer_4,
+
+      beverages_category: userData?.beverages,
+      desserts: userData?.dessert,
+      safety_tag: userData?.safety,
+      //?  .30701754385964913 --> 30%
+      Image: userData?.images,
+      //?  1 -> 100%
+      description: userData?.description,
+    };
+
+    res.json({
+      user: userData,
+    });
+  } catch (err) {
+    res.json({
+      Error: err,
+    });
+  }
 });
 
 module.exports = router;
