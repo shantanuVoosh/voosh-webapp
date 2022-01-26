@@ -6,10 +6,10 @@
   display: flex;
   flex-flow: column;
   justify-content: space-between;
-  @include breakpoint-up(small) {
-    background: url("../images/bg-image-2.jpg") no-repeat center center fixed;
-    background-size: contain;
-  }
+  // @include breakpoint-up(small) {
+  //   background: url("../images/bg-image-2.jpg") no-repeat center center fixed;
+  //   // background-size: contain;
+  // }
 }
 
 // .s-container {
@@ -95,7 +95,7 @@
       // line-height: 35px;
       font-weight: 700;
       color: $color-grey-3;
-      @include breakpoint-up(xxsmall) {
+      @include breakpoint-up(xsmall) {
         padding: 1rem;
       }
     }

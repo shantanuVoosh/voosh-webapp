@@ -24,6 +24,7 @@ import cookie from "react-cookies";
 import "react-toastify/dist/ReactToastify.css";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
+const VOOSH_APP_PHONE = "voosh-phone";
 
 const NewSignup = () => {
   const auth = getAuth();
@@ -32,6 +33,7 @@ const NewSignup = () => {
   const [otpError, setOtpError] = React.useState(false);
   const [otpErrorMessage, setOtpErrorMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [phoneInCookie, setPhoneInCookie] = React.useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -44,11 +46,15 @@ const NewSignup = () => {
   } = useForm();
 
   React.useEffect(() => {
+    console.log(cookie.load(VOOSH_APP_PHONE));
     setShowPage(0);
     setOtp("");
     setOtpError(false);
     setOtpErrorMessage("");
     setIsLoading(false);
+    setPhoneInCookie(
+      cookie.load(VOOSH_APP_PHONE) ? cookie.load(VOOSH_APP_PHONE) : ""
+    );
   }, []);
 
   // ? Alerts for the user
@@ -74,6 +80,7 @@ const NewSignup = () => {
   const onSubmitPhone = (data) => {
     // setShowPage(1);
     // return;
+
     const phoneNumber = data["phone-number"];
     if (phoneNumber.length < 10) {
       notifyError("Please enter a valid phone number");
@@ -87,6 +94,7 @@ const NewSignup = () => {
       data["phone-number"] === "1234567890" ||
       data["phone-number"] === "0123401234"
     ) {
+      cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
       setShowPage(1);
       return;
     }
@@ -105,11 +113,25 @@ const NewSignup = () => {
         setShowPage(1);
         setIsLoading(false);
         notifySuccess("OTP sent");
+        cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
       })
       .catch((error) => {
-        console.log("otp not sent", error);
+        console.log(error);
+        console.log(typeof error);
         setIsLoading(false);
-        notifyError("OTP not sent, Please refresh the page and try again!");
+        if (
+          `${error}`.indexOf(
+            "reCAPTCHA has already been rendered in this element"
+          ) !== -1
+        ) {
+          window.location.reload();
+          notifyError("Please reload the page");
+        }
+        if (`${error}`.indexOf("auth/too-many-requests") !== -1) {
+          notifyError("Please wait for a while and try again after 15mins");
+        }
+
+        // notifyError("OTP not sent, Please refresh the page and try again!");
       });
   };
   const onSubmitOTP = async (data) => {
@@ -125,6 +147,7 @@ const NewSignup = () => {
           if (response.isAuth) {
             // ?set token
             cookie.save(APP_TOKEN, response.token, { path: "/" });
+            cookie.remove(VOOSH_APP_PHONE);
             dispatch(loginSuccess(response.token));
             const restaurant = response.restaurantDetails;
             // listing_id: "P0081"
@@ -289,6 +312,7 @@ const NewSignup = () => {
                 className="form-input"
                 type="tel"
                 name="phone-number"
+                defaultValue={phoneInCookie}
                 placeholder="Phone Number"
                 {...register("phone-number", {
                   required: true,
@@ -297,11 +321,11 @@ const NewSignup = () => {
                 })}
               />
             </div>
-            <div className="s-form__error-msg">
+            {/* <div className="s-form__error-msg">
               {errors["phone-number"] && (
                 <p className="error red">Enter your 10 digit mobile number</p>
               )}
-            </div>
+            </div> */}
             <div className="s-form__btn">
               {/* //Todo: id="sign-in-button" */}
               <button className="btn btn-verify">GET OTP</button>
@@ -319,9 +343,10 @@ const NewSignup = () => {
           <div
             className="previous-page"
             onClick={() => {
-              // window.location.reload();
-              setShowPage(0);
-              setOtpError("");
+              // Todo: go to previous page
+              window.location.reload();
+              // setShowPage(0);
+              // setOtpError("");
             }}
           >
             <GrFormPreviousLink size={30} />
