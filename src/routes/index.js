@@ -512,9 +512,9 @@ router.post("/loginByGoogle", checkGoogleLogin, async (req, res) => {
 // ! signup and login
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
-  // const onboardProductsColleaction = "onboard_products";
+  const onboardProductsColleaction = "onboard_products";
   // const onboardProductsColleaction = "Onboard_New_Users_UAT";
-  const onboardProductsColleaction = "test_users";
+  // const onboardProductsColleaction = "test_users";
   const nvdpColleaction = "non_voosh_dashboard_products";
 
   try {
@@ -595,21 +595,19 @@ router.post("/login-voosh", async (req, res) => {
         expiresIn: 3000, //50min
       });
 
-      // // ! Temp Use
-      // // Todo : defferd dashboard
       // console.log(parseInt(phoneNumber) === 0123401234, phoneNumber, typeof phoneNumber);
-      // if (parseInt(phoneNumber) === 0123401234) {
-      //   res.json({
-      //     status: "success",
-      //     message: "Test User",
-      //     isAuthTemp: true,
-      //     isSwiggyNumberPresent: false,
-      //     isZomatoNumberPresent: false,
-      //     token: token,
-      //   });
-      //   console.log("Test User");
-      //   return
-      // }
+      if (parseInt(phoneNumber) === 0123401234) {
+        res.json({
+          status: "success",
+          message: "Test User",
+          isAuthTemp: true,
+          isSwiggyNumberPresent: false,
+          isZomatoNumberPresent: false,
+          token: token,
+        });
+        console.log("Test User");
+        return;
+      }
 
       const isUserPresentInOnboardProducts = await db
         .collection(onboardProductsColleaction)
@@ -642,15 +640,12 @@ router.post("/login-voosh", async (req, res) => {
       // ? if phone not present, create entery in db
       else {
         await db.collection(onboardProductsColleaction).insertOne({
-          name: "",
-          email: "",
           restaurant_name: "",
           phone: parseInt(phoneNumber),
           join_date: new Date(),
           swiggy_register_phone: "",
-          swiggy_number_resistered_date: "",
+          swiggy_password: "",
           zomato_register_phone: "",
-          zomato_number_resistered_date: "",
         });
         res.json({
           status: "success",
@@ -684,8 +679,8 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    // const onboardProductsColleaction = "onboard_products";
-    const onboardProductsColleaction = "test_users";
+    const onboardProductsColleaction = "onboard_products";
+    // const onboardProductsColleaction = "test_users";
 
     const userData = await db
       .collection(onboardProductsColleaction)
@@ -722,8 +717,8 @@ router.post(
     console.log("hit onboard data");
     const { phone, tempUser } = req.payload;
     const {
-      name,
-      email,
+      // name,
+      // email,
       restaurant_name,
       swiggy_register_phone,
       zomato_register_phone,
@@ -733,14 +728,14 @@ router.post(
         useNewUrlParser: true,
       });
       const db = client.db(documentName);
-      // const onboardProductsColleaction = "onboard_products";
-      const onboardProductsColleaction = "test_users";
+      const onboardProductsColleaction = "onboard_products";
+      // const onboardProductsColleaction = "test_users";
 
       const query = { phone: parseInt(phone) };
       const update = {
         $set: {
-          name,
-          email,
+          // name,
+          // email,
           restaurant_name,
           swiggy_register_phone: parseInt(swiggy_register_phone),
           zomato_register_phone: parseInt(zomato_register_phone),
@@ -775,6 +770,85 @@ router.post(
     }
   }
 );
+
+// ! request call
+router.post("/user/call-request", async (req, res) => {
+  try {
+    const { flagName, phoneNumber } = req.body;
+    const collectionName = "flags_banners_products";
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    // const db = await client
+    //   .db(documentName)
+    //   .collection("SAVE_FLAG_WITH_PHONE_NUMBER")
+    //   .insertOne({
+    //     flag_1: flag_1,
+    //     flag_2: flag_2,
+    //     flag_3: flag_3,
+    //     phone: phoneNumber,
+    //   });
+
+    // ? first check if user is present in flags_banners_products
+    const db = await client.db(documentName);
+
+    const isNumberPresent = await db.collection(collectionName).findOne({
+      phone: parseInt(phoneNumber),
+      flag_name: flagName,
+    });
+
+    console.log(isNumberPresent);
+
+    if (isNumberPresent !== null) {
+      const { flag_status } = isNumberPresent;
+
+      // ? if flag is already present then update the status
+      if (flag_status === "resolved") {
+        await db.collection(collectionName).insertOne({
+          phone: parseInt(phoneNumber),
+          flag_name: flagName,
+          time_stamp: new Date(),
+          flag_status: "pending",
+        });
+
+        res.json({
+          status: "success",
+          message: "Stiil having problem, Someone will call you soon",
+          
+        });
+      }
+      // ? if number is not resolved then send sms
+      else {
+        res.json({
+          status: "success",
+          message: "Your Request is being processed",
+        });
+      }
+    }
+    // ? this request rise fot the first timne
+    else {
+      // console.log("44");
+      const userData = await db.collection(collectionName).insertOne({
+        phone: parseInt(phoneNumber),
+        flag_name: flagName,
+        time_stamp: new Date(),
+        flag_status: "pending",
+      });
+      res.json({
+        status: "success",
+        message: "Call request sent",
+        user: userData,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
+      message: "Error while sending data from server data",
+      error: err,
+    });
+  }
+});
 
 //! test route
 router.post("/test-101", async (req, res) => {

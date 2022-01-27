@@ -1,0 +1,5 @@
+
+/* ? only footer to boder line removed */
+[data-rsbs-footer]{
+    box-shadow: none;
+}
