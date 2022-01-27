@@ -22,6 +22,7 @@ import { BsShieldFillCheck } from "react-icons/bs";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import Footer from "../../components/onboardingDashboard/Footer";
+import Header from "../../components/onboardingDashboard/Header";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import random_food_image1 from "../../styles/images/food-1.jpg";
 import random_food_image2 from "../../styles/images/food-2.jpg";
@@ -46,6 +47,7 @@ const Home = ({
   setDataSubmitted,
   isLoading,
   changePage,
+  pageName,
 }) => {
   const { isTemporaryAuthenticated, temporaryToken } = useSelector(
     (state) => state.auth
@@ -59,6 +61,7 @@ const Home = ({
     subTitle: "",
     content: "",
     image: "",
+    points: [],
   });
 
   const {
@@ -80,6 +83,7 @@ const Home = ({
       subTitle: "",
       content: "",
       image: "",
+      points: [],
     });
     setDisplayPageNumber(0);
   }, []);
@@ -116,13 +120,21 @@ const Home = ({
   };
 
   //   ? Bottom popup on banner click
-  const onBannerClick = ({ bannerName, title, subTitle, content, image }) => {
+  const onBannerClick = ({
+    bannerName,
+    title,
+    subTitle,
+    content,
+    image,
+    points,
+  }) => {
     setBottomSheetData({
       bannerName: bannerName,
       title: title,
       subTitle: subTitle,
       content: content,
       image: image,
+      points: points,
     });
     setOpenBottomSheet(true);
   };
@@ -290,10 +302,8 @@ const Home = ({
   // ? onboarded Dashboard
   const DashboardPage = () => {
     return (
-      <div className="container onboard-container">
-        <div className="onboard-logo">
-          <img src={logo_img} alt="logo" className="onboard-logo--image" />
-        </div>
+      <div className="container onboard-container onboard-home">
+        <Header />
         {/* //! dashboard */}
         {!dataSubmitted && (
           <div className="onboard-preview-dashboard">
@@ -361,13 +371,14 @@ const Home = ({
         {/* //! Banners */}
         <div className="onboard-banners">
           <h1 className="onboard-banners__title">
-            <span className="text">Why Select </span>
-            <span className="orange name">Voosh</span>
+            <span className="text">Consult with </span>
+            <span className="orange name"> Voosh</span>
           </h1>
 
           <div className="onboard-banners__banners">
             {BannerArray.map((banner, index) => {
-              const { bannerName, title, subTitle, image, content } = banner;
+              const { bannerName, title, subTitle, image, content, points } =
+                banner;
 
               return (
                 <div
@@ -381,6 +392,7 @@ const Home = ({
                       subTitle,
                       image,
                       content,
+                      points,
                     });
                   }}
                 >
@@ -388,11 +400,12 @@ const Home = ({
                     <img src={image} alt="banner-article" className="image" />
                   </div>
                   <div className="body">
-                    <div className="heading">{title}</div>
-                    <div className="sub-heading">{subTitle}</div>
-                    {/* <div className="icon">
-                      <HiArrowSmRight />
-                    </div> */}
+                    <div className="heading">{subTitle}</div>
+                    {/* <div className="sub-heading">{subTitle}</div> */}
+                    <div className="icon know-more">
+                      Know More
+                      {/* <HiArrowSmRight /> */}
+                    </div>
                   </div>
                 </div>
               );
@@ -1076,7 +1089,9 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
-      {displayPageNumber === 0 && <Footer changePage={changePage} />}
+      {displayPageNumber === 0 && (
+        <Footer changePage={changePage} pageName={pageName} />
+      )}
       <BottomSheet
         open={openBottomSheet}
         onDismiss={() => {
@@ -1086,6 +1101,7 @@ const Home = ({
             subTitle: "",
             content: "",
             image: "",
+            points: [],
           });
           setOpenBottomSheet(false);
         }}
@@ -1114,15 +1130,43 @@ const Home = ({
               <div className="head__title--heading">
                 {bottomSheetData.title}
               </div>
-              <div className="head__title--sub-heading">
+              {/* <div className="head__title--sub-heading">
                 {bottomSheetData.subTitle}
-              </div>
+              </div> */}
             </div>
             <div className="body">
               <div className="body__image">
                 <img src={bottomSheetData.image} alt="banner" />
               </div>
-              <div className="body__content">{bottomSheetData.content}</div>
+              <div className="body__content">
+                <div
+                  className=""
+                  style={{
+                    fontSize: "15px",
+                    marginBottom: ".5rem",
+                    color: "black",
+                  }}
+                >
+                  {bottomSheetData.content}
+                </div>
+                <div className="">
+                  {bottomSheetData.points.map((point, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="text"
+                        style={{
+                          fontSize: "15px",
+                          color: "black",
+                        }}
+                      >
+                        {"-"}
+                        {point}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>

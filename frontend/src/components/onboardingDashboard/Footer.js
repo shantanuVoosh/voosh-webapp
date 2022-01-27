@@ -10,15 +10,15 @@ import {
 } from "react-icons/md";
 
 
-const Footer = ({changePage}) => {
+const Footer = ({changePage, pageName}) => {
   return (
     <footer className="onboard-footer">
       <div className="onboard-footer__btns">
-        <div className="btn" onClick={()=>changePage("home")}>
+        <div className={`btn  ${pageName==='home'?'active':''}`} onClick={()=>changePage("home")}>
           <HiHome />
           <span className="btn--text">Home</span>
         </div>
-        <div className="btn" onClick={()=>changePage("explore")}>
+        <div className={`btn  ${pageName==='explore'?'active':''}`} onClick={()=>changePage("explore")}>
           <RiRocketFill />
           <span className="btn--text">Explore</span>
         </div>

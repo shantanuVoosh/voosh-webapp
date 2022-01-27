@@ -113,9 +113,12 @@ const Dashboard = () => {
           setDataSubmitted={setDataSubmitted}
           isLoading={isLoading}
           changePage={changePage}
+          pageName={pageName}
         />
       )}
-      {pageName === "explore" && <Explore changePage={changePage} />}
+      {pageName === "explore" && (
+        <Explore changePage={changePage} pageName={pageName} />
+      )}
     </>
   );
 };

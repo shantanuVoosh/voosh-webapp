@@ -10,7 +10,7 @@
 
   &__btns {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     max-width: 400px;
     margin: 0 auto;
@@ -18,11 +18,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to right, #f752101e 10%, rgba(255, 152, 18, 0.1) 80%);
-     
-      color: $color-black-1;
+      background-color: $color-white-2;
+      // background: linear-gradient(
+      //   to right,
+      //   #f752101e 10%,
+      //   rgba(255, 152, 18, 0.1) 80%
+      // );
+
+      color: $color-grey-3;
       border-radius: $radius-1 + 6px;
       padding: 0.5rem 2rem;
+     
+
+      @include breakpoint-up(xxsmall) {
+        padding: 0.5rem 2.7rem;
+      }
+
+      // * show active btn
+      &.active {
+        background: linear-gradient(
+          to right,
+          $color-primary-1,
+          $color-primary-2
+        );
+        color: $color-white-1;
+      }
     }
   }
 }

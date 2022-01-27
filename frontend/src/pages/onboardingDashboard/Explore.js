@@ -7,17 +7,16 @@ import random_food_image2 from "../../styles/images/food-2.jpg";
 import random_food_image3 from "../../styles/images/food-3.jpg";
 import logo_img from "../../styles/images/logo-img.png";
 import Footer from "../../components/onboardingDashboard/Footer";
+import Header from "../../components/onboardingDashboard/Header";
 
-const Explore = ({ changePage }) => {
+const Explore = ({ changePage, pageName }) => {
   // Todo :temp use
   const numberOfVideoWatch = 1;
 
   return (
     <>
       <div className="container onboard-container onboard-explore">
-        <div className="onboard-logo">
-          <img src={logo_img} alt="logo" className="onboard-logo--image" />
-        </div>
+        <Header />
         {/* //! Gray Card */}
         <div className="onboard-certified-card">
           <div className="part-one">
@@ -189,7 +188,7 @@ const Explore = ({ changePage }) => {
         </div>
       </div>
 
-      <Footer changePage={changePage} />
+      <Footer changePage={changePage} pageName={pageName} />
     </>
   );
 };
