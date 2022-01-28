@@ -24,14 +24,14 @@ const AllReviews = () => {
         {all_reviews !== undefined &&
           all_reviews.length > 0 &&
           all_reviews.map((review, index) => {
-            const { order_id, feedback, rating, date } = review;
+            const { order_id, feedback, rating, order_date } = review;
             return (
               <ReviewCard
                 key={index}
                 id={order_id}
                 rating={rating}
                 review={feedback}
-                date={date}
+                date={order_date}
               />
             );
           })}

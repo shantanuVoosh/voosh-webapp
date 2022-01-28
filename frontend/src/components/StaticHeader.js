@@ -23,8 +23,8 @@ const StaticHeader = ({ name, addBtn }) => {
     navigate("/");
     ReactGA.event({
       category: "Button Click",
-      action: "Clicked for Logout",
-      label: "Signout from voosh",
+      action: "Logout from Main Dashboard",
+      label: "logout from voosh",
     });
   };
 

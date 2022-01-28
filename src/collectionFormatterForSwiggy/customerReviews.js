@@ -71,6 +71,7 @@ const customerReviewsMongoDBData = async (
     const db = client.db(documentName);
 
     // ? For Feedback Comments
+    // * sort by problem i.e. sum
     const reviewOfProducts = await db
       .collection("swiggy_weekly_review_products")
       .aggregate([
@@ -78,6 +79,44 @@ const customerReviewsMongoDBData = async (
           $match: feedbackQuery,
         },
         { $sort: { sum: -1 } },
+      ])
+      .toArray();
+
+    // * sort by sales
+    const reviewOfProductsSales = await db
+      .collection("swiggy_weekly_review_products")
+      .aggregate([
+        {
+          $match: feedbackQuery,
+        },
+        {
+          $lookup: {
+            from: "swiggy_item_sales_products",
+            pipeline: [
+              // ? $match: { swiggy_res_id: 256302, week_no: 52 }
+              { $match: OrdersPerRatingQuery },
+              {
+                $group: {
+                  _id: "item_sales",
+                  item_sales: { $sum: "$item_income" },
+                },
+              },
+            ],
+            localField: "item_name",
+            foreignField: "item_name",
+            as: "itemwise_sales",
+          },
+        },
+        {
+          $unwind: {
+            path: "$itemwise_sales",
+          },
+        },
+        {
+          $sort: {
+            "itemwise_sales.item_sales": -1,
+          },
+        },
       ])
       .toArray();
 
@@ -152,19 +191,22 @@ const customerReviewsMongoDBData = async (
       ])
       .toArray();
 
-    // console.log("------******------");
-    // console.log("reviewOfProducts:", reviewOfProducts);
-    // console.log("------******------");
+    console.log("------******------");
+    console.log("reviewOfProducts:", reviewOfProducts[0]);
+    console.log("------******------");
     // console.log("allFeedbacks:", allFeedbacks);
     // console.log("------******------");
     // console.log("customerRatings:", customerRatings);
     // console.log("------******------");
     // console.log("OrdersPerRating:", OrdersPerRating);
-    // console.log("------******------");
+    console.log("------******------");
+    console.log("reviewOfProductsSales:", reviewOfProductsSales[0]);
+    console.log("------******------");
 
     client.close();
     return {
       reviewOfProducts,
+      reviewOfProductsSales,
       allFeedbacks,
       customerRatings: customerRatings[0]?.customer_rating,
       OrdersPerRating:
@@ -199,8 +241,13 @@ const customerReviewsDataFormatter = async (
       startDate,
       endDate
     );
-    const { reviewOfProducts, allFeedbacks, OrdersPerRating, customerRatings } =
-      data;
+    const {
+      reviewOfProducts,
+      allFeedbacks,
+      OrdersPerRating,
+      customerRatings,
+      reviewOfProductsSales,
+    } = data;
     // console.log(reviewOfProducts.length, "line no. 188");
     //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
     const negative_review_items = reviewOfProducts.map((item) => {
@@ -330,6 +377,7 @@ const customerReviewsDataFormatter = async (
       },
       all_reviews: [...all_reviews],
       negative: [...negative_review_items],
+      reviewOfProductsSales,
     };
 
     return customerReviews;

@@ -39,6 +39,9 @@ import { ImArrowRight2 } from "react-icons/im";
 import "react-spring-bottom-sheet/dist/style.css";
 import "./bottomSheet.css";
 import BannerArray from "../../utils/bannerArray";
+import PersonArray from "../../utils/customerReviewArray";
+import ReactGA from "react-ga4";
+import MetaTags from "react-meta-tags";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const Home = ({
@@ -110,6 +113,12 @@ const Home = ({
       if (response.status === "success") {
         // setDataSubmitted(true);
         setOpenBottomSheet(false);
+        ReactGA.event({
+          category: "Request a call back",
+          action: "Request a call back Submitted",
+          label: "Request a call back Submitted",
+        });
+
         notifySuccess(response.message);
       } else {
         notifyError(response.message);
@@ -128,6 +137,11 @@ const Home = ({
     image,
     points,
   }) => {
+    ReactGA.event({
+      category: `Banner Clicked`,
+      action: `Open Banner ${title}`,
+      label: `Open Banner`,
+    });
     setBottomSheetData({
       bannerName: bannerName,
       title: title,
@@ -154,7 +168,13 @@ const Home = ({
       setValue("zomato-number", currentUserDetails.phoneNumber);
     }
 
-    // Todo prev page se !
+    ReactGA.event({
+      category: "Form Fillup",
+      action: "Basic Details Form Filled",
+      label: "Basic Details Form Filled",
+    });
+
+    // Todo prev page se if u are coming back !
     setValue("checkbox_not-in-swiggy", false);
     setValue("checkbox_not-in-zomato", false);
     setDisplayPageNumber(2);
@@ -211,11 +231,21 @@ const Home = ({
       console.log(response);
 
       if (response.status === "error") {
+        ReactGA.event({
+          category: "Form Fillup",
+          action: "Provided Swiggy Number is not valid",
+          label: "Swiggy Number Check Failed",
+        });
         notifyError(response.message);
         return;
       }
       // ? if the response is success then we can continue
       else {
+        ReactGA.event({
+          category: "Form Fillup",
+          action: "Swiggy Details Form Filled",
+          label: "Swiggy Details Form Filled",
+        });
         console.log("response:", response);
         setDisplayPageNumber(3);
       }
@@ -286,6 +316,11 @@ const Home = ({
       if (response.status === "success") {
         console.log("response success", response);
         notifySuccess(response.message);
+        ReactGA.event({
+          category: "Zomato Fillup",
+          action: "Zomato Details Form Filled",
+          label: "Zomato Details Form Filled",
+        });
         setDisplayPageNumber(0);
         setDataSubmitted(true);
       } else {
@@ -302,115 +337,124 @@ const Home = ({
   // ? onboarded Dashboard
   const DashboardPage = () => {
     return (
-      <div className="container onboard-container onboard-home">
-        <Header />
-        {/* //! dashboard */}
-        {!dataSubmitted && (
-          <div className="onboard-preview-dashboard">
-            <div className="onboard-preview-dashboard__top">
-              <div className="onboard-preview-dashboard__top--icon">
-                <IoHomeOutline size={30} />
-              </div>
-              <div className="onboard-preview-dashboard__top--rest-name">
-                Register your restaurant
-              </div>
-              <div className="onboard-preview-dashboard__top--info">
-                Linik your <span>Swiggy</span> and <span>Zomato</span> Id's
-              </div>
-            </div>
-            <div className="onboard-preview-dashboard__mid">
-              <span className="onboard-preview-dashboard__mid--left-bar"></span>
-              <span className="onboard-preview-dashboard__mid--text">
-                {" "}
-                Get{" "}
-              </span>
-              <span className="onboard-preview-dashboard__mid--right-bar"></span>
-            </div>
-            <div className="onboard-preview-dashboard__bottom">
-              {/* //? all bottom menu btns */}
-              <div className="onboard-preview-dashboard__bottom--menu-btns">
-                <div className="menu-btn">
-                  <div className="icon">
-                    <CgLoadbarSound size={32} />
-                  </div>
-                  <div className="text">Get all round analysis</div>
+      <>
+        <MetaTags>
+          <title>Voosh | Home-Onboarding-Dashboard</title>
+          <meta
+            name="voosh web app, Home-Onboarding-Dashboard page"
+            content="voosh Home-Onboarding-Dashboard page"
+          />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
+        <div className="container onboard-container onboard-home">
+          <Header />
+          {/* //! dashboard */}
+          {!dataSubmitted && (
+            <div className="onboard-preview-dashboard">
+              <div className="onboard-preview-dashboard__top">
+                <div className="onboard-preview-dashboard__top--icon">
+                  <IoHomeOutline size={30} />
                 </div>
-                <div className="menu-btn">
-                  <div className="icon">
-                    <MdAnchor size={32} />
-                  </div>
-                  <div className="text">Expert help and insights</div>
+                <div className="onboard-preview-dashboard__top--rest-name">
+                  Register your restaurant
                 </div>
-                <div className="menu-btn">
-                  <div className="icon">
-                    <GiCommercialAirplane size={32} />
-                  </div>
-                  <div className="text">Maximum results</div>
+                <div className="onboard-preview-dashboard__top--info">
+                  Linik your <span>Swiggy</span> and <span>Zomato</span> Id's
                 </div>
               </div>
-              <div
-                className="onboard-preview-dashboard__bottom--btn add-now-btn"
-                onClick={() => setDisplayPageNumber(1)}
-              >
-                Add Now
+              <div className="onboard-preview-dashboard__mid">
+                <span className="onboard-preview-dashboard__mid--left-bar"></span>
+                <span className="onboard-preview-dashboard__mid--text">
+                  {" "}
+                  Get{" "}
+                </span>
+                <span className="onboard-preview-dashboard__mid--right-bar"></span>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* //! if get the data the show we are analysing yor data */}
-        {dataSubmitted && (
-          <div className="onboard-alalysing">
-            <div className="icon">
-              <CgLoadbarSound size={40} />
-            </div>
-            <div className="text">We are analysing your Restaurant data</div>
-          </div>
-        )}
-
-        {/* //! Banners */}
-        <div className="onboard-banners">
-          <h1 className="onboard-banners__title">
-            <span className="text">Consult with </span>
-            <span className="orange name"> Voosh</span>
-          </h1>
-
-          <div className="onboard-banners__banners">
-            {BannerArray.map((banner, index) => {
-              const { bannerName, title, subTitle, image, content, points } =
-                banner;
-
-              return (
+              <div className="onboard-preview-dashboard__bottom">
+                {/* //? all bottom menu btns */}
+                <div className="onboard-preview-dashboard__bottom--menu-btns">
+                  <div className="menu-btn">
+                    <div className="icon">
+                      <CgLoadbarSound size={32} />
+                    </div>
+                    <div className="text">Get all round analysis</div>
+                  </div>
+                  <div className="menu-btn">
+                    <div className="icon">
+                      <MdAnchor size={32} />
+                    </div>
+                    <div className="text">Expert help and insights</div>
+                  </div>
+                  <div className="menu-btn">
+                    <div className="icon">
+                      <GiCommercialAirplane size={32} />
+                    </div>
+                    <div className="text">Maximum results</div>
+                  </div>
+                </div>
                 <div
-                  key={index}
-                  className="onboard-banners__banners--card"
-                  //   ! onclick it will change bottom sheet data dynamically
-                  onClick={() => {
-                    onBannerClick({
-                      bannerName,
-                      title,
-                      subTitle,
-                      image,
-                      content,
-                      points,
-                    });
-                  }}
+                  className="onboard-preview-dashboard__bottom--btn add-now-btn"
+                  onClick={() => setDisplayPageNumber(1)}
                 >
-                  <div className="head">
-                    <img src={image} alt="banner-article" className="image" />
-                  </div>
-                  <div className="body">
-                    <div className="heading">{subTitle}</div>
-                    {/* <div className="sub-heading">{subTitle}</div> */}
-                    <div className="icon know-more">
-                      Know More
-                      {/* <HiArrowSmRight /> */}
+                  Add Now
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* //! if get the data the show we are analysing yor data */}
+          {dataSubmitted && (
+            <div className="onboard-alalysing">
+              <div className="icon">
+                <CgLoadbarSound size={40} />
+              </div>
+              <div className="text">We are analysing your Restaurant data</div>
+            </div>
+          )}
+
+          {/* //! Banners */}
+          <div className="onboard-banners">
+            <h1 className="onboard-banners__title">
+              <span className="text">Consult with </span>
+              <span className="orange name"> Voosh</span>
+            </h1>
+
+            <div className="onboard-banners__banners">
+              {BannerArray.map((banner, index) => {
+                const { bannerName, title, subTitle, image, content, points } =
+                  banner;
+
+                return (
+                  <div
+                    key={index}
+                    className="onboard-banners__banners--card"
+                    //   ! onclick it will change bottom sheet data dynamically
+                    onClick={() => {
+                      onBannerClick({
+                        bannerName,
+                        title,
+                        subTitle,
+                        image,
+                        content,
+                        points,
+                      });
+                    }}
+                  >
+                    <div className="head">
+                      <img src={image} alt="banner-article" className="image" />
+                    </div>
+                    <div className="body">
+                      <div className="heading">{subTitle}</div>
+                      {/* <div className="sub-heading">{subTitle}</div> */}
+                      <div className="icon know-more">
+                        Know More
+                        {/* <HiArrowSmRight /> */}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-            {/* <div className="onboard-banners__banners--card">
+                );
+              })}
+              {/* <div className="onboard-banners__banners--card">
               <div className="head">
                 <img
                   src={random_food_image1}
@@ -443,11 +487,11 @@ const Home = ({
                 </div>
               </div>
             </div> */}
+            </div>
           </div>
-        </div>
 
-        {/* //! Blue Cards */}
-        {/* <div className="onboard-city-card">
+          {/* //! Blue Cards */}
+          {/* <div className="onboard-city-card">
           <div className="onboard-city-card__title">
             Check out the average cost for two in the top metros of India
           </div>
@@ -473,8 +517,8 @@ const Home = ({
           </div>
         </div> */}
 
-        {/* //! score bars */}
-        {/* <div className="onboard-area-score">
+          {/* //! score bars */}
+          {/* <div className="onboard-area-score">
           <div className="onboard-area-score__bars">
             <div className="bar">
               <div className="name">Indiranagar</div>
@@ -557,215 +601,172 @@ const Home = ({
           </div>
         </div> */}
 
-        {/* //! Review Cards */}
-        <div className="onborad-customer-reviews">
-          <span className="quote-right">
-            <RiDoubleQuotesR size={180} />
-          </span>
-          <span className="quote-left">
-            <RiDoubleQuotesL size={180} />
-          </span>
-          <h1 className="onborad-customer-reviews__title">
-            Our Customer Love Us
-          </h1>
-          <div className="onborad-customer-reviews__all-reviews">
-            <div className="single-review-card">
-              <div className="head">
-                <img
-                  src="https://randomuser.me/api/portraits/med/men/15.jpg"
-                  alt="user"
-                />
-              </div>
-              <div className="body">
-                <div className="review">
-                  {" "}
-                  "Voosh has completely changed the way i lived"
-                </div>
-                <div className="user-name">-Gaurav Rukhana</div>
-              </div>
-            </div>
-            <div className="single-review-card">
-              <div className="head">
-                <img
-                  src="https://randomuser.me/api/portraits/med/men/1.jpg"
-                  alt="user"
-                />
-              </div>
-              <div className="body">
-                <div className="review">
-                  {" "}
-                  "Voosh has completely changed the way i lived"
-                </div>
-                <div className="user-name">-Gaurav Rukhana</div>
-              </div>
-            </div>
-            <div className="single-review-card">
-              <div className="head">
-                <img
-                  src="https://randomuser.me/api/portraits/med/men/12.jpg"
-                  alt="user"
-                />
-              </div>
-              <div className="body">
-                <div className="review">
-                  {" "}
-                  "Voosh has completely changed the way i lived"
-                </div>
-                <div className="user-name">-Gaurav Rukhana</div>
-              </div>
-            </div>
-            <div className="single-review-card">
-              <div className="head">
-                <img
-                  src="https://randomuser.me/api/portraits/med/men/5.jpg"
-                  alt="user"
-                />
-              </div>
-              <div className="body">
-                <div className="review">
-                  {" "}
-                  Voosh has completely changed the way i lived
-                </div>
-                <div className="user-name">-Gaurav Rukhana</div>
-              </div>
-            </div>
-            <div className="single-review-card">
-              <div className="head">
-                <img
-                  src="https://randomuser.me/api/portraits/med/men/13.jpg"
-                  alt="user"
-                />
-              </div>
-              <div className="body">
-                <div className="review">
-                  {" "}
-                  Voosh has completely changed the way i lived
-                </div>
-                <div className="user-name">-Gaurav Rukhana</div>
-              </div>
+          {/* //! Review Cards */}
+          <div className="onborad-customer-reviews">
+            <span className="quote-right">
+              <RiDoubleQuotesR size={180} />
+            </span>
+            <span className="quote-left">
+              <RiDoubleQuotesL size={180} />
+            </span>
+            <h1 className="onborad-customer-reviews__title">
+              Our Customer Love Us
+            </h1>
+            <div className="onborad-customer-reviews__all-reviews">
+              {PersonArray.map((person, index) => {
+                const { image, review, name, restaurantName } = person;
+                return (
+                  <div className="single-review-card">
+                    <div className="head">
+                      <img src={image} alt="user" />
+                    </div>
+                    <div className="body">
+                      <div className="review">
+                        {review.length > 50
+                          ? review.slice(0, 50) + "..."
+                          : review}
+                      </div>
+
+                      <div className="user-name">
+                        -{name}
+                        {`(${restaurantName})`}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        </div>
 
-        {/* <ScrollButton /> */}
-      </div>
+          {/* <ScrollButton /> */}
+        </div>
+      </>
     );
   };
 
   // ? basic details form-1
   const RenderPageOne = () => {
     return (
-      <div className="container onboard-form">
-        <div className="page-btns">
-          <span className="previous" onClick={() => setDisplayPageNumber(0)}>
-            <GrFormPreviousLink size={30} />
-          </span>
-          <span className="text">
-            STEP {displayPageNumber} / {3}
-          </span>
-          <span className="close">
-            <RiCloseCircleLine
-              size={30}
-              onClick={() => setDisplayPageNumber(0)}
-            />
-          </span>
-        </div>
-        <div className="page-body">
-          <div className="page-body__title">
-            <div className="page-body__title--text">
-              Confirm restaurant details
-            </div>
+      <>
+        <MetaTags>
+          <title>Voosh | Form-1 Basic Details</title>
+          <meta
+            name="voosh web app, Form-1 Basic Details"
+            content="voosh Form-1 Basic Details page"
+          />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
+        <div className="container onboard-form">
+          <div className="page-btns">
+            <span className="previous" onClick={() => setDisplayPageNumber(0)}>
+              <GrFormPreviousLink size={30} />
+            </span>
+            <span className="text">
+              STEP {displayPageNumber} / {3}
+            </span>
+            <span className="close">
+              <RiCloseCircleLine
+                size={30}
+                onClick={() => setDisplayPageNumber(0)}
+              />
+            </span>
           </div>
-          <form
-            className="page-body__form"
-            onSubmit={handleSubmit(onSubmitFormOne)}
-          >
-            {/* //! Restaurant Name */}
-            <div className="page-body__form--input-feild">
-              <input
-                className="form-input"
-                type="text"
-                placeholder="Restaurant Name"
-                {...register("restaurant-name", {
-                  required: true,
-                  minLength: 1,
-                })}
-              />
+          <div className="page-body">
+            <div className="page-body__title">
+              <div className="page-body__title--text">
+                Confirm restaurant details
+              </div>
             </div>
-            <div className="page-body__form--error">
-              {errors["restaurant-name"] && (
-                <p className="error red">
-                  Name should be atleast 1 characters long
-                </p>
-              )}
-            </div>
+            <form
+              className="page-body__form"
+              onSubmit={handleSubmit(onSubmitFormOne)}
+            >
+              {/* //! Restaurant Name */}
+              <div className="page-body__form--input-feild">
+                <input
+                  className="form-input"
+                  type="text"
+                  placeholder="Restaurant Name"
+                  {...register("restaurant-name", {
+                    required: true,
+                    minLength: 1,
+                  })}
+                />
+              </div>
+              <div className="page-body__form--error">
+                {errors["restaurant-name"] && (
+                  <p className="error red">
+                    Name should be atleast 1 characters long
+                  </p>
+                )}
+              </div>
 
-            {/* //! Phone Number */}
-            <div className="page-body__form--input-feild">
-              <input
-                className="form-input in-number"
-                defaultValue={"+91"}
-                disabled={true}
-              />
-              <input
-                className="form-input phone-number"
-                type="tel"
-                name="phone-number"
-                placeholder="Phone Number"
-                defaultValue={currentUserDetails.phoneNumber}
-                disabled={true}
-                {...register("phone-number", {
-                  // required: true,
-                  maxLength: 10,
-                  minLength: 10,
-                })}
-              />
-            </div>
-            <div className="page-body__form--error">
-              {errors["phone-number"] && (
-                <p className="error red">Enter your 10 digit mobile number</p>
-              )}
-            </div>
-            {/* //! Checkbox */}
-            <div className="page-body__form--check-box">
-              <span className="text">Same Number:</span>
-              <span className="box-feild">
-                <span className="checkbox-container">
+              {/* //! Phone Number */}
+              <div className="page-body__form--input-feild">
+                <input
+                  className="form-input in-number"
+                  defaultValue={"+91"}
+                  disabled={true}
+                />
+                <input
+                  className="form-input phone-number"
+                  type="tel"
+                  name="phone-number"
+                  placeholder="Phone Number"
+                  defaultValue={currentUserDetails.phoneNumber}
+                  disabled={true}
+                  {...register("phone-number", {
+                    // required: true,
+                    maxLength: 10,
+                    minLength: 10,
+                  })}
+                />
+              </div>
+              <div className="page-body__form--error">
+                {errors["phone-number"] && (
+                  <p className="error red">Enter your 10 digit mobile number</p>
+                )}
+              </div>
+              {/* //! Checkbox */}
+              <div className="page-body__form--check-box">
+                <span className="text">Same Number:</span>
+                <span className="box-feild">
+                  <span className="checkbox-container">
+                    <input
+                      className="checkbox-input"
+                      {...register("checkbox_1")}
+                      type="checkbox"
+                      defaultChecked={true}
+                      onChange={(e) => {
+                        console.log(e.target.checked);
+                      }}
+                    />
+                    <span className="checkbox-checkmark"></span>
+                  </span>
+
+                  <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
+                    {" "}
+                    Swiggy
+                  </span>
+                </span>
+                <span className="box-feild">
                   <input
                     className="checkbox-input"
-                    {...register("checkbox_1")}
+                    {...register("checkbox_2")}
                     type="checkbox"
                     defaultChecked={true}
                     onChange={(e) => {
                       console.log(e.target.checked);
                     }}
                   />
-                  <span className="checkbox-checkmark"></span>
+                  <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
+                    {" "}
+                    Zomato
+                  </span>
                 </span>
-
-                <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
-                  {" "}
-                  Swiggy
-                </span>
-              </span>
-              <span className="box-feild">
-                <input
-                  className="checkbox-input"
-                  {...register("checkbox_2")}
-                  type="checkbox"
-                  defaultChecked={true}
-                  onChange={(e) => {
-                    console.log(e.target.checked);
-                  }}
-                />
-                <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
-                  {" "}
-                  Zomato
-                </span>
-              </span>
-            </div>
-            {/* //! Name */}
-            {/* <div className="page-body__form--input-feild">
+              </div>
+              {/* //! Name */}
+              {/* <div className="page-body__form--input-feild">
                 <input
                   className="form-input"
                   type="text"
@@ -783,8 +784,8 @@ const Home = ({
                   </p>
                 )}
               </div> */}
-            {/* //! Email */}
-            {/* <div className="page-body__form--input-feild ">
+              {/* //! Email */}
+              {/* <div className="page-body__form--input-feild ">
                 <input
                   className="form-input"
                   type="email"
@@ -809,261 +810,309 @@ const Home = ({
                 )}
               </div> */}
 
-            {/*// ?Proceed Button */}
-            <div className="page-body__form--btn">
-              <button className="btn">Proceed</button>
-              <div className="contact-us">
-                <span className="text">Need help?</span>
-                <a href="tel:9015317006" className="orange text-bold">
-                  Call Us
-                </a>
+              {/*// ?Proceed Button */}
+              <div className="page-body__form--btn">
+                <button className="btn">Proceed</button>
+                <div
+                  className="contact-us"
+                  onClick={() => {
+                    ReactGA.event({
+                      category: "Button Click",
+                      action: "Call Us text clicked",
+                      label: "Call Us text clicked",
+                    });
+                  }}
+                >
+                  <span className="text">Need help?</span>
+                  <a href="tel:9015317006" className="orange text-bold">
+                    Call Us
+                  </a>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
   // ? swiggy details form-2
   const RenderPageTwo = () => {
     return (
-      <div className="container onboard-form">
-        <div className="page-btns">
-          <span className="previous" onClick={() => setDisplayPageNumber(1)}>
-            <GrFormPreviousLink size={30} />
-          </span>
-          <span className="text">
-            STEP {displayPageNumber} / {3}
-          </span>
-          <span className="close">
-            <RiCloseCircleLine
-              size={30}
-              onClick={() => setDisplayPageNumber(0)}
-            />
-          </span>
-        </div>
-        <div className="page-body">
-          <div className="page-body__title">
-            <div className="page-body__title--text">
-              Please link your Swiggy ID
-            </div>
+      <>
+        <MetaTags>
+          <title>Voosh | Form-2 Swiggy Details</title>
+          <meta
+            name="voosh web app, Form-2 Swiggy Details"
+            content="voosh Form-2 Swiggy Details page"
+          />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
+        <div className="container onboard-form">
+          <div className="page-btns">
+            <span className="previous" onClick={() => setDisplayPageNumber(1)}>
+              <GrFormPreviousLink size={30} />
+            </span>
+            <span className="text">
+              STEP {displayPageNumber} / {3}
+            </span>
+            <span className="close">
+              <RiCloseCircleLine
+                size={30}
+                onClick={() => setDisplayPageNumber(0)}
+              />
+            </span>
           </div>
-          <form
-            className="page-body__form"
-            onSubmit={handleSubmit(onSubmitFormTwo)}
-          >
-            <div className="page-body__form--secure-text">
-              <BsShieldFillCheck size={20} className="icon" />
-              <span className="text"> Your data is secure with us</span>
-              <IoIosInformationCircleOutline size={25} className="icon" />
-            </div>
-            {/* //!Swiggy Rest. Phone */}
-
-            <div className="page-body__form--input-feild">
-              <input
-                className="form-input"
-                type="tel"
-                name="swiggy-number"
-                placeholder="Swiggy Number"
-                {...register("swiggy-number", {
-                  // required: true,
-                  maxLength: 10,
-                  // minLength: 10,
-                })}
-              />
-            </div>
-            <div className="page-body__form--error">
-              {errors["swiggy-number"] && (
-                <p className="error red">
-                  Provide a valid number, your Swiggy Registered Phone Number
-                </p>
-              )}
-            </div>
-
-            {/* //!Swiggy Password */}
-            <div className="page-body__form--input-feild">
-              <input
-                className="form-input"
-                type="password"
-                name="swiggy-password"
-                placeholder="Swiggy Password"
-                {...register("swiggy-password", {
-                  // required: true,
-                  // minLength: 3,
-                })}
-              />
-            </div>
-            <div className="page-body__form--error">
-              {errors["swiggy-password"] && (
-                <p className="error red">
-                  Your Swiggy password should be atleast 3 characters long
-                </p>
-              )}
-            </div>
-            <div
-              className="page-body__form--skip-btn"
-              onClick={() => {
-                const data = getValues();
-                const isCheckboxChecked = data["checkbox_not-in-swiggy"];
-
-                if (!isCheckboxChecked) {
-                  setValue("checkbox_not-in-swiggy", true);
-                  setValue("swiggy-number", "");
-                  setValue("swiggy-password", "");
-                } else {
-                  setValue("checkbox_not-in-swiggy", false);
-                  setValue("swiggy-number", "");
-                  setValue("swiggy-password", "");
-                }
-
-                console.log(data, "data insde skip");
-
-                // setDisplayPageNumber(3);
-              }}
-            >
-              <input
-                {...register("checkbox_not-in-swiggy")}
-                type="checkbox"
-                className="checkbox-not-in-swiggy"
-                style={{
-                  marginRight: ".3rem",
-                }}
-              />
-              <span>
-                I don't have a{" "}
-                <span
-                  style={{
-                    fontWeight: "600",
-                  }}
-                >
-                  Swiggy
-                </span>{" "}
-                account
-              </span>
-            </div>
-
-            {/*// ?Proceed Button */}
-            <div className="page-body__form--btn">
-              <button className="btn">Proceed</button>
-              <div className="contact-us">
-                <span className="text">Need help?</span>
-                <a href="tel:9015317006" className="orange text-bold">
-                  Call Us
-                </a>
+          <div className="page-body">
+            <div className="page-body__title">
+              <div className="page-body__title--text">
+                Please link your Swiggy ID
               </div>
             </div>
-          </form>
+            <form
+              className="page-body__form"
+              onSubmit={handleSubmit(onSubmitFormTwo)}
+            >
+              <div className="page-body__form--secure-text">
+                <BsShieldFillCheck size={20} className="icon" />
+                <span className="text"> Your data is secure with us</span>
+                <IoIosInformationCircleOutline size={25} className="icon" />
+              </div>
+              {/* //!Swiggy Rest. Phone */}
+
+              <div className="page-body__form--input-feild">
+                <input
+                  className="form-input"
+                  type="tel"
+                  name="swiggy-number"
+                  placeholder="Swiggy Number"
+                  {...register("swiggy-number", {
+                    // required: true,
+                    maxLength: 10,
+                    // minLength: 10,
+                  })}
+                />
+              </div>
+              <div className="page-body__form--error">
+                {errors["swiggy-number"] && (
+                  <p className="error red">
+                    Provide a valid number, your Swiggy Registered Phone Number
+                  </p>
+                )}
+              </div>
+
+              {/* //!Swiggy Password */}
+              <div className="page-body__form--input-feild">
+                <input
+                  className="form-input"
+                  type="password"
+                  name="swiggy-password"
+                  placeholder="Swiggy Password"
+                  {...register("swiggy-password", {
+                    // required: true,
+                    // minLength: 3,
+                  })}
+                />
+              </div>
+              <div className="page-body__form--error">
+                {errors["swiggy-password"] && (
+                  <p className="error red">
+                    Your Swiggy password should be atleast 3 characters long
+                  </p>
+                )}
+              </div>
+              <div
+                className="page-body__form--skip-btn"
+                onClick={() => {
+                  const data = getValues();
+                  const isCheckboxChecked = data["checkbox_not-in-swiggy"];
+
+                  if (!isCheckboxChecked) {
+                    setValue("checkbox_not-in-swiggy", true);
+                    setValue("swiggy-number", "");
+                    setValue("swiggy-password", "");
+                  } else {
+                    setValue("checkbox_not-in-swiggy", false);
+                    setValue("swiggy-number", "");
+                    setValue("swiggy-password", "");
+                  }
+
+                  console.log(data, "data insde skip");
+
+                  // setDisplayPageNumber(3);
+                }}
+              >
+                <input
+                  {...register("checkbox_not-in-swiggy")}
+                  type="checkbox"
+                  className="checkbox-not-in-swiggy"
+                  style={{
+                    marginRight: ".3rem",
+                  }}
+                />
+                <span>
+                  I don't have a{" "}
+                  <span
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    Swiggy
+                  </span>{" "}
+                  account
+                </span>
+              </div>
+
+              {/*// ?Proceed Button */}
+              <div className="page-body__form--btn">
+                <button className="btn">Proceed</button>
+                <div
+                  className="contact-us"
+                  onClick={() => {
+                    ReactGA.event({
+                      category: "Button Click",
+                      action: "Call Us text clicked",
+                      label: "Call Us text clicked",
+                    });
+                  }}
+                >
+                  <span className="text">Need help?</span>
+                  <a href="tel:9015317006" className="orange text-bold">
+                    Call Us
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
   // ? zomato  details form-3
   const RenderPageThree = () => {
     return (
-      <div className="container onboard-form">
-        <div className="page-btns">
-          <span className="previous" onClick={() => setDisplayPageNumber(2)}>
-            <GrFormPreviousLink size={30} />
-          </span>
-          <span className="text">
-            STEP {displayPageNumber} / {3}
-          </span>
-          <span className="close">
-            <RiCloseCircleLine
-              size={30}
-              onClick={() => setDisplayPageNumber(0)}
-            />
-          </span>
-        </div>
-        <div className="page-body">
-          <div className="page-body__title">
-            <div className="page-body__title--text">
-              Please link your Zomato ID
-            </div>
+      <>
+        <MetaTags>
+          <title>Voosh | Form-3 Zomato Details</title>
+          <meta
+            name="voosh web app, Form-3 Zomato Details"
+            content="voosh Form-3 Zomato Details page"
+          />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
+        <div className="container onboard-form">
+          <div className="page-btns">
+            <span className="previous" onClick={() => setDisplayPageNumber(2)}>
+              <GrFormPreviousLink size={30} />
+            </span>
+            <span className="text">
+              STEP {displayPageNumber} / {3}
+            </span>
+            <span className="close">
+              <RiCloseCircleLine
+                size={30}
+                onClick={() => setDisplayPageNumber(0)}
+              />
+            </span>
           </div>
-          <form
-            className="page-body__form"
-            onSubmit={handleSubmit(onSubmitFormThree)}
-          >
-            <div className="page-body__form--secure-text">
-              <BsShieldFillCheck size={20} className="icon" />
-              <span className="text"> Your data is secure with us</span>
-              <IoIosInformationCircleOutline size={25} className="icon" />
-            </div>
-            {/* //!Zomato Rest. Phone */}
-            <div className="page-body__form--input-feild">
-              <input
-                className="form-input"
-                type="tel"
-                name="zomato-number"
-                placeholder="Zomato Number"
-                {...register("zomato-number", {
-                  // required: true,
-                  maxLength: 10,
-                  // minLength: 10,
-                })}
-              />
-            </div>
-            <div className="page-body__form--error">
-              {errors["zomato-number"] && (
-                <p className="error red">
-                  Provide a valid number, your Zomato Registered Phone Number
-                </p>
-              )}
-            </div>
-
-            <div
-              className="page-body__form--skip-btn"
-              onClick={() => {
-                const data = getValues();
-                // console.log(data);
-                const isCheckboxChecked = data["checkbox_not-in-zomato"];
-                console.log(isCheckboxChecked, "isCheckboxChecked");
-                if (!isCheckboxChecked) {
-                  setValue("checkbox_not-in-zomato", true);
-                  setValue("zomato-number", "");
-                } else {
-                  setValue("checkbox_not-in-zomato", false);
-                  setValue("zomato-number", "");
-                }
-              }}
-            >
-              <input
-                {...register("checkbox_not-in-zomato")}
-                type="checkbox"
-                className="checkbox-not-in-swiggy"
-                style={{
-                  marginRight: ".3rem",
-                }}
-              />
-              <span>
-                I don't have a{" "}
-                <span
-                  style={{
-                    fontWeight: "600",
-                  }}
-                >
-                  Zomato
-                </span>{" "}
-                account
-              </span>
-            </div>
-
-            {/*// ?Proceed Button */}
-            <div className="page-body__form--btn">
-              <button className="btn">Proceed</button>
-              <div className="contact-us">
-                <span className="text">Need help?</span>
-                <a href="tel:9015317006" className="orange text-bold">
-                  Call Us
-                </a>
+          <div className="page-body">
+            <div className="page-body__title">
+              <div className="page-body__title--text">
+                Please link your Zomato ID
               </div>
             </div>
-          </form>
+            <form
+              className="page-body__form"
+              onSubmit={handleSubmit(onSubmitFormThree)}
+            >
+              <div className="page-body__form--secure-text">
+                <BsShieldFillCheck size={20} className="icon" />
+                <span className="text"> Your data is secure with us</span>
+                <IoIosInformationCircleOutline size={25} className="icon" />
+              </div>
+              {/* //!Zomato Rest. Phone */}
+              <div className="page-body__form--input-feild">
+                <input
+                  className="form-input"
+                  type="tel"
+                  name="zomato-number"
+                  placeholder="Zomato Number"
+                  {...register("zomato-number", {
+                    // required: true,
+                    maxLength: 10,
+                    // minLength: 10,
+                  })}
+                />
+              </div>
+              <div className="page-body__form--error">
+                {errors["zomato-number"] && (
+                  <p className="error red">
+                    Provide a valid number, your Zomato Registered Phone Number
+                  </p>
+                )}
+              </div>
+
+              <div
+                className="page-body__form--skip-btn"
+                onClick={() => {
+                  const data = getValues();
+                  // console.log(data);
+                  const isCheckboxChecked = data["checkbox_not-in-zomato"];
+                  console.log(isCheckboxChecked, "isCheckboxChecked");
+                  if (!isCheckboxChecked) {
+                    setValue("checkbox_not-in-zomato", true);
+                    setValue("zomato-number", "");
+                  } else {
+                    setValue("checkbox_not-in-zomato", false);
+                    setValue("zomato-number", "");
+                  }
+                }}
+              >
+                <input
+                  {...register("checkbox_not-in-zomato")}
+                  type="checkbox"
+                  className="checkbox-not-in-swiggy"
+                  style={{
+                    marginRight: ".3rem",
+                  }}
+                />
+                <span>
+                  I don't have a{" "}
+                  <span
+                    style={{
+                      fontWeight: "600",
+                    }}
+                  >
+                    Zomato
+                  </span>{" "}
+                  account
+                </span>
+              </div>
+
+              {/*// ?Proceed Button */}
+              <div className="page-body__form--btn">
+                <button className="btn">Proceed</button>
+                <div
+                  className="contact-us"
+                  onClick={() => {
+                    ReactGA.event({
+                      category: "Button Click",
+                      action: "Call Us text clicked",
+                      label: "Call Us text clicked",
+                    });
+                  }}
+                >
+                  <span className="text">Need help?</span>
+                  <a href="tel:9015317006" className="orange text-bold">
+                    Call Us
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
@@ -1105,7 +1154,7 @@ const Home = ({
           });
           setOpenBottomSheet(false);
         }}
-        snapPoints={({ maxHeight }) => 0.7 * maxHeight}
+        snapPoints={({ maxHeight }) => 0.8 * maxHeight}
         // header={<div className="onboard-bottom-sheet__header">SHEET HEADER</div>}
         footer={
           <div className="onboard-bottom-sheet__footer">

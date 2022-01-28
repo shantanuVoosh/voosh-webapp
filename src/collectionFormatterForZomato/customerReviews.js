@@ -75,7 +75,7 @@ const customerReviewsMongoDBData = async (
 
     // ? Rating Split
     const OrdersPerRating = await db
-      .collection("zomato_rating_products_test")
+      .collection("zomato_rating_products")
       .aggregate([
         {
           $match: OrdersPerRatingQuery,

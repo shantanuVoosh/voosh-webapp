@@ -166,6 +166,7 @@ const NewSignup = () => {
           }
 
           if (response.isAuthTemp) {
+            cookie.remove(VOOSH_APP_PHONE);
             cookie.save(TEMP_APP_TOKEN, response.token, { path: "/" });
             dispatch(tempLoginSuccess(response.token));
             navigate("/onboarding-dashboard");
