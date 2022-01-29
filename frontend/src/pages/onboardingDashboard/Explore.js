@@ -11,6 +11,7 @@ import Header from "../../components/onboardingDashboard/Header";
 import ArticleArray from "../../utils/articleArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
+import ReactPixel from "react-facebook-pixel";
 
 const Explore = ({ changePage, pageName }) => {
   // Todo :temp use
@@ -48,7 +49,7 @@ const Explore = ({ changePage, pageName }) => {
               className="bar"
               style={{ width: `${(numberOfVideoWatch / 4) * 100}%` }}
             ></div>
-            <div className="text">1/4 videos watched!</div>
+            {/*<div className="text">1/4 videos watched!</div>*/}
           </div>
         </div>
         {/* //! Samll mein col xsmall other row */}
@@ -112,9 +113,6 @@ const Explore = ({ changePage, pageName }) => {
         <div className="onboard-quick-reads">
           {/* //? article */}
           <h1>Articles</h1>
-
-          {/* //Todo */}
-
           {ArticleArray.map((article, index) => {
             const { title, subTitle, name, date, readTime, link, image } =
               article;
@@ -122,16 +120,21 @@ const Explore = ({ changePage, pageName }) => {
               <div className="onboard-quick-reads__article" key={index}>
                 {/* //? text */}
                 <div className="left">
-                  <div className="head">
+                  <a
+                    className="head"
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {title.length > 45 ? title.slice(0, 45) + "..." : title}
-                  </div>
+                  </a>
                   <div className="sub-head">
-                    {subTitle.length > 70
-                      ? subTitle.slice(0, 70) + "..."
+                    {subTitle.length > 55
+                      ? subTitle.slice(0, 55) + "..."
                       : subTitle}
                   </div>
                   <div className="info-tab">
-                    <span className="name">{name}</span>
+                    {/*<span className="name">{name}</span>*/}
                     <span className="date">{date}</span>
                     {/* <span className="time">5mins</span> */}
                   </div>
@@ -142,6 +145,12 @@ const Explore = ({ changePage, pageName }) => {
                       rel="noreferrer"
                       className="orange"
                       onClick={() => {
+                        // ! experiment
+                        // Todo: tezt
+                        ReactPixel.trackCustom("Article  Clicked", {
+                          value: `Article-${index + 1} clicked`,
+                        });
+
                         ReactGA.event({
                           category: `Article-${index + 1} Read More Clicked`,
                           action: `Article-${index + 1} Read More Clicked`,

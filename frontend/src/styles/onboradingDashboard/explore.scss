@@ -1,8 +1,10 @@
 .onboard-explore {
   // background: linear-gradient(to bottom, #f752102a 10%, transparent 90%);
   // background-color: $color-white-2;
-  padding-bottom: 7rem;
   position: relative;
+  padding: 0 0;
+  padding-bottom: 7rem;
+  p
 
   &::before {
     position: absolute;
@@ -55,17 +57,17 @@
       }
     }
   }
-  .part-two {
-    .bar {
-      height: 10px;
-      border-radius: $radius-1;
-      background: linear-gradient(
-        91.75deg,
-        $color-primary-orange-red,
-        $color-primary-2
-      );
-    }
-  }
+  // .part-two {
+  //   .bar {
+  //     height: 10px;
+  //     border-radius: $radius-1;
+  //     background: linear-gradient(
+  //       91.75deg,
+  //       $color-primary-orange-red,
+  //       $color-primary-2
+  //     );
+  //   }
+  // }
 }
 
 // ? Videos
@@ -198,6 +200,7 @@
         font-weight: 600;
         margin-bottom: 0.5rem;
         max-width: 200px;
+        color: $color-black-1
         // line-height: 24px;
       }
       .sub-head {

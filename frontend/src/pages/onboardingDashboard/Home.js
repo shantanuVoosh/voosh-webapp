@@ -42,6 +42,7 @@ import BannerArray from "../../utils/bannerArray";
 import PersonArray from "../../utils/customerReviewArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
+import ReactPixel from "react-facebook-pixel";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const Home = ({
@@ -113,6 +114,12 @@ const Home = ({
       if (response.status === "success") {
         // setDataSubmitted(true);
         setOpenBottomSheet(false);
+
+        // Todo
+        ReactPixel.track("Request a call back", {
+          value: `Request a call back, ${title}`,
+        });
+
         ReactGA.event({
           category: "Request a call back",
           action: "Request a call back Submitted",
@@ -137,6 +144,10 @@ const Home = ({
     image,
     points,
   }) => {
+    ReactPixel.track("Banner Click", {
+      value: `Banner ${title} Clicked`,
+    });
+
     ReactGA.event({
       category: `Banner Clicked`,
       action: `Open Banner ${title}`,
@@ -167,6 +178,11 @@ const Home = ({
     if (data.checkbox_2 === true) {
       setValue("zomato-number", currentUserDetails.phoneNumber);
     }
+
+    // Todo: test
+    ReactPixel.track("Form-1 Basic Details", {
+      value: "Basic Details Form Filled",
+    });
 
     ReactGA.event({
       category: "Form Fillup",
@@ -231,6 +247,10 @@ const Home = ({
       console.log(response);
 
       if (response.status === "error") {
+        // Todo: test
+        ReactPixel.track("Provided Swiggy Number is not valid", {
+          value: "Provided Swiggy Number is not valid",
+        });
         ReactGA.event({
           category: "Form Fillup",
           action: "Provided Swiggy Number is not valid",
@@ -241,6 +261,11 @@ const Home = ({
       }
       // ? if the response is success then we can continue
       else {
+        // Todo: test
+        ReactPixel.track("Form-2 Swiggy Details", {
+          value: "Swiggy Details Form Filled",
+        });
+
         ReactGA.event({
           category: "Form Fillup",
           action: "Swiggy Details Form Filled",
@@ -316,6 +341,12 @@ const Home = ({
       if (response.status === "success") {
         console.log("response success", response);
         notifySuccess(response.message);
+
+        // Todo: test
+        ReactPixel.track("Form-3 Zomato Details", {
+          value: "Zomato Details Form Filled",
+        });
+
         ReactGA.event({
           category: "Zomato Fillup",
           action: "Zomato Details Form Filled",
@@ -394,7 +425,19 @@ const Home = ({
                 </div>
                 <div
                   className="onboard-preview-dashboard__bottom--btn add-now-btn"
-                  onClick={() => setDisplayPageNumber(1)}
+                  onClick={() => {
+                    // Todo: test
+                    ReactPixel.track("Add Now", {
+                      value: "Add Now Button Clicked",
+                    });
+
+                    ReactGA.event({
+                      category: "Button Clicked",
+                      action: "Add Now",
+                      label: "Add Now Button Clicked",
+                    });
+                    setDisplayPageNumber(1);
+                  }}
                 >
                   Add Now
                 </div>
@@ -658,7 +701,21 @@ const Home = ({
         </MetaTags>
         <div className="container onboard-form">
           <div className="page-btns">
-            <span className="previous" onClick={() => setDisplayPageNumber(0)}>
+            <span
+              className="previous"
+              onClick={() => {
+                // Todo
+                ReactPixel.track("Go Back Click", {
+                  value: "Go Back to Onboard Dashboard",
+                });
+                ReactGA.event({
+                  category: "Button Clicked",
+                  action: "Go Back to Onboard Dashboard",
+                  label: "Go Back to Onboard Dashboard",
+                });
+                setDisplayPageNumber(0);
+              }}
+            >
               <GrFormPreviousLink size={30} />
             </span>
             <span className="text">
@@ -667,7 +724,18 @@ const Home = ({
             <span className="close">
               <RiCloseCircleLine
                 size={30}
-                onClick={() => setDisplayPageNumber(0)}
+                onClick={() => {
+                  // Todo
+                  ReactPixel.track("Close Form, in Step-1", {
+                    value: "Go Back to Onboard Dashboard",
+                  });
+                  ReactGA.event({
+                    category: "Button Clicked",
+                    action: "Close Form 1",
+                    label: "Close Form 1, Go Back to Onboard Dashboard",
+                  });
+                  setDisplayPageNumber(0);
+                }}
               />
             </span>
           </div>
@@ -816,6 +884,11 @@ const Home = ({
                 <div
                   className="contact-us"
                   onClick={() => {
+                    // Todo
+                    ReactPixel.track("Contact UsClicked", {
+                      value: "Contact Us Clicked, in Step-1",
+                    });
+
                     ReactGA.event({
                       category: "Button Click",
                       action: "Call Us text clicked",
@@ -850,7 +923,22 @@ const Home = ({
         </MetaTags>
         <div className="container onboard-form">
           <div className="page-btns">
-            <span className="previous" onClick={() => setDisplayPageNumber(1)}>
+            <span
+              className="previous"
+              onClick={() => {
+                // Todo
+                ReactPixel.track("Go Back Click", {
+                  value: "Go Back to Step-1",
+                });
+                ReactGA.event({
+                  category: "Button Clicked",
+                  action: "Go Back to Step-1",
+                  label: "Go Back to Step-1",
+                });
+
+                setDisplayPageNumber(1);
+              }}
+            >
               <GrFormPreviousLink size={30} />
             </span>
             <span className="text">
@@ -859,7 +947,19 @@ const Home = ({
             <span className="close">
               <RiCloseCircleLine
                 size={30}
-                onClick={() => setDisplayPageNumber(0)}
+                onClick={() => {
+                  // Todo
+                  ReactPixel.track("Close Form, in Step-2", {
+                    value: "Go Back to Onboard Dashboard",
+                  });
+                  ReactGA.event({
+                    category: "Button Clicked",
+                    action: "Close Form 2",
+                    label: "Close Form 2, Go Back to Onboard Dashboard",
+                  });
+
+                  setDisplayPageNumber(0);
+                }}
               />
             </span>
           </div>
@@ -969,6 +1069,11 @@ const Home = ({
                 <div
                   className="contact-us"
                   onClick={() => {
+                    // Todo
+                    ReactPixel.track("Contact UsClicked", {
+                      value: "Contact Us Clicked, in Step-1",
+                    });
+
                     ReactGA.event({
                       category: "Button Click",
                       action: "Call Us text clicked",
@@ -1003,7 +1108,22 @@ const Home = ({
         </MetaTags>
         <div className="container onboard-form">
           <div className="page-btns">
-            <span className="previous" onClick={() => setDisplayPageNumber(2)}>
+            <span
+              className="previous"
+              onClick={() => {
+                // Todo
+                ReactPixel.track("Go Back Click", {
+                  value: "Go Back to Step-2",
+                });
+                ReactGA.event({
+                  category: "Button Clicked",
+                  action: "Go Back to Step-2",
+                  label: "Go Back to Step-2",
+                });
+
+                setDisplayPageNumber(2);
+              }}
+            >
               <GrFormPreviousLink size={30} />
             </span>
             <span className="text">
@@ -1012,7 +1132,18 @@ const Home = ({
             <span className="close">
               <RiCloseCircleLine
                 size={30}
-                onClick={() => setDisplayPageNumber(0)}
+                onClick={() => {
+                  // Todo
+                  ReactPixel.track("Close Form, in Step-3", {
+                    value: "Go Back to Onboard Dashboard",
+                  });
+                  ReactGA.event({
+                    category: "Button Clicked",
+                    action: "Close Form 3",
+                    label: "Close Form 3, Go Back to Onboard Dashboard",
+                  });
+                  setDisplayPageNumber(0);
+                }}
               />
             </span>
           </div>
@@ -1096,6 +1227,11 @@ const Home = ({
                 <div
                   className="contact-us"
                   onClick={() => {
+                    // Todo
+                    ReactPixel.track("Contact UsClicked", {
+                      value: "Contact Us Clicked, in Step-1",
+                    });
+
                     ReactGA.event({
                       category: "Button Click",
                       action: "Call Us text clicked",

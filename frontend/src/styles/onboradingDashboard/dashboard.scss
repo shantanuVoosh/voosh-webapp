@@ -1,4 +1,5 @@
 .onboard-home {
+  padding: 0 0;
   &::before {
     position: absolute;
     content: " ";
@@ -150,7 +151,7 @@
     }
 
     &--btn {
-      width: 70%;
+      width: 90%;
       max-width: 250px;
       padding: 0.8rem 0rem;
       border-radius: 10px;
@@ -187,6 +188,7 @@
 .onboard-banners {
   position: relative;
   padding: 0.5rem;
+  padding-top: .7rem;
   // background-color: $color-white-2;
 
   &::before {
@@ -206,9 +208,11 @@
 
   @include breakpoint-up(xxsmall) {
     padding: 0 1.5rem;
+    padding-top: 1rem;
   }
   @include breakpoint-up(xsmall) {
     padding: 0 2rem;
+    padding-top: 1rem;
   }
   &__title {
     font-size: 24px;
@@ -472,7 +476,8 @@
 // ? Review
 .onborad-customer-reviews {
   // width: 100%;
-  min-height: 380px;
+  min-height: 355px;
+  padding-top: 1rem;
   margin-bottom: 2rem;
   background: #fff4ef;
   position: relative;
@@ -499,7 +504,7 @@
     position: relative;
     font-size: 24px;
     font-weight: 700;
-    margin-top: 1.5rem;
+    // margin-top: 1.5rem;
     margin-bottom: 2rem;
     padding: 0.5rem;
     @include breakpoint-up(xxsmall) {

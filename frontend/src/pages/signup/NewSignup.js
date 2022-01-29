@@ -21,6 +21,7 @@ import {
 } from "../../redux/Auth/actions/authAction";
 import { setListingIdWithRestaurantDetails } from "../../redux/Data/actions/actions";
 import cookie from "react-cookies";
+import ReactPixel from "react-facebook-pixel";
 import "react-toastify/dist/ReactToastify.css";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -79,7 +80,7 @@ const NewSignup = () => {
 
   const onSubmitPhone = (data) => {
     // setShowPage(1);
-    // return;
+    // return
 
     const phoneNumber = data["phone-number"];
     if (phoneNumber.length < 10) {
@@ -113,6 +114,11 @@ const NewSignup = () => {
         setShowPage(1);
         setIsLoading(false);
         notifySuccess("OTP sent");
+        // Todo Remove this
+        ReactPixel.track("Get OTP", {
+          eventName: "OTP Sent",
+          eventValue: "OTP Sent",
+        });
         cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
       })
       .catch((error) => {
@@ -129,6 +135,10 @@ const NewSignup = () => {
         }
         if (`${error}`.indexOf("auth/too-many-requests") !== -1) {
           notifyError("Please wait for a while and try again after 15mins");
+          ReactPixel.track("OTP Fail", {
+            eventName: "OTP Sent",
+            eventValue: "OTP Sent",
+          });
         }
 
         // notifyError("OTP not sent, Please refresh the page and try again!");
@@ -191,11 +201,19 @@ const NewSignup = () => {
     if (`${otp}`.length === 0) {
       setOtpError(true);
       setOtpErrorMessage("Please enter your OTP");
+      ReactPixel.trackCustom("OTP Error", {
+        value: "Otp Feild Empty",
+        eventValue: "OTP Error",
+      });
     } else if (`${otp}`.length < 6) {
+      ReactPixel.trackCustom("OTP Error", {
+        value: "Otp not valid",
+        eventValue: "OTP Error",
+      });
       setOtpError(true);
       setOtpErrorMessage("Please enter a valid OTP");
     }
-    // ! if every thing is ok, magic happens :)
+    // ! if every thing are ok, magic will happen :)
     else {
       setIsLoading(true);
       window.confirmationResult
@@ -215,6 +233,11 @@ const NewSignup = () => {
             console.log("response:", response);
             if (response.status === "success") {
               console.log(response);
+
+              // Todo: test
+              ReactPixel.trackCustom("OTP Verified", {
+                value: "OTP Verified",
+              });
 
               // ! NvDP User
               if (response.isAuth) {
@@ -259,6 +282,11 @@ const NewSignup = () => {
           setIsLoading(false);
         })
         .catch((error) => {
+          // Todo: test
+          ReactPixel.trackCustom("OTP Error", {
+            value: "Otp not valid",
+            eventValue: "OTP Error",
+          });
           console.log("otp not verified", error);
           setOtpError(true);
           setOtpErrorMessage("Otp didn't match");
