@@ -81,6 +81,14 @@ function App() {
           path="/"
           element={
             <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Login</title>
+                <meta
+                  name="voosh web app, Signup page"
+                  content="voosh signup page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <NewSignup />
             </RedirectRoute>
           }

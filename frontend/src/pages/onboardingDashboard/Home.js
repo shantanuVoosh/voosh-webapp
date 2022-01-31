@@ -90,6 +90,7 @@ const Home = ({
       points: [],
     });
     setDisplayPageNumber(0);
+    window.scrollTo(0, 0);
   }, []);
 
   const sendResponse = async (bannerData) => {
@@ -390,7 +391,7 @@ const Home = ({
                   Register your restaurant
                 </div>
                 <div className="onboard-preview-dashboard__top--info">
-                  Linik your <span>Swiggy</span> and <span>Zomato</span> Id's
+                  Link your <span>Swiggy</span> and <span>Zomato</span> Id's
                 </div>
               </div>
               <div className="onboard-preview-dashboard__mid">
@@ -458,7 +459,7 @@ const Home = ({
           {/* //! Banners */}
           <div className="onboard-banners">
             <h1 className="onboard-banners__title">
-              <span className="text">Consult with </span>
+              <span className="text">FREE call with </span>
               <span className="orange name"> Voosh</span>
             </h1>
 
@@ -885,7 +886,7 @@ const Home = ({
                   className="contact-us"
                   onClick={() => {
                     // Todo
-                    ReactPixel.track("Contact UsClicked", {
+                    ReactPixel.track("Contact Us Clicked", {
                       value: "Contact Us Clicked, in Step-1",
                     });
 
@@ -896,10 +897,18 @@ const Home = ({
                     });
                   }}
                 >
+                  {/*//!temp call us */}
                   <span className="text">Need help?</span>
-                  <a href="tel:9015317006" className="orange text-bold">
+                  <span
+                    className="orange text-bold"
+                    onClick={() => {
+                      notifySuccess(
+                        "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      );
+                    }}
+                  >
                     Call Us
-                  </a>
+                  </span>
                 </div>
               </div>
             </form>
@@ -1070,7 +1079,7 @@ const Home = ({
                   className="contact-us"
                   onClick={() => {
                     // Todo
-                    ReactPixel.track("Contact UsClicked", {
+                    ReactPixel.track("Contact Us Clicked", {
                       value: "Contact Us Clicked, in Step-1",
                     });
 
@@ -1081,10 +1090,18 @@ const Home = ({
                     });
                   }}
                 >
+                  {/*//!temp call us */}
                   <span className="text">Need help?</span>
-                  <a href="tel:9015317006" className="orange text-bold">
+                  <span
+                    className="orange text-bold"
+                    onClick={() => {
+                      notifySuccess(
+                        "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      );
+                    }}
+                  >
                     Call Us
-                  </a>
+                  </span>
                 </div>
               </div>
             </form>
@@ -1228,7 +1245,7 @@ const Home = ({
                   className="contact-us"
                   onClick={() => {
                     // Todo
-                    ReactPixel.track("Contact UsClicked", {
+                    ReactPixel.track("Contact Us Clicked", {
                       value: "Contact Us Clicked, in Step-1",
                     });
 
@@ -1239,10 +1256,18 @@ const Home = ({
                     });
                   }}
                 >
+                  {/*//!temp call us */}
                   <span className="text">Need help?</span>
-                  <a href="tel:9015317006" className="orange text-bold">
+                  <span
+                    className="orange text-bold"
+                    onClick={() => {
+                      notifySuccess(
+                        "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      );
+                    }}
+                  >
                     Call Us
-                  </a>
+                  </span>
                 </div>
               </div>
             </form>

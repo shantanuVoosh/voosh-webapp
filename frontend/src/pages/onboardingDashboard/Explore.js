@@ -17,6 +17,26 @@ const Explore = ({ changePage, pageName }) => {
   // Todo :temp use
   const numberOfVideoWatch = 1;
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pageName]);
+
+  const onVideoClick = (name, videoNumber) => {
+    console.log("video click");
+    ReactPixel.track("Video View", {
+      value: `${name}, video number-${videoNumber}`,
+    });
+    ReactGA.event({
+      category: "Video Clicked",
+      action: `${name}, video number-${videoNumber}`,
+      label: "Video View",
+    });
+  };
+
+  const openNewWindow = (url) => {
+    window.open(url, "_blank", "toolbar=0,location=0,menubar=0");
+  };
+
   return (
     <>
       <MetaTags>
@@ -52,10 +72,10 @@ const Explore = ({ changePage, pageName }) => {
             {/*<div className="text">1/4 videos watched!</div>*/}
           </div>
         </div>
-        {/* //! Samll mein col xsmall other row */}
+        {/* //! Small mein col xsmall other row */}
         <div className="onboard-bottom">
           <div className="onboard-bottom__videos">
-            <div className="single-video">
+            <div className="single-video" onClick={onVideoClick}>
               <ReactPlayer
                 className="single-video"
                 url="https://www.youtube.com/watch?v=_tnnZYeFYYo"
@@ -63,6 +83,10 @@ const Explore = ({ changePage, pageName }) => {
                 playbackRate={1}
                 width="100%"
                 height="200px"
+                onStart={() => {
+                  console.log("video start");
+                  onVideoClick("Food-Delivery Apps vs. Restaurants", 1);
+                }}
               />
               <div className="text">Food-Delivery Apps vs. Restaurants</div>
             </div>
@@ -74,6 +98,13 @@ const Explore = ({ changePage, pageName }) => {
                 playbackRate={1}
                 width="310px"
                 height="200px"
+                onStart={() => {
+                  console.log("video start");
+                  onVideoClick(
+                    "Where does your food delivery really come from?",
+                    2
+                  );
+                }}
               />
               <div className="text">
                 Where does your food delivery really come from?
@@ -87,6 +118,10 @@ const Explore = ({ changePage, pageName }) => {
                 playbackRate={1}
                 width="100%"
                 height="200px"
+                onStart={() => {
+                  console.log("video start");
+                  onVideoClick("CloudKitchens: How it Works", 3);
+                }}
               />
               <div className="text">CloudKitchens: How it Works</div>
             </div>
@@ -98,6 +133,13 @@ const Explore = ({ changePage, pageName }) => {
                 playbackRate={1}
                 width="310px"
                 height="200px"
+                onStart={() => {
+                  console.log("video start");
+                  onVideoClick(
+                    "The cloud kitchen hoping to go fully autonomous",
+                    4
+                  );
+                }}
               />
               <div className="text">
                 The cloud kitchen hoping to go fully autonomous
@@ -120,14 +162,22 @@ const Explore = ({ changePage, pageName }) => {
               <div className="onboard-quick-reads__article" key={index}>
                 {/* //? text */}
                 <div className="left">
-                  <a
+                  {/* <a
                     className="head"
                     href={link}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {title.length > 45 ? title.slice(0, 45) + "..." : title}
-                  </a>
+                  </a> */}
+                  <div
+                    className="head"
+                    onClick={() => {
+                      openNewWindow(link);
+                    }}
+                  >
+                    {title.length > 45 ? title.slice(0, 45) + "..." : title}
+                  </div>
                   <div className="sub-head">
                     {subTitle.length > 55
                       ? subTitle.slice(0, 55) + "..."
@@ -139,7 +189,7 @@ const Explore = ({ changePage, pageName }) => {
                     {/* <span className="time">5mins</span> */}
                   </div>
                   <div className="article-read-more red">
-                    <a
+                    {/* <a
                       href={link}
                       target="_blank"
                       rel="noreferrer"
@@ -159,7 +209,26 @@ const Explore = ({ changePage, pageName }) => {
                       }}
                     >
                       Read More
-                    </a>
+                    </a> */}
+                    <div
+                      className="orange"
+                      onClick={() => {
+                        // ! experiment
+                        // Todo: tezt
+                        ReactPixel.trackCustom("Article  Clicked", {
+                          value: `Article-${index + 1} clicked`,
+                        });
+
+                        ReactGA.event({
+                          category: `Article-${index + 1} Read More Clicked`,
+                          action: `Article-${index + 1} Read More Clicked`,
+                          label: `Article-${index + 1} Clicked`,
+                        });
+                        openNewWindow(link);
+                      }}
+                    >
+                      Read More
+                    </div>
                     <span style={{ display: "flex", alignItems: "center" }}>
                       <BsChevronDoubleRight size={10} />
                     </span>

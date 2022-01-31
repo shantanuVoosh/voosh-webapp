@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
 import ReactGA from "react-ga4";
+import ReactPixel from "react-facebook-pixel";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
@@ -39,6 +40,11 @@ const Header = () => {
     cookie.remove(APP_TOKEN, { path: "/" });
     cookie.remove(TEMP_APP_TOKEN);
     navigate("/");
+
+    ReactPixel.trackCustom("Logout", {
+      value: "logout from Onboarding dashboard",
+    });
+
     ReactGA.event({
       category: "Button Click",
       action: "Logout from Onboarding Dashboard",
@@ -94,6 +100,7 @@ const Header = () => {
         </div>
         <div
           className="onboard-header__call-us-btn"
+          style={{ display: "none" }}
           onClick={() => {
             ReactGA.event({
               category: `Button Clicked`,
