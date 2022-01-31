@@ -116,9 +116,9 @@ const Dashboard = () => {
           pageName={pageName}
         />
       )}
-      {pageName === "explore" && (
+      {/* {pageName === "explore" && (
         <Explore changePage={changePage} pageName={pageName} />
-      )}
+      )} */}
     </>
   );
 };

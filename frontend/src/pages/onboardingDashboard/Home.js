@@ -93,6 +93,18 @@ const Home = ({
     window.scrollTo(0, 0);
   }, []);
 
+  const onVideoClick = (name, videoNumber) => {
+    console.log("video click");
+    ReactPixel.track("Video Clicked", {
+      value: `${name}, video number-${videoNumber}`,
+    });
+    ReactGA.event({
+      category: "Video Clicked",
+      action: `${name}, video number-${videoNumber}`,
+      label: "Video View",
+    });
+  };
+
   const sendResponse = async (bannerData) => {
     const { title } = bannerData;
 
@@ -378,7 +390,11 @@ const Home = ({
           />
           <meta property="og:title" content="web-app" />
         </MetaTags>
-        <div className="container onboard-container onboard-home">
+        <div className="container onboard-container onboard-home"
+        // Todo: temp use
+        style={{marginBottom:"0rem"}}
+        
+        >
           <Header />
           {/* //! dashboard */}
           {!dataSubmitted && (
@@ -645,8 +661,117 @@ const Home = ({
           </div>
         </div> */}
 
+          {/* //! Gray Card */}
+          <div className="onboard-certified-card">
+            <div className="part-one">
+              {/*//? left 70% */}
+              <div className="text">
+                <div className="head">
+                  Get <span className="orange">Voosh</span> certified
+                </div>
+                <div className="sub-head">
+                  While we prepare your data, have a look at the below knowledge
+                  goldmine!
+                </div>
+              </div>
+              {/*//? right 30% */}
+              <div className="sample-image">
+                <img src={vooshCardSvg} alt="voosh-card" />
+              </div>
+            </div>
+            <div className="part-two">
+              <div
+                className="bar"
+                style={{ width: `${(1 / 4) * 100}%` }}
+              ></div>
+              {/*<div className="text">1/4 videos watched!</div>*/}
+            </div>
+          </div>
+          {/* //! Small mein col xsmall other row */}
+          <div className="onboard-bottom">
+            <div className="onboard-bottom__videos">
+              <div className="single-video">
+                <ReactPlayer
+                  className="single-video"
+                  url="https://www.youtube.com/watch?v=_tnnZYeFYYo"
+                  controls
+                  playbackRate={1}
+                  width="100%"
+                  height="200px"
+                  onStart={() => {
+                    console.log("video start");
+                    onVideoClick("Food-Delivery Apps vs. Restaurants", 1);
+                  }}
+                />
+                <div className="text">Food-Delivery Apps vs. Restaurants</div>
+              </div>
+              <div className="single-video">
+                <ReactPlayer
+                  className="single-video"
+                  url="https://www.youtube.com/watch?v=v7_ZTzErBDs"
+                  controls
+                  playbackRate={1}
+                  width="310px"
+                  height="200px"
+                  onStart={() => {
+                    console.log("video start");
+                    onVideoClick(
+                      "Where does your food delivery really come from?",
+                      2
+                    );
+                  }}
+                />
+                <div className="text">
+                  Where does your food delivery really come from?
+                </div>
+              </div>
+              <div className="single-video">
+                <ReactPlayer
+                  className="single-video"
+                  url="https://www.youtube.com/watch?v=lqtAeEbEyMg"
+                  controls
+                  playbackRate={1}
+                  width="100%"
+                  height="200px"
+                  onStart={() => {
+                    console.log("video start");
+                    onVideoClick("CloudKitchens: How it Works", 3);
+                  }}
+                />
+                <div className="text">CloudKitchens: How it Works</div>
+              </div>
+              <div className="single-video">
+                <ReactPlayer
+                  className="single-video"
+                  url="https://www.youtube.com/watch?v=PAM8k6EF0as"
+                  controls
+                  playbackRate={1}
+                  width="310px"
+                  height="200px"
+                  onStart={() => {
+                    console.log("video start");
+                    onVideoClick(
+                      "The cloud kitchen hoping to go fully autonomous",
+                      4
+                    );
+                  }}
+                />
+                <div className="text">
+                  The cloud kitchen hoping to go fully autonomous
+                </div>
+              </div>
+            </div>
+            {/* <div className="">
+        <ScrollButton />
+      </div> */}
+          </div>
+
           {/* //! Review Cards */}
-          <div className="onborad-customer-reviews">
+          <div className="onborad-customer-reviews" 
+          // Todo: temp use
+          style={{paddingBottom:"6rem", marginBottom:"0rem"}}
+          
+          >
             <span className="quote-right">
               <RiDoubleQuotesR size={180} />
             </span>
@@ -882,9 +1007,7 @@ const Home = ({
               {/*// ?Proceed Button */}
               <div className="page-body__form--btn">
                 <button className="btn">Proceed</button>
-                <div
-                  className="contact-us"
-                >
+                <div className="contact-us">
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
@@ -893,7 +1016,7 @@ const Home = ({
                       ReactPixel.track("Contact Us Clicked", {
                         value: "Contact Us Clicked, in Step-1",
                       });
-  
+
                       ReactGA.event({
                         category: "Button Click",
                         action: "Call Us text clicked",
@@ -1072,10 +1195,7 @@ const Home = ({
               {/*// ?Proceed Button */}
               <div className="page-body__form--btn">
                 <button className="btn">Proceed</button>
-                <div
-                  className="contact-us"
-                  
-                >
+                <div className="contact-us">
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
@@ -1084,7 +1204,7 @@ const Home = ({
                       ReactPixel.track("Contact Us Clicked", {
                         value: "Contact Us Clicked, in Step-2",
                       });
-  
+
                       ReactGA.event({
                         category: "Button Click",
                         action: "Call Us text clicked",
@@ -1236,9 +1356,7 @@ const Home = ({
               {/*// ?Proceed Button */}
               <div className="page-body__form--btn">
                 <button className="btn">Proceed</button>
-                <div
-                  className="contact-us"
-                >
+                <div className="contact-us">
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
@@ -1250,7 +1368,7 @@ const Home = ({
                       ReactPixel.track("Contact Us Clicked", {
                         value: "Contact Us Clicked, in Step-3",
                       });
-  
+
                       ReactGA.event({
                         category: "Button Click",
                         action: "Call Us text clicked",
@@ -1291,9 +1409,9 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
-      {displayPageNumber === 0 && (
+      {/* {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
-      )}
+      )} */}
       <BottomSheet
         open={openBottomSheet}
         onDismiss={() => {
