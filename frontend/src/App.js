@@ -31,6 +31,7 @@ import PreSignUp from "./pages/PreSignUp";
 import OnboardingDashboard from "./pages/onboardingDashboard/Dashboard";
 // import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
+import ReactPixel from 'react-facebook-pixel';
 import MetaTags from "react-meta-tags";
 import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
 
@@ -38,21 +39,15 @@ function App() {
   const location = useLocation();
 
   React.useEffect(() => {
-    // ! Ignore login page and provied user log(current page)
-    // if (location.pathname !== "/") {
-    //   (async function () {
-    //     const { data: response } = await axios.post("/update/user-log", {
-    //       token: token,
-    //       location: location.pathname,
-    //     });
-    // console.log(response);
-    //   })();
-    // }
+    ReactPixel.init('326312254783097');
+
     ReactGA.initialize([
       {
         trackingId: "G-BNX0KV0H7M",
       },
     ]);
+
+    
     ReactGA.send({
       hitType: "pageview",
       page: window.location.pathname + window.location.search,
@@ -86,6 +81,14 @@ function App() {
           path="/"
           element={
             <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Login</title>
+                <meta
+                  name="voosh web app, Signup page"
+                  content="voosh signup page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
               <NewSignup />
             </RedirectRoute>
           }

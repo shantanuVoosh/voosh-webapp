@@ -1,4 +1,5 @@
 .onboard-home {
+  padding: 0 0;
   &::before {
     position: absolute;
     content: " ";
@@ -12,64 +13,6 @@
   }
 }
 
-// ?List of opyions in sidebar
-.sidebar-list {
-  padding: 0.5rem;
-
-  .close-btn {
-    color: $color-primary-1;
-    width: 100%;
-    height: 100%;
-    margin-top: 0.2rem;
-    text-align: right;
-  }
-  .list {
-    padding: 1rem 2rem;
-    text-align: center;
-    // font-weight: 700;
-    font-size: 20px;
-  }
-}
-
-// ?Header for the onboarding Dashboard
-.onboard-header {
-  margin-top: 2rem;
-  display: flex;
-  align-items: center;
-  padding: 0 1rem;
-  &__hamberger {
-  }
-  &__logo {
-    height: 100%;
-    &--image {
-      width: 96px;
-      height: 48px;
-    }
-  }
-  &__call-us-btn {
-    margin-left: auto;
-    .icon {
-      width: 40px;
-      height: 40px;
-      background: $color-white-1;
-      border: 1px solid #ffd8ca;
-      color: $color-primary-1;
-      box-shadow: 0px 9px 17px rgba(255, 175, 82, 0.3);
-      border-radius: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-  }
-}
-
-.onboard-logo {
-  margin-top: 1.2rem;
-  &--image {
-    height: 55px;
-  }
-}
 
 .onboard-preview-dashboard {
   margin: 1rem 0.5rem 2rem 0.5rem;
@@ -208,7 +151,7 @@
     }
 
     &--btn {
-      width: 70%;
+      width: 90%;
       max-width: 250px;
       padding: 0.8rem 0rem;
       border-radius: 10px;
@@ -245,6 +188,7 @@
 .onboard-banners {
   position: relative;
   padding: 0.5rem;
+  padding-top: .7rem;
   // background-color: $color-white-2;
 
   &::before {
@@ -264,9 +208,11 @@
 
   @include breakpoint-up(xxsmall) {
     padding: 0 1.5rem;
+    padding-top: 1rem;
   }
   @include breakpoint-up(xsmall) {
     padding: 0 2rem;
+    padding-top: 1rem;
   }
   &__title {
     font-size: 24px;
@@ -346,11 +292,17 @@
   }
 }
 
+// Todo: max-width: 520px; and margin: 0 auto; for bottom pop up, cuz model is outside of the screen
+
 // ? Bottom sheet
 .onboard-bottom-sheet__header {
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 .onboard-bottom-sheet__body {
+  max-width: 520px;
+  margin: 0 auto;
   padding: 1rem 1.5rem;
   // *title
   .head {
@@ -395,6 +347,8 @@
 }
 
 .onboard-bottom-sheet__footer {
+  max-width: 520px;
+  margin: 0 auto;
   .btn {
     width: 100%;
     display: flex;
@@ -522,7 +476,8 @@
 // ? Review
 .onborad-customer-reviews {
   // width: 100%;
-  min-height: 380px;
+  min-height: 355px;
+  padding-top: 1rem;
   margin-bottom: 2rem;
   background: #fff4ef;
   position: relative;
@@ -549,7 +504,7 @@
     position: relative;
     font-size: 24px;
     font-weight: 700;
-    margin-top: 1.5rem;
+    // margin-top: 1.5rem;
     margin-bottom: 2rem;
     padding: 0.5rem;
     @include breakpoint-up(xxsmall) {
@@ -584,9 +539,14 @@
       background-color: $color-white-1;
       box-shadow: 0px 9px 17px rgba(218, 217, 216, 0.3);
       .head {
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        overflow: hidden;
         img {
-          height: 50px;
-          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
       .body {
