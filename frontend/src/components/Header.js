@@ -156,28 +156,44 @@ const Header = ({
 
     // !On Revenue page
     if (pathname === "/revenue") {
-      dispatch(setResultType("Previous Day"));
+      if (resultType !== "Previous Month") {
+        dispatch(setResultType("Previous Month"));
+      }
+
       setAllResultType([
         "Previous Day",
         "This Week",
         "Previous Week",
         "This Month",
         "Previous Month",
-        // Todo: testing purpose
         "Custom Range",
       ]);
     }
     // ! go back old dropdown
-    else if (pathname !== "/revenue" && resultType === "Previous Day") {
-      dispatch(setResultType("This Week"));
-      setAllResultType([
-        "This Week",
-        "Previous Week",
-        "This Month",
-        "Previous Month",
-        // Todo: testing purpose
-        "Custom Range",
-      ]);
+    else if (pathname !== "/revenue") {
+      // ?
+      if (resultType !== "Previous Day") {
+        // ? seting week cuz by default it is "Previous Month"
+        dispatch(setResultType("This Week"));
+        setAllResultType([
+          "This Week",
+          "Previous Week",
+          "This Month",
+          "Previous Month",
+          "Custom Range",
+        ]);
+      }
+      // ? if prv day is selected,change to old dropdown and set result type Week
+      else {
+        dispatch(setResultType("This Week"));
+        setAllResultType([
+          "This Week",
+          "Previous Week",
+          "This Month",
+          "Previous Month",
+          "Custom Range",
+        ]);
+      }
     }
   }, [location.pathname]);
 
@@ -190,7 +206,12 @@ const Header = ({
 
   const setNewRestaurantByListingID = (restaurant) => {
     // dispatch(setRestaurantNameAndId(res_name, res_id));
-    dispatch(setListingIdWithRestaurantDetails({...restaurant, listingID: restaurant.listing_id}));
+    dispatch(
+      setListingIdWithRestaurantDetails({
+        ...restaurant,
+        listingID: restaurant.listing_id,
+      })
+    );
     setValue([null, null]);
     setShowDatePicker(false);
     setRestaurantListOpen(false);

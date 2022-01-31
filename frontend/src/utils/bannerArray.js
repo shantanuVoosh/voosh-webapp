@@ -1,6 +1,6 @@
-import voosh_image_1 from "../styles/images/article1.jpg";
-import voosh_image_2 from "../styles/images/article2.jpg";
-import voosh_image_3 from "../styles/images/article3.jpg";
+import voosh_image_1 from "../styles/images/banners/banner1.jpg";
+import voosh_image_2 from "../styles/images/banners/banner2.jpg";
+import voosh_image_3 from "../styles/images/banners/banner3.jpg";
 
 const array = [
   {

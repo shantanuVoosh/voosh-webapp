@@ -25,13 +25,13 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Voosh</title>
-    <!-- <base href="/" /> -->
+    <base href="/" />
     <!-- //! pixel code -->
     <meta
       name="facebook-domain-verification"
       content="s4x1jyxpnprb6r6oqw3bblhr14etws"
     />
-    <script>
+    <!-- <script>
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function () {
@@ -64,7 +64,31 @@
         width="1"
         style="display: none"
         src="https://www.facebook.com/tr?id=326312254783097&ev=PageView&noscript=1"
-    /></noscript>
+    /></noscript> -->
+
+    <!-- //! Google Tag -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-PT6CJ96");
+    </script>
+
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-PT6CJ96"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -80,5 +104,4 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
-  
 </html>

@@ -55,7 +55,7 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
             <BsBarChartLine className="home-card-left__icon" size={25} />
           ) : null}
           <div className="home-card-left__text">
-            <h4 className="home-card-left__text--heading">{name}</h4>
+            <h4 className="home-card-left__text--heading">{name==="Revenue"?"Sales":name}</h4>
             <p className="home-card-left__text--info">{info}</p>
           </div>
           <span

@@ -13,7 +13,7 @@ const ReviewCard = ({ id, rating, date, review }) => {
         </div>
       </div>
       <div className="review-card__message">
-        <div className="review-card__message--date">{moment("20201107").format('DD/MM/YYYY')}</div>
+        <div className="review-card__message--date">{moment(date).format('YYYY/MM/DD')}</div>
         <div className="review-card__message--review">{review}</div>
       </div>
     </div>

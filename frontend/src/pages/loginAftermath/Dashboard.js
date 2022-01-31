@@ -39,6 +39,8 @@ const Dashboard = () => {
       <div className="dashboard-cards">
         {/* //? Revenue */}
         <Card
+        // Todo: Card name is changed Revenue to Sales, but cant change or pass name here
+        // Todo: other thing are getting effected, 
           iconName={"bar"}
           name={"Revenue"}
           info={"Dive into sales, deduction, commisions, etc."}

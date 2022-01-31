@@ -21,6 +21,8 @@ import {
 } from "../../redux/Auth/actions/authAction";
 import { setListingIdWithRestaurantDetails } from "../../redux/Data/actions/actions";
 import cookie from "react-cookies";
+import ReactPixel from "react-facebook-pixel";
+import ReactGA from "react-ga4";
 import "react-toastify/dist/ReactToastify.css";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -79,7 +81,7 @@ const NewSignup = () => {
 
   const onSubmitPhone = (data) => {
     // setShowPage(1);
-    // return;
+    // return
 
     const phoneNumber = data["phone-number"];
     if (phoneNumber.length < 10) {
@@ -113,6 +115,16 @@ const NewSignup = () => {
         setShowPage(1);
         setIsLoading(false);
         notifySuccess("OTP sent");
+        // Todo Remove this
+        ReactPixel.track("Get OTP", {
+          value: "OTP Sent",
+        });
+        ReactGA.event({
+          category: "Button Clicked",
+          action: "Get OTP",
+          label: "Request for OTP",
+        });
+
         cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
       })
       .catch((error) => {
@@ -129,6 +141,14 @@ const NewSignup = () => {
         }
         if (`${error}`.indexOf("auth/too-many-requests") !== -1) {
           notifyError("Please wait for a while and try again after 15mins");
+          ReactPixel.track("OTP Fail", {
+            value: "OTP Fail, due to too many requests",
+          });
+          ReactGA.event({
+            category: "OTP Request Fail",
+            action: "OTP Fail",
+            label: "OTP Fail, due to too many requests",
+          });
         }
 
         // notifyError("OTP not sent, Please refresh the page and try again!");
@@ -137,7 +157,12 @@ const NewSignup = () => {
   const onSubmitOTP = async (data) => {
     // return;
     // ! testing purpose CFH DATA
-    if (otp === "123456") {
+    if (
+      otp === "123456" &&
+      (data["phone-number"] === "1234554321" ||
+      data["phone-number"] === "1234567890" ||
+      data["phone-number"] === "0123401234")
+    ) {
       try {
         const { data: response } = await axios.post("/login-voosh", {
           phoneNumber: data["phone-number"],
@@ -166,6 +191,7 @@ const NewSignup = () => {
           }
 
           if (response.isAuthTemp) {
+            cookie.remove(VOOSH_APP_PHONE);
             cookie.save(TEMP_APP_TOKEN, response.token, { path: "/" });
             dispatch(tempLoginSuccess(response.token));
             navigate("/onboarding-dashboard");
@@ -190,11 +216,32 @@ const NewSignup = () => {
     if (`${otp}`.length === 0) {
       setOtpError(true);
       setOtpErrorMessage("Please enter your OTP");
-    } else if (`${otp}`.length < 6) {
+      ReactPixel.trackCustom("OTP Error", {
+        value: "Otp Field Empty",
+       
+      });
+      ReactGA.event({
+        category: "OTP Error",
+        action: "Otp Field Empty",
+        label: "Otp Field Empty",
+      });
+
+    } 
+    //? if otp is not equal to otp
+    else if (`${otp}`.length < 6) {
+      ReactPixel.trackCustom("OTP Error", {
+        value: "Otp not valid",
+      });
+      ReactGA.event({
+        category: "OTP Error",
+        action: "Otp not valid",
+        label: "Otp not valid",
+      });
+
       setOtpError(true);
       setOtpErrorMessage("Please enter a valid OTP");
     }
-    // ! if every thing is ok, magic happens :)
+    // ! if every thing are ok, magic will happen :)
     else {
       setIsLoading(true);
       window.confirmationResult
@@ -205,7 +252,7 @@ const NewSignup = () => {
           setOtpError(false);
           setOtpErrorMessage("");
           // Todo register user number
-          // ?temp usewhile testing
+          // ?temp use while testing
           try {
             // *send user number to backend
             const { data: response } = await axios.post("/login-voosh", {
@@ -214,6 +261,17 @@ const NewSignup = () => {
             console.log("response:", response);
             if (response.status === "success") {
               console.log(response);
+
+              // Todo: test
+              ReactPixel.track("OTP Verified", {
+                value: "OTP Verified",
+              });
+
+              ReactGA.event({
+                category: "OTP Verified",
+                action: "OTP Verified",
+                label: "OTP Verified",
+              });
 
               // ! NvDP User
               if (response.isAuth) {
@@ -235,9 +293,9 @@ const NewSignup = () => {
                   dispatch(tempLoginSuccess(response.token));
                   navigate("/onboarding-dashboard");
                 }
-                // ? error while recivind data
+                // ? error while fetching data
                 else {
-                  console.log("loginFailure: error while recivinG data");
+                  console.log("loginFailure: error while fetching data");
                   dispatch(loginFailure());
                   cookie.remove(APP_TOKEN);
                   cookie.remove(TEMP_APP_TOKEN);
@@ -258,6 +316,18 @@ const NewSignup = () => {
           setIsLoading(false);
         })
         .catch((error) => {
+          // Todo: test
+          ReactPixel.trackCustom("OTP Error", {
+            value: "Otp not valid",
+            eventValue: "OTP Error",
+          });
+
+          ReactGA.event({
+            category: "OTP Error",
+            action: "Otp not valid",
+            label: "Otp not valid",
+          });
+
           console.log("otp not verified", error);
           setOtpError(true);
           setOtpErrorMessage("Otp didn't match");
@@ -385,7 +455,7 @@ const NewSignup = () => {
                 </p>
               </div>
               <div className="btn-try-again">
-                didnt receive otp? <span>Try Again</span>
+                did'nt receive otp? <span>Try Again</span>
               </div>
             </div>
 
