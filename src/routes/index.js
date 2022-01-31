@@ -671,6 +671,51 @@ router.post("/login-voosh", async (req, res) => {
   }
 });
 
+
+// ! for saving only phone numbers
+router.post("/user/save-only-number", async (req, res) => {
+  const { phoneNumber } = req.body;
+
+  // const onboardProductsColleaction = "onboard_products";
+  const save_all_users_number = "save_all_users_number";
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    const isUserPresent = await db
+      .collection(save_all_users_number)
+      .findOne({ phone: parseInt(phoneNumber) });
+
+    if (isUserPresent !== null) {
+      res.json({
+        status: "success",
+        message: "User already exists, no need to save number",
+      });
+      
+    }else{
+      await db.collection(save_all_users_number).insertOne({
+        phone: parseInt(phoneNumber),
+        first_seen: new Date(),
+      });
+      res.json({
+        status: "success",
+        message: "new number saved",
+      });
+    }
+
+
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
+      message: "Error while saving number, Server Error",
+    });
+  }
+});
+
+// ! user data who are not present in onboard products
 router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
   const { phone, tempUser } = req.payload;
@@ -709,7 +754,7 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   }
 });
 
-//! Udate onbord Users
+//! Update onboard Users
 router.post(
   "/user/update/onboard-data",
   checkAuthentication,
@@ -779,15 +824,6 @@ router.post("/user/call-request", async (req, res) => {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
-    // const db = await client
-    //   .db(documentName)
-    //   .collection("SAVE_FLAG_WITH_PHONE_NUMBER")
-    //   .insertOne({
-    //     flag_1: flag_1,
-    //     flag_2: flag_2,
-    //     flag_3: flag_3,
-    //     phone: phoneNumber,
-    //   });
 
     // ? first check if user is present in flags_banners_products
     const db = await client.db(documentName);
@@ -813,8 +849,7 @@ router.post("/user/call-request", async (req, res) => {
 
         res.json({
           status: "success",
-          message: "Stiil having problem, Someone will call you soon",
-
+          message: "Still having problem, Someone will call you soon",
         });
       }
       // ? if number is not resolved then send sms
@@ -849,7 +884,6 @@ router.post("/user/call-request", async (req, res) => {
     });
   }
 });
-
 
 //! test route
 router.post("/test-101", async (req, res) => {

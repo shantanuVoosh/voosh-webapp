@@ -101,7 +101,9 @@ const Header = () => {
         <div
           className="onboard-header__call-us-btn"
           style={{ display: "none" }}
+          
           onClick={() => {
+            // window.open("tel:+917008237257");
             ReactGA.event({
               category: `Button Clicked`,
               action: "Call Us Button Clicked",
@@ -109,9 +111,9 @@ const Header = () => {
             });
           }}
         >
-          <a className="icon" href="tel:9015317006">
+          <span className="icon">
             <FaPhoneAlt size={20} />
-          </a>
+          </span>
         </div>
       </div>
     </>

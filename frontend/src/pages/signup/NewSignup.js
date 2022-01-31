@@ -63,6 +63,24 @@ const NewSignup = () => {
   const notifyError = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
 
+  const savePhoneNumber = async (phoneNumber) => {
+    if (phoneNumber.length < 10) {
+      return;
+    }
+    if (
+      phoneNumber === "1234554321" ||
+      phoneNumber === "1234567890" ||
+      phoneNumber === "0123401234"
+    ) {
+      return;
+    }
+
+    const { data: response } = await axios.post(`/user/save-only-number`, {
+      phoneNumber,
+    });
+    console.log(response, "response on save phone number");
+  };
+
   const configureRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       "sign-in-button",
@@ -108,6 +126,10 @@ const NewSignup = () => {
     setIsLoading(true);
 
     const appVerifier = window.recaptchaVerifier;
+
+    // Todo saving phone number in db
+    savePhoneNumber(data["phone-number"]);
+    
     signInWithPhoneNumber(auth, phone, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
@@ -160,8 +182,8 @@ const NewSignup = () => {
     if (
       otp === "123456" &&
       (data["phone-number"] === "1234554321" ||
-      data["phone-number"] === "1234567890" ||
-      data["phone-number"] === "0123401234")
+        data["phone-number"] === "1234567890" ||
+        data["phone-number"] === "0123401234")
     ) {
       try {
         const { data: response } = await axios.post("/login-voosh", {
@@ -218,15 +240,13 @@ const NewSignup = () => {
       setOtpErrorMessage("Please enter your OTP");
       ReactPixel.trackCustom("OTP Error", {
         value: "Otp Field Empty",
-       
       });
       ReactGA.event({
         category: "OTP Error",
         action: "Otp Field Empty",
         label: "Otp Field Empty",
       });
-
-    } 
+    }
     //? if otp is not equal to otp
     else if (`${otp}`.length < 6) {
       ReactPixel.trackCustom("OTP Error", {

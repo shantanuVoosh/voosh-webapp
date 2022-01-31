@@ -884,30 +884,27 @@ const Home = ({
                 <button className="btn">Proceed</button>
                 <div
                   className="contact-us"
-                  onClick={() => {
-                    // Todo
-                    ReactPixel.track("Contact Us Clicked", {
-                      value: "Contact Us Clicked, in Step-1",
-                    });
-
-                    ReactGA.event({
-                      category: "Button Click",
-                      action: "Call Us text clicked",
-                      label: "Call Us text clicked",
-                    });
-                  }}
                 >
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
                     className="orange text-bold"
                     onClick={() => {
-                      notifySuccess(
-                        "Your Call Request is Submitted Successfully, We will get back to you soon"
-                      );
+                      ReactPixel.track("Contact Us Clicked", {
+                        value: "Contact Us Clicked, in Step-1",
+                      });
+  
+                      ReactGA.event({
+                        category: "Button Click",
+                        action: "Call Us text clicked",
+                        label: "Call Us text clicked",
+                      });
+                      // notifySuccess(
+                      //   "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      // );
                     }}
                   >
-                    Call Us
+                    Call Us @ +91-9015317006
                   </span>
                 </div>
               </div>
@@ -1077,30 +1074,28 @@ const Home = ({
                 <button className="btn">Proceed</button>
                 <div
                   className="contact-us"
-                  onClick={() => {
-                    // Todo
-                    ReactPixel.track("Contact Us Clicked", {
-                      value: "Contact Us Clicked, in Step-1",
-                    });
-
-                    ReactGA.event({
-                      category: "Button Click",
-                      action: "Call Us text clicked",
-                      label: "Call Us text clicked",
-                    });
-                  }}
+                  
                 >
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
                     className="orange text-bold"
                     onClick={() => {
-                      notifySuccess(
-                        "Your Call Request is Submitted Successfully, We will get back to you soon"
-                      );
+                      ReactPixel.track("Contact Us Clicked", {
+                        value: "Contact Us Clicked, in Step-2",
+                      });
+  
+                      ReactGA.event({
+                        category: "Button Click",
+                        action: "Call Us text clicked",
+                        label: "Call Us text clicked",
+                      });
+                      // notifySuccess(
+                      //   "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      // );
                     }}
                   >
-                    Call Us
+                    Call Us +91-9015317006
                   </span>
                 </div>
               </div>
@@ -1243,30 +1238,27 @@ const Home = ({
                 <button className="btn">Proceed</button>
                 <div
                   className="contact-us"
-                  onClick={() => {
-                    // Todo
-                    ReactPixel.track("Contact Us Clicked", {
-                      value: "Contact Us Clicked, in Step-1",
-                    });
-
-                    ReactGA.event({
-                      category: "Button Click",
-                      action: "Call Us text clicked",
-                      label: "Call Us text clicked",
-                    });
-                  }}
                 >
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
                   <span
                     className="orange text-bold"
                     onClick={() => {
-                      notifySuccess(
-                        "Your Call Request is Submitted Successfully, We will get back to you soon"
-                      );
+                      // notifySuccess(
+                      //   "Your Call Request is Submitted Successfully, We will get back to you soon"
+                      // );
+                      ReactPixel.track("Contact Us Clicked", {
+                        value: "Contact Us Clicked, in Step-3",
+                      });
+  
+                      ReactGA.event({
+                        category: "Button Click",
+                        action: "Call Us text clicked",
+                        label: "Call Us text clicked",
+                      });
                     }}
                   >
-                    Call Us
+                    Call Us @+91-9015317006
                   </span>
                 </div>
               </div>

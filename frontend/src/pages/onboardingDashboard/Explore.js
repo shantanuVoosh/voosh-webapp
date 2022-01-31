@@ -23,7 +23,7 @@ const Explore = ({ changePage, pageName }) => {
 
   const onVideoClick = (name, videoNumber) => {
     console.log("video click");
-    ReactPixel.track("Video View", {
+    ReactPixel.track("Video Clicked", {
       value: `${name}, video number-${videoNumber}`,
     });
     ReactGA.event({
@@ -75,7 +75,7 @@ const Explore = ({ changePage, pageName }) => {
         {/* //! Small mein col xsmall other row */}
         <div className="onboard-bottom">
           <div className="onboard-bottom__videos">
-            <div className="single-video" onClick={onVideoClick}>
+            <div className="single-video">
               <ReactPlayer
                 className="single-video"
                 url="https://www.youtube.com/watch?v=_tnnZYeFYYo"
