@@ -12,10 +12,14 @@ import ArticleArray from "../../utils/articleArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
+import EmbeddedBrowser from "react-embedded-browser";
 
 const Explore = ({ changePage, pageName }) => {
   // Todo :temp use
   const numberOfVideoWatch = 1;
+
+  const [showArticleModel, setShowArticleModel] = React.useState(false);
+  const [articleLink, setArticleLink] = React.useState("");
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,8 +38,32 @@ const Explore = ({ changePage, pageName }) => {
   };
 
   const openNewWindow = (url) => {
-    window.open(url, "_blank", "toolbar=0,location=0,menubar=0");
+    // window.open(url, "_blank", "toolbar=0,location=0,menubar=0");
+    setShowArticleModel((prev) => !prev);
+    setArticleLink(url);
   };
+
+  if (showArticleModel) {
+    return (
+      <>
+        <div className="article-model">
+          <div className="article-model__head">
+            <div onClick={() => setShowArticleModel((prev) => !prev)}>
+              Go Back
+            </div>
+          </div>
+          <div className="article-model__body">
+            <iframe
+              src={articleLink}
+              width="100%"
+              height="100%"
+              title="random"
+            ></iframe>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -52,11 +80,10 @@ const Explore = ({ changePage, pageName }) => {
             {/*//? left 70% */}
             <div className="text">
               <div className="head">
-                Get <span className="orange">Voosh</span> certified
+                Grow with <span className="orange">Voosh</span> Verified
               </div>
               <div className="sub-head">
-                While we prepare your data, have a look at the below knowledge
-                goldmine!
+                We're working on your data, Below is some food for thought!
               </div>
             </div>
             {/*//? right 30% */}
@@ -154,7 +181,7 @@ const Explore = ({ changePage, pageName }) => {
         {/* //! Quick reads */}
         <div className="onboard-quick-reads">
           {/* //? article */}
-          <h1>Articles</h1>
+          <h1>Trending stories</h1>
           {ArticleArray.map((article, index) => {
             const { title, subTitle, name, date, readTime, link, image } =
               article;

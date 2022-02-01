@@ -31,15 +31,16 @@ import PreSignUp from "./pages/PreSignUp";
 import OnboardingDashboard from "./pages/onboardingDashboard/Dashboard";
 // import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import ReactPixel from 'react-facebook-pixel';
+import ReactPixel from "react-facebook-pixel";
 import MetaTags from "react-meta-tags";
 import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
+import NewSignupA from "./pages/signup/NewSignupA";
 
 function App() {
   const location = useLocation();
 
   React.useEffect(() => {
-    ReactPixel.init('326312254783097');
+    ReactPixel.init("326312254783097");
 
     ReactGA.initialize([
       {
@@ -47,7 +48,6 @@ function App() {
       },
     ]);
 
-    
     ReactGA.send({
       hitType: "pageview",
       page: window.location.pathname + window.location.search,
@@ -77,7 +77,7 @@ function App() {
           }
         /> */}
         {/* //Todo: New Onboarding dashboard */}
-        <Route
+        {/* <Route
           path="/"
           element={
             <RedirectRoute>
@@ -92,10 +92,29 @@ function App() {
               <NewSignup />
             </RedirectRoute>
           }
+        /> */}
+
+        {/* //Todo new signup part -2 :> */}
+        <Route
+          path="/"
+          element={
+            <RedirectRoute>
+              <MetaTags>
+                <title>Voosh | Login</title>
+                <meta
+                  name="voosh web app, Signup page"
+                  content="voosh signup page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <NewSignupA />
+            </RedirectRoute>
+          }
         />
+
         {/* //Todo: New Onboarding dashboard */}
         <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
-        <Route path="/test" element={<OnboardingDashboard />} />
+        {/* <Route path="/test" element={<OnboardingDashboard />} /> */}
         <Route
           path="/signup"
           element={

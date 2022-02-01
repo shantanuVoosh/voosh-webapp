@@ -93,18 +93,6 @@ const Home = ({
     window.scrollTo(0, 0);
   }, []);
 
-  const onVideoClick = (name, videoNumber) => {
-    console.log("video click");
-    ReactPixel.track("Video Clicked", {
-      value: `${name}, video number-${videoNumber}`,
-    });
-    ReactGA.event({
-      category: "Video Clicked",
-      action: `${name}, video number-${videoNumber}`,
-      label: "Video View",
-    });
-  };
-
   const sendResponse = async (bannerData) => {
     const { title } = bannerData;
 
@@ -390,10 +378,10 @@ const Home = ({
           />
           <meta property="og:title" content="web-app" />
         </MetaTags>
-        <div className="container onboard-container onboard-home"
-        // Todo: temp use
-        style={{marginBottom:"0rem"}}
-        
+        <div
+          className="container onboard-container onboard-home"
+          // Todo: temp use
+          style={{ marginBottom: "0rem" }}
         >
           <Header />
           {/* //! dashboard */}
@@ -404,10 +392,11 @@ const Home = ({
                   <IoHomeOutline size={30} />
                 </div>
                 <div className="onboard-preview-dashboard__top--rest-name">
-                  Register your restaurant
+                  Onboard your restaurant with us!
                 </div>
                 <div className="onboard-preview-dashboard__top--info">
-                  Link your <span>Swiggy</span> and <span>Zomato</span> Id's
+                  Sync your <span>Swiggy</span> and <span>Zomato</span> accounts
+                  for a wholesome experience
                 </div>
               </div>
               <div className="onboard-preview-dashboard__mid">
@@ -425,7 +414,7 @@ const Home = ({
                     <div className="icon">
                       <CgLoadbarSound size={32} />
                     </div>
-                    <div className="text">Get all round analysis</div>
+                    <div className="text">Get deep performance insights</div>
                   </div>
                   <div className="menu-btn">
                     <div className="icon">
@@ -456,7 +445,7 @@ const Home = ({
                     setDisplayPageNumber(1);
                   }}
                 >
-                  Add Now
+                  Click to Grow !
                 </div>
               </div>
             </div>
@@ -468,7 +457,7 @@ const Home = ({
               <div className="icon">
                 <CgLoadbarSound size={40} />
               </div>
-              <div className="text">We are analysing your Restaurant data</div>
+              <div className="text">Our bots are analysing your data!</div>
             </div>
           )}
 
@@ -661,116 +650,11 @@ const Home = ({
           </div>
         </div> */}
 
-          {/* //! Gray Card */}
-          <div className="onboard-certified-card">
-            <div className="part-one">
-              {/*//? left 70% */}
-              <div className="text">
-                <div className="head">
-                  Get <span className="orange">Voosh</span> certified
-                </div>
-                <div className="sub-head">
-                  While we prepare your data, have a look at the below knowledge
-                  goldmine!
-                </div>
-              </div>
-              {/*//? right 30% */}
-              <div className="sample-image">
-                <img src={vooshCardSvg} alt="voosh-card" />
-              </div>
-            </div>
-            <div className="part-two">
-              <div
-                className="bar"
-                style={{ width: `${(1 / 4) * 100}%` }}
-              ></div>
-              {/*<div className="text">1/4 videos watched!</div>*/}
-            </div>
-          </div>
-          {/* //! Small mein col xsmall other row */}
-          <div className="onboard-bottom">
-            <div className="onboard-bottom__videos">
-              <div className="single-video">
-                <ReactPlayer
-                  className="single-video"
-                  url="https://www.youtube.com/watch?v=_tnnZYeFYYo"
-                  controls
-                  playbackRate={1}
-                  width="100%"
-                  height="200px"
-                  onStart={() => {
-                    console.log("video start");
-                    onVideoClick("Food-Delivery Apps vs. Restaurants", 1);
-                  }}
-                />
-                <div className="text">Food-Delivery Apps vs. Restaurants</div>
-              </div>
-              <div className="single-video">
-                <ReactPlayer
-                  className="single-video"
-                  url="https://www.youtube.com/watch?v=v7_ZTzErBDs"
-                  controls
-                  playbackRate={1}
-                  width="310px"
-                  height="200px"
-                  onStart={() => {
-                    console.log("video start");
-                    onVideoClick(
-                      "Where does your food delivery really come from?",
-                      2
-                    );
-                  }}
-                />
-                <div className="text">
-                  Where does your food delivery really come from?
-                </div>
-              </div>
-              <div className="single-video">
-                <ReactPlayer
-                  className="single-video"
-                  url="https://www.youtube.com/watch?v=lqtAeEbEyMg"
-                  controls
-                  playbackRate={1}
-                  width="100%"
-                  height="200px"
-                  onStart={() => {
-                    console.log("video start");
-                    onVideoClick("CloudKitchens: How it Works", 3);
-                  }}
-                />
-                <div className="text">CloudKitchens: How it Works</div>
-              </div>
-              <div className="single-video">
-                <ReactPlayer
-                  className="single-video"
-                  url="https://www.youtube.com/watch?v=PAM8k6EF0as"
-                  controls
-                  playbackRate={1}
-                  width="310px"
-                  height="200px"
-                  onStart={() => {
-                    console.log("video start");
-                    onVideoClick(
-                      "The cloud kitchen hoping to go fully autonomous",
-                      4
-                    );
-                  }}
-                />
-                <div className="text">
-                  The cloud kitchen hoping to go fully autonomous
-                </div>
-              </div>
-            </div>
-            {/* <div className="">
-        <ScrollButton />
-      </div> */}
-          </div>
-
           {/* //! Review Cards */}
-          <div className="onborad-customer-reviews" 
-          // Todo: temp use
-          style={{paddingBottom:"6rem", marginBottom:"0rem"}}
-          
+          <div
+            className="onborad-customer-reviews"
+            // Todo: temp use
+            style={{ paddingBottom: "6rem", marginBottom: "0rem" }}
           >
             <span className="quote-right">
               <RiDoubleQuotesR size={180} />
@@ -779,7 +663,7 @@ const Home = ({
               <RiDoubleQuotesL size={180} />
             </span>
             <h1 className="onborad-customer-reviews__title">
-              Our Customer Love Us
+              What our partners think of us
             </h1>
             <div className="onborad-customer-reviews__all-reviews">
               {PersonArray.map((person, index) => {
@@ -1409,9 +1293,9 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
-      {/* {displayPageNumber === 0 && (
+      {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
-      )} */}
+      )}
       <BottomSheet
         open={openBottomSheet}
         onDismiss={() => {
@@ -1469,18 +1353,18 @@ const Home = ({
                 >
                   {bottomSheetData.content}
                 </div>
-                <div className="">
+                <div className="all-points">
                   {bottomSheetData.points.map((point, index) => {
                     return (
                       <div
                         key={index}
-                        className="text"
+                        className="point"
                         style={{
                           fontSize: "15px",
                           color: "black",
                         }}
                       >
-                        {"-"}
+                        {"-  "}
                         {point}
                       </div>
                     );
