@@ -111,8 +111,8 @@ const NewSignupA = () => {
   };
 
   const onSubmitPhone = (data) => {
-    setShowPage(1);
-    return;
+    // setShowPage(1);
+    // return;
 
     const phoneNumber = data["phone-number"];
     if (phoneNumber.length < 10) {
@@ -190,7 +190,7 @@ const NewSignupA = () => {
       });
   };
   const onSubmitOTP = async (data) => {
-    return;
+    // return;
     // ! testing purpose CFH DATA
     if (
       otp === "123456" &&
@@ -454,7 +454,7 @@ const NewSignupA = () => {
             <div className="video-preview s-a-video">
               <ReactPlayer
                 className="single-video"
-                url={"https://youtu.be/cLFaVhZcbbg"}
+                url={"https://www.youtube.com/watch?v=QZs2SpNzeD4"}
                 controls
                 playbackRate={1}
                 width="100%"
@@ -562,7 +562,7 @@ const NewSignupA = () => {
               {PersonArray.map((person, index) => {
                 const { image, review, name, restaurantName } = person;
                 return (
-                  <div className="single-review-card">
+                  <div className="single-review-card" key={index}>
                     <div className="head">
                       <div className="image">
                         <img src={image} alt="user" />
@@ -589,7 +589,15 @@ const NewSignupA = () => {
               })}
             </div>
             <div className="s-a-customer-reviews__btn">
-              <div className="btn">Join Now</div>
+              <div
+                className="btn"
+                onClick={() => {
+                  console.log("clicked");
+                  window.scrollTo(0, 0);
+                }}
+              >
+                Join Now
+              </div>
             </div>
           </div>
           <div className="s-a-footer">
