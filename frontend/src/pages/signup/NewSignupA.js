@@ -389,7 +389,7 @@ const NewSignupA = () => {
           className="s-a-bg"
           style={{ display: `${showPage === 0 && !isLoading ? "" : "none"}` }}
         >
-          <div className="all-svg">
+          <div className="all-svg" style={{ paddingTop: "3rem" }}>
             <div className="svg-1 svg">
               <img src={circleSvg} alt="svg1" />
             </div>

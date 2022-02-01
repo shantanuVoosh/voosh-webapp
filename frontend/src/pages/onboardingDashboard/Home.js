@@ -392,7 +392,7 @@ const Home = ({
                   <IoHomeOutline size={30} />
                 </div>
                 <div className="onboard-preview-dashboard__top--rest-name">
-                  Onboard your restaurant with us!
+                  Onboard With Us!
                 </div>
                 <div className="onboard-preview-dashboard__top--info">
                   Sync your <span>Swiggy</span> and <span>Zomato</span> accounts
@@ -414,7 +414,7 @@ const Home = ({
                     <div className="icon">
                       <CgLoadbarSound size={32} />
                     </div>
-                    <div className="text">Get deep performance insights</div>
+                    <div className="text">Performance insights</div>
                   </div>
                   <div className="menu-btn">
                     <div className="icon">
@@ -1344,10 +1344,10 @@ const Home = ({
               </div>
               <div className="body__content">
                 <div
-                  className=""
+                  className="main-pont"
                   style={{
                     fontSize: "15px",
-                    marginBottom: ".5rem",
+                    marginBottom: "1rem",
                     color: "black",
                   }}
                 >
