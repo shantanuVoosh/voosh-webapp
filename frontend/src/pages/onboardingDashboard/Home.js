@@ -1,7 +1,9 @@
 import React from "react";
 import { IoHomeOutline } from "react-icons/io5";
 import { MdAnchor } from "react-icons/md";
-import { CgLoadbarSound } from "react-icons/cg";
+import { CgLoadbarSound, CgClose } from "react-icons/cg";
+import { AiFillCaretLeft, AiOutlinePlus } from "react-icons/ai";
+import { BsCircleFill, BsCircle } from "react-icons/bs";
 import { GiCommercialAirplane } from "react-icons/gi";
 import logo_img from "../../styles/images/logo-img.png";
 import ReactPlayer from "react-player";
@@ -9,7 +11,7 @@ import { useForm } from "react-hook-form";
 import ScrollButton from "../../components/ScrollButton"; // Todo: scroll to top
 import vooshCardSvg from "../../styles/assets/voosh_card.svg";
 import { GrFormPreviousLink } from "react-icons/gr";
-import { RiCloseCircleLine } from "react-icons/ri";
+import { RiCloseCircleLine, RiBarChart2Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -34,6 +36,7 @@ import PersonArray from "../../utils/customerReviewArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
+import PartnerRegistrationPage from "./partnerRegistrationPage";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const options = {
@@ -1408,6 +1411,46 @@ const Home = ({
     );
   };
 
+  // ? Congratulations page
+  const CongratulationsPage = () => {
+    return (
+      <div className="container">
+        <div className="closeicon">
+          <CgClose size={22} />
+        </div>
+        <div className="divider" />
+        <div className="multilogo">
+          <BsCircleFill size={13} className="circleFill" color="#ff2f2a" />
+          <BsCircle size={10} className="circle" color="#fc598a" />
+          <AiFillCaretLeft size={13} className="leftarrow" color="#ff2f2a" />
+          <img src={logo_img} width="120px" height={"60px"} />
+        </div>
+
+        <div className="congText">CONGRATULATIONS</div>
+        <div className="congTextOrange">Registration successful</div>
+        <div className="barroundback">
+          <RiBarChart2Line size={42} />
+        </div>
+        <div className="textpara">
+          We have started analysis and our experts will be back with valuable
+          insights
+        </div>
+        <p className="textpara">
+          This might take upto<b> 3 days</b>
+        </p>
+        <div className="page-body__form--btn">
+          <button className="btn">Go to dashboard</button>
+        </div>
+        <div className="page-body__form--secure-text">
+          <span className="text">
+            <AiOutlinePlus />
+            Add another restaurant
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -1430,6 +1473,8 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
+      {displayPageNumber === 4 && <CongratulationsPage />}
+      {displayPageNumber === 5 && <PartnerRegistrationPage />}
       {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
       )}

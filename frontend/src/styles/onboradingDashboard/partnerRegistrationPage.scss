@@ -1,0 +1,139 @@
+.sect {
+  margin: 0;
+  padding: 0;
+}
+.headerSection {
+  width: 100vw;
+  height: 150px;
+  background-color: rgb(249, 239, 235);
+  border-bottom-right-radius: 50px;
+}
+.headerContent {
+  position: absolute;
+  align-items: center;
+  flex-direction: row;
+  display: flex;
+  top: 80px;
+  justify-content: space-around;
+  width: 100%;
+}
+.bodyform {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.title {
+  color: rgb(228, 115, 78);
+  font-size: 25px;
+  b {
+    font-weight: 900;
+  }
+}
+.subtitle {
+  color: rgb(126, 136, 149);
+  font-size: 15px;
+}
+.logintext {
+  color: rgb(42, 58, 80);
+  font-size: 24px;
+  font-weight: 900;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.textinfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  div {
+    color: rgba(40, 44, 62, 0.7);
+    max-width: 258px;
+    font-size: 14px;
+  }
+}
+.inputnumber {
+  width: 100%;
+  border-width: 1px !important;
+  border-color: rgb(212, 213, 217) !important;
+  border-style: solid !important;
+}
+.inputnumberdiv {
+  margin-bottom: 20px;
+}
+.page-body {
+  margin: 2rem 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    // * Submit button
+    &--btn {
+      margin-top: 20px;
+      text-align: center;
+      width: 100%;
+
+      .btn {
+        max-width: 400px;
+        width: 90%;
+        background: linear-gradient(
+          to right,
+          $color-primary-orange-red,
+          $color-primary-2
+        );
+        color: $color-white-1;
+        border: none;
+        padding: 1.1rem 1.2rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0px 9px 17px rgb(255 175 82 / 30%);
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.invitedText {
+  display: flex;
+  font-size: 16px;
+  color: #2a3a50;
+  width: fit-content;
+  margin: 20px auto;
+
+  p {
+    border-color: rgb(228, 115, 78);
+    border-bottom-width: 1px;
+    color: rgb(228, 115, 78);
+    text-decoration: underline;
+  }
+}
+
+.divborder {
+  position: absolute;
+  bottom: 0;
+  padding: 10px 0px;
+  border-top-width: 2px;
+  border-top-style: dashed;
+  border-top-color: #d4d5d9;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.listedtext {
+  font-size: 13px;
+  display: flex;
+  color: rgb(147, 149, 159);
+  p {
+    font-size: 13px;
+    text-decoration: underline;
+    font-weight: 600;
+    color: rgb(61, 64, 81);
+  }
+}
