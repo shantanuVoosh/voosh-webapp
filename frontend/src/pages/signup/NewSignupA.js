@@ -45,6 +45,8 @@ const NewSignupA = () => {
   const [otpErrorMessage, setOtpErrorMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [phoneInCookie, setPhoneInCookie] = React.useState("");
+  const [timeLeft, setTimeLeft] = React.useState(0);
+  const [isTimerOn, setIsTimerOn] = React.useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -57,7 +59,11 @@ const NewSignupA = () => {
   } = useForm();
 
   React.useEffect(() => {
-    console.log(cookie.load(VOOSH_APP_PHONE));
+    const phone = cookie.load(VOOSH_APP_PHONE);
+    if (phone !== undefined && phone.length === 10) {
+      setValue("phone-number", phone);
+    }
+
     setShowPage(0);
     setOtp("");
     setOtpError(false);
@@ -68,12 +74,42 @@ const NewSignupA = () => {
     );
   }, []);
 
+  // ? for timer only
+  React.useEffect(() => {
+    const countInterval =
+      timeLeft > 0 &&
+      setInterval(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+
+    return () => {
+      clearInterval(countInterval);
+    };
+  }, [timeLeft]);
+
+  // ? for try again button, cuz re refreshing the page, recaptcha will be reset this way
+  React.useEffect(() => {
+    const isPageRefreshed = cookie.load("voosh-page-refresh");
+    if (isPageRefreshed) {
+      const phone = cookie.load(VOOSH_APP_PHONE)
+        ? cookie.load(VOOSH_APP_PHONE)
+        : "";
+      cookie.remove("voosh-page-refresh");
+      console.log("yes bro");
+      onSubmitPhone({
+        "phone-number": phone,
+      });
+    }
+  }, []);
+
   // ? Alerts for the user
   const notifyError = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
 
   const handelTryAgainClick = () => {
-    console.log("yes bro");
+    // console.log("phoneInCookie", typeof phoneInCookie);
+    window.location.reload();
+    cookie.save("voosh-page-refresh", true, { path: "/" });
   };
 
   const savePhoneNumber = async (phoneNumber) => {
@@ -101,7 +137,7 @@ const NewSignupA = () => {
         size: "invisible",
         callback: (response) => {
           // reCAPTCHA solved, allow signInWithPhoneNumber.
-          onSubmitPhone();
+          // onSubmitPhone();
           console.log("Recaptcha success");
         },
         defaultCountry: "IN",
@@ -113,9 +149,18 @@ const NewSignupA = () => {
   const onSubmitPhone = (data) => {
     // setShowPage(1);
     // return;
+    // if (data["phone-number"].length === 0 && phoneInCookie.length === 10) {
+    //   data["phone-number"] = phoneInCookie;
+    // }
 
     const phoneNumber = data["phone-number"];
     if (phoneNumber.length < 10) {
+      console.log(phoneNumber, data);
+      notifyError("Please enter a valid phone number");
+      return;
+    }
+    if (phoneNumber.length === 0 && phoneInCookie.length === 0) {
+      console.log(phoneNumber, data);
       notifyError("Please enter a valid phone number");
       return;
     }
@@ -128,7 +173,9 @@ const NewSignupA = () => {
       data["phone-number"] === "0123401234"
     ) {
       cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
+      setPhoneInCookie(data["phone-number"]);
       setShowPage(1);
+      setTimeLeft(10);
       return;
     }
 
@@ -147,9 +194,13 @@ const NewSignupA = () => {
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
         console.log("otp sent");
+
+        notifySuccess("OTP sent");
         setShowPage(1);
         setIsLoading(false);
-        notifySuccess("OTP sent");
+        setPhoneInCookie(data["phone-number"]);
+        setTimeLeft(100);
+
         // Todo Remove this
         ReactPixel.track("Get OTP", {
           value: "OTP Sent",
@@ -183,6 +234,14 @@ const NewSignupA = () => {
             category: "OTP Request Fail",
             action: "OTP Fail",
             label: "OTP Fail, due to too many requests",
+          });
+        }
+        if (`${error}`.indexOf("auth/invalid-phone-number") !== -1) {
+          notifyError("Please enter a valid phone number");
+          ReactGA.event({
+            category: "OTP Request Fail, invalid-phone-number",
+            action: "OTP Fail",
+            label: "OTP Fail, invalid-phone-number",
           });
         }
 
@@ -430,10 +489,10 @@ const NewSignupA = () => {
                 className="form-input"
                 type="tel"
                 name="phone-number"
-                defaultValue={phoneInCookie}
+                // defaultValue={phoneInCookie}
                 placeholder="Phone Number"
                 {...register("phone-number", {
-                  required: true,
+                  // required: true,
                   maxLength: 10,
                   // minLength: 10,
                 })}
@@ -459,6 +518,8 @@ const NewSignupA = () => {
                 playbackRate={1}
                 width="100%"
                 height="220px"
+                muted={true}
+                playing={true}
               />
             </div>
           </div>
@@ -573,8 +634,8 @@ const NewSignupA = () => {
                     </div>
                     <div className="body">
                       <div className="review">
-                        {review.length > 50
-                          ? review.slice(0, 50) + "..."
+                        {review.length > 85
+                          ? review.slice(0, 85) + "..."
                           : review}
                       </div>
 
@@ -622,6 +683,7 @@ const NewSignupA = () => {
               // Todo: go to previous page
               window.location.reload();
               // setShowPage(0);
+
               // setOtpError("");
             }}
           >
@@ -662,8 +724,17 @@ const NewSignupA = () => {
                 </p>
               </div>
               <div className="btn-try-again">
-                did'nt receive otp?{" "}
-                <span onClick={() => handelTryAgainClick()}>Try Again</span>
+                {timeLeft === 0 && (
+                  <div className="try-aging">
+                    did'nt receive otp?
+                    <span onClick={() => handelTryAgainClick()}>Try Again</span>
+                  </div>
+                )}
+                <div className="timer">
+                  {timeLeft > 0 ? (
+                    <span>{`Try again in ${timeLeft} sec`}</span>
+                  ) : null}
+                </div>
               </div>
             </div>
 

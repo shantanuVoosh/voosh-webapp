@@ -193,31 +193,99 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
 
 // ! check swiggy Number
 router.post("/check-swiggy-number", async (req, res) => {
-  const { swiggy_register_phone } = req.body;
+  const { swiggy_register_phone, swiggy_password } = req.body;
   const fetch = (...args) =>
     import("node-fetch").then(({ default: fetch }) => fetch(...args));
   const swiggyURL =
     "https://partner.swiggy.com/registration/v2/registration-status?userId=";
+
+  const swiggyPasswordCheckURL =
+    "https://partner.swiggy.com/authentication/v1/login";
+
   try {
     console.log(swiggy_register_phone);
-    const swiggyResponse = await (
+    const swiggyNumberResponse = await (
       await fetch(`${swiggyURL}${swiggy_register_phone}`)
     ).json();
 
-    console.log(swiggyResponse);
+    console.log(swiggyNumberResponse);
+    const { statusCode, statusMessage } = swiggyNumberResponse;
+    const userPresentMessage =
+      "User already registered with this mobile number";
+    const userNotPresentMessage = "Invalid Mobile Number";
 
-    if (
-      swiggyResponse.statusCode === -1 ||
-      swiggyResponse.statusMessage === "Invalid Mobile Number"
-    ) {
+    // ? if in future swiggy api response json is changed
+    if (statusCode === undefined || statusMessage === undefined) {
+      res.json({
+        status: "error",
+        message: `Server Error While Checking Swiggy Number, Please Try Again Later`,
+      });
+      return;
+    }
+
+    // ? if swiggy number is not registered this the response
+    if (statusCode === -1 || statusMessage === userNotPresentMessage) {
       return res.json({
         status: "error",
         message: `This Number is not registered With Swiggy!`,
       });
-    } else {
+    }
+
+    // ? if swiggy number is registered then,
+    // *now check password!
+    if (statusCode === -2 || statusMessage === userPresentMessage) {
+      // console.log("swiggy check", swiggy_register_phone, swiggy_password);
+      const userPasswordCorrectMessage = "Login Successful";
+      const userPasswordIncorrectMessage = "incorrect password entered";
+
+      const swiggyPasswordResponse = await (
+        await fetch(`${swiggyPasswordCheckURL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            username: swiggy_register_phone,
+            password: swiggy_password,
+            accept_tnc: true,
+          }),
+        })
+      ).json();
+
+      console.log(
+        swiggyPasswordResponse,
+        "swiggyPasswordResponse",
+        "********************--------------------------"
+      );
+
+      const {
+        statusCode,
+        statusMessage,
+        user_id: user_register_phone,
+        permissions,
+        outlets,
+      } = swiggyPasswordResponse;
+
+      // ! now if statusCode is -1 then password is wrong, and 0 means success
+      if (statusCode === 0 || statusMessage === userPasswordCorrectMessage) {
+        return res.json({
+          status: "success",
+          message: `Your Swiggy Password is correct!`,
+        });
+      }
+
+      if (statusCode === -1 || statusMessage === userPasswordIncorrectMessage) {
+        return res.json({
+          status: "error",
+          message: `Password is incorrect!`,
+        });
+      }
+
+      // * if  no match found then return server error
       return res.json({
-        status: "success",
-        message: swiggyResponse.statusMessage,
+        status: "error",
+        message: `Server Error While Checking Swiggy Password, Please Try Again Later`,
       });
     }
   } catch (err) {
@@ -233,13 +301,13 @@ router.post("/check-swiggy-number", async (req, res) => {
 // ?if no, (create a temp auth) then send the onboarding product -> no,create a new user |*|-> yes, send user data
 // Todo token expire time remove
 
-// Todo: now for Uat
+// Todo: now for UAT
 // ! signup and login
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
   // const onboardProductsColleaction = "onboard_products";
   const onboardProductsColleaction = "Onboard_New_Users_UAT";
-  // const onboardProductsColleaction = "test_users";
+
   const nvdpColleaction = "non_voosh_dashboard_products";
 
   try {
@@ -396,12 +464,19 @@ router.post("/login-voosh", async (req, res) => {
   }
 });
 
-// Todo: now for Uat
+// Todo: now for UAT
 // ! for saving only phone numbers
 router.post("/user/save-only-number", async (req, res) => {
   const { phoneNumber } = req.body;
 
-  // const onboardProductsColleaction = "onboard_products";
+  if (parseInt(phoneNumber) === "0123401234") {
+    res.json({
+      status: "success",
+      message: "Test User",
+    });
+    return;
+  }
+
   // const save_all_users_number = "save_all_users_number";
   const save_all_users_number = "save_all_users_number_UAT";
   try {
@@ -438,14 +513,32 @@ router.post("/user/save-only-number", async (req, res) => {
   }
 });
 
-// Todo: now in futhure we will use this route, for check the nvdp collection cuz
-// Todo: we are gonna keep the token wiyhout expiry time
+// Todo: now in future we will use this route, for check the nvdp collection cuz
+// Todo: we are gonna keep the token without expiry time
 // Todo: if user is present in nvdp then send the a new token and with restaurant data
 // ! user data who are present in onboard products
+
 // Todo: now for UAT
 router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
   const { phone, tempUser } = req.payload;
+
+  if (phone === "0123401234") {
+    res.json({
+      status: "success",
+      phone,
+      isAuthTemp: tempUser,
+      userDetails: {
+        name: "",
+        email: "",
+        restaurantName: "test",
+        phoneNumber: 0123401234,
+      },
+      dataSubmitted: false,
+    });
+    return;
+  }
+
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -489,6 +582,16 @@ router.post(
   async (req, res) => {
     console.log("hit onboard data");
     const { phone, tempUser } = req.payload;
+
+    if (parseInt(phone) === "0123401234") {
+      res.json({
+        status: "success",
+        message: "User data updated",
+      });
+
+      return;
+    }
+
     const {
       // name,
       // email,
@@ -549,6 +652,17 @@ router.post(
 router.post("/user/call-request", async (req, res) => {
   try {
     const { flagName, phoneNumber } = req.body;
+    console.log("flagName", flagName);
+    console.log("phoneNumber", phoneNumber);
+
+    if (parseInt(phoneNumber) === 0123401234) {
+      res.json({
+        status: "success",
+        message: "Still having problem, Someone will call you soon",
+      });
+      return;
+    }
+
     // const collectionName = "flags_banners_products";
     const collectionName = "flags_banners_products_UAT";
     const client = await MongoClient.connect(VooshDB, {

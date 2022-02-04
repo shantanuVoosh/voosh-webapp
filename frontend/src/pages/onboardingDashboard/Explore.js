@@ -186,7 +186,24 @@ const Explore = ({ changePage, pageName }) => {
             const { title, subTitle, name, date, readTime, link, image } =
               article;
             return (
-              <div className="onboard-quick-reads__article" key={index}>
+              <div
+                className="onboard-quick-reads__article"
+                key={index}
+                onClick={() => {
+                  // ! experiment
+                  // Todo: tezt
+                  ReactPixel.trackCustom("Article  Clicked", {
+                    value: `Article-${index + 1} clicked`,
+                  });
+
+                  ReactGA.event({
+                    category: `Article-${index + 1} Read More Clicked`,
+                    action: `Article-${index + 1} Read More Clicked`,
+                    label: `Article-${index + 1} Clicked`,
+                  });
+                  openNewWindow(link);
+                }}
+              >
                 {/* //? text */}
                 <div className="left">
                   {/* <a
@@ -239,20 +256,20 @@ const Explore = ({ changePage, pageName }) => {
                     </a> */}
                     <div
                       className="orange"
-                      onClick={() => {
-                        // ! experiment
-                        // Todo: tezt
-                        ReactPixel.trackCustom("Article  Clicked", {
-                          value: `Article-${index + 1} clicked`,
-                        });
+                      // onClick={() => {
+                      //   // ! experiment
+                      //   // Todo: tezt
+                      //   ReactPixel.trackCustom("Article  Clicked", {
+                      //     value: `Article-${index + 1} clicked`,
+                      //   });
 
-                        ReactGA.event({
-                          category: `Article-${index + 1} Read More Clicked`,
-                          action: `Article-${index + 1} Read More Clicked`,
-                          label: `Article-${index + 1} Clicked`,
-                        });
-                        openNewWindow(link);
-                      }}
+                      //   ReactGA.event({
+                      //     category: `Article-${index + 1} Read More Clicked`,
+                      //     action: `Article-${index + 1} Read More Clicked`,
+                      //     label: `Article-${index + 1} Clicked`,
+                      //   });
+                      //   openNewWindow(link);
+                      // }}
                     >
                       Read More
                     </div>

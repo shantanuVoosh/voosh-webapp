@@ -26,7 +26,8 @@ const Dashboard = () => {
     name: "",
     email: "",
     restaurantName: "",
-    phoneNumber: 7008237257,
+    phoneNumber: parseInt('0123401234'),
+    
   });
 
   // ? Check if user is authenticated
@@ -81,6 +82,7 @@ const Dashboard = () => {
       {pageName === "home" && (
         <Home
           currentUserDetails={currentUserDetails}
+          setCurrentUserDetails={setCurrentUserDetails}
           dataSubmitted={dataSubmitted}
           setDataSubmitted={setDataSubmitted}
           isLoading={isLoading}

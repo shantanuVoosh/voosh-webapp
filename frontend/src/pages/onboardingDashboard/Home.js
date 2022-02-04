@@ -24,18 +24,9 @@ import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import Footer from "../../components/onboardingDashboard/Footer";
 import Header from "../../components/onboardingDashboard/Header";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import random_food_image1 from "../../styles/images/food-1.jpg";
-import random_food_image2 from "../../styles/images/food-2.jpg";
-import random_food_image3 from "../../styles/images/food-3.jpg";
-import { FaArrowRight } from "react-icons/fa";
-import {
-  HiArrowSmRight,
-  HiArrowRight,
-  HiArrowNarrowRight,
-} from "react-icons/hi";
 import { FaPhoneAlt } from "react-icons/fa";
 import { ImArrowRight2 } from "react-icons/im";
-
+import { Line, Bar } from "react-chartjs-2";
 import "react-spring-bottom-sheet/dist/style.css";
 import "./bottomSheet.css";
 import BannerArray from "../../utils/bannerArray";
@@ -45,8 +36,104 @@ import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
+const options = {
+  // title: {
+  //   display: true,
+  //   text: "Voosh",
+  // },
+  plugins: {
+    legend: {
+      display: true,
+    },
+  },
+
+  scales: {
+    y: {
+      beginAtZero: true,
+      grid: {
+        // drawBorder: false,
+        // display: false,
+      },
+      ticks: {
+        min: 3.5,
+        max: 4,
+        stepSize: 0.5,
+      },
+    },
+    x: {
+      beginAtZero: true,
+      grid: {
+        // display: false,
+      },
+    },
+  },
+};
+const options2 = {
+  plugins: {
+    legend: {
+      // show title written in data
+      display: false,
+    },
+  },
+  scales: {
+    y: {
+      ticks: {
+        stepSize: 10,
+        color: "#969BB0",
+      },
+      beginAtZero: true,
+      grid: {
+        // drawBorder: false,
+        // display: false,
+        color: "#f5f5f9",
+      },
+    },
+    x: {
+      ticks: {
+        stepSize: 10,
+        color: "#969BB0",
+      },
+      beginAtZero: true,
+      grid: {
+        // display: false,
+        color: "#f5f5f9",
+      },
+    },
+  },
+};
+const LineGraphData = {
+  labels: [0, 20, 40, 60, 80, 100, 120, 140],
+
+  datasets: [
+    {
+      label: "Order V/S Rating Growth",
+      data: [null, null, 3.6, 3.73, 3.91, 3.98, null],
+      // fill: true,
+      backgroundColor: "rgba(75,192,192,0.2)",
+      borderColor: "rgba(75,192,192,1)",
+      llineTension: 0,
+      tension: 0.4,
+    },
+  ],
+};
+const LineGraphData2 = {
+  labels: [0, 10, 20, 30, 40, 50, 60],
+  datasets: [
+    {
+      label: "Customer Attraction %",
+      data: [0, 10, 30, 45, 65, 85, 95],
+      fill: true,
+      backgroundColor: "rgba(75,192,192,0.2)",
+      borderColor: "rgba(75,192,192,1)",
+      tension: 0.5,
+      borderWidth: 1,
+    },
+  ],
+};
+
 const Home = ({
   currentUserDetails,
+  setCurrentUserDetails,
   dataSubmitted,
   setDataSubmitted,
   isLoading,
@@ -57,7 +144,6 @@ const Home = ({
     (state) => state.auth
   );
   const [displayPageNumber, setDisplayPageNumber] = React.useState(0);
-
   const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
   const [bottomSheetData, setBottomSheetData] = React.useState({
     bannerName: "",
@@ -93,6 +179,7 @@ const Home = ({
     window.scrollTo(0, 0);
   }, []);
 
+  //? call Request, when btn clicked
   const sendResponse = async (bannerData) => {
     const { title } = bannerData;
 
@@ -136,7 +223,7 @@ const Home = ({
     }
   };
 
-  //   ? Bottom popup on banner click
+  //? Bottom popup on banner click
   const onBannerClick = ({
     bannerName,
     title,
@@ -180,16 +267,25 @@ const Home = ({
       setValue("zomato-number", currentUserDetails.phoneNumber);
     }
 
-    // Todo: test
-    ReactPixel.track("Form-1 Basic Details", {
-      value: "Basic Details Form Filled",
-    });
+    if (data["restaurant-name"] !== currentUserDetails.restaurantName) {
+      setCurrentUserDetails((prevState) => {
+        return {
+          ...prevState,
+          restaurantName: data["restaurant-name"],
+        };
+      });
+      console.log("sup");
+      // * Events
+      ReactPixel.track("Form-1 Basic Details", {
+        value: "Basic Details Form Filled",
+      });
 
-    ReactGA.event({
-      category: "Form Fillup",
-      action: "Basic Details Form Filled",
-      label: "Basic Details Form Filled",
-    });
+      ReactGA.event({
+        category: "Form Fillup",
+        action: "Basic Details Form Filled",
+        label: "Basic Details Form Filled",
+      });
+    }
 
     // Todo prev page se if u are coming back !
     setValue("checkbox_not-in-swiggy", false);
@@ -244,6 +340,7 @@ const Home = ({
     try {
       const { data: response } = await axios.post("/check-swiggy-number", {
         swiggy_register_phone: swiggyNumber,
+        swiggy_password: swiggyPassword,
       });
       console.log(response);
 
@@ -565,6 +662,45 @@ const Home = ({
             </div>
           </div>
         </div> */}
+
+          {/* //! Line Graph */}
+          <div
+            className="onboard-graphs"
+            style={{ marginTop: "3rem", marginBottom: "3rem" }}
+          >
+            {/* <div className="linegraph-1" style={{ marginBottom: "2.5rem" }}>
+              <div
+                className=""
+                style={{
+                  textAlign: "center",
+                  fontSize: "25px",
+                }}
+              >
+                Order V/S Rating Growth
+              </div>
+              <Line options={options} data={LineGraphData} />
+            </div> */}
+            <div
+              className="linegraph-2"
+              style={
+                {
+                  // color:"#efefef",
+                }
+              }
+            >
+              <div className="label-head">
+                <div className="label-head__text">
+                  Checkout Bangaluru customer
+                  <br />
+                  attrction percentage
+                </div>
+              </div>
+              <div className="graph">
+                <Line options={options2} data={LineGraphData2} height={220} />
+              </div>
+              <div className="label-bottom">DISCOUNT PERCENTAGE</div>
+            </div>
+          </div>
 
           {/* //! score bars */}
           {/* <div className="onboard-area-score">
@@ -989,6 +1125,7 @@ const Home = ({
               <div className="page-body__form--secure-text">
                 <BsShieldFillCheck size={20} className="icon" />
                 <span className="text"> Your data is secure with us</span>
+                {/* <BsShieldFillCheck size={20} className="icon" /> */}
                 <IoIosInformationCircleOutline size={25} className="icon" />
               </div>
               {/* //!Swiggy Rest. Phone */}

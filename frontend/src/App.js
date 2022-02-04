@@ -115,7 +115,7 @@ function App() {
         {/* //Todo: New Onboarding dashboard */}
         <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
         {/* <Route path="/test" element={<OnboardingDashboard />} /> */}
-        <Route
+        {/* <Route
           path="/signup"
           element={
             <RedirectRoute>
@@ -127,13 +127,13 @@ function App() {
                 />
                 <meta property="og:title" content="web-app" />
               </MetaTags>
-              {/* <Signup /> */}
+              <Signup />
               <SignupA />
-              {/* <SignupB /> */}
+              <SignupB />
             </RedirectRoute>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path="/greeting"
           element={
             <RedirectRoute>
@@ -148,7 +148,7 @@ function App() {
               <Greeting />
             </RedirectRoute>
           }
-        />
+        /> */}
         <Route
           path="/settings"
           element={

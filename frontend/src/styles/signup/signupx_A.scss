@@ -1,4 +1,10 @@
+$bold: 700;
+$medium-large: 600;
+$medium: 500;
+$light: 200;
+
 .s-a-bg {
+  // font-family: "Proxima Nova Rg";
   &::before {
     position: absolute;
     content: " ";
@@ -80,10 +86,12 @@
 
 .s-a-heading {
   font-size: 24px;
-  font-weight: 700;
+  line-height: 25px;
+  font-weight: $bold;
   text-align: center;
+
   margin: 0 auto;
-  max-width: 400px;
+  max-width: 370px;
   width: 100%;
   margin-bottom: 1rem;
   padding: 0 1rem;
@@ -100,19 +108,20 @@
   background-color: transparent;
   &__input-feilds {
     width: 100%;
-    margin-top: 1.2rem;
-    border-radius: 5px;
-    font-weight: 600;
-    border: none;
+    max-width: 400px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    max-width: 400px;
+
+    margin-top: 1.2rem;
+    border-radius: 5px;
+    font-weight: $medium;
+    border: none;
 
     input[type="text"] {
       font-size: 18px;
       line-height: 14px;
-      font-weight: 600;
+      font-weight: $medium;
     }
 
     .in-number {
@@ -120,9 +129,9 @@
       padding: 1rem 0.5rem;
       border: none;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: $medium;
       background-color: $color-white-2;
-      color: $color-grey-3;
+      color: #969bb0;
       box-shadow: 0px 5px 11px rgba(255, 101, 30, 0.24);
       border-radius: 16px;
       @include breakpoint-up(xsmall) {
@@ -136,14 +145,14 @@
       border: none;
       background-color: $color-white-2;
       font-size: 18px;
-      color: $color-grey-3;
+      color: $color-black-1;
       box-shadow: 0px 5px 11px rgba(255, 101, 30, 0.24);
       border-radius: 16px;
-      font-weight: 600;
+      font-weight: $bold;
       &::placeholder {
-        color: $color-grey-3;
+        color: #969bb0;
         font-size: 18px;
-        font-weight: 600;
+        font-weight: $medium;
       }
     }
   }
@@ -151,24 +160,28 @@
   &__btn {
     text-align: center;
     width: 100%;
-    margin-top: 1.3rem;
+    // margin-top: 1.3rem;
     .btn {
-      max-width: 200px;
-      border: none;
-      margin-top: 1rem;
+      max-width: 180px;
+
       background: #000000;
-      box-shadow: 0px 9px 17px rgba(255, 175, 82, 0.3);
-      border-radius: 16px;
       color: #ffffff;
+      box-shadow: 0px 9px 17px rgba(255, 175, 82, 0.3);
+
+      padding: 0.5rem 2.2rem;
+      margin-top: 1.5rem;
+
+      border: none;
+      border-radius: 16px;
       font-size: 18px;
       line-height: 35px;
-      padding: 0.5rem 2.2rem;
+      font-weight: $bold;
     }
   }
 }
 
 .s-a-video-container {
-  padding: 2rem 2rem 0.5rem 2rem;
+  padding: 2rem 2rem 2rem 2rem;
   .s-a-video {
     .single-video {
       box-shadow: 0px 10px 11px rgba(255, 101, 30, 0.24);
@@ -187,8 +200,10 @@
   &__item {
     text-align: center;
     &--number {
-      font-size: 35px;
-      font-weight: 700;
+      font-size: 32px;
+      line-height: 25px;
+      font-weight: $bold;
+      margin-bottom: 0.5rem;
 
       background-image: linear-gradient(
         to bottom,
@@ -200,7 +215,9 @@
     }
     &--text {
       font-size: 14px;
+      line-height: 17px;
       color: $color-black-1;
+      font-weight: $medium;
     }
   }
 }
@@ -224,31 +241,32 @@
 
     &--left-line {
       width: 15%;
-      height: 3.5px;
+      height: 3px;
       background: linear-gradient(to right, #ff3529 100%, #ff9114 100%);
       border-radius: 20px;
-      opacity: 0.3;
+      opacity: 0.2;
     }
     &--text {
       font-size: 22px;
       color: $color-black-1;
-      font-weight: 700;
       text-align: center;
-      width: 65%;
+      // width: 65%;
+      min-width: 210px;
+      font-weight: $bold;
       @include breakpoint-up(xxsmall) {
         font-size: 24px;
       }
     }
     &--right-line {
       width: 15%;
-      height: 3.5px;
+      height: 3px;
       background: linear-gradient(
         to right,
         $color-primary-orange-red 100%,
         $color-primary-2 100%
       );
       border-radius: 20px;
-      opacity: 0.3;
+      opacity: 0.2;
     }
   }
 
@@ -271,15 +289,16 @@
     &--text {
       .title {
         font-size: 18px;
-        font-weight: 600;
+        line-height: 25px;
+        font-weight: $medium-large;
         text-align: left;
         margin-bottom: 0.2rem;
       }
       .sub-title {
         font-size: 14px;
-        font-weight: 400;
+        font-weight: $medium;
         text-align: left;
-        color: $color-grey-3;
+        color:$color-grey-1;
       }
     }
   }
@@ -312,7 +331,7 @@
   &__title {
     position: relative;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: $bold;
 
     margin-bottom: 2rem;
     padding: 0.5rem;
@@ -341,9 +360,9 @@
 
     .single-review-card {
       position: relative;
-      min-height: 180px;
-      max-width: 180px;
-      min-width: 180px;
+      min-height: 200px;
+      // max-width: 180px;
+      min-width: 240px;
       padding: 1rem 0.5rem;
       margin-right: 1rem;
       border-radius: 20px;
@@ -398,7 +417,7 @@
       box-shadow: 0px 9px 17px rgba(255, 175, 82, 0.3);
       border-radius: 16px;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: $bold;
       padding: 0.7rem 1rem;
 
       color: $color-white-1;

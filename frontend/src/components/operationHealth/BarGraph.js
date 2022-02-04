@@ -17,12 +17,15 @@ const BarGraph = ({ compareThen, value, benchmark }) => {
     },
 
     scales: {
+      min: 3.5,
+      max: 5,
       y: {
         beginAtZero: true,
         grid: {
           drawBorder: false,
           display: false,
         },
+        tick: {},
       },
       x: {
         beginAtZero: true,

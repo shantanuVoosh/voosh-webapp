@@ -1,3 +1,41 @@
+@font-face {
+  font-family: "Proxima Nova Bl";
+  src: url("./font/ProximaNova-Black.eot");
+  src: local("Proxima Nova Black"), local("ProximaNova-Black"),
+    url("./font/ProximaNova-Black.eot?#iefix") format("embedded-opentype"),
+    url("./font/ProximaNova-Black.woff2") format("woff2"),
+    url("./font/ProximaNova-Black.woff") format("woff"),
+    url("./font/ProximaNova-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Proxima Nova Rg';
+  src: url('./font/ProximaNova-Bold.eot');
+  src: local('Proxima Nova Bold'), local('ProximaNova-Bold'),
+      url('./font/ProximaNova-Bold.eot?#iefix') format('embedded-opentype'),
+      url('./font/ProximaNova-Bold.woff2') format('woff2'),
+      url('./font/ProximaNova-Bold.woff') format('woff'),
+      url('./font/ProximaNova-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("./font/ProximaNova-Regular.eot");
+  src: local("Proxima Nova Regular"), local("ProximaNova-Regular"),
+    url("./font/ProximaNova-Regular.eot?#iefix") format("embedded-opentype"),
+    url("./font/ProximaNova-Regular.woff2") format("woff2"),
+    url("./font/ProximaNova-Regular.woff") format("woff"),
+    url("./font/ProximaNova-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @import "utils/mixins";
 @import "utils/variable";
 @import "globals";
@@ -22,6 +60,7 @@
 @import "onboradingDashboard/header";
 @import "onboradingDashboard/footer";
 @import "onboradingDashboard/explore";
+
 @import "timeSeries/timeSeries";
 @import "listingScore/listingScore";
 @import "revenue/revenue_a";
