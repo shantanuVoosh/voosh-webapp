@@ -10,19 +10,17 @@
   font-style: normal;
 }
 
-
 @font-face {
-  font-family: 'Proxima Nova Rg';
-  src: url('./font/ProximaNova-Bold.eot');
-  src: local('Proxima Nova Bold'), local('ProximaNova-Bold'),
-      url('./font/ProximaNova-Bold.eot?#iefix') format('embedded-opentype'),
-      url('./font/ProximaNova-Bold.woff2') format('woff2'),
-      url('./font/ProximaNova-Bold.woff') format('woff'),
-      url('./font/ProximaNova-Bold.ttf') format('truetype');
+  font-family: "Proxima Nova Rg";
+  src: url("./font/ProximaNova-Bold.eot");
+  src: local("Proxima Nova Bold"), local("ProximaNova-Bold"),
+    url("./font/ProximaNova-Bold.eot?#iefix") format("embedded-opentype"),
+    url("./font/ProximaNova-Bold.woff2") format("woff2"),
+    url("./font/ProximaNova-Bold.woff") format("woff"),
+    url("./font/ProximaNova-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
-
 
 @font-face {
   font-family: "Proxima Nova";
@@ -60,7 +58,8 @@
 @import "onboradingDashboard/header";
 @import "onboradingDashboard/footer";
 @import "onboradingDashboard/explore";
-
+@import "onboradingDashboard/congratulationPage.scss";
+@import "onboradingDashboard/partnerRegistrationPage.scss";
 @import "timeSeries/timeSeries";
 @import "listingScore/listingScore";
 @import "revenue/revenue_a";
