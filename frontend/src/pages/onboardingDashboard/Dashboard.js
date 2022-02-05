@@ -8,6 +8,7 @@ import cookie from "react-cookies";
 import Loading from "../../components/Loading";
 import Explore from "./Explore";
 import Home from "./Home";
+import Notification from "./Notification";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -26,7 +27,7 @@ const Dashboard = () => {
     name: "",
     email: "",
     restaurantName: "",
-    phoneNumber: parseInt('0123401234'),
+    phoneNumber: parseInt('7008237257'),
     
   });
 
@@ -46,7 +47,7 @@ const Dashboard = () => {
           restaurantName: userDetails.restaurant_name,
           phoneNumber: userDetails.phone,
         });
-        console.log("response success", response);
+        console.log("response success---user details", userDetails);
         setDataSubmitted(response.dataSubmitted);
       } else {
         navigate("/");
@@ -92,6 +93,9 @@ const Dashboard = () => {
       )}
       {pageName === "explore" && (
         <Explore changePage={changePage} pageName={pageName} />
+      )}
+      {pageName === "notification" && (
+        <Notification changePage={changePage} pageName={pageName} />
       )}
     </>
   );

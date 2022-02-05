@@ -4,19 +4,16 @@ import { MdAnchor } from "react-icons/md";
 import { CgLoadbarSound } from "react-icons/cg";
 import { GiCommercialAirplane } from "react-icons/gi";
 import logo_img from "../../styles/images/logo-img.png";
+
 import ReactPlayer from "react-player";
 import { useForm } from "react-hook-form";
 import ScrollButton from "../../components/ScrollButton"; // Todo: scroll to top
-import vooshCardSvg from "../../styles/assets/voosh_card.svg";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import { loginFailure } from "../../redux/Auth/actions/authAction";
-import cookie from "react-cookies";
 import Loading from "../../components/Loading";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { IoIosInformationCircleOutline } from "react-icons/io";
@@ -34,6 +31,10 @@ import PersonArray from "../../utils/customerReviewArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
+import { RiBarChart2Line } from "react-icons/ri";
+import { AiOutlinePlus } from "react-icons/ai";
+import congratulation_logo from "../../styles/assets/congratulation-logo-voosh.svg";
+import PartnerRegistrationPage from "./partnerRegistrationPage";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const options = {
@@ -145,6 +146,7 @@ const Home = ({
   );
   const [displayPageNumber, setDisplayPageNumber] = React.useState(0);
   const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
+  const [isButtonDisable, setIsButtonDisable] = React.useState(false);
   const [bottomSheetData, setBottomSheetData] = React.useState({
     bannerName: "",
     title: "",
@@ -338,6 +340,7 @@ const Home = ({
     }
     // ! Now let check if the swiggy number is valid or not
     try {
+      setIsButtonDisable(true);
       const { data: response } = await axios.post("/check-swiggy-number", {
         swiggy_register_phone: swiggyNumber,
         swiggy_password: swiggyPassword,
@@ -354,6 +357,7 @@ const Home = ({
           action: "Provided Swiggy Number is not valid",
           label: "Swiggy Number Check Failed",
         });
+        setIsButtonDisable(false);
         notifyError(response.message);
         return;
       }
@@ -370,6 +374,8 @@ const Home = ({
           label: "Swiggy Details Form Filled",
         });
         console.log("response:", response);
+        notifySuccess("Swiggy Details are valid!");
+        setIsButtonDisable(false);
         setDisplayPageNumber(3);
       }
     } catch (err) {
@@ -429,6 +435,7 @@ const Home = ({
         token: temporaryToken,
         // name: data["user-name"],
         // email: data["email"],
+
         restaurant_name: data["restaurant-name"],
         phone: currentUserDetails.phoneNumber,
         swiggy_register_phone: swiggyNumber,
@@ -450,7 +457,7 @@ const Home = ({
           action: "Zomato Details Form Filled",
           label: "Zomato Details Form Filled",
         });
-        setDisplayPageNumber(0);
+        setDisplayPageNumber(4);
         setDataSubmitted(true);
       } else {
         console.log("response error", response);
@@ -480,7 +487,7 @@ const Home = ({
           // Todo: temp use
           style={{ marginBottom: "0rem" }}
         >
-          <Header />
+          <Header changePage={changePage} />
           {/* //! dashboard */}
           {!dataSubmitted && (
             <div className="onboard-preview-dashboard">
@@ -805,7 +812,7 @@ const Home = ({
               {PersonArray.map((person, index) => {
                 const { image, review, name, restaurantName } = person;
                 return (
-                  <div className="single-review-card">
+                  <div className="single-review-card" key={index}>
                     <div className="head">
                       <img src={image} alt="user" />
                     </div>
@@ -916,6 +923,7 @@ const Home = ({
               </div>
 
               {/* //! Phone Number */}
+              {console.log(currentUserDetails)}
               <div className="page-body__form--input-feild">
                 <input
                   className="form-input in-number"
@@ -1214,8 +1222,15 @@ const Home = ({
               </div>
 
               {/*// ?Proceed Button */}
-              <div className="page-body__form--btn">
-                <button className="btn">Proceed</button>
+              <div className={"page-body__form--btn"}>
+                <button
+                  className={
+                    "btn" + ` ${isButtonDisable ? "btn-disabled" : ""}`
+                  }
+                >
+                  {isButtonDisable ? "Wait..." : "Proceed"}
+                  {/* Proceed */}
+                </button>
                 <div className="contact-us">
                   {/*//!temp call us */}
                   <span className="text">Need help?</span>
@@ -1408,6 +1423,75 @@ const Home = ({
     );
   };
 
+  // ? Congratulations page
+  const CongratulationsPage = () => {
+    return (
+      <>
+        <MetaTags>
+          <title>Voosh | Congratulations page</title>
+          <meta
+            name="voosh web app, Form-3 Zomato Details"
+            content="voosh Form-3 Zomato Details page"
+          />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
+        <div className="container">
+          <div className="closeicon">
+            <div
+              className="icon"
+              onClick={() => {
+                setDisplayPageNumber(0);
+              }}
+            >
+              <RiCloseCircleLine size={35} />
+            </div>
+          </div>
+
+          <div className="voosh-logo">
+            <span className="left"></span>
+            <img
+              src={congratulation_logo}
+              width="100px"
+              height={"100px"}
+              alt="555"
+            />
+            <span className="right"></span>
+          </div>
+
+          <div className="congText">CONGRATULATIONS</div>
+          <div className="congTextOrange">Registration successful</div>
+          <div className="barroundback">
+            <RiBarChart2Line size={42} />
+          </div>
+          <div className="textpara">
+            We have started analysis and our experts will be back with valuable
+            insights
+          </div>
+          <p className="textpara">
+            This might take upto<b> 3 days</b>
+          </p>
+          <div className="page-body__form--btn congratulations-btn">
+            <button
+              className="btn"
+              onClick={() => {
+                setDisplayPageNumber(0);
+              }}
+            >
+              Go to dashboard
+            </button>
+          </div>
+          {/* //! not needed right now*/}
+          {/* <div className="page-body__form--secure-text">
+            <span className="text">
+              <AiOutlinePlus />
+              Add another restaurant
+            </span>
+          </div> */}
+        </div>
+      </>
+    );
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -1430,6 +1514,8 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
+      {displayPageNumber === 4 && <CongratulationsPage />}
+      {displayPageNumber === 5 && <PartnerRegistrationPage />}
       {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
       )}

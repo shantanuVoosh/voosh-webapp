@@ -73,7 +73,7 @@ const Explore = ({ changePage, pageName }) => {
         <meta property="og:title" content="web-app" />
       </MetaTags>
       <div className="container onboard-container onboard-explore">
-        <Header />
+        <Header changePage={changePage} />
         {/* //! Gray Card */}
         <div className="onboard-certified-card">
           <div className="part-one">

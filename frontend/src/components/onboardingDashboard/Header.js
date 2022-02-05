@@ -21,7 +21,7 @@ import ReactPixel from "react-facebook-pixel";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
-const Header = () => {
+const Header = ({changePage}) => {
   const [openSlider, setOpenSlider] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,10 +72,10 @@ const Header = () => {
               <div className="list" onClick={handleLogout}>
                 Logout
               </div>
+              {/* <Divider />
+              <div className="list is-disabled">Settings</div> */}
               <Divider />
-              <div className="list is-disabled">Settings</div>
-              <Divider />
-              <div className="list is-disabled">Notification</div>
+              <div className="list"  onClick={()=>changePage("notification")} >Notification</div>
               <Divider />
             </div>
             {/* <div>Close</div> */}

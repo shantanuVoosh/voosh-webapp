@@ -1,0 +1,73 @@
+// Todo: copy all the code below
+
+// import React from 'react';
+
+
+//   // ? Congratulations page
+//   const CongratulationsPage = () => {
+//     return (
+//       <>
+//         <MetaTags>
+//           <title>Voosh | Congratulations page</title>
+//           <meta
+//             name="voosh web app, Form-3 Zomato Details"
+//             content="voosh Form-3 Zomato Details page"
+//           />
+//           <meta property="og:title" content="web-app" />
+//         </MetaTags>
+//         <div className="container">
+//           <div className="closeicon">
+//             <div
+//               className="icon"
+//               onClick={() => {
+//                 setDisplayPageNumber(0);
+//               }}
+//             >
+//               <RiCloseCircleLine size={35} />
+//             </div>
+//           </div>
+
+//           <div className="voosh-logo">
+//             <span className="left"></span>
+//             <img
+//               src={congratulation_logo}
+//               width="100px"
+//               height={"100px"}
+//               alt="555"
+//             />
+//             <span className="right"></span>
+//           </div>
+
+//           <div className="congText">CONGRATULATIONS</div>
+//           <div className="congTextOrange">Registration successful</div>
+//           <div className="barroundback">
+//             <RiBarChart2Line size={42} />
+//           </div>
+//           <div className="textpara">
+//             We have started analysis and our experts will be back with valuable
+//             insights
+//           </div>
+//           <p className="textpara">
+//             This might take upto<b> 3 days</b>
+//           </p>
+//           <div className="page-body__form--btn">
+//             <button
+//               className="btn"
+//               onClick={() => {
+//                 setDisplayPageNumber(0);
+//               }}
+//             >
+//               Go to dashboard
+//             </button>
+//           </div>
+//           {/* //! not needed right now*/}
+//           {/* <div className="page-body__form--secure-text">
+//             <span className="text">
+//               <AiOutlinePlus />
+//               Add another restaurant
+//             </span>
+//           </div> */}
+//         </div>
+//       </>
+//     );
+//   };

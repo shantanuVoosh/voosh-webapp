@@ -524,6 +524,7 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   const { phone, tempUser } = req.payload;
 
   if (phone === "0123401234") {
+    console.log("Test User");
     res.json({
       status: "success",
       phone,
@@ -531,8 +532,8 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
       userDetails: {
         name: "",
         email: "",
-        restaurantName: "test",
-        phoneNumber: 0123401234,
+        restaurant_name: "test",
+        phone: 1111111111,
       },
       dataSubmitted: false,
     });
@@ -598,6 +599,7 @@ router.post(
       restaurant_name,
       swiggy_register_phone,
       zomato_register_phone,
+      swiggy_password,
     } = req.body;
     try {
       const client = await MongoClient.connect(VooshDB, {
@@ -613,8 +615,15 @@ router.post(
           // name,
           // email,
           restaurant_name,
-          swiggy_register_phone: parseInt(swiggy_register_phone),
-          zomato_register_phone: parseInt(zomato_register_phone),
+          swiggy_register_phone:
+            swiggy_register_phone.length > 0
+              ? parseInt(swiggy_register_phone)
+              : "",
+          swiggy_password: swiggy_password,
+          zomato_register_phone:
+            zomato_register_phone.length > 0
+              ? parseInt(zomato_register_phone)
+              : "",
         },
       };
       db.collection(onboardProductsColleaction).updateOne(

@@ -35,6 +35,8 @@ import ReactPixel from "react-facebook-pixel";
 import MetaTags from "react-meta-tags";
 import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
 import NewSignupA from "./pages/signup/NewSignupA";
+import AmplitudePage from "./pages/amplitudeCopy/Amplitude";
+
 
 function App() {
   const location = useLocation();
@@ -112,8 +114,12 @@ function App() {
           }
         />
 
-        {/* //Todo: New Onboarding dashboard */}
+        {/* //Todo: ne swiggy signup */}
+        {/* <Route path="/swiggy-path" /> */}
+
+        {/* //? New Onboarding dashboard */}
         <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
+        <Route path="/amplitude" element={<AmplitudePage />} />
         {/* <Route path="/test" element={<OnboardingDashboard />} /> */}
         {/* <Route
           path="/signup"
