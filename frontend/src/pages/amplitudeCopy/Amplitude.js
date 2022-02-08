@@ -241,7 +241,7 @@ const Amplitude = () => {
 
       {/* //? 4th services */}
       {/* //Todo: just put a IAMGE BELOW APP */}
-      <div className="amplitude__services">
+      {/* <div className="amplitude__services">
         <div className="amplitude__services--head">
           <div className="heading">
             Growth is a wholistic
@@ -277,7 +277,7 @@ const Amplitude = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* //? 5th grey section */}
       <div className="amplitude__outcomes">
@@ -482,7 +482,7 @@ const Amplitude = () => {
         <div className="amplitude__bottom-section--bottom">
           <div className="text">
             By submitting this form, you agree I’d like to receive emails about
-            news & updates from Amplitude, to our Terms of Use and acknowledge
+            news & updates from Voosh, to our Terms of Use and acknowledge
             our Privacy Statement.
           </div>
           {/* <div className="privacy-text">

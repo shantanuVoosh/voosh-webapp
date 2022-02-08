@@ -18,10 +18,11 @@ import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
 import ReactGA from "react-ga4";
 import ReactPixel from "react-facebook-pixel";
+import { MdOutlineNotificationsActive } from "react-icons/md";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
-const Header = ({changePage}) => {
+const Header = ({ changePage, pageName }) => {
   const [openSlider, setOpenSlider] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,8 +76,10 @@ const Header = ({changePage}) => {
               {/* <Divider />
               <div className="list is-disabled">Settings</div> */}
               <Divider />
-              <div className="list"  onClick={()=>changePage("notification")} >Notification</div>
-              <Divider />
+              {/* <div className="list" onClick={() => changePage("notification")}>
+                Notification
+              </div>
+              <Divider /> */}
             </div>
             {/* <div>Close</div> */}
             {/* <List>
@@ -100,19 +103,21 @@ const Header = ({changePage}) => {
         </div>
         <div
           className="onboard-header__call-us-btn"
-          style={{ display: "none" }}
-          
+          // style={{ display: "none" }}
+
           onClick={() => {
             // window.open("tel:+917008237257");
-            ReactGA.event({
-              category: `Button Clicked`,
-              action: "Call Us Button Clicked",
-              label: "Call Us Icon Clicked",
-            });
+            // ReactGA.event({
+            //   category: `Button Clicked`,
+            //   action: "Call Us Button Clicked",
+            //   label: "Call Us Icon Clicked",
+            // });
+            changePage('notification')
           }}
         >
           <span className="icon">
-            <FaPhoneAlt size={20} />
+            <MdOutlineNotificationsActive size={20} />
+            {/* <span>1</span> */}
           </span>
         </div>
       </div>

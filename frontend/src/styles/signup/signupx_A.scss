@@ -1,6 +1,6 @@
 $bold: 700;
-$medium-large: 600;
-$medium: 500;
+$medium-large: 500;
+$medium: 400;
 $light: 200;
 
 .s-a-bg {
@@ -288,6 +288,7 @@ $light: 200;
     }
     &--text {
       .title {
+        color: $color-black-1;
         font-size: 18px;
         line-height: 25px;
         font-weight: $medium-large;

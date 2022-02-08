@@ -154,6 +154,7 @@ const NewSignupA = () => {
     // }
 
     const phoneNumber = data["phone-number"];
+    console.log(phoneNumber, "phoneNumber");
     if (phoneNumber.length < 10) {
       console.log(phoneNumber, data);
       notifyError("Please enter a valid phone number");
@@ -164,6 +165,12 @@ const NewSignupA = () => {
       notifyError("Please enter a valid phone number");
       return;
     }
+
+    if (phoneNumber.length > 10) {
+      notifyError("Please enter a valid phone number");
+      return;
+    }
+    
 
     // ! testing purpose
     if (
@@ -493,7 +500,7 @@ const NewSignupA = () => {
                 placeholder="Phone Number"
                 {...register("phone-number", {
                   // required: true,
-                  maxLength: 10,
+                  // maxLength: 10,
                   // minLength: 10,
                 })}
               />
@@ -530,7 +537,7 @@ const NewSignupA = () => {
               <div className="s-a-percentages__item--text">
                 Increased
                 <br />
-                Revenue*
+                Revenue
               </div>
             </div>
             <div className="s-a-percentages__item">

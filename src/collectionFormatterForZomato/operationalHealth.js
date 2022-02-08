@@ -187,7 +187,7 @@ const operationalHealthMongoDBData = async (
     console.log("rdc_score", rdc_score);
     console.log("mfr_score", mfr_score);
     console.log("rating", rating);
-    
+
     console.log(
       "****************-------------------------*********************"
     );
@@ -240,7 +240,8 @@ const operationHealthDataFormatter = async (
       rating_score,
     });
 
-    console.log("ohManually", ohManually);
+    // console.log("ohManually", ohManually);
+    // console.log(rdc_score, 'rdc_score------------------>')
 
     const operationHealth = {
       operationHealthMain: {
@@ -294,7 +295,7 @@ const operationHealthDataFormatter = async (
           value:
             rdc_score === undefined
               ? "Please wait! We are working on It."
-              : parseInt(rdc_score * 100),
+              : parseFloat(rdc_score.toFixed(2)),
           isDataPresent: rdc_score === undefined ? false : true,
         },
         // Todo: Empty data
@@ -314,7 +315,7 @@ const operationHealthDataFormatter = async (
           value:
             rating_score === undefined
               ? "Please wait! We are working on It."
-              : rating_score,
+              : parseFloat(rating_score.toFixed(2)),
           isDataPresent: rating_score === undefined ? false : true,
         },
         // ?Swiggy_MFR
