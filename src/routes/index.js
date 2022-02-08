@@ -22,6 +22,16 @@ const VooshDB =
 const documentName = "operationsdb";
 const secret = "secret";
 
+// Todo: Notification collection sample
+const BANNER_REQUEST = "Banner Request Sent";
+const SIGNUP_SUCCESS = "Signup Successful";
+const REGISTRATION_SUCCESS = "Registration Successful";
+const NotificationModel = {
+  "Banner Request Sent": `Banner Service "Review" requested. You'll receive a callback shortly!`,
+  "Signup Successful": `Welcome to "Grow" by Voosh. We'll be there on your growth Journey!`,
+  "Registration Successful": `You have now successfully entered all details! Sit tight and Relax and we'll analyze and provide you restaurant recommendations!`,
+};
+
 router.post("/user-save-details", async (req, res) => {
   // ?Main Collection
   // const newCollectionName = "onboard_products";
@@ -307,6 +317,7 @@ router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
   // const onboardProductsColleaction = "onboard_products";
   const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
   const nvdpColleaction = "non_voosh_dashboard_products";
 
@@ -440,6 +451,20 @@ router.post("/login-voosh", async (req, res) => {
           swiggy_password: "",
           zomato_register_phone: "",
         });
+
+        await db.collection(onboardNotificationsCollection).insertOne({
+          phone: parseInt(phoneNumber),
+          notifications: [
+            {
+              title: SIGNUP_SUCCESS,
+              message: NotificationModel[SIGNUP_SUCCESS],
+              messageType: "success",
+              date: new Date(),
+              seen: false,
+            },
+          ],
+        });
+
         res.json({
           status: "success",
           message: "New user created",
@@ -516,8 +541,9 @@ router.post("/user/save-only-number", async (req, res) => {
 // Todo: now in future we will use this route, for check the nvdp collection cuz
 // Todo: we are gonna keep the token without expiry time
 // Todo: if user is present in nvdp then send the a new token and with restaurant data
-// ! user data who are present in onboard products
 
+// ? remove notifications thing from here!
+// ! user data who are present in onboard products
 // Todo: now for UAT
 router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
@@ -547,23 +573,33 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
     const db = client.db(documentName);
     // const onboardProductsColleaction = "onboard_products";
     const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
+    // * Grabs all notifications for the user
+    const userAllNotifications = await db
+      .collection(onboardNotificationsCollection)
+      .findOne({ phone: parseInt(phone) });
+
+    // * Grbs the user details
     const userData = await db
       .collection(onboardProductsColleaction)
       .findOne({ phone: parseInt(phone) });
 
     const { swiggy_register_phone, zomato_register_phone } = userData;
+    const { notifications } = userAllNotifications;
 
     console.log("userData", userData);
     res.json({
       status: "success",
       phone,
+
       isAuthTemp: tempUser,
       userDetails: userData,
       dataSubmitted:
         swiggy_register_phone !== "" || zomato_register_phone !== ""
           ? true
           : false,
+      notifications: notifications,
     });
   } catch (err) {
     res.json({
@@ -607,7 +643,9 @@ router.post(
       });
       const db = client.db(documentName);
       // const onboardProductsColleaction = "onboard_products";
+      // const onboardNotificationsCollection = "Onboard_Notifications";
       const onboardProductsColleaction = "Onboard_New_Users_UAT";
+      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
       const query = { phone: parseInt(phone) };
       const update = {
@@ -629,7 +667,7 @@ router.post(
       db.collection(onboardProductsColleaction).updateOne(
         query,
         update,
-        (err, result) => {
+        async (err, result) => {
           if (err) {
             res.json({
               status: "error",
@@ -637,6 +675,22 @@ router.post(
               error: err,
             });
           } else {
+            // ? so this means user is providing swiggy or zomato number(maybe both!)
+            await db.collection(onboardNotificationsCollection).updateOne(
+              { phone: parseInt(phone) },
+              {
+                $push: {
+                  notifications: {
+                    title: REGISTRATION_SUCCESS,
+                    message: NotificationModel[REGISTRATION_SUCCESS],
+                    messageType: "success",
+                    date: new Date(),
+                    seen: false,
+                  },
+                },
+              }
+            );
+
             res.json({
               status: "success",
               message: "User data updated",
@@ -646,6 +700,57 @@ router.post(
           }
         }
       );
+    } catch (err) {
+      res.json({
+        status: "error",
+        message: "Error while sending data from server data",
+        error: err,
+      });
+    }
+  }
+);
+
+// ! Send the users Notifications
+// Todo: now for UAT
+router.post(
+  "/user/onboard-notifications",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone } = req.body;
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      // const onboardNotificationsCollection = "Onboard_Notifications";
+      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+
+      const userAllNotifications = await db
+        .collection(onboardNotificationsCollection)
+        .findOne({ phone: parseInt(phone) });
+
+      console.log("user all notifications", userAllNotifications);
+
+      // ? for handling the old users, they dont have notifications collections when they onboarded
+      if (userAllNotifications === null) {
+        await db.collection(onboardNotificationsCollection).insertOne({
+          phone: phone,
+          notifications: [],
+        });
+
+        res.json({
+          status: "success",
+          notifications: [],
+        });
+        return;
+      }
+
+      const { notifications } = userAllNotifications;
+
+      res.json({
+        status: "success",
+        notifications,
+      });
     } catch (err) {
       res.json({
         status: "error",
@@ -844,5 +949,74 @@ router.post("/test-listing", async (req, res) => {
     });
   }
 });
+router.post(
+  "/sup",
+  // checkAuthentication,
+  async (req, res) => {
+    const { phone } = req.body;
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+
+      const userAllNotifications = await db
+        .collection(onboardNotificationsCollection)
+        .findOne({ phone: parseInt(phone) });
+
+      console.log("userAllNotifications", userAllNotifications);
+      // ? if this is happing, then we have to add the user to the onboard collection
+      if (userAllNotifications === null) {
+        // await db.collection(onboardNotificationsCollection).insertOne({
+        //   phone: parseInt(phone),
+        //   notifications: [
+        //     {
+        //       title: SIGNUP_SUCCESS,
+        //       message: NotificationModel[SIGNUP_SUCCESS],
+        //       messageType: "success",
+        //       date: new Date(),
+        //       seen: false,
+        //     },
+        //   ],
+        // });
+
+        res.json({
+          status: "success",
+          notifications: [],
+        });
+        return;
+      }
+
+      await db.collection(onboardNotificationsCollection).updateOne(
+        { phone: parseInt(phone) },
+        {
+          $push: {
+            notifications: {
+              title: "you have been added to the onboarding process",
+              message: NotificationModel[SIGNUP_SUCCESS],
+              messageType: "success",
+              date: new Date(),
+              seen: false,
+            },
+          },
+        }
+      );
+
+      const { notifications } = userAllNotifications;
+
+      res.json({
+        status: "success",
+        notifications,
+      });
+    } catch (err) {
+      res.json({
+        status: "error",
+        message: "Error while sending data from server data",
+        error: err,
+      });
+    }
+  }
+);
 
 module.exports = router;

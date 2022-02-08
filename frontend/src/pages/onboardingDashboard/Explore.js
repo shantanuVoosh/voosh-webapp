@@ -14,7 +14,7 @@ import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
 import EmbeddedBrowser from "react-embedded-browser";
 
-const Explore = ({ changePage, pageName }) => {
+const Explore = ({ changePage, pageName,  }) => {
   // Todo :temp use
   const numberOfVideoWatch = 1;
 

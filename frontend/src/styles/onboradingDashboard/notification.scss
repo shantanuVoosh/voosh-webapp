@@ -6,6 +6,8 @@
   width: 100%;
   height: 100%;
   padding: 0 1rem;
+  padding-bottom: 15rem;
+  overflow: scroll;
 }
 
 .onboard-n__no-notification {
@@ -27,6 +29,15 @@
 }
 .onboard-n-notification {
   .notification-item {
+    background-color: $color-white-2;
+    margin-bottom: 2rem;
+    padding: 10px 15px;
+    border-radius: 10px;
+
+    &.seen{
+        background-color: $color-white-3;
+    }
+
     &__head {
       display: flex;
       justify-content: flex-start;
@@ -39,6 +50,7 @@
 
         .icon-success {
           color: $green;
+          margin-top: 5px;
         }
       }
       &--title {

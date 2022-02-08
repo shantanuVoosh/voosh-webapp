@@ -13,7 +13,13 @@ import image_1 from "../../styles/images/banners/banner1.jpg";
 import image_2 from "../../styles/images/banners/banner2.jpg";
 import image_3 from "../../styles/images/banners/banner3.jpg";
 import image_4 from "../../styles/images/banners/banner1.jpg";
+import voosh_services from "../../styles/images/voosh-services.png";
 import { SiSwiggy, SiZomato } from "react-icons/si";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import ReactPlayer from "react-player";
 
 const images = [image_1, image_1, image_1, image_1];
 
@@ -21,6 +27,7 @@ const images = [image_1, image_1, image_1, image_1];
 
 const Amplitude = () => {
   const [optionCardNumber, setOptionCardNumber] = React.useState(0);
+  const [isModelOpen, setIsModelOpen] = React.useState(false);
 
   const {
     register,
@@ -35,8 +42,44 @@ const Amplitude = () => {
     setOptionCardNumber(number);
   };
 
+  const model_style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    // p: 4,
+  };
+
   return (
     <div className="amplitude">
+      {/* //? Model */}
+      <>
+        <Modal
+          open={isModelOpen}
+          onClose={() => setIsModelOpen(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={model_style}>
+            <ReactPlayer
+              className="single-video"
+              url="https://www.youtube.com/watch?v=_tnnZYeFYYo"
+              controls
+              playbackRate={1}
+              width="100%"
+              height="200px"
+              onStart={() => {
+                console.log("video start");
+              }}
+            />
+          </Box>
+        </Modal>
+      </>
+      {/* //? Header */}
       <div className="amplitude__header">
         <div className="head">
           {/* <div className="name">Voosh</div> */}
@@ -62,7 +105,9 @@ const Amplitude = () => {
             path forward
           </div>
           <div className="buttons">
-            <div className="btn-watch btn">Watch the Video</div>
+            <div className="btn-watch btn" onClick={() => setIsModelOpen(true)}>
+              Watch the Video
+            </div>
             <div className="btn-vision btn">Our Vision</div>
           </div>
         </div>
@@ -241,7 +286,7 @@ const Amplitude = () => {
 
       {/* //? 4th services */}
       {/* //Todo: just put a IAMGE BELOW APP */}
-      {/* <div className="amplitude__services">
+      <div className="amplitude__services">
         <div className="amplitude__services--head">
           <div className="heading">
             Growth is a wholistic
@@ -253,31 +298,11 @@ const Amplitude = () => {
           </div>
         </div>
         <div className="amplitude__services--body">
-          <div className="logo"></div>
-          <div className="service-items">
-            <div className="item item-1">
-              <span className="icon"></span>
-              <span className="text">Product</span>
-            </div>
-            <div className="item item-2">
-              <span className="icon"></span>
-              <span className="text">Product</span>
-            </div>
-            <div className="item item-3">
-              <span className="icon"></span>
-              <span className="text">Product</span>
-            </div>
-            <div className="item item-4">
-              <span className="icon"></span>
-              <span className="text">Product</span>
-            </div>
-            <div className="item item-5">
-              <span className="icon"></span>
-              <span className="text">Product</span>
-            </div>
+          <div className="logo">
+            <img src={voosh_services} alt="voosh-services" />
           </div>
         </div>
-      </div> */}
+      </div>
 
       {/* //? 5th grey section */}
       <div className="amplitude__outcomes">
@@ -382,7 +407,10 @@ const Amplitude = () => {
             </div> */}
           </div>
           <div className="item item-2">
-            <div className="icon" style={{color:"#f05a48", margin:"-25px 0px"}}>
+            <div
+              className="icon"
+              style={{ color: "#f05a48", margin: "-25px 0px" }}
+            >
               <SiZomato size={100} />
             </div>
             <div className="text">Zomato Integration</div>
@@ -482,8 +510,8 @@ const Amplitude = () => {
         <div className="amplitude__bottom-section--bottom">
           <div className="text">
             By submitting this form, you agree I’d like to receive emails about
-            news & updates from Voosh, to our Terms of Use and acknowledge
-            our Privacy Statement.
+            news & updates from Voosh, to our Terms of Use and acknowledge our
+            Privacy Statement.
           </div>
           {/* <div className="privacy-text">
             ©2022 Amplitude, Inc. All rights reserved. Amplitude is a registered

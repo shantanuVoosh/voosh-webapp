@@ -9,6 +9,7 @@ import Loading from "../../components/Loading";
 import Explore from "./Explore";
 import Home from "./Home";
 import Notification from "./Notification";
+import CongratulationsPage from "./CongratulationsPage";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -27,9 +28,10 @@ const Dashboard = () => {
     name: "",
     email: "",
     restaurantName: "",
-    phoneNumber: parseInt('7008237257'),
-    
+    phoneNumber: parseInt("6008237257"),
   });
+
+  const [userAllNotifications, setUserAllNotifications] = React.useState([]);
 
   // ? Check if user is authenticated
   const getUserOnboardData = async () => {
@@ -40,7 +42,7 @@ const Dashboard = () => {
       });
       console.log(response);
       if (response.status === "success") {
-        const { userDetails } = response;
+        const { userDetails, notifications } = response;
         setCurrentUserDetails({
           name: userDetails.name,
           email: userDetails.email,
@@ -48,6 +50,8 @@ const Dashboard = () => {
           phoneNumber: userDetails.phone,
         });
         console.log("response success---user details", userDetails);
+        setUserAllNotifications(notifications);
+        console.log("response success---notifications", notifications);
         setDataSubmitted(response.dataSubmitted);
       } else {
         navigate("/");
@@ -95,7 +99,15 @@ const Dashboard = () => {
         <Explore changePage={changePage} pageName={pageName} />
       )}
       {pageName === "notification" && (
-        <Notification changePage={changePage} pageName={pageName} />
+        <Notification
+          changePage={changePage}
+          pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          currentUserDetails={currentUserDetails}
+        />
+      )}
+      {pageName === "congratulations" && (
+        <CongratulationsPage changePage={changePage} pageName={pageName} />
       )}
     </>
   );
