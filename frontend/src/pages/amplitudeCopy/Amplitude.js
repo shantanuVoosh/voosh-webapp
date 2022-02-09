@@ -9,10 +9,6 @@ import { BiComment } from "react-icons/bi";
 import logo_img from "../../styles/images/logo-img.png";
 import { useForm } from "react-hook-form";
 import BannerArray from "../../utils/bannerArray";
-import image_1 from "../../styles/images/banners/banner1.jpg";
-import image_2 from "../../styles/images/banners/banner2.jpg";
-import image_3 from "../../styles/images/banners/banner3.jpg";
-import image_4 from "../../styles/images/banners/banner1.jpg";
 import voosh_services from "../../styles/images/voosh-services.png";
 import { SiSwiggy, SiZomato } from "react-icons/si";
 import Box from "@mui/material/Box";
@@ -20,15 +16,41 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import ReactPlayer from "react-player";
-
-const images = [image_1, image_1, image_1, image_1];
+import { BottomSheet } from "react-spring-bottom-sheet";
+import ReactGA from "react-ga4";
+import MetaTags from "react-meta-tags";
+import ReactPixel from "react-facebook-pixel";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import { FaPhoneAlt } from "react-icons/fa";
 
 // FaNetworkWired
 
-const Amplitude = () => {
+// tODO;  currentUserDetails temp hai, once this this on the onborad page we can remove this
+
+const Amplitude = ({
+  currentUserDetails = {
+    name: "",
+    email: "",
+    restaurantName: "",
+    phoneNumber: parseInt("6008237257"),
+  },
+}) => {
+  const { isTemporaryAuthenticated, temporaryToken } = useSelector(
+    (state) => state.auth
+  );
   const [optionCardNumber, setOptionCardNumber] = React.useState(0);
   const [isModelOpen, setIsModelOpen] = React.useState(false);
-
+  const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
+  const [bottomSheetData, setBottomSheetData] = React.useState({
+    bannerName: "",
+    title: "",
+    subTitle: "",
+    content: "",
+    image: "",
+    points: [],
+  });
   const {
     register,
     handleSubmit,
@@ -38,6 +60,107 @@ const Amplitude = () => {
     setValue,
   } = useForm();
 
+  const notifyError = (msg) => toast.error(msg);
+  const notifySuccess = (msg) => toast.success(msg);
+
+  //? call Request, when btn clicked
+  const sendResponse = async (bannerData) => {
+    const { title } = bannerData;
+
+    try {
+      const { data: response } = await axios.post(
+        "/user/call-request",
+        {
+          token: temporaryToken,
+          phoneNumber: currentUserDetails.phoneNumber,
+          flagName: title,
+        }
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${temporaryToken}`,
+        //   },
+        // }
+      );
+
+      console.log("data", response);
+      if (response.status === "success") {
+        // setDataSubmitted(true);
+        setOpenBottomSheet(false);
+
+        // Todo
+        ReactPixel.track("Request a call back", {
+          value: `Request a call back, ${title}`,
+        });
+
+        ReactGA.event({
+          category: "Request a call back",
+          action: "Request a call back Submitted",
+          label: "Request a call back Submitted",
+        });
+
+        notifySuccess(response.message);
+      } else {
+        notifyError(response.message);
+      }
+    } catch (error) {
+      notifyError(error.message);
+    }
+  };
+
+  //? Bottom popup on banner click
+  const onBannerClick = ({
+    bannerName,
+    title,
+    subTitle,
+    content,
+    image,
+    points,
+  }) => {
+    ReactPixel.track("Banner Click", {
+      value: `Banner ${title} Clicked`,
+    });
+
+    ReactGA.event({
+      category: `Banner Clicked`,
+      action: `Open Banner ${title}`,
+      label: `Open Banner`,
+    });
+    setBottomSheetData({
+      bannerName: bannerName,
+      title: title,
+      subTitle: subTitle,
+      content: content,
+      image: image,
+      points: points,
+    });
+    setOpenBottomSheet(true);
+  };
+
+  // tODO : WE CAN GET THE phone number from the token also
+  const onEmailSubmit = async () => {
+    const { email } = getValues();
+    console.log("email", email);
+    try {
+      const { data: response } = await axios.post("/user/email-request", {
+        token: temporaryToken,
+        email: email,
+        phoneL: "7763849952",
+      });
+      console.log("data", response);
+      if (response.status === "success") {
+        notifySuccess(response.message);
+      }
+      // ? server error?
+      else {
+        notifyError(response.message);
+      }
+    } catch (err) {
+      notifyError("Something went wrong, please try again later");
+      console.log("server Error", err);
+    }
+  };
+
+  // ? this not used right now
   const changeOptionCardNumber = (number) => {
     setOptionCardNumber(number);
   };
@@ -56,8 +179,26 @@ const Amplitude = () => {
 
   return (
     <div className="amplitude">
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </>
       {/* //? Model */}
       <>
+        <MetaTags>
+          <title>Voosh | Find-More</title>
+          <meta name="voosh web app, Find More" content="voosh Find More" />
+          <meta property="og:title" content="web-app" />
+        </MetaTags>
         <Modal
           open={isModelOpen}
           onClose={() => setIsModelOpen(false)}
@@ -449,7 +590,20 @@ const Amplitude = () => {
             const { bannerName, title, subTitle, image, content, points } =
               banner;
             return (
-              <div className="banner-card" key={index}>
+              <div
+                className="banner-card"
+                key={index}
+                onClick={() => {
+                  onBannerClick({
+                    bannerName,
+                    title,
+                    subTitle,
+                    image,
+                    content,
+                    points,
+                  });
+                }}
+              >
                 <div className="head">
                   <img className="image" src={image} alt={bannerName} />
                 </div>
@@ -480,7 +634,7 @@ const Amplitude = () => {
         </div>
         <div className="amplitude__bottom-section--body">
           {/* //! email lena hai yaha se */}
-          <div className="form">
+          <form className="form" onSubmit={handleSubmit(onEmailSubmit)}>
             <div className="form--input-field ">
               <input
                 className="form-input"
@@ -497,7 +651,15 @@ const Amplitude = () => {
                 })}
               />
             </div>
-            <div className="form--error red">
+            <div
+              className="form--error red"
+              style={{
+                textAlign: "left",
+                width: "100%",
+                paddingBottom: "1rem",
+                marginTop: "-15px",
+              }}
+            >
               {errors["email"] && (
                 <p className="error red">Provide a valid email address</p>
               )}
@@ -505,7 +667,7 @@ const Amplitude = () => {
             <div className="form--btn">
               <button>Signup</button>
             </div>
-          </div>
+          </form>
         </div>
         <div className="amplitude__bottom-section--bottom">
           <div className="text">
@@ -524,6 +686,85 @@ const Amplitude = () => {
           </div> */}
         </div>
       </div>
+      <BottomSheet
+        open={openBottomSheet}
+        onDismiss={() => {
+          setBottomSheetData({
+            bannerName: "",
+            title: "",
+            subTitle: "",
+            content: "",
+            image: "",
+            points: [],
+          });
+          setOpenBottomSheet(false);
+        }}
+        snapPoints={({ maxHeight }) => 0.8 * maxHeight}
+        // header={<div className="onboard-bottom-sheet__header">SHEET HEADER</div>}
+        footer={
+          <div className="onboard-bottom-sheet__footer">
+            <div
+              className="btn"
+              onClick={() => {
+                console.log("clicked", bottomSheetData);
+                sendResponse(bottomSheetData);
+              }}
+            >
+              <span className="btn--icon">
+                <FaPhoneAlt />
+              </span>
+              <span className="btn--text">Request a call back</span>
+            </div>
+          </div>
+        }
+      >
+        <div className="onboard-bottom-sheet__body">
+          <div className="head">
+            <div className="head__title">
+              <div className="head__title--heading">
+                {bottomSheetData.title}
+              </div>
+              {/* <div className="head__title--sub-heading">
+                {bottomSheetData.subTitle}
+              </div> */}
+            </div>
+            <div className="body">
+              <div className="body__image">
+                <img src={bottomSheetData.image} alt="banner" />
+              </div>
+              <div className="body__content">
+                <div
+                  className="main-pont"
+                  style={{
+                    fontSize: "15px",
+                    marginBottom: "1rem",
+                    color: "black",
+                  }}
+                >
+                  {bottomSheetData.content}
+                </div>
+                <div className="all-points">
+                  {bottomSheetData.points.map((point, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="point"
+                        style={{
+                          fontSize: "15px",
+                          color: "black",
+                        }}
+                      >
+                        {"-  "}
+                        {point}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BottomSheet>
     </div>
   );
 };

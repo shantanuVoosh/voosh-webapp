@@ -452,10 +452,12 @@ router.post("/login-voosh", async (req, res) => {
           zomato_register_phone: "",
         });
 
+        // ? id is 1 cuz this will be the 1st notification
         await db.collection(onboardNotificationsCollection).insertOne({
           phone: parseInt(phoneNumber),
           notifications: [
             {
+              id: 1,
               title: SIGNUP_SUCCESS,
               message: NotificationModel[SIGNUP_SUCCESS],
               messageType: "success",
@@ -617,7 +619,7 @@ router.post(
   "/user/update/onboard-data",
   checkAuthentication,
   async (req, res) => {
-    console.log("hit onboard data");
+    console.log("Update onboard data");
     const { phone, tempUser } = req.payload;
 
     if (parseInt(phone) === "0123401234") {
@@ -641,11 +643,24 @@ router.post(
       const client = await MongoClient.connect(VooshDB, {
         useNewUrlParser: true,
       });
+
+      console.log("Connected successfully to server");
+      console.log(restaurant_name, "restaurant_name");
+
+      console.log(swiggy_password, "swiggy_password");
+      console.log(swiggy_register_phone, "swiggy_register_phone");
+      console.log(zomato_register_phone, "zomato_register_phone");
+      console.log(typeof swiggy_register_phone, "swiggy_register type");
+      console.log(typeof zomato_register_phone, "zomato_register type");
+
       const db = client.db(documentName);
       // const onboardProductsColleaction = "onboard_products";
       // const onboardNotificationsCollection = "Onboard_Notifications";
       const onboardProductsColleaction = "Onboard_New_Users_UAT";
       const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+
+      // ! if default numbers is passed then the type of phone number is
+      // !string, and user provided phone number is string--> so we use `${phone}`
 
       const query = { phone: parseInt(phone) };
       const update = {
@@ -654,12 +669,12 @@ router.post(
           // email,
           restaurant_name,
           swiggy_register_phone:
-            swiggy_register_phone.length > 0
+            `${swiggy_register_phone}`.length > 0
               ? parseInt(swiggy_register_phone)
               : "",
           swiggy_password: swiggy_password,
           zomato_register_phone:
-            zomato_register_phone.length > 0
+            `${zomato_register_phone}`.length > 0
               ? parseInt(zomato_register_phone)
               : "",
         },
@@ -675,12 +690,22 @@ router.post(
               error: err,
             });
           } else {
+            const userNotifications = await db
+              .collection(onboardNotificationsCollection)
+              .findOne({ phone: parseInt(phone) });
+
+            const { notifications } = userNotifications;
+
+            console.log("userNotifications", notifications);
+            console.log("this will happen after user data is save");
+
             // ? so this means user is providing swiggy or zomato number(maybe both!)
             await db.collection(onboardNotificationsCollection).updateOne(
               { phone: parseInt(phone) },
               {
                 $push: {
                   notifications: {
+                    id: notifications.length + 1,
                     title: REGISTRATION_SUCCESS,
                     message: NotificationModel[REGISTRATION_SUCCESS],
                     messageType: "success",
@@ -693,7 +718,7 @@ router.post(
 
             res.json({
               status: "success",
-              message: "User data updated",
+              message: "User data updated Successfully",
               isAuthTemp: tempUser,
               userDetails: result,
             });
@@ -701,6 +726,8 @@ router.post(
         }
       );
     } catch (err) {
+      // ! if some server error occurs
+
       res.json({
         status: "error",
         message: "Error while sending data from server data",
@@ -710,7 +737,7 @@ router.post(
   }
 );
 
-// ! Send the users Notifications
+// ! get all  user Notifications
 // Todo: now for UAT
 router.post(
   "/user/onboard-notifications",
@@ -729,7 +756,7 @@ router.post(
         .collection(onboardNotificationsCollection)
         .findOne({ phone: parseInt(phone) });
 
-      console.log("user all notifications", userAllNotifications);
+      // console.log("user all notifications", userAllNotifications);
 
       // ? for handling the old users, they dont have notifications collections when they onboarded
       if (userAllNotifications === null) {
@@ -842,6 +869,123 @@ router.post("/user/call-request", async (req, res) => {
     });
   }
 });
+
+// Todo: Now for UAT
+// ! Save email
+router.post("/user/email-request", checkAuthentication, async (req, res) => {
+  const { email, phoneNumber } = req.body;
+  const { phone } = req.payload;
+
+  // const onboardProductsColleaction = "onboard_products";
+  const onboardProductsColleaction = "Onboard_New_Users_UAT";
+
+  console.log("email", email);
+  console.log("phoneNumber", phoneNumber);
+  console.log("phone", phone);
+  const current_phone_number = parseInt(phone);
+
+  // ? add new field email in onboard_products
+  // ? but check if user is already provided email?
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    const query = { phone: current_phone_number };
+    const update = {
+      $set: {
+        email: email,
+      },
+    };
+
+    const userData = await db.collection(onboardProductsColleaction).findOne({
+      phone: current_phone_number,
+    });
+
+    const { email: userEmail } = userData;
+    console.log("userData", userEmail);
+    if (userEmail !== undefined) {
+      return res.json({
+        status: "success",
+        message: "Email Already Provided, We will contact you soon",
+      });
+    }
+
+    await db
+      .collection(onboardProductsColleaction)
+      .updateOne(query, update, (err, result) => {
+        if (err) {
+        } else {
+          console.log(result, "result");
+          res.json({
+            status: "success",
+            message: "Email saved",
+          });
+        }
+      });
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: "Error while sending data from server data",
+      error: err,
+    });
+  }
+
+  // res.json({
+  //   status: "success",
+  //   message: "Email sent successfully",
+  // });
+});
+
+// Todo: Now for UAT
+// ! change notification seen status
+router.post(
+  "/user/onboard-notifications/change-seen-status",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone } = req.payload;
+    const { notification_id } = req.body;
+    console.log("phone", phone);
+    console.log("notification_id", notification_id);
+
+    // const onboardNotificationsCollection = "Onboard_Notifications";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+
+      await db.collection(onboardNotificationsCollection).updateOne(
+        { phone: parseInt(phone), "notifications.id": notification_id },
+        {
+          $set: {
+            "notifications.$.seen": true,
+          },
+        }
+      );
+
+      // // Todo: only for checking
+      // const userData = await db
+      //   .collection(onboardNotificationsCollection)
+      //   .findOne({
+      //     phone: parseInt(phoneNumber),
+      //   });
+
+      // const { notifications } = userData;
+      console.log("notifications updated");
+    } catch (err) {
+      console.log(err);
+      res.json({
+        status: "error",
+        message: "Error while sending data from server data",
+        error: err,
+      });
+    }
+  }
+);
 
 //! test route
 router.post("/test-101", async (req, res) => {

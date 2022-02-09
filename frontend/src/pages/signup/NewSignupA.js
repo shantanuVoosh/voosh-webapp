@@ -102,6 +102,26 @@ const NewSignupA = () => {
     }
   }, []);
 
+  React.useEffect(() => {
+    if ("OTPCredential" in window) {
+      const ac = new AbortController();
+
+      navigator.credentials
+        .get({
+          otp: { transport: ["sms"] },
+          signal: ac.signal,
+        })
+        .then((otp) => {
+          this.setState({ otp: otp.code });
+          ac.abort();
+        })
+        .catch((err) => {
+          ac.abort();
+          console.log(err);
+        });
+    }
+  }, []);
+
   // ? Alerts for the user
   const notifyError = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
@@ -170,7 +190,6 @@ const NewSignupA = () => {
       notifyError("Please enter a valid phone number");
       return;
     }
-    
 
     // ! testing purpose
     if (
@@ -497,6 +516,8 @@ const NewSignupA = () => {
                 type="tel"
                 name="phone-number"
                 // defaultValue={phoneInCookie}
+                autocomplete="one-time-code"
+                // inputmode="numeric"
                 placeholder="Phone Number"
                 {...register("phone-number", {
                   // required: true,

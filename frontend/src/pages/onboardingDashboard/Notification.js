@@ -10,17 +10,12 @@ import Loading from "../../components/Loading";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 
-// Todo: put this into common components?
-
-
 const Variants = () => {
   return (
     <Stack spacing={1.5}>
       <Skeleton variant="rectangular" height={118} />
       <Skeleton variant="rectangular" height={118} />
       <Skeleton variant="rectangular" height={118} />
-      {/* <Skeleton variant="rectangular" height={118} />
-      <Skeleton variant="rectangular" height={118} /> */}
     </Stack>
   );
 };
@@ -33,9 +28,11 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
   );
   const [isLoading, setIsLoading] = React.useState(false);
   const [userAllNotifications, setUserAllNotifications] = React.useState([]);
+  const [counter, setCounter] = React.useState(0);
 
   const getAllNotifications = async () => {
     setIsLoading(true);
+
     try {
       const { data: response } = await axios.post(
         `/user/onboard-notifications`,
@@ -58,24 +55,77 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
     }
   };
 
+  const onClickChangeSeenStatus = async (notificationData) => {
+    console.log("notificationData", notificationData);
+    setCounter((prev) => prev + 1);
+    const { id } = notificationData;
+    console.log(id, "id");
+    try {
+      const { data: response } = await axios.post(
+        `/user/onboard-notifications/change-seen-status`,
+        {
+          notification_id: id,
+          phone: currentUserDetails.phoneNumber,
+          token: temporaryToken,
+        }
+      );
+
+      console.log("response-------->", response);
+      if (response.status === "success") {
+        setUserAllNotifications((prev_notifications) => {
+          return prev_notifications.map((notification) => {
+            console.log("notification", notification);
+            if (notification.id === id) {
+              console.log("notification.id", "changed", notification.id);
+
+              notification.seen = true;
+            }
+            return notification;
+          });
+        });
+        setIsLoading(false);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
     getAllNotifications();
     console.log("sup");
-  }, [pageName]);
+  }, [pageName, counter]);
 
-
-  const NotificationItem = ({ title, message, messageType }) => {
+  const NotificationItem = ({
+    title,
+    message,
+    messageType,
+    seen,
+    date,
+    id,
+  }) => {
     return (
       <div
-        className="notification-item"
+        className={"notification-item" + ` ${!seen ? "not-seen" : ""}`}
         onClick={() => {
-          if(title!=="Registration Successful"){
-            return
+          if (seen) return;
+
+          onClickChangeSeenStatus({
+            title,
+            message,
+            messageType,
+            seen,
+            date,
+            id,
+          });
+          if (title !== "Registration Successful") {
+            return;
           }
-          changePage("congratulations")
+          changePage("congratulations");
         }}
       >
-        <div className="notification-item__head">
+        <div className={"notification-item__head"}>
           <div className="notification-item__head--icon">
             {/* //!messageType */}
             {messageType === "error" && (
@@ -97,8 +147,6 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
       </div>
     );
   };
-
-
 
   if (isLoading) {
     return (
@@ -156,13 +204,16 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
           ) : (
             <div className="onboard-n-notification">
               {userAllNotifications.map((item, index) => {
-                const { message, title, messageType } = item;
+                const { message, title, messageType, date, seen, id } = item;
                 return (
                   <NotificationItem
                     key={index}
+                    id={id}
                     message={message}
                     title={title}
                     messageType={messageType}
+                    date={date}
+                    seen={seen}
                   />
                 );
               })}

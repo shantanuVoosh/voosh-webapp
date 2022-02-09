@@ -419,17 +419,8 @@ const Home = ({
 
     //! Todo save or udate the current user
     try {
-      // checkbox_1: true
-      // checkbox_2: true
-      // checkbox_not-in-swiggy: true
-      // checkbox_not-in-zomato: false
-      // email: "shanu09.sm@gmail.com"
-      // phone-number: undefined
-      // restaurant-name: "dummy"
-      // swiggy-number: ""
-      // swiggy-password: ""
-      // user-name: "555"
       // zomato-number: 7008237257
+      console.log(data);
 
       const { data: response } = await axios.post("/user/update/onboard-data", {
         token: temporaryToken,
@@ -445,7 +436,6 @@ const Home = ({
       console.log(response);
       if (response.status === "success") {
         console.log("response success", response);
-        notifySuccess(response.message);
 
         // Todo: test
         ReactPixel.track("Form-3 Zomato Details", {
@@ -1425,7 +1415,6 @@ const Home = ({
       </>
     );
   };
-
 
   if (isLoading) {
     return <Loading />;
