@@ -15,19 +15,27 @@ const Variants = () => {
     <Stack spacing={1.5}>
       <Skeleton variant="rectangular" height={118} />
       <Skeleton variant="rectangular" height={118} />
-      <Skeleton variant="rectangular" height={118} />
+      {/* <Skeleton variant="rectangular" height={118} /> */}
     </Stack>
   );
 };
 
-const Notification = ({ changePage, pageName, currentUserDetails }) => {
+const Notification = ({
+  changePage,
+  pageName,
+  currentUserDetails,
+  userAllNotifications,
+  setUserAllNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
+}) => {
   // const notification_from_api = userAllNotifications;
   // console.log("notification_from_api", notification_from_api);
   const { isTemporaryAuthenticated, temporaryToken } = useSelector(
     (state) => state.auth
   );
   const [isLoading, setIsLoading] = React.useState(false);
-  const [userAllNotifications, setUserAllNotifications] = React.useState([]);
+  // const [userAllNotifications, setUserAllNotifications] = React.useState([]);
   const [counter, setCounter] = React.useState(0);
 
   const getAllNotifications = async () => {
@@ -44,7 +52,11 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
 
       console.log("response-------->", response);
       if (response.status === "success") {
-        setUserAllNotifications(response.notifications);
+        const sortedNotifications = response.notifications.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
+
+        setUserAllNotifications(sortedNotifications);
       } else {
         console.log("error");
       }
@@ -74,15 +86,18 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
       if (response.status === "success") {
         setUserAllNotifications((prev_notifications) => {
           return prev_notifications.map((notification) => {
-            console.log("notification", notification);
+            // console.log("notification", notification);
             if (notification.id === id) {
-              console.log("notification.id", "changed", notification.id);
+              // console.log("notification.id", "changed", notification.id);
 
               notification.seen = true;
             }
             return notification;
           });
         });
+        // Todo decrease the number of notifications
+        setNumberOfNotifications((prev_number) => prev_number - 1);
+
         setIsLoading(false);
       } else {
         console.log("error");
@@ -109,7 +124,7 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
       <div
         className={"notification-item" + ` ${!seen ? "not-seen" : ""}`}
         onClick={() => {
-          if (seen) return;
+          // if (seen) return;
 
           onClickChangeSeenStatus({
             title,
@@ -161,9 +176,17 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
         </MetaTags>
 
         <div className="onboard-notification">
-          <Header changePage={changePage} pageName={pageName} />
+          <Header
+            changePage={changePage}
+            pageName={pageName}
+            userAllNotifications={userAllNotifications}
+            setUserAllNotifications={setUserAllNotifications}
+            numberOfNotifications={numberOfNotifications}
+            setNumberOfNotifications={setNumberOfNotifications}
+          />
           <div className="onboard-notification-container">
             <Variants />
+            <Footer changePage={changePage} pageName={pageName} />
           </div>
         </div>
       </>
@@ -178,7 +201,14 @@ const Notification = ({ changePage, pageName, currentUserDetails }) => {
         <meta property="og:title" content="web-app" />
       </MetaTags>
       <div className="onboard-notification">
-        <Header changePage={changePage} pageName={pageName} />
+        <Header
+          changePage={changePage}
+          pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
         <div className="onboard-notification-container">
           {/* //? for now only no notification wala dummy */}
           {/* <div className="onboard-n__no-notification">

@@ -102,6 +102,16 @@ const NewSignupA = () => {
     }
   }, []);
 
+  // ?Auto utp Submit
+  React.useEffect(() => {
+    if (otp.length === 6) {
+      // const phone = cookie.load(VOOSH_APP_PHONE)
+      const data = getValues();
+      onSubmitOTP(data);
+    }
+  }, [otp]);
+
+  // Todo Testing
   React.useEffect(() => {
     if ("OTPCredential" in window) {
       const ac = new AbortController();
@@ -139,7 +149,7 @@ const NewSignupA = () => {
     if (
       phoneNumber === "1234554321" ||
       phoneNumber === "1234567890" ||
-      phoneNumber === "0123401234"
+      phoneNumber === "1231231239"
     ) {
       return;
     }
@@ -196,7 +206,7 @@ const NewSignupA = () => {
       data["phone-number"] === "9448467130" ||
       data["phone-number"] === "1234554321" ||
       data["phone-number"] === "1234567890" ||
-      data["phone-number"] === "0123401234"
+      data["phone-number"] === "1231231239"
     ) {
       cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
       setPhoneInCookie(data["phone-number"]);
@@ -281,7 +291,7 @@ const NewSignupA = () => {
       otp === "123456" &&
       (data["phone-number"] === "1234554321" ||
         data["phone-number"] === "1234567890" ||
-        data["phone-number"] === "0123401234")
+        data["phone-number"] === "1231231239")
     ) {
       try {
         const { data: response } = await axios.post("/login-voosh", {
@@ -516,7 +526,7 @@ const NewSignupA = () => {
                 type="tel"
                 name="phone-number"
                 // defaultValue={phoneInCookie}
-                autocomplete="one-time-code"
+                // autoComplete="one-time-code"
                 // inputmode="numeric"
                 placeholder="Phone Number"
                 {...register("phone-number", {
@@ -554,27 +564,23 @@ const NewSignupA = () => {
           {/* //? percentage */}
           <div className="s-a-percentages">
             <div className="s-a-percentages__item">
-              <div className="s-a-percentages__item--number">20%</div>
+              <div className="s-a-percentages__item--number">30%</div>
               <div className="s-a-percentages__item--text">
-                Increased
-                <br />
-                Revenue
+                more
+                {/* <br /> */}
+                more orders
               </div>
             </div>
             <div className="s-a-percentages__item">
-              <div className="s-a-percentages__item--number">40%</div>
+              <div className="s-a-percentages__item--number">5000+</div>
               <div className="s-a-percentages__item--text">
-                Increased customer
-                <br />
-                Satisfaction
+              restaurants 
               </div>
             </div>
             <div className="s-a-percentages__item">
               <div className="s-a-percentages__item--number">50%</div>
               <div className="s-a-percentages__item--text">
-                Saving
-                <br />
-                time
+                Saving time
               </div>
             </div>
           </div>

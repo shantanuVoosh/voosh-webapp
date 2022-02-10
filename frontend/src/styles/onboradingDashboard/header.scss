@@ -13,9 +13,11 @@
       height: 48px;
     }
   }
-  &__call-us-btn {
+  &__notification-btn {
     margin-left: auto;
-    .icon {
+
+    &--icon {
+      position: relative;
       width: 40px;
       height: 40px;
       background: $color-white-1;
@@ -27,6 +29,42 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 6px;
+      z-index: 1;
+
+      .icon {
+      }
+      .icon-number {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 100%;
+        background-color: $color-primary-1;
+        color: $color-white-1;
+        font-size: 8px;
+        font-weight: 700;
+        text-align: center;
+       top: -1px;
+        right: 1px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: -1;
+        position: absolute;
+        // width: 12px;
+        // height: 12px;
+        // border-radius: 100%;
+        // background-color: #ff5920;
+        // color: #ffffff;
+        // font-size: 8px;
+        // font-weight: 700;
+        // text-align: center;
+        // top: -1px;
+        // right: 1px;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        // z-index: -1;
+      }
     }
   }
 }
@@ -47,7 +85,7 @@
     text-align: center;
     // font-weight: 700;
     font-size: 20px;
-    &.is-disabled{
+    &.is-disabled {
       color: $color-grey-1;
     }
   }

@@ -399,19 +399,19 @@ router.post("/login-voosh", async (req, res) => {
         // expiresIn: 3000 *3, //50min
       });
 
-      // console.log(parseInt(phoneNumber) === 0123401234, phoneNumber, typeof phoneNumber);
-      if (parseInt(phoneNumber) === 0123401234) {
-        res.json({
-          status: "success",
-          message: "Test User",
-          isAuthTemp: true,
-          isSwiggyNumberPresent: false,
-          isZomatoNumberPresent: false,
-          token: token,
-        });
-        console.log("Test User");
-        return;
-      }
+      // console.log(parseInt(phoneNumber) === 1231231239, phoneNumber, typeof phoneNumber);
+      // if ((parseInt(phoneNumber) === 1231231239)) {
+      //   res.json({
+      //     status: "success",
+      //     message: "Test User",
+      //     isAuthTemp: true,
+      //     isSwiggyNumberPresent: false,
+      //     isZomatoNumberPresent: false,
+      //     token: token,
+      //   });
+      //   console.log("Test User");
+      //   return;
+      // }
 
       const isUserPresentInOnboardProducts = await db
         .collection(onboardProductsColleaction)
@@ -496,7 +496,7 @@ router.post("/login-voosh", async (req, res) => {
 router.post("/user/save-only-number", async (req, res) => {
   const { phoneNumber } = req.body;
 
-  if (parseInt(phoneNumber) === "0123401234") {
+  if (parseInt(phoneNumber) === "1231231239") {
     res.json({
       status: "success",
       message: "Test User",
@@ -551,22 +551,22 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
   const { phone, tempUser } = req.payload;
 
-  if (phone === "0123401234") {
-    console.log("Test User");
-    res.json({
-      status: "success",
-      phone,
-      isAuthTemp: tempUser,
-      userDetails: {
-        name: "",
-        email: "",
-        restaurant_name: "test",
-        phone: 1111111111,
-      },
-      dataSubmitted: false,
-    });
-    return;
-  }
+  // if (phone === "1231231239") {
+  //   console.log("Test User");
+  //   res.json({
+  //     status: "success",
+  //     phone,
+  //     isAuthTemp: tempUser,
+  //     userDetails: {
+  //       name: "",
+  //       email: "",
+  //       restaurant_name: "test",
+  //       phone: 1231231239,
+  //     },
+  //     dataSubmitted: false,
+  //   });
+  //   return;
+  // }
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -622,7 +622,7 @@ router.post(
     console.log("Update onboard data");
     const { phone, tempUser } = req.payload;
 
-    if (parseInt(phone) === "0123401234") {
+    if (parseInt(phone) === "1231231239") {
       res.json({
         status: "success",
         message: "User data updated",
@@ -796,7 +796,7 @@ router.post("/user/call-request", async (req, res) => {
     console.log("flagName", flagName);
     console.log("phoneNumber", phoneNumber);
 
-    if (parseInt(phoneNumber) === 0123401234) {
+    if (parseInt(phoneNumber) === 1231231239) {
       res.json({
         status: "success",
         message: "Still having problem, Someone will call you soon",
@@ -967,14 +967,6 @@ router.post(
         }
       );
 
-      // // Todo: only for checking
-      // const userData = await db
-      //   .collection(onboardNotificationsCollection)
-      //   .findOne({
-      //     phone: parseInt(phoneNumber),
-      //   });
-
-      // const { notifications } = userData;
       console.log("notifications updated");
     } catch (err) {
       console.log(err);

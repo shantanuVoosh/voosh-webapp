@@ -10,7 +10,7 @@ import { RiCloseCircleLine } from "react-icons/ri";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 
-const Amplitude = () => {
+const SwiggyForm = () => {
   const {
     register,
     handleSubmit,
@@ -191,4 +191,4 @@ const Amplitude = () => {
   );
 };
 
-export default Amplitude;
+export default SwiggyForm;

@@ -22,16 +22,36 @@ import { MdOutlineNotificationsActive } from "react-icons/md";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
-const Header = ({ changePage, pageName }) => {
+const Header = ({
+  changePage,
+  pageName,
+  userAllNotifications,
+  setUserAllNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
+}) => {
   const [openSlider, setOpenSlider] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (userAllNotifications) {
+      const count_unseen_notifications = userAllNotifications.filter(
+        (notification) => {
+          return notification.seen === false;
+        }
+      ).length;
+
+      setNumberOfNotifications(count_unseen_notifications);
+    }
+  }, [pageName]);
 
   const handelSlider = () => {
     console.log("handelSlider");
     setOpenSlider((prevState) => !prevState);
     console.log(openSlider);
   };
+  console.log(numberOfNotifications, "numberOfNotifications");
 
   const handleLogout = () => {
     console.log("handleLogout");
@@ -73,6 +93,18 @@ const Header = ({ changePage, pageName }) => {
               <div className="list" onClick={handleLogout}>
                 Logout
               </div>
+              <Divider />
+              <div className="list" onClick={() => changePage("find-more")}>
+                Find More
+              </div>
+              <Divider />
+              <div className="list" onClick={() => changePage("user-profile")}>
+                Profile
+              </div>
+              <Divider />
+              <div className="list" onClick={() => changePage("swiggy-form")}>
+                For Test(refresh page to go back)
+              </div>
               {/* <Divider />
               <div className="list is-disabled">Settings</div> */}
               <Divider />
@@ -102,7 +134,7 @@ const Header = ({ changePage, pageName }) => {
           />
         </div>
         <div
-          className="onboard-header__call-us-btn"
+          className="onboard-header__notification-btn"
           // style={{ display: "none" }}
 
           onClick={() => {
@@ -112,13 +144,17 @@ const Header = ({ changePage, pageName }) => {
             //   action: "Call Us Button Clicked",
             //   label: "Call Us Icon Clicked",
             // });
-            changePage('notification')
+            changePage("notification");
           }}
         >
-          <span className="icon">
-            <MdOutlineNotificationsActive size={20} />
-            {/* <span>1</span> */}
-          </span>
+          <div className="onboard-header__notification-btn--icon">
+            <MdOutlineNotificationsActive size={20} className="icon" />
+            {numberOfNotifications > 0 && (
+              <span className={"icon-number"}>
+                {/* <span>{numberOfNotifications}</span> */}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </>

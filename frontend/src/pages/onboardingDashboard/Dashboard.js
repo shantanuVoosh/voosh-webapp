@@ -10,6 +10,9 @@ import Explore from "./Explore";
 import Home from "./Home";
 import Notification from "./Notification";
 import CongratulationsPage from "./CongratulationsPage";
+import FindMore from "./FindMore";
+import SwiggyForm from "./SwiggyForm";
+import UserProfile from "./UserProfile";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -30,8 +33,9 @@ const Dashboard = () => {
     restaurantName: "",
     phoneNumber: parseInt("6008237257"),
   });
-
   const [userAllNotifications, setUserAllNotifications] = React.useState([]);
+  // const [unSeenNotifications, setUnSeenNotifications] = React.useState(0);
+  const [numberOfNotifications, setNumberOfNotifications] = React.useState(0);
 
   // ? Check if user is authenticated
   const getUserOnboardData = async () => {
@@ -93,21 +97,55 @@ const Dashboard = () => {
           isLoading={isLoading}
           changePage={changePage}
           pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
         />
       )}
       {pageName === "explore" && (
-        <Explore changePage={changePage} pageName={pageName} />
+        <Explore
+          changePage={changePage}
+          pageName={pageName}
+          currentUserDetails={currentUserDetails}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
       )}
       {pageName === "notification" && (
         <Notification
           changePage={changePage}
           pageName={pageName}
-          userAllNotifications={userAllNotifications}
           currentUserDetails={currentUserDetails}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
         />
       )}
       {pageName === "congratulations" && (
         <CongratulationsPage changePage={changePage} pageName={pageName} />
+      )}
+      {pageName === "find-more" && (
+        <FindMore changePage={changePage} pageName={pageName} />
+      )}
+      {pageName === "swiggy-form" && <SwiggyForm />}
+      {pageName === "user-profile" && (
+        <UserProfile
+          currentUserDetails={currentUserDetails}
+          setCurrentUserDetails={setCurrentUserDetails}
+          dataSubmitted={dataSubmitted}
+          setDataSubmitted={setDataSubmitted}
+          isLoading={isLoading}
+          changePage={changePage}
+          pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
       )}
     </>
   );

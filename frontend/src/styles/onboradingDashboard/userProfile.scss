@@ -1,0 +1,27 @@
+.user-profile {
+}
+
+.user-profile__head {
+  //   background-color: $color-primary-1;
+  min-height: 300px;
+  padding: 1rem 2rem;
+  &--top {
+    // background-color: #fff;
+  }
+  &--user-icon {
+    height: 300px;
+    width: 300px;
+    border-radius: 100%;
+    background-color: $color-primary-1;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-primary-1;
+    // border: 5px solid;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 50%);
+  }
+  &--bottom {
+    // background-color: #fff;
+  }
+}

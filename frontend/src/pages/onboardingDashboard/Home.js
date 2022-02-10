@@ -31,10 +31,8 @@ import PersonArray from "../../utils/customerReviewArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
-import { RiBarChart2Line } from "react-icons/ri";
-import { AiOutlinePlus } from "react-icons/ai";
-import congratulation_logo from "../../styles/assets/congratulation-logo-voosh.svg";
-import PartnerRegistrationPage from "./partnerRegistrationPage";
+
+
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
 const options = {
@@ -140,6 +138,10 @@ const Home = ({
   isLoading,
   changePage,
   pageName,
+  userAllNotifications,
+  setUserAllNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
 }) => {
   const { isTemporaryAuthenticated, temporaryToken } = useSelector(
     (state) => state.auth
@@ -180,6 +182,32 @@ const Home = ({
     setDisplayPageNumber(0);
     window.scrollTo(0, 0);
   }, [pageName]);
+
+  // ? when form is submitted
+  const getAllNotifications = async () => {
+    try {
+      const { data: response } = await axios.post(
+        `/user/onboard-notifications`,
+        {
+          phone: currentUserDetails.phoneNumber,
+          token: temporaryToken,
+        }
+      );
+
+      console.log("response-------->", response);
+      if (response.status === "success") {
+        const sortedNotifications = response.notifications.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
+
+        setUserAllNotifications(sortedNotifications);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //? call Request, when btn clicked
   const sendResponse = async (bannerData) => {
@@ -437,7 +465,6 @@ const Home = ({
       if (response.status === "success") {
         console.log("response success", response);
 
-        // Todo: test
         ReactPixel.track("Form-3 Zomato Details", {
           value: "Zomato Details Form Filled",
         });
@@ -451,6 +478,7 @@ const Home = ({
         // ! chaning the page number, in case of success (new way)
         // setDisplayPageNumber(4);
         changePage("congratulations");
+        getAllNotifications();
         setDataSubmitted(true);
       } else {
         console.log("response error", response);
@@ -463,7 +491,7 @@ const Home = ({
     }
   };
 
-  // ? onboarded Dashboard
+  // ? onboard Dashboard
   const DashboardPage = () => {
     return (
       <>
@@ -480,7 +508,14 @@ const Home = ({
           // Todo: temp use
           style={{ marginBottom: "0rem" }}
         >
-          <Header changePage={changePage} />
+          <Header
+            changePage={changePage}
+            pageName={pageName}
+            userAllNotifications={userAllNotifications}
+            setUserAllNotifications={setUserAllNotifications}
+            numberOfNotifications={numberOfNotifications}
+            setNumberOfNotifications={setNumberOfNotifications}
+          />
           {/* //! dashboard */}
           {!dataSubmitted && (
             <div className="onboard-preview-dashboard">
@@ -511,19 +546,19 @@ const Home = ({
                     <div className="icon">
                       <CgLoadbarSound size={32} />
                     </div>
-                    <div className="text">Performance insights</div>
+                    <div className="text">Persoanlized analsis</div>
                   </div>
                   <div className="menu-btn">
                     <div className="icon">
                       <MdAnchor size={32} />
                     </div>
-                    <div className="text">Expert help and insights</div>
+                    <div className="text">Detailed review analysis</div>
                   </div>
                   <div className="menu-btn">
                     <div className="icon">
                       <GiCommercialAirplane size={32} />
                     </div>
-                    <div className="text">Maximum results</div>
+                    <div className="text">Data based Recommendatons</div>
                   </div>
                 </div>
                 <div
@@ -1438,7 +1473,7 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
-      {displayPageNumber === 5 && <PartnerRegistrationPage />}
+      
       {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
       )}

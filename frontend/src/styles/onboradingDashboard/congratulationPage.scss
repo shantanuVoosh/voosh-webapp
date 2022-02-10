@@ -87,13 +87,14 @@
 .barroundback {
   justify-content: center;
   align-items: center;
-  background-color: $color-white-3;
+  // background-color: $color-white-3;
   color: $color-grey-1;
   width: 160px;
   height: 160px;
   border-radius: 100%;
   display: flex;
   margin: 20px auto 20px auto;
+  // color: $color-grey-3;
 }
 
 .textpara {

@@ -6,6 +6,11 @@ import ReactPixel from "react-facebook-pixel";
 import { RiBarChart2Line } from "react-icons/ri";
 import { AiOutlinePlus } from "react-icons/ai";
 import congratulation_logo from "../../styles/assets/congratulation-logo-voosh.svg";
+import { TiTickOutline } from "react-icons/ti";
+import { GrUserExpert } from "react-icons/gr";
+
+import { TiTick } from "react-icons/ti";
+import { GoVerified } from "react-icons/go";
 
 // ? Congratulations page
 const CongratulationsPage = ({ changePage, pageName }) => {
@@ -45,7 +50,7 @@ const CongratulationsPage = ({ changePage, pageName }) => {
         <div className="congText">CONGRATULATIONS</div>
         <div className="congTextOrange">Registration successful</div>
         <div className="barroundback">
-          <RiBarChart2Line size={42} />
+          <GoVerified size={230} />
         </div>
         <div className="textpara">
           We have started analysis and our experts will be back with valuable

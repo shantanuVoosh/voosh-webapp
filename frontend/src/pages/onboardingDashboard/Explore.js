@@ -14,7 +14,14 @@ import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
 import EmbeddedBrowser from "react-embedded-browser";
 
-const Explore = ({ changePage, pageName,  }) => {
+const Explore = ({
+  changePage,
+  pageName,
+  userAllNotifications,
+  setUserAllNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
+}) => {
   // Todo :temp use
   const numberOfVideoWatch = 1;
 
@@ -73,7 +80,13 @@ const Explore = ({ changePage, pageName,  }) => {
         <meta property="og:title" content="web-app" />
       </MetaTags>
       <div className="container onboard-container onboard-explore">
-        <Header changePage={changePage} />
+        <Header
+          changePage={changePage}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
         {/* //! Gray Card */}
         <div className="onboard-certified-card">
           <div className="part-one">

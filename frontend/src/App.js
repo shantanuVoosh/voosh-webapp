@@ -37,7 +37,6 @@ import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and
 import NewSignupA from "./pages/signup/NewSignupA";
 import AmplitudePage from "./pages/amplitudeCopy/Amplitude";
 
-
 function App() {
   const location = useLocation();
 
@@ -159,15 +158,17 @@ function App() {
           path="/settings"
           element={
             <>
-              <MetaTags>
-                <title>Voosh | Settings</title>
-                <meta
-                  name="voosh web app, Settings page"
-                  content="voosh Settings page"
-                />
-                <meta property="og:title" content="web-app" />
-              </MetaTags>
-              <Settings />
+              <RequiredAuth>
+                <MetaTags>
+                  <title>Voosh | Settings</title>
+                  <meta
+                    name="voosh web app, Settings page"
+                    content="voosh Settings page"
+                  />
+                  <meta property="og:title" content="web-app" />
+                </MetaTags>
+                <Settings />
+              </RequiredAuth>
             </>
           }
         />
@@ -175,15 +176,17 @@ function App() {
           path="/notification"
           element={
             <>
-              <MetaTags>
-                <title>Voosh | Notification</title>
-                <meta
-                  name="voosh web app, Notification page"
-                  content="voosh Notification page"
-                />
-                <meta property="og:title" content="web-app" />
-              </MetaTags>
-              <Notification />
+              <RequiredAuth>
+                <MetaTags>
+                  <title>Voosh | Notification</title>
+                  <meta
+                    name="voosh web app, Notification page"
+                    content="voosh Notification page"
+                  />
+                  <meta property="og:title" content="web-app" />
+                </MetaTags>
+                <Notification />
+              </RequiredAuth>
             </>
           }
         />
