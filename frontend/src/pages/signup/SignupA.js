@@ -327,19 +327,19 @@ const SignupA = () => {
                   style={{ display: "flex", alignItems: "center" }}
                 >
                   <input
-                    type="checkbox"
-                    name="tnc-checkbox"
-                    value={tnc}
-                    checked={tnc}
-                    ref={tncRef}
-                    onChange={(e) => {
-                      setTnc((prevState) => !prevState);
-                    }}
+                  // type="checkbox"
+                  // name="tnc-checkbox"
+                  // value={tnc}
+                  // checked={tnc}
+                  // ref={tncRef}
+                  // onChange={(e) => {
+                  //   setTnc((prevState) => !prevState);
+                  // }}
                   />
                   <Button
                     onClick={() => {
-                      setTnc((prevState) => !prevState);
-                      handelModelClose();
+                      // setTnc((prevState) => !prevState);
+                      // handelModelClose();
                     }}
                   >
                     Accept And Continue
@@ -347,9 +347,9 @@ const SignupA = () => {
                 </div>
                 <Button
                   onClick={() => {
-                    console.log(tnc);
-                    handelModelClose();
-                    console.log(tnc);
+                    // console.log(tnc);
+                    // handelModelClose();
+                    // console.log(tnc);
                   }}
                 >
                   Close

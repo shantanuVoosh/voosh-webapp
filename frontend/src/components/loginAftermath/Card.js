@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import SectionButtons from "../SectionButtons";
 import { useSelector, useDispatch } from "react-redux";
 import CardStatistics from "./CardStatistics";
+import moment from "moment";
 
 const Card = ({ iconName, name, info, cardStatistics }) => {
   const navigate = useNavigate();
-  const { data, resultType } = useSelector((state) => state.data);
+  const { data, resultType, startDate, endDate } = useSelector(
+    (state) => state.data
+  );
   const buttons = data.map((item) => item.name);
   const navBtnRef = data.map((_, index) => React.createRef(null));
 
@@ -29,6 +32,19 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
       financicalData: { totalSales },
     },
   } = currentProductData;
+
+  // Todo: testing
+
+  const startOfMonth = moment()
+    .clone()
+    .subtract(1, "months")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  const endOfMonth = moment()
+    .clone()
+    .subtract(1, "months")
+    .endOf("month")
+    .format("YYYY-MM-DD");
 
   const handelClick = () => {
     // Removing white space, and first letter in smaller case
@@ -55,7 +71,9 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
             <BsBarChartLine className="home-card-left__icon" size={25} />
           ) : null}
           <div className="home-card-left__text">
-            <h4 className="home-card-left__text--heading">{name==="Revenue"?"Sales":name}</h4>
+            <h4 className="home-card-left__text--heading">
+              {name === "Revenue" ? "Sales" : name}
+            </h4>
             <p className="home-card-left__text--info">{info}</p>
           </div>
           <span
@@ -87,13 +105,23 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
                 // Todo: temp solution for Prev Month Revenue
                 // ! if prev month is null then show 0
                 value:
-                  resultType === "Previous Month" ? totalSales : revenue_score,
+                  resultType === "Custom Range"
+                    ? startOfMonth === startDate && endOfMonth === endDate
+                      ? totalSales
+                      : revenue_score
+                    : resultType === "Previous Month"
+                    ? totalSales
+                    : revenue_score,
                 change: null,
                 benchmark: null,
                 changeTypeDirection: "up",
                 type: "money",
                 isDataPresent:
-                  (resultType === "Previous Month"
+                  (resultType === "Custom Range"
+                    ? startOfMonth === startDate && endOfMonth === endDate
+                      ? totalSales
+                      : revenue_score
+                    : resultType === "Previous Month"
                     ? totalSales
                     : revenue_score) !== undefined,
               }}

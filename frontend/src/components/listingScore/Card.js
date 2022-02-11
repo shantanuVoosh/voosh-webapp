@@ -2,7 +2,6 @@ import React from "react";
 import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CardWithNoData from "./CardWithNoData";
 
 const Card = ({
   name,
@@ -31,9 +30,6 @@ const Card = ({
     }
     // ! String Number
     else if (benchmark === "4.0") {
-      // console.log("here");
-      // resultValue=value===benchmark?100:0;
-      // compare="equal";
       if (value.includes("<")) {
         value = value.replace("<", "");
         resultValue = parseFloat(value);
@@ -54,7 +50,6 @@ const Card = ({
         resultBenchmark = parseFloat(benchmark);
       }
     } else if (value === "Not Applicable" || value === "Applicable") {
-      // console.log("here++++++++++++++++")
       resultValue = value === "Not Applicable" ? 0 : 100;
       resultBenchmark = 100;
     }
@@ -64,7 +59,6 @@ const Card = ({
       if (value === "High") {
         resultValue = 90;
       } else if (value === "Medium") {
-        
         console.log("here", name, value, benchmark, compareThen, type);
         resultValue = 70;
       } else if (value === "Low") {
@@ -92,15 +86,20 @@ const Card = ({
 
         <div className={`value ${showColor}`}>
           {value}
-          {type === "percentage" && name !== "Number of Rating" ? "%" : ""}
+          {type === "percentage" &&
+          name !== "Number of Rating" &&
+          name !== "Number of Reviews"
+            ? "%"
+            : ""}
         </div>
       </div>
       {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
-      {(
-        name === "Images" ||
+      {(name === "Images" ||
         // name === "Number of Rating" ||
         name === "Rating" ||
         name === "Best Seller Score" ||
+        name === "Review(star)" ||
+        name === "Number of Reviews" ||
         name === "Item Description") && (
         <Link
           to={`${name.replace(/\s/g, "")}`}

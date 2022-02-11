@@ -506,7 +506,7 @@ const NewSignupA = () => {
           </div>
           <div className="s-a-heading">
             <div className="text">
-              Your One stop shop to grow your sales on Swiggy and Zomato
+              Your One stop shop to <b>Grow</b> your sales on Swiggy and Zomato
             </div>
           </div>
           {/* //? number feild */}
@@ -566,31 +566,24 @@ const NewSignupA = () => {
             <div className="s-a-percentages__item">
               <div className="s-a-percentages__item--number">30%</div>
               <div className="s-a-percentages__item--text">
-                more
                 {/* <br /> */}
                 more orders
               </div>
             </div>
             <div className="s-a-percentages__item">
-              <div className="s-a-percentages__item--number">5000+</div>
-              <div className="s-a-percentages__item--text">
-              restaurants 
-              </div>
+              <div className="s-a-percentages__item--number">2000+</div>
+              <div className="s-a-percentages__item--text">restaurants</div>
             </div>
             <div className="s-a-percentages__item">
               <div className="s-a-percentages__item--number">50%</div>
-              <div className="s-a-percentages__item--text">
-                Saving time
-              </div>
+              <div className="s-a-percentages__item--text">Saving time</div>
             </div>
           </div>
           {/* //?offer */}
           <div className="s-a-offers">
             <div className="s-a-offers__heading">
               <span className="s-a-offers__heading--left-line"></span>
-              <span className="s-a-offers__heading--text">
-                What Voosh Offers
-              </span>
+              <span className="s-a-offers__heading--text">How we help you</span>
               <span className="s-a-offers__heading--right-line"></span>
             </div>
             {/* //* item 1*/}
@@ -599,9 +592,9 @@ const NewSignupA = () => {
                 <AiOutlineBars size={20} />
               </div>
               <div className="s-a-offers__item--text">
-                <div className="title">Menu Analytics</div>
+                <div className="title">Rank your Menu</div>
                 <div className="sub-title">
-                  Daily analysis of your menu’s efficiency
+                  Create the best menu for yourself
                 </div>
               </div>
             </div>
@@ -611,9 +604,9 @@ const NewSignupA = () => {
                 <BsBarChartLine size={20} />
               </div>
               <div className="s-a-offers__item--text">
-                <div className="title">Competition analysis</div>
+                <div className="title">Competitive analysis</div>
                 <div className="sub-title">
-                  How to position your business strongly
+                  Analyze industry trends and position your business strongly
                 </div>
               </div>
             </div>
@@ -623,10 +616,8 @@ const NewSignupA = () => {
                 <BsClipboard size={20} />
               </div>
               <div className="s-a-offers__item--text">
-                <div className="title">Item wise review analysis</div>
-                <div className="sub-title">
-                  All your problems solved on a single dashboard
-                </div>
+                <div className="title">Practicality of Reviews</div>
+                <div className="sub-title">Know what and where to improve</div>
               </div>
             </div>
             {/* //* item 4*/}
@@ -635,8 +626,10 @@ const NewSignupA = () => {
                 <AiOutlineFundProjectionScreen size={20} />
               </div>
               <div className="s-a-offers__item--text">
-                <div className="title">Get targeted solutions</div>
-                <div className="sub-title">Appropriate market positioning</div>
+                <div className="title">Just-for-you Solutions</div>
+                <div className="sub-title">
+                  Tailor made recommendations for faster growth
+                </div>
               </div>
             </div>
           </div>

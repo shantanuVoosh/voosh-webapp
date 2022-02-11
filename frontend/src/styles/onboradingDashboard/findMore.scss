@@ -32,7 +32,7 @@
   background-color: transparent;
   height: 100%;
   width: 100%;
-  padding-top: 9rem;
+  padding-top: 7rem;
   padding-bottom: 10rem;
   color: $color-primary-1;
   color: $color-white-1;
@@ -50,7 +50,8 @@
 
   &--section-1 {
     // margin-bottom: 18rem;
-    margin-bottom: 5rem;
+    // margin-bottom: 5rem;
+    margin-bottom: 3rem;
     .heading {
       text-align: center;
       font-size: 35px;
@@ -78,14 +79,16 @@
 
       .btn {
         min-width: 150px;
-        background-color: $color-white-1;
-        color: $color-primary-1;
+        // background-color: $color-white-1;
+        background-color: transparent;
+        // color: $color-primary-1;
+        // color: $color-primary-1;
 
         text-align: center;
         font-weight: 700;
         padding: 1rem 1rem;
         border-radius: 5px;
-        border: 1px solid $color-white-1;
+        border: 2px solid $color-white-1;
         &:first-child {
           margin-bottom: 1rem;
           // @include breakpoint-up(xxsmall) {
@@ -98,13 +101,18 @@
   }
 
   &--section-2 {
-    padding: 5rem 0;
-    background-color: $color-white-1;
+    padding: 1rem 1rem;
+    margin: 2rem 0 2rem 0;
+    // background-color: $color-white-1;
 
-    .image {
-      img {
-        width: 100%;
-      }
+    // .image {
+    //   img {
+    //     width: 100%;
+    //   }
+    // }
+    .video-container {
+      border-radius: 20px;
+      overflow: hidden;
     }
   }
 
@@ -353,7 +361,7 @@
     }
 
     &:last-child {
-      margin-bottom: 3rem;
+      margin-bottom: 0rem;
     }
 
     .score-box {

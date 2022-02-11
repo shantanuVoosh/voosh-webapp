@@ -52,6 +52,7 @@ const FindMore = ({
   );
   const [optionCardNumber, setOptionCardNumber] = React.useState(0);
   const [isModelOpen, setIsModelOpen] = React.useState(false);
+  const [modelImage, setModelImage] = React.useState("");
   const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
   const [bottomSheetData, setBottomSheetData] = React.useState({
     bannerName: "",
@@ -154,7 +155,7 @@ const FindMore = ({
       const { data: response } = await axios.post("/user/email-request", {
         token: temporaryToken,
         email: email,
-        phoneL: "7763849952",
+        phone: "7763849952",
       });
       console.log("data", response);
       if (response.status === "success") {
@@ -180,14 +181,15 @@ const FindMore = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    // width: "100%",
-    minWidth: "300px",
+    width: "100%",
+    height: "auto",
+    // minWidth: "300px",
     maxWidth: "400px",
-    bgcolor: "#000",
-    border: "2px solid #000",
-    boxShadow: 24,
-    padding: "0 5px",
-    borderRadius: "10px",
+    // bgcolor: "#000",
+    // padding: "0 5px",
+    // borderRadius: "10px",
+    border: "none",
+    overflow: "hidden",
     // p: 4,
   };
 
@@ -220,7 +222,7 @@ const FindMore = ({
           aria-describedby="modal-modal-description"
         >
           <Box sx={model_style}>
-            <ReactPlayer
+            {/* <ReactPlayer
               className="single-video"
               url={"https://www.youtube.com/watch?v=QZs2SpNzeD4"}
               controls
@@ -230,7 +232,17 @@ const FindMore = ({
               onStart={() => {
                 console.log("video start");
               }}
-            />
+            /> */}
+            <div className="model-image">
+              <img
+                src={app_pic_4}
+                alt="sup"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
+              />
+            </div>
           </Box>
         </Modal>
       </>
@@ -267,29 +279,25 @@ const FindMore = ({
             analytics and experts in restaurant business to show you the best
             path forward
           </div>
-          <div className="buttons">
+          {/* <div className="buttons">
             <div className="btn-watch btn" onClick={() => setIsModelOpen(true)}>
               Watch the Video
             </div>
-            {/* <div className="btn-vision btn">Our Vision</div> */}
-          </div>
+            <div className="btn-vision btn">Our Vision</div>
+          </div> */}
         </div>
         <div className="find-more__hero--section-2">
-          {/* <div className="image">
-            <img src={image_website_creative} alt="website_creative" />
-          </div> */}
-          <div className="image" style={{ marginBottom: "1rem" }}>
-            <img
-              src={image_website_creative_top}
-              alt="website_creative"
-              style={{ width: "100%" }}
-            />
-          </div>
-          <div className="image">
-            <img
-              src={image_website_creative_bottom}
-              alt="website_creative"
-              style={{ width: "100%" }}
+          <div className="video-container">
+            <ReactPlayer
+              className="single-video"
+              url={"https://www.youtube.com/watch?v=QZs2SpNzeD4"}
+              controls
+              playbackRate={1}
+              width="100%"
+              height="240px"
+              onStart={() => {
+                console.log("video start");
+              }}
             />
           </div>
         </div>
@@ -299,7 +307,12 @@ const FindMore = ({
         >
           <div className="icon_items">
             <div className="icon-item-1 item">
-              <div className="icon">
+              <div
+                className="icon"
+                style={{
+                  marginBottom: "-10px",
+                }}
+              >
                 <AiOutlineEye size={100} />
               </div>
               <div className="text">Analyse</div>
@@ -354,7 +367,14 @@ const FindMore = ({
               className="btn-1 btn"
               onClick={() => changeOptionCardNumber(0)}
             >
-              <div className="text">Sales and Finance</div>
+              <div
+                className={
+                  "text" +
+                  ` ${0 === optionCardNumber ? "orange-cream bold-text" : ""}`
+                }
+              >
+                Sales and Finance
+              </div>
             </div>
             <div
               className={
@@ -362,7 +382,13 @@ const FindMore = ({
                 ` ${0 === optionCardNumber ? "show-image" : ""}`
               }
             >
-              <div className="image--container">
+              <div
+                className="image--container"
+                onClick={() => {
+                  setModelImage(app_pic_2);
+                  setIsModelOpen(true);
+                }}
+              >
                 <img src={app_pic_2} alt="sup" />
               </div>
               {/* <div className="image--link-btn">
@@ -377,7 +403,14 @@ const FindMore = ({
               className="btn-2 btn"
               onClick={() => changeOptionCardNumber(1)}
             >
-              <div className="text">Review Analytics</div>
+              <div
+                className={
+                  "text" +
+                  ` ${1 === optionCardNumber ? "orange-cream bold-text" : ""}`
+                }
+              >
+                Review Analytics
+              </div>
             </div>
             <div
               className={
@@ -385,7 +418,13 @@ const FindMore = ({
                 ` ${1 === optionCardNumber ? "show-image" : ""}`
               }
             >
-              <div className="image--container">
+              <div
+                className="image--container"
+                onClick={() => {
+                  setModelImage(app_pic_4);
+                  setIsModelOpen(true);
+                }}
+              >
                 <img src={app_pic_4} alt="sup" />
               </div>
               {/* <div className="image--link-btn">
@@ -400,7 +439,14 @@ const FindMore = ({
               className="btn-3 btn"
               onClick={() => changeOptionCardNumber(2)}
             >
-              <div className="text">Visibility assesment</div>
+              <div
+                className={
+                  "text" +
+                  ` ${2 === optionCardNumber ? "orange-cream bold-text" : ""}`
+                }
+              >
+                Visibility Assessment
+              </div>
             </div>
             <div
               className={
@@ -408,7 +454,13 @@ const FindMore = ({
                 ` ${2 === optionCardNumber ? "show-image" : ""}`
               }
             >
-              <div className="image--container">
+              <div
+                className="image--container"
+                onClick={() => {
+                  setModelImage(app_pic_3);
+                  setIsModelOpen(true);
+                }}
+              >
                 <img src={app_pic_3} alt="sup" />
               </div>
               {/* <div className="image--link-btn">
@@ -423,7 +475,14 @@ const FindMore = ({
               className="btn-4 btn"
               onClick={() => changeOptionCardNumber(3)}
             >
-              <div className="text">Simplified UX</div>
+              <div
+                className={
+                  "text" +
+                  ` ${3 === optionCardNumber ? "orange-cream bold-text" : ""}`
+                }
+              >
+                Simplified UX
+              </div>
             </div>
             <div
               className={
@@ -431,7 +490,13 @@ const FindMore = ({
                 ` ${3 === optionCardNumber ? "show-image" : ""}`
               }
             >
-              <div className="image--container">
+              <div
+                className="image--container"
+                onClick={() => {
+                  setModelImage(app_pic_1);
+                  setIsModelOpen(true);
+                }}
+              >
                 <img src={app_pic_1} alt="sup" />
               </div>
               {/* <div className="image--link-btn">
@@ -521,7 +586,7 @@ const FindMore = ({
           <div className="item item-2">
             <div className="score-box">
               <div className="score">
-                <span className="text">5000</span>{" "}
+                <span className="text">2000</span>{" "}
                 <span className="percentage">{"+"}</span>
               </div>
               <div className="score-text">

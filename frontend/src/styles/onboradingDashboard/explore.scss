@@ -59,6 +59,7 @@
 
   .part-one {
     display: flex;
+    justify-content: space-between;
     .text {
       .head {
         font-size: $heading-big;
@@ -288,6 +289,14 @@
         background-position: center center;
         margin-bottom: 2rem;
       }
+    }
+  }
+
+  .show-more {
+    &__text {
+      font-size: 12px;
+      text-align: center;
+      text-decoration: underline;
     }
   }
 }

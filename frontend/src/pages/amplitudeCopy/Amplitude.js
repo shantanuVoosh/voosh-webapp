@@ -52,7 +52,6 @@ const Amplitude = () => {
               // style={{ height: "100%" }}
             />
           </div>
-      
         </div>
         <form
           className="swiggy-form__body"
@@ -66,7 +65,7 @@ const Amplitude = () => {
               Enter a registered mobile number or restaurant ID to login
             </div>
             <div className="icon">
-            <IoIosInformationCircleOutline size={25}  />
+              <IoIosInformationCircleOutline size={25} />
             </div>
           </div>
 
@@ -140,16 +139,12 @@ const Amplitude = () => {
                 marginRight: ".3rem",
               }}
             />
-            <span>
-              I don't have a{" "}
-              <span
-                style={{
-                  fontWeight: "600",
-                }}
-              >
-                Swiggy
-              </span>{" "}
-              account
+            <span
+              style={{
+                fontWeight: "600",
+              }}
+            >
+              Skip
             </span>
           </div>
 
@@ -158,32 +153,9 @@ const Amplitude = () => {
             <button
               className={"btn" + ` ${isButtonDisable ? "btn-disabled" : ""}`}
             >
-              {isButtonDisable ? "Wait..." : "Proceed"}
+              {isButtonDisable ? "Wait..." : "Continue"}
               {/* Proceed */}
             </button>
-            <div className="contact-us">
-              {/*//!temp call us */}
-              <span className="text">Need help?</span>
-              <span
-                className="orange text-bold"
-                onClick={() => {
-                  ReactPixel.track("Contact Us Clicked", {
-                    value: "Contact Us Clicked, in Step-2",
-                  });
-
-                  ReactGA.event({
-                    category: "Button Click",
-                    action: "Call Us text clicked",
-                    label: "Call Us text clicked",
-                  });
-                  // notifySuccess(
-                  //   "Your Call Request is Submitted Successfully, We will get back to you soon"
-                  // );
-                }}
-              >
-                Call Us +91-9015317006
-              </span>
-            </div>
           </div>
         </form>
       </div>

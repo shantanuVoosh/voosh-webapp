@@ -4,7 +4,7 @@ import { MdAnchor } from "react-icons/md";
 import { CgLoadbarSound } from "react-icons/cg";
 import { GiCommercialAirplane } from "react-icons/gi";
 import logo_img from "../../styles/images/logo-img.png";
-
+import { Backdrop, Box, Modal, Fade, Button, Typography } from "@mui/material";
 import ReactPlayer from "react-player";
 import { useForm } from "react-hook-form";
 import ScrollButton from "../../components/ScrollButton"; // Todo: scroll to top
@@ -31,7 +31,7 @@ import PersonArray from "../../utils/customerReviewArray";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
-
+import TNC from "./tnc";
 
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
@@ -130,6 +130,21 @@ const LineGraphData2 = {
   ],
 };
 
+const Modelstyle = {
+  position: "absolute",
+  height: "70vh",
+  display: "block",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  overflow: "scroll",
+};
+
 const Home = ({
   currentUserDetails,
   setCurrentUserDetails,
@@ -149,6 +164,8 @@ const Home = ({
   const [displayPageNumber, setDisplayPageNumber] = React.useState(0);
   const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
   const [isButtonDisable, setIsButtonDisable] = React.useState(false);
+  const [tncValue, setTncValue] = React.useState(true);
+  const [tncModel, setTncModel] = React.useState(false);
   const [bottomSheetData, setBottomSheetData] = React.useState({
     bannerName: "",
     title: "",
@@ -169,6 +186,9 @@ const Home = ({
 
   const notifyError = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
+  // const handelTncClick = (e) => {
+  //   e.preventDefault();
+  // };
 
   React.useEffect(() => {
     setBottomSheetData({
@@ -295,6 +315,10 @@ const Home = ({
     }
     if (data.checkbox_2 === true) {
       setValue("zomato-number", currentUserDetails.phoneNumber);
+    }
+    if (!tncValue) {
+      notifyError("Please accept the terms and conditions");
+      return;
     }
 
     if (data["restaurant-name"] !== currentUserDetails.restaurantName) {
@@ -524,11 +548,11 @@ const Home = ({
                   <IoHomeOutline size={30} />
                 </div>
                 <div className="onboard-preview-dashboard__top--rest-name">
-                  Onboard With Us!
+                  Enable Growth!
                 </div>
                 <div className="onboard-preview-dashboard__top--info">
-                  Sync your <span>Swiggy</span> and <span>Zomato</span> accounts
-                  for a wholesome experience
+                  Link with <b>Swiggy</b> and<b>Zomato</b> today for
+                  personalized experience{" "}
                 </div>
               </div>
               <div className="onboard-preview-dashboard__mid">
@@ -596,8 +620,9 @@ const Home = ({
           {/* //! Banners */}
           <div className="onboard-banners">
             <h1 className="onboard-banners__title">
-              <span className="text">FREE call with </span>
-              <span className="orange name"> Voosh</span>
+              <span className="text">Free Call with </span>
+              <span className="orange name"> Voosh </span>
+              <span className="text">Expert</span>
             </h1>
 
             <div className="onboard-banners__banners">
@@ -715,6 +740,8 @@ const Home = ({
               </div>
               <Line options={options} data={LineGraphData} />
             </div> */}
+
+            {/* <div>Insights</div> */}
             <div
               className="linegraph-2"
               style={
@@ -880,6 +907,72 @@ const Home = ({
           />
           <meta property="og:title" content="web-app" />
         </MetaTags>
+        <>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={tncModel}
+            onClose={() => setTncModel(false)}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={tncModel}>
+              <Box sx={Modelstyle}>
+                <Typography
+                  id="transition-modal-title"
+                  variant="h6"
+                  component="h2"
+                >
+                  Terms & Conditions
+                </Typography>
+                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                  <TNC />
+                </Typography>
+                <div
+                  className="model-checkbox"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <input
+                    type="checkbox"
+                    className="form--input-checkbox"
+                    value={tncValue}
+                    checked={tncValue}
+                    {...register("tnc")}
+                    onClick={(e) => {
+                      setTncValue((prevState) => !prevState);
+                    }}
+                  />
+                  <Button
+                    onClick={() => {
+                      if (!tncValue) {
+                        setTncValue((prevState) => !prevState);
+                      }
+                      setTncModel(false);
+                    }}
+                  >
+                    Accept And Continue
+                  </Button>
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                    }}
+                  >
+                    <Button
+                      onClick={() => {
+                        setTncModel(false);
+                      }}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              </Box>
+            </Fade>
+          </Modal>
+        </>
         <div className="container onboard-form">
           <div className="page-btns">
             <span
@@ -981,18 +1074,16 @@ const Home = ({
               <div className="page-body__form--check-box">
                 <span className="text">Same Number:</span>
                 <span className="box-feild">
-                  <span className="checkbox-container">
-                    <input
-                      className="checkbox-input"
-                      {...register("checkbox_1")}
-                      type="checkbox"
-                      defaultChecked={true}
-                      onChange={(e) => {
-                        console.log(e.target.checked);
-                      }}
-                    />
-                    <span className="checkbox-checkmark"></span>
-                  </span>
+                  <input
+                    className="checkbox-input"
+                    {...register("checkbox_1")}
+                    type="checkbox"
+                    defaultChecked={true}
+                    onChange={(e) => {
+                      console.log(e.target.checked);
+                    }}
+                  />
+                  <span className="checkbox-checkmark"></span>
 
                   <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
                     {" "}
@@ -1012,6 +1103,36 @@ const Home = ({
                   <span style={{ marginLeft: ".3rem", fontWeight: "700" }}>
                     {" "}
                     Zomato
+                  </span>
+                </span>
+              </div>
+              <div className="page-body__form--terms-and-conditions">
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
+                  <input
+                    className="form--input-checkbox"
+                    type="checkbox"
+                    value={tncValue}
+                    checked={tncValue}
+                    {...register("tnc")}
+                    onClick={(e) => {
+                      setTncValue((prevState) => !prevState);
+                    }}
+                  />
+                  <span
+                    className="patner-name tnc"
+                    onClick={() => setTncModel(true)}
+                    style={{
+                      marginLeft: ".5rem",
+                      fontWeight: "200",
+                    }}
+                  >
+                    Read all Terms & Conditions
                   </span>
                 </span>
               </div>
@@ -1152,6 +1273,7 @@ const Home = ({
             <div className="page-body__title">
               <div className="page-body__title--text">
                 Please link your Swiggy ID
+                {/* Connect with Swiggy */}
               </div>
             </div>
             <form
@@ -1237,7 +1359,7 @@ const Home = ({
                   }}
                 />
                 <span>
-                  I don't have a{" "}
+                  Not on{" "}
                   <span
                     style={{
                       fontWeight: "600",
@@ -1245,7 +1367,7 @@ const Home = ({
                   >
                     Swiggy
                   </span>{" "}
-                  account
+                  
                 </span>
               </div>
 
@@ -1405,7 +1527,7 @@ const Home = ({
                   }}
                 />
                 <span>
-                  I don't have a{" "}
+                  Not on{" "}
                   <span
                     style={{
                       fontWeight: "600",
@@ -1413,7 +1535,7 @@ const Home = ({
                   >
                     Zomato
                   </span>{" "}
-                  account
+                   
                 </span>
               </div>
 
@@ -1473,7 +1595,7 @@ const Home = ({
       {displayPageNumber === 1 && <RenderPageOne />}
       {displayPageNumber === 2 && <RenderPageTwo />}
       {displayPageNumber === 3 && <RenderPageThree />}
-      
+
       {displayPageNumber === 0 && (
         <Footer changePage={changePage} pageName={pageName} />
       )}

@@ -44,7 +44,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba($color: #000000, $alpha: 0.3);
+      background-color: rgba($color: #000000, $alpha: 0.15);
       width: 50px;
       height: 50px;
       border-radius: 100%;
@@ -120,7 +120,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: rgba($color: #000000, $alpha: 0.2);
+          background-color: rgba($color: #000000, $alpha: 0.15);
           width: 50px;
           height: 50px;
           border-radius: 100%;
@@ -766,6 +766,7 @@
   }
 }
 
+// ? Graph
 .onboard-graphs {
   .linegraph-1 {
     // color: $color-white-2;
@@ -779,8 +780,16 @@
         // max-width: 300px;
         font-size: 22px;
         font-weight: 700;
-        padding: 0 1rem;
+        padding: 1rem 1rem;
         color: $color-black-1;
+        @include breakpoint-up(xxsmall) {
+          padding: 1rem 1.5rem;
+          padding-top: 1rem;
+        }
+        @include breakpoint-up(xsmall) {
+          padding: 1rem 2rem;
+          padding-top: 1rem;
+        }
       }
     }
     .graph {

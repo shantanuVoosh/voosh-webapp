@@ -5,6 +5,7 @@
   height: 100%;
 }
 
+// ?Header
 .swiggy-form__header {
   display: flex;
   justify-content: space-between;
@@ -37,6 +38,8 @@
     }
   }
 }
+
+// ?Form or body
 .swiggy-form__body {
   flex: 1;
   width: 100%;
@@ -59,9 +62,10 @@
     display: flex;
     .text {
       // width: 100%;
-      margin-right: 2rem;
+      // margin-right: 2rem;
     }
     .icon {
+      display: none;
       width: 100%;
       max-width: 50px;
       display: flex;
@@ -135,6 +139,11 @@
     }
   }
 
+  &--skip-btn {
+    display: flex;
+    align-items: center;
+  }
+
   // * Submit button
   &--btn {
     margin-top: auto;
@@ -162,7 +171,7 @@
       font-weight: 700;
       margin-bottom: 2rem;
       &.btn-disabled {
-        background: $color-white-3;
+        background: $color-white-4;
         color: $color-white-1;
       }
     }

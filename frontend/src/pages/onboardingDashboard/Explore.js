@@ -27,6 +27,11 @@ const Explore = ({
 
   const [showArticleModel, setShowArticleModel] = React.useState(false);
   const [articleLink, setArticleLink] = React.useState("");
+  const [allArticle, setAllArticle] = React.useState(
+    ArticleArray.length > 3 ? ArticleArray.slice(0, 3) : ArticleArray
+  );
+
+  const [showAllArticles, setShowAllArticles] = React.useState(false);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -93,10 +98,10 @@ const Explore = ({
             {/*//? left 70% */}
             <div className="text">
               <div className="head">
-                Grow with <span className="orange">Voosh</span> Verified
+              Learn with <span className="orange">Voosh</span> 
               </div>
               <div className="sub-head">
-                We're working on your data, Below is some food for thought!
+              Below is some food for thought!
               </div>
             </div>
             {/*//? right 30% */}
@@ -195,7 +200,7 @@ const Explore = ({
         <div className="onboard-quick-reads">
           {/* //? article */}
           <h1>Trending stories</h1>
-          {ArticleArray.map((article, index) => {
+          {allArticle.map((article, index) => {
             const { title, subTitle, name, date, readTime, link, image } =
               article;
             return (
@@ -297,6 +302,35 @@ const Explore = ({
               </div>
             );
           })}
+         { <div className="show-more orange">
+            {!showAllArticles && (
+              <div
+                className="show-more__text"
+                onClick={() => {
+                  setAllArticle(ArticleArray);
+                  setShowAllArticles(true);
+                }}
+              >
+                Show More
+              </div>
+            )}
+            {showAllArticles && (
+              <div
+                className="show-more__text"
+  
+                onClick={() => {
+                  setAllArticle(
+                    ArticleArray.length > 3
+                      ? ArticleArray.slice(0, 3)
+                      : ArticleArray
+                  );
+                  setShowAllArticles(false);
+                }}
+              >
+                Show Less
+              </div>
+            )}
+          </div>}
         </div>
       </div>
 
