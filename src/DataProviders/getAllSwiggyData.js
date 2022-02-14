@@ -12,7 +12,6 @@ const {
   customerReviewsDataFormatter,
 } = require("../collectionFormatterForSwiggy/customerReviews");
 const {
-  revenuDataFormatter,
   revenuDataOfPreviousMonth,
 } = require("../collectionFormatterForSwiggy/revenue");
 
@@ -59,13 +58,7 @@ async function getAllSwiggyData(
     startDate,
     endDate
   );
-  const revenue = await revenuDataFormatter(
-    res_id,
-    number,
-    resultType,
-    startDate,
-    endDate
-  );
+  
   const revenue_previous_month = await revenuDataOfPreviousMonth(res_id);
   return {
     name: "Swiggy",

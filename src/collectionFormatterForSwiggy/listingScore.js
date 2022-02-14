@@ -3,88 +3,6 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-// ! not using this function
-const listingScoreMongoDBData = async (res_id, number, resultType) => {
-  // ? key is different in collection
-
-  // console.log("listingScoreMongoDBData:", res_id, number, resultType);
-
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = client.db(documentName);
-
-    let listingScore;
-
-    // ! Cuz this upadated on Weekly basis
-    if (resultType === "week") {
-      // console.log("week-------------->")
-      const query = {
-        swiggy_res_id: `${res_id}`,
-        week_no: `${number}`,
-      };
-      listingScore = await db
-        .collection("swiggy_weekly_listing_score_products")
-        .findOne(query);
-    }
-
-    // ! Last  Week of that Month, In case of Monthly result
-    else if (resultType === "month") {
-      // console.log("month------------->")
-      query = {
-        swiggy_res_id: `${res_id}`,
-        month_no: `${number}`,
-      };
-
-      listingScore = await db
-        .collection("swiggy_weekly_listing_score_products")
-        .aggregate([
-          { $match: query },
-          { $sort: { week_no: -1 } },
-          { $limit: 1 },
-        ])
-        .toArray();
-
-      listingScore = listingScore[0];
-    }
-
-    //! if resultType is not week or month!
-    else {
-      listingScore = {
-        dataPresent: false,
-      };
-    }
-
-    // console.log("------******------");
-    // console.log("listingScore--------------------------.................:", listingScore);
-    // console.log("------******------");
-
-    client.close();
-    return {
-      score: listingScore?.score,
-      safety_tag: listingScore?.safety_tag,
-      rating: listingScore?.rating,
-      number_of_rating: listingScore?.number_of_rating,
-      offer_1: listingScore?.offer_1,
-      offer_2: listingScore?.offer_2,
-      beverages_category: listingScore?.beverages_category,
-      desserts: listingScore?.["desserts/sweet_category"],
-      image: listingScore?.["image_%"],
-      bestsellers_score_in_recommended:
-        listingScore?.[
-          "bestseller_%_in_recommended_vs_without_recommended_data"
-        ],
-      description: listingScore?.["description_%"],
-    };
-  } catch (err) {
-    console.log(err);
-    return {
-      error: err,
-    };
-  }
-};
-
 // ! new Listing Score data with most recent data
 // ? Only res_id is required, we are sorting most recent year, month, week
 const listingScoreMostRecentMongoDBData = async (res_id) => {
@@ -367,5 +285,4 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
 
 module.exports = {
   listingScoreDataFormatter,
-  listingScoreMongoDBData,
 };

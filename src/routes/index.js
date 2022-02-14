@@ -311,13 +311,14 @@ router.post("/check-swiggy-number", async (req, res) => {
 // ?if no, (create a temp auth) then send the onboarding product -> no,create a new user |*|-> yes, send user data
 // Todo token expire time remove
 
-// Todo: now for UAT
+// Todo: now for Onboarding
 // ! signup and login
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
-  // const onboardProductsColleaction = "onboard_products";
-  const onboardProductsColleaction = "Onboard_New_Users_UAT";
-  const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+  const onboardProductsColleaction = "onboard_products";
+  // const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+  const onboardNotificationsCollection = "Onboard_Notifications";
 
   const nvdpColleaction = "non_voosh_dashboard_products";
 
@@ -491,7 +492,7 @@ router.post("/login-voosh", async (req, res) => {
   }
 });
 
-// Todo: now for UAT
+// Todo: now for Onboard Products
 // ! for saving only phone numbers
 router.post("/user/save-only-number", async (req, res) => {
   const { phoneNumber } = req.body;
@@ -504,8 +505,8 @@ router.post("/user/save-only-number", async (req, res) => {
     return;
   }
 
-  // const save_all_users_number = "save_all_users_number";
-  const save_all_users_number = "save_all_users_number_UAT";
+  const save_all_users_number = "save_all_users_number";
+  // const save_all_users_number = "save_all_users_number_UAT";
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -546,36 +547,53 @@ router.post("/user/save-only-number", async (req, res) => {
 
 // ? remove notifications thing from here!
 // ! user data who are present in onboard products
-// Todo: now for UAT
+// Todo: now for Onboard Products
 router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
   const { phone, tempUser } = req.payload;
 
-  // if (phone === "1231231239") {
-  //   console.log("Test User");
-  //   res.json({
-  //     status: "success",
-  //     phone,
-  //     isAuthTemp: tempUser,
-  //     userDetails: {
-  //       name: "",
-  //       email: "",
-  //       restaurant_name: "test",
-  //       phone: 1231231239,
-  //     },
-  //     dataSubmitted: false,
-  //   });
-  //   return;
-  // }
+  if (phone === "1231231239") {
+    console.log("Test User");
+    // * Grabs all notifications for the user
+    // try{
+
+    // }catch(err){
+
+    // }
+    // const userAllNotifications = await MongoClient
+    //   .connect(VooshDB, {
+    //     useNewUrlParser: true,
+    //   })
+    //   .db(documentName)
+    //   .collection(onboardNotificationsCollection)
+    //   .findOne({ phone: parseInt(phone) });
+
+    // const { notifications: n } = userAllNotifications;
+    res.json({
+      status: "success",
+      phone,
+      isAuthTemp: tempUser,
+      userDetails: {
+        name: "",
+        email: "",
+        restaurant_name: "test",
+        phone: 1231231239,
+      },
+      notifications: [],
+      dataSubmitted: false,
+    });
+    return;
+  }
 
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    // const onboardProductsColleaction = "onboard_products";
-    const onboardProductsColleaction = "Onboard_New_Users_UAT";
-    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    const onboardProductsColleaction = "onboard_products";
+    // const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications";
+    // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
     // * Grabs all notifications for the user
     const userAllNotifications = await db
@@ -614,7 +632,7 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
 });
 
 //! Update onboard Users
-// Todo: now for UAT
+// Todo: now for Onboard Products
 router.post(
   "/user/update/onboard-data",
   checkAuthentication,
@@ -654,10 +672,10 @@ router.post(
       console.log(typeof zomato_register_phone, "zomato_register type");
 
       const db = client.db(documentName);
-      // const onboardProductsColleaction = "onboard_products";
-      // const onboardNotificationsCollection = "Onboard_Notifications";
-      const onboardProductsColleaction = "Onboard_New_Users_UAT";
-      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      const onboardProductsColleaction = "onboard_products";
+      const onboardNotificationsCollection = "Onboard_Notifications";
+      // const onboardProductsColleaction = "Onboard_New_Users_UAT";
+      // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
       // ! if default numbers is passed then the type of phone number is
       // !string, and user provided phone number is string--> so we use `${phone}`
@@ -738,7 +756,7 @@ router.post(
 );
 
 // ! get all  user Notifications
-// Todo: now for UAT
+// Todo: now for Onboard Products
 router.post(
   "/user/onboard-notifications",
   checkAuthentication,
@@ -749,8 +767,8 @@ router.post(
         useNewUrlParser: true,
       });
       const db = client.db(documentName);
-      // const onboardNotificationsCollection = "Onboard_Notifications";
-      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      const onboardNotificationsCollection = "Onboard_Notifications";
+      // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
       const userAllNotifications = await db
         .collection(onboardNotificationsCollection)
@@ -788,7 +806,7 @@ router.post(
   }
 );
 
-// Todo: Now for UAT
+// Todo: Now for Onboard Products
 // ! request call
 router.post("/user/call-request", async (req, res) => {
   try {
@@ -804,8 +822,8 @@ router.post("/user/call-request", async (req, res) => {
       return;
     }
 
-    // const collectionName = "flags_banners_products";
-    const collectionName = "flags_banners_products_UAT";
+    const collectionName = "flags_banners_products";
+    // const collectionName = "flags_banners_products_UAT";
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
@@ -870,14 +888,14 @@ router.post("/user/call-request", async (req, res) => {
   }
 });
 
-// Todo: Now for UAT
+// Todo: Now for Onboard Products
 // ! Save email
 router.post("/user/email-request", checkAuthentication, async (req, res) => {
   const { email, phoneNumber } = req.body;
   const { phone } = req.payload;
 
-  // const onboardProductsColleaction = "onboard_products";
-  const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  const onboardProductsColleaction = "onboard_products";
+  // const onboardProductsColleaction = "Onboard_New_Users_UAT";
 
   console.log("email", email);
   console.log("phoneNumber", phoneNumber);
@@ -938,7 +956,7 @@ router.post("/user/email-request", checkAuthentication, async (req, res) => {
   // });
 });
 
-// Todo: Now for UAT
+// Todo: Now for Onboard Products
 // ! change notification seen status
 router.post(
   "/user/onboard-notifications/change-seen-status",
@@ -949,8 +967,8 @@ router.post(
     console.log("phone", phone);
     console.log("notification_id", notification_id);
 
-    // const onboardNotificationsCollection = "Onboard_Notifications";
-    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications";
+    // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
 
     try {
       const client = await MongoClient.connect(VooshDB, {
@@ -980,71 +998,6 @@ router.post(
 );
 
 //! test route
-router.post("/test-101", async (req, res) => {
-  // const { phone } = req.body;
-  // const nvdpColleaction = "non_voosh_dashboard_products";
-  // const zomatoNvdpColleaction = "zomato_nvdp";
-  // try {
-  //   const client = await MongoClient.connect(VooshDB, {
-  //     useNewUrlParser: true,
-  //   });
-  //   const db = client.db(documentName);
-  //   const userData = await db.collection(nvdpColleaction).findOne({ phone });
-  //   if (userData) {
-  //     const { kitchen_id } = userData;
-  //     const swiggyData = await db
-  //       .collection(nvdpColleaction)
-  //       .find({ kitchen_id: kitchen_id })
-  //       .toArray();
-  //     const zomatoData = await db
-  //       .collection(zomatoNvdpColleaction)
-  //       .find({ kitchen_id: kitchen_id })
-  //       .toArray();
-  //     const sLid = swiggyData.map((i) => i.listing_id);
-  //     const zLid = zomatoData.map((i) => i.listing_id);
-  //     const allIds = [...new Set([...sLid, ...zLid])];
-  //     const finalData = allIds.map((Lid, i) => {
-  //       const s_data = swiggyData.find((item) => item.listing_id === Lid);
-  //       const z_data = zomatoData.find((item) => item.listing_id === Lid);
-  //       const swiggy_res_id = s_data?.swiggy_res_id;
-  //       const zomato_res_id = z_data?.zomato_res_id;
-  //       const restaurant_name =
-  //         s_data !== undefined
-  //           ? s_data.restaurant_name
-  //           : z_data.zomato_nomenclature;
-  //       return {
-  //         restaurant_name,
-  //         listing_id: Lid,
-  //         swiggy_res_id: swiggy_res_id === undefined ? null : swiggy_res_id,
-  //         zomato_res_id: zomato_res_id === undefined ? null : zomato_res_id,
-  //         // swiggy: {
-  //         //   ...s_data,
-  //         // },
-  //         // zomato: {
-  //         //   ...z_data,
-  //         // },
-  //       };
-  //     });
-  //     res.json({
-  //       // swiggy: swiggyData,
-  //       // zomato: zomatoData,
-  //       // sLid,
-  //       // zLid,
-  //       // allIds,
-  //       finalData,
-  //     });
-  //   } else {
-  //     res.json({
-  //       user: userData,
-  //     });
-  //   }
-  // } catch (err) {
-  //   // ? if error happens
-  //   res.json({
-  //     Error: err,
-  //   });
-  // }
-});
 
 // ? zomato lsitings
 router.post("/test-listing", async (req, res) => {

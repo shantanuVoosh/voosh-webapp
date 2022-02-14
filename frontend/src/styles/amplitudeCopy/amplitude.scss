@@ -5,13 +5,28 @@
   height: 100%;
 }
 
+.swiggy-form__page-btns{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #feece9;
+  padding: 1rem 1rem 0 1rem;
+
+  .previous{
+    color: $color-grey-3;
+  }
+  .close{
+    color: $color-grey-3;
+  }
+}
+
 // ?Header
 .swiggy-form__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #feece9;
-  padding: 3.5rem 1rem 1rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   border-bottom-right-radius: 50px;
 
   &--text {

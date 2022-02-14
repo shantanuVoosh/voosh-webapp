@@ -10,7 +10,12 @@ import { RiCloseCircleLine } from "react-icons/ri";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 
-const SwiggyForm = () => {
+import { useNavigate } from "react-router-dom";
+
+const SwiggyForm = ({
+  changePage,
+  pageName,
+}) => {
   const {
     register,
     handleSubmit,
@@ -23,6 +28,7 @@ const SwiggyForm = () => {
   const onSubmitForm = (data) => {
     console.log(data);
   };
+  const navigate = useNavigate();
 
   return (
     <>
@@ -35,6 +41,51 @@ const SwiggyForm = () => {
         <meta property="og:title" content="web-app" />
       </MetaTags>
       <div className="swiggy-form">
+      <div className="swiggy-form__page-btns">
+            <span
+              className="previous"
+              onClick={() => {
+                // navigate("/onboarding-dashboard")
+                changePage("home");
+              }}
+              // onClick={() => {
+              //   // Todo
+              //   ReactPixel.track("Go Back Click", {
+              //     value: "Go Back to Onboard Dashboard",
+              //   });
+              //   ReactGA.event({
+              //     category: "Button Clicked",
+              //     action: "Go Back to Onboard Dashboard",
+              //     label: "Go Back to Onboard Dashboard",
+              //   });
+              //   // setDisplayPageNumber(0);
+              // }}
+            >
+              <GrFormPreviousLink size={30} />
+            </span>
+            <span className="text">
+              {/* STEP {2} / {3} */}
+            </span>
+            <span className="close">
+              <RiCloseCircleLine
+                size={30}
+                onClick={() => {
+                  // Todo
+                  // navigate("/onboarding-dashboard")
+                  changePage("home");
+                  // ReactPixel.track("Close Form, in Step-1", {
+                  //   value: "Go Back to Onboard Dashboard",
+                  // });
+                  // ReactGA.event({
+                  //   category: "Button Clicked",
+                  //   action: "Close Form 1",
+                  //   label: "Close Form 1, Go Back to Onboard Dashboard",
+                  // });
+                  // setDisplayPageNumber(0);
+                }}
+              />
+            </span>
+          </div>
         <div className="swiggy-form__header">
           <div className="swiggy-form__header--text">
             <h2 className="">
@@ -64,7 +115,12 @@ const SwiggyForm = () => {
             <div className="text">
               Enter a registered mobile number or restaurant ID to login
             </div>
-            <div className="icon">
+            <div className="icon"
+            style={{
+              display: "none",
+            }}
+            
+            >
               <IoIosInformationCircleOutline size={25} />
             </div>
           </div>

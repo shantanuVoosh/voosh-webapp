@@ -551,7 +551,7 @@ const Home = ({
                   Enable Growth!
                 </div>
                 <div className="onboard-preview-dashboard__top--info">
-                  Link with <b>Swiggy</b> and<b>Zomato</b> today for
+                  Link with <b>Swiggy</b> and <b>Zomato</b> today for
                   personalized experience{" "}
                 </div>
               </div>
@@ -570,7 +570,7 @@ const Home = ({
                     <div className="icon">
                       <CgLoadbarSound size={32} />
                     </div>
-                    <div className="text">Persoanlized analsis</div>
+                    <div className="text">Personalized analysis</div>
                   </div>
                   <div className="menu-btn">
                     <div className="icon">
@@ -582,7 +582,7 @@ const Home = ({
                     <div className="icon">
                       <GiCommercialAirplane size={32} />
                     </div>
-                    <div className="text">Data based Recommendatons</div>
+                    <div className="text">Data based Recommendations</div>
                   </div>
                 </div>
                 <div
@@ -754,13 +754,14 @@ const Home = ({
                 <div className="label-head__text">
                   Checkout Bangaluru customer
                   <br />
-                  attrction percentage
+                  attraction percentage
                 </div>
               </div>
               <div className="graph">
                 <Line options={options2} data={LineGraphData2} height={220} />
               </div>
-              <div className="label-bottom">DISCOUNT PERCENTAGE</div>
+              <div className="label-bottom">Discount % </div>
+              <div className="label-left">Order increase % </div>
             </div>
           </div>
 

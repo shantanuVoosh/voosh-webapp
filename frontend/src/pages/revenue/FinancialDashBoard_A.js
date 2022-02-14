@@ -10,7 +10,9 @@ import ScrollButton from "../../components/ScrollButton";
 import moment from "moment";
 
 const FinancialDashBoard = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, currentProductIndex, startDate, endDate } = useSelector(
+    (state) => state.data
+  );
   const { resultType } = useSelector((state) => state.data);
   const revenue = data[currentProductIndex]["revenue"];
   const customDate = moment(new Date())
@@ -93,23 +95,49 @@ const FinancialDashBoard = () => {
       },
     ],
   };
+
+  // Todo: Test Again
+  const startOfMonth = moment()
+    .clone()
+    .subtract(1, "months")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  const endOfMonth = moment()
+    .clone()
+    .subtract(1, "months")
+    .endOf("month")
+    .format("YYYY-MM-DD");
+
+  console.log("startOfMonth =>", startOfMonth);
+  console.log("endOfMonth =>", endOfMonth);
+  console.log("start =>", startDate);
+  console.log("enddate =>", endDate);
+
   return (
     <>
-    {/* //! use for only prev month */}
+      {/* //! use for only prev month */}
       <div className="financial_a">
         {/* //? Orange, White cards */}
         <div className="financial_a-cards">
           <WhiteCard
             name={"Total Sales"}
             type={"Pecentage"}
-            value={resultType === "Previous Month" ? totalSales : finalRevenue}
+            // value={resultType === "Previous Month" ? totalSales : finalRevenue}
+            value={
+              resultType === "Custom Range"
+                ? startOfMonth === startDate && endOfMonth === endDate
+                  ? totalSales
+                  : finalRevenue
+                : resultType === "Previous Day"
+                ? totalSales
+                : finalRevenue
+            }
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
             // color={"#262D30"}
             isDataPresent={
-             ( resultType === "Previous Month"
-                ? totalSales
-                : finalRevenue) === undefined
+              (resultType === "Previous Month" ? totalSales : finalRevenue) ===
+              undefined
                 ? false
                 : true
             }

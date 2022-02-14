@@ -774,6 +774,7 @@
     // background-image: linear-gradient(315deg, #63a4ff 0%, #80cec08a 74%);
   }
   .linegraph-2 {
+    position: relative;
     .label-head {
       &__text {
         // margin: 0 auto;
@@ -794,16 +795,33 @@
     }
     .graph {
       padding: 0 1rem;
+      padding-left: 1.2rem;
     }
     .label-bottom {
       width: 100%;
       margin-top: 0.5rem;
       text-align: center;
-      text-transform: uppercase;
+      // text-transform: uppercase;
       font-size: 12px;
       font-weight: 600;
       color: $color-grey-3;
       letter-spacing: 1.5px;
+    }
+    .label-left {
+      position: absolute;
+      width: 100%;
+      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #919398;
+      letter-spacing: 1.5px;
+      
+      bottom: 41%;
+      transform: rotate(270deg);
+      // /* left: 50%; */
+      right: 47%;
+      // /* transform: translate(-50%,-50%);
     }
   }
 }

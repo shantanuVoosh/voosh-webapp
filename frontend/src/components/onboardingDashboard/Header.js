@@ -90,21 +90,22 @@ const Header = ({
                 />
               </div>
               <Divider />
-              <div className="list" onClick={handleLogout}>
-                Logout
-              </div>
-              <Divider />
+
               <div className="list" onClick={() => changePage("find-more")}>
                 Find More
               </div>
               <Divider />
-              {/* <div className="list" onClick={() => changePage("user-profile")}>
+              <div className="list" onClick={handleLogout}>
+                Logout
+              </div>
+              <Divider />
+              <div className="list" onClick={() => changePage("user-profile")}>
                 Profile
               </div>
               <Divider />
               <div className="list" onClick={() => changePage("swiggy-form")}>
-                For Test(refresh page to go back)
-              </div> */}
+                Swiggy Form
+              </div>
               {/* <Divider />
               <div className="list is-disabled">Settings</div> */}
               {/* <Divider /> */}

@@ -111,8 +111,7 @@ const NewSignupA = () => {
     }
   }, [otp]);
 
-  // Todo Testing
-  React.useEffect(() => {
+  const test = ()=>{
     if ("OTPCredential" in window) {
       const ac = new AbortController();
 
@@ -121,15 +120,20 @@ const NewSignupA = () => {
           otp: { transport: ["sms"] },
           signal: ac.signal,
         })
-        .then((otp) => {
-          this.setState({ otp: otp.code });
-          ac.abort();
-        })
-        .catch((err) => {
-          ac.abort();
-          console.log(err);
-        });
+        // .then((otp) => {
+        //   this.setState({ otp: otp.code });
+        //   ac.abort();
+        // })
+        // .catch((err) => {
+        //   ac.abort();
+        //   console.log(err);
+        // });
     }
+  }
+
+  // Todo Testing
+  React.useEffect(() => {
+   
   }, []);
 
   // ? Alerts for the user

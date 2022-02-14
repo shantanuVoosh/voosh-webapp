@@ -131,7 +131,9 @@ const Dashboard = () => {
       {pageName === "find-more" && (
         <FindMore changePage={changePage} pageName={pageName} />
       )}
-      {pageName === "swiggy-form" && <SwiggyForm />}
+      {pageName === "swiggy-form" && (
+        <SwiggyForm changePage={changePage} pageName={pageName} />
+      )}
       {pageName === "user-profile" && (
         <UserProfile
           currentUserDetails={currentUserDetails}
