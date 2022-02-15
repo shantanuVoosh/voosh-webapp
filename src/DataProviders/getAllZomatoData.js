@@ -65,7 +65,7 @@ async function getAllZomatoData(
     year
   );
 
-  console.log(ls);
+  // console.log(ls);
 
   // ?Temp Data Ls
   return {

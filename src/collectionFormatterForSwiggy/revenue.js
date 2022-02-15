@@ -26,6 +26,8 @@ const revenueMongoDBData = async (
 ) => {
   let query = {};
 
+  console.log(res_id, "revenue res_id---------->");
+
   // ? Query for week
   if (resultType === "week") {
     query = {
@@ -74,6 +76,8 @@ const revenueMongoDBData = async (
       ])
       .toArray();
 
+    console.log(revenue, "revenue***************************************score");
+
     client.close();
     return {
       revenue_score: revenue[0]?.revenue,
@@ -121,7 +125,6 @@ const getPreviousDaySales = async (res_id) => {
     };
   }
 };
-
 
 // ! only month wise data is available
 async function revenuDataOfPreviousMonth(res_id) {
@@ -187,12 +190,21 @@ async function revenuDataOfPreviousMonth(res_id) {
         previousDayRevenue: previousDayRevenue,
         isDataPresent: false,
         financicalData: {
-          totalCancellation:0,
-          totalSales:0,
-          netPayout:0,
-          deleveries:0,
-          cancelledOrders:0,
-          deductions: {},
+          totalCancellation: 0,
+          totalSales: 0,
+          netPayout: 0,
+          deleveries: 0,
+          cancelledOrders: 0,
+          deductions: {
+            "Platform Services Charges": 0,
+            "Cancellation Deduction": 0,
+            "Other OFD deduction": 0,
+            Promotions: 0,
+            "Previous Week Outstanding": 0,
+            Miscellaneous: 0,
+            TCS: 0,
+            TDS: 0,
+          },
         },
       };
     }

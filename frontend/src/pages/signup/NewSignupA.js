@@ -111,30 +111,30 @@ const NewSignupA = () => {
     }
   }, [otp]);
 
-  const test = ()=>{
-    if ("OTPCredential" in window) {
-      const ac = new AbortController();
+  // const test = ()=>{
+  //   if ("OTPCredential" in window) {
+  //     const ac = new AbortController();
 
-      navigator.credentials
-        .get({
-          otp: { transport: ["sms"] },
-          signal: ac.signal,
-        })
-        // .then((otp) => {
-        //   this.setState({ otp: otp.code });
-        //   ac.abort();
-        // })
-        // .catch((err) => {
-        //   ac.abort();
-        //   console.log(err);
-        // });
-    }
-  }
+  //     navigator.credentials
+  //       .get({
+  //         otp: { transport: ["sms"] },
+  //         signal: ac.signal,
+  //       })
+  //       // .then((otp) => {
+  //       //   this.setState({ otp: otp.code });
+  //       //   ac.abort();
+  //       // })
+  //       // .catch((err) => {
+  //       //   ac.abort();
+  //       //   console.log(err);
+  //       // });
+  //   }
+  // }
 
-  // Todo Testing
-  React.useEffect(() => {
-   
-  }, []);
+  // // Todo Testing
+  // React.useEffect(() => {
+
+  // }, []);
 
   // ? Alerts for the user
   const notifyError = (msg) => toast.error(msg);
@@ -187,6 +187,37 @@ const NewSignupA = () => {
     //   data["phone-number"] = phoneInCookie;
     // }
 
+    // ! testing purpose
+    if (data["phone-number"].length > 10) {
+      //! now for custom validation, remove the string from the phone number
+      const phone_number = data["phone-number"];
+      if (
+        phone_number.includes("hack") &&
+        phone_number.replace(/hack/g, "").length === 10
+      ) {
+        setShowPage(1);
+        setTimeLeft(10);
+        return;
+      } else {
+        notifyError("type 'hack' in front of your 10 digit phone number");
+        return;
+      }
+    }
+
+    // ! testing purpose
+    if (
+      data["phone-number"] === "9448467130" ||
+      data["phone-number"] === "1234554321" ||
+      data["phone-number"] === "1234567890" ||
+      data["phone-number"] === "1231231239"
+    ) {
+      cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
+      setPhoneInCookie(data["phone-number"]);
+      setShowPage(1);
+      setTimeLeft(10);
+      return;
+    }
+
     const phoneNumber = data["phone-number"];
     console.log(phoneNumber, "phoneNumber");
     if (phoneNumber.length < 10) {
@@ -202,20 +233,6 @@ const NewSignupA = () => {
 
     if (phoneNumber.length > 10) {
       notifyError("Please enter a valid phone number");
-      return;
-    }
-
-    // ! testing purpose
-    if (
-      data["phone-number"] === "9448467130" ||
-      data["phone-number"] === "1234554321" ||
-      data["phone-number"] === "1234567890" ||
-      data["phone-number"] === "1231231239"
-    ) {
-      cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
-      setPhoneInCookie(data["phone-number"]);
-      setShowPage(1);
-      setTimeLeft(10);
       return;
     }
 
@@ -292,10 +309,13 @@ const NewSignupA = () => {
     // return;
     // ! testing purpose CFH DATA
     if (
-      otp === "123456" &&
-      (data["phone-number"] === "1234554321" ||
-        data["phone-number"] === "1234567890" ||
-        data["phone-number"] === "1231231239")
+      (otp === "123456" &&
+        (data["phone-number"] === "1234554321" ||
+          data["phone-number"] === "1234567890" ||
+          data["phone-number"] === "1231231239")) ||
+      
+      (data["phone-number"].includes("hack") &&
+        data["phone-number"].replace(/hack/g, "").length === 10)
     ) {
       try {
         const { data: response } = await axios.post("/login-voosh", {
@@ -331,7 +351,8 @@ const NewSignupA = () => {
             navigate("/onboarding-dashboard");
           }
         } else {
-          console.log("loginFailure", response.error);
+          console.log("loginFailure", response.message);
+          notifyError(response.message);
           dispatch(loginFailure());
           dispatch(loginFailure());
           cookie.remove(APP_TOKEN);

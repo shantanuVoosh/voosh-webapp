@@ -154,6 +154,15 @@ const Header = ({
     setResultTypeOpen(false);
     console.log(pathname === "/revenue");
 
+    if (pathname === "/customerReviews") {
+      setAllResultType([
+        "This Week",
+        "Previous Week",
+        "This Month",
+        "Previous Month",
+      ]);
+      return;
+    }
     // !On Revenue page
     if (pathname === "/revenue") {
       if (resultType !== "Previous Month") {

@@ -8,7 +8,6 @@ const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
   const listingScoreItems = data[currentProductIndex]["listingScore"];
   const listingScoreData = listingScoreItems["listingScoreData"];
-  // console.log(listingScoreData);
 
   return (
     <>
@@ -23,7 +22,7 @@ const Dashboard = () => {
             type,
             isDataPresent,
           } = item;
-          // console.log( name, value, benchmark, compareThen, type)
+
           return isDataPresent ? (
             <Card
               key={index}

@@ -1,16 +1,11 @@
 const router = require("express").Router();
 const { MongoClient } = require("mongodb");
-const { getTimeLog } = require("../utils/dateProvide");
 const jwt = require("jsonwebtoken");
 const {
   getAllRestaurants,
   getAllSwiggyAndZomatoRestaurants,
 } = require("../utils/getAllRestaurants");
 
-// Todo: when Use it, jst change the name!
-const {
-  checkAuthenticationByGoogle: checkGoogleLogin,
-} = require("../controller/googleAuth");
 const { checkAuthentication } = require("../controller/checkAuth");
 
 const { getAllSwiggyData } = require("../DataProviders/getAllSwiggyData");
@@ -34,7 +29,6 @@ const NotificationModel = {
 
 router.post("/user-save-details", async (req, res) => {
   // ?Main Collection
-  // const newCollectionName = "onboard_products";
   // ? Test Collection
   const newCollectionName = "Onboard_New_Users_UAT";
 
@@ -142,10 +136,10 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     // ?if client is set, then we are selection new restaurant
     // ?if not then it is running for the first time
     if (
-      s_res_id !== "" &&
-      z_res_id !== "" &&
-      zomato_res_id !== z_res_id &&
-      swiggy_res_id !== s_res_id
+      (z_res_id !== "" || s_res_id !== "") &&
+      (z_res_id !== null || s_res_id !== null) &&
+      ((z_res_id !== null && z_res_id !== zomato_res_id) ||
+        (s_res_id !== null && s_res_id !== swiggy_res_id))
     ) {
       console.log("new call");
       swiggyData = await getAllSwiggyData(
@@ -311,16 +305,19 @@ router.post("/check-swiggy-number", async (req, res) => {
 // ?if no, (create a temp auth) then send the onboarding product -> no,create a new user |*|-> yes, send user data
 // Todo token expire time remove
 
-// Todo: now for Onboarding
+// Todo: now for UAt
 // ! signup and login
 router.post("/login-voosh", async (req, res) => {
   const { phoneNumber } = req.body;
-  const onboardProductsColleaction = "onboard_products";
-  // const onboardProductsColleaction = "Onboard_New_Users_UAT";
-  // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
-  const onboardNotificationsCollection = "Onboard_Notifications";
+  const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+  // const onboardProductsColleaction = "onboard_products";
+  // const onboardNotificationsCollection = "Onboard_Notifications";
 
   const nvdpColleaction = "non_voosh_dashboard_products";
+
+  // console.log("phoneNumber", phoneNumber);
+  // return;
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -338,6 +335,10 @@ router.post("/login-voosh", async (req, res) => {
 
     if (test_number[phoneNumber]) {
       customPhoneNumber = test_number[phoneNumber];
+    }
+    // ? new logic
+    else if (phoneNumber.includes("hack")) {
+      customPhoneNumber = phoneNumber.replace(/hack/g, "");
     } else {
       customPhoneNumber = phoneNumber;
     }
@@ -350,6 +351,14 @@ router.post("/login-voosh", async (req, res) => {
       owner_number: parseInt(customPhoneNumber),
     });
     console.log("isUserPresentInNVDP", isUserPresentInNVDP);
+
+    // ! quick check if by mistake hack-number is not present in nvdp
+    if (isUserPresentInNVDP === null && phoneNumber.includes("hack")) {
+      return res.json({
+        status: "error",
+        message: `This Number is not contained in NVDP!`,
+      });
+    }
 
     // ! if user present in NVDP then send the token
     if (isUserPresentInNVDP !== null || isUserPresentInNVDP) {
@@ -492,7 +501,7 @@ router.post("/login-voosh", async (req, res) => {
   }
 });
 
-// Todo: now for Onboard Products
+// Todo: now for UAT
 // ! for saving only phone numbers
 router.post("/user/save-only-number", async (req, res) => {
   const { phoneNumber } = req.body;
@@ -505,8 +514,8 @@ router.post("/user/save-only-number", async (req, res) => {
     return;
   }
 
-  const save_all_users_number = "save_all_users_number";
-  // const save_all_users_number = "save_all_users_number_UAT";
+  const save_all_users_number = "save_all_users_number_UAT";
+  // const save_all_users_number = "save_all_users_number";
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -547,7 +556,7 @@ router.post("/user/save-only-number", async (req, res) => {
 
 // ? remove notifications thing from here!
 // ! user data who are present in onboard products
-// Todo: now for Onboard Products
+// Todo: now for UAT
 router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
   console.log("hit onboard data");
   const { phone, tempUser } = req.payload;
@@ -590,10 +599,10 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    const onboardProductsColleaction = "onboard_products";
-    // const onboardProductsColleaction = "Onboard_New_Users_UAT";
-    const onboardNotificationsCollection = "Onboard_Notifications";
-    // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    // const onboardProductsColleaction = "onboard_products";
+    // const onboardNotificationsCollection = "Onboard_Notifications";
 
     // * Grabs all notifications for the user
     const userAllNotifications = await db
@@ -632,7 +641,7 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
 });
 
 //! Update onboard Users
-// Todo: now for Onboard Products
+// Todo: now for Uat
 router.post(
   "/user/update/onboard-data",
   checkAuthentication,
@@ -662,8 +671,13 @@ router.post(
         useNewUrlParser: true,
       });
 
-      console.log("Connected successfully to server");
-      console.log(restaurant_name, "restaurant_name");
+      console.log("User Update, with phone: " + phone);
+      console.log(
+        restaurant_name,
+        swiggy_register_phone,
+        zomato_register_phone,
+        swiggy_password
+      );
 
       console.log(swiggy_password, "swiggy_password");
       console.log(swiggy_register_phone, "swiggy_register_phone");
@@ -672,10 +686,10 @@ router.post(
       console.log(typeof zomato_register_phone, "zomato_register type");
 
       const db = client.db(documentName);
-      const onboardProductsColleaction = "onboard_products";
-      const onboardNotificationsCollection = "Onboard_Notifications";
-      // const onboardProductsColleaction = "Onboard_New_Users_UAT";
-      // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      const onboardProductsColleaction = "Onboard_New_Users_UAT";
+      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      // const onboardProductsColleaction = "onboard_products";
+      // const onboardNotificationsCollection = "Onboard_Notifications";
 
       // ! if default numbers is passed then the type of phone number is
       // !string, and user provided phone number is string--> so we use `${phone}`
@@ -756,7 +770,7 @@ router.post(
 );
 
 // ! get all  user Notifications
-// Todo: now for Onboard Products
+// Todo: now for UAT
 router.post(
   "/user/onboard-notifications",
   checkAuthentication,
@@ -767,8 +781,8 @@ router.post(
         useNewUrlParser: true,
       });
       const db = client.db(documentName);
-      const onboardNotificationsCollection = "Onboard_Notifications";
-      // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      // const onboardNotificationsCollection = "Onboard_Notifications";
 
       const userAllNotifications = await db
         .collection(onboardNotificationsCollection)
@@ -806,7 +820,7 @@ router.post(
   }
 );
 
-// Todo: Now for Onboard Products
+// Todo: Now for UAT
 // ! request call
 router.post("/user/call-request", async (req, res) => {
   try {
@@ -822,8 +836,8 @@ router.post("/user/call-request", async (req, res) => {
       return;
     }
 
-    const collectionName = "flags_banners_products";
-    // const collectionName = "flags_banners_products_UAT";
+    const collectionName = "flags_banners_products_UAT";
+    // const collectionName = "flags_banners_products";
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
@@ -888,14 +902,14 @@ router.post("/user/call-request", async (req, res) => {
   }
 });
 
-// Todo: Now for Onboard Products
+// Todo: Now for UAT
 // ! Save email
 router.post("/user/email-request", checkAuthentication, async (req, res) => {
   const { email, phoneNumber } = req.body;
   const { phone } = req.payload;
 
-  const onboardProductsColleaction = "onboard_products";
-  // const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  const onboardProductsColleaction = "Onboard_New_Users_UAT";
+  // const onboardProductsColleaction = "onboard_products";
 
   console.log("email", email);
   console.log("phoneNumber", phoneNumber);
@@ -956,7 +970,7 @@ router.post("/user/email-request", checkAuthentication, async (req, res) => {
   // });
 });
 
-// Todo: Now for Onboard Products
+// Todo: Now for UAT
 // ! change notification seen status
 router.post(
   "/user/onboard-notifications/change-seen-status",
@@ -967,8 +981,8 @@ router.post(
     console.log("phone", phone);
     console.log("notification_id", notification_id);
 
-    const onboardNotificationsCollection = "Onboard_Notifications";
-    // const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    // const onboardNotificationsCollection = "Onboard_Notifications";
 
     try {
       const client = await MongoClient.connect(VooshDB, {

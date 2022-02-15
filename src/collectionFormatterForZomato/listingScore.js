@@ -38,7 +38,7 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
     client.close();
 
     return {
-      score: listingScore.Score,
+      score: listingScore?.Score,
       delivery_no_review: listingScore?.delivery_no_review,
       delivery_review: listingScore?.delivery_review,
       offer_1: listingScore?.offer1,

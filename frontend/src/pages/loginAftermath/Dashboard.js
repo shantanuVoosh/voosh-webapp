@@ -43,7 +43,7 @@ const Dashboard = () => {
         // Todo: other thing are getting effected, 
           iconName={"bar"}
           name={"Revenue"}
-          info={"Dive into sales, deduction, commisions, etc."}
+          info={"Dive into sales, deduction, commissions, etc."}
           cardStatistics={{
             // Todo: temp solution for Prev Month Revenue
             // ! if prev month is null then show 0

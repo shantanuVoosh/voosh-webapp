@@ -40,8 +40,10 @@ const FinancialDashBoard = () => {
 
   console.log("revenue =>", previousDayRevenue);
 
-  const finalRevenue =
+  let finalRevenue =
     resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
+
+  finalRevenue = finalRevenue === undefined ? 0 : finalRevenue;
 
   const pieColors = [
     "#370665",
@@ -108,10 +110,12 @@ const FinancialDashBoard = () => {
     .endOf("month")
     .format("YYYY-MM-DD");
 
-  console.log("startOfMonth =>", startOfMonth);
-  console.log("endOfMonth =>", endOfMonth);
-  console.log("start =>", startDate);
-  console.log("enddate =>", endDate);
+  // console.log("startOfMonth =>", startOfMonth);
+  // console.log("endOfMonth =>", endOfMonth);
+  // console.log("start =>", startDate);
+  // console.log("enddate =>", endDate);
+
+  console.log();
 
   return (
     <>
@@ -128,7 +132,7 @@ const FinancialDashBoard = () => {
                 ? startOfMonth === startDate && endOfMonth === endDate
                   ? totalSales
                   : finalRevenue
-                : resultType === "Previous Day"
+                : resultType === "Previous Month"
                 ? totalSales
                 : finalRevenue
             }
@@ -136,8 +140,13 @@ const FinancialDashBoard = () => {
             color={"#27AE60"}
             // color={"#262D30"}
             isDataPresent={
-              (resultType === "Previous Month" ? totalSales : finalRevenue) ===
-              undefined
+              (resultType === "Custom Range"
+                ? startOfMonth === startDate && endOfMonth === endDate
+                  ? totalSales
+                  : finalRevenue
+                : resultType === "Previous Month"
+                ? totalSales
+                : finalRevenue) === undefined
                 ? false
                 : true
             }

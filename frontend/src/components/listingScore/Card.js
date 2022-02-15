@@ -88,7 +88,8 @@ const Card = ({
           {value}
           {type === "percentage" &&
           name !== "Number of Rating" &&
-          name !== "Number of Reviews"
+          name !== "Number of Reviews" &&
+          name !== "Images"
             ? "%"
             : ""}
         </div>
