@@ -5,7 +5,9 @@ import { useSelector } from "react-redux";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
 const GrayCard = (props) => {
-  const resultType = useSelector((state) => state.resultType);
+  const { currentProductIndex } = useSelector((state) => state.data);
+
+  
   const { name, type, value, info, color, isDataPresent } = props;
 
   if (!isDataPresent) {
@@ -14,7 +16,13 @@ const GrayCard = (props) => {
         <div className="card__text">
           <h5 className="card__text--heading">{name}</h5>
 
-          <div className="value error-value green">Working on it..</div>
+        {currentProductIndex===0&&   <div className="value error-value green"
+        style={{
+          fontSize:"14px"
+        }}
+        
+        >From Next Month</div>}
+        {currentProductIndex===1&&   <div className="value error-value green">Working on it..</div>}
 
           <div className="card__text--info">
             <p>{info}</p>
