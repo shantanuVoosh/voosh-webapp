@@ -125,7 +125,10 @@ const FinancialDashBoard = () => {
         {/* //? Orange, White cards */}
         <div className="financial_a-cards">
           <WhiteCard
-            name={"Total Sales"}
+            // name={"Total Sales"}
+            name={`${
+              currentProductIndex === 0 ? "Swiggy Sales" : "Zomato Sales"
+            }`}
             type={"Pecentage"}
             // value={resultType === "Previous Month" ? totalSales : finalRevenue}
             value={
@@ -162,7 +165,7 @@ const FinancialDashBoard = () => {
         <div
           className="show-more-btn"
           style={{
-            display: !isDataPresent ? "" : "none",
+            display: !isDataPresent && currentProductIndex === 0 ? "" : "none",
             height: "160px",
             gridColumn: "span 2",
             flexDirection: "row",
@@ -180,17 +183,19 @@ const FinancialDashBoard = () => {
             Your detailed financial deductions will be calculated on 10th Next
             month. In the meantime, feel free to use our manual service.
           </b>
-          {/* <div className="">
+          <div className="">
             In the meantime, explore our free financial
-            <span>consultation service</span>
-          </div> */}
+            <span> consultation service</span>
+          </div>
         </div>
 
         <div
           className="financial_a-breakdown"
-          style={{
-            display: isDataPresent ? "" : "none",
-          }}
+          style={
+            {
+              // display: isDataPresent ? "" : "none",
+            }
+          }
         >
           <div className="financial_a-breakdown__heading">
             <h5 className="text">Channel Breakdown</h5>
@@ -249,6 +254,7 @@ const FinancialDashBoard = () => {
                     name={name}
                     value={Math.abs(value)}
                     color={pieColors[index]}
+                    isDataPresent={isDataPresent}
                   />
                 );
               })}

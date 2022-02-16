@@ -1,6 +1,6 @@
 import React from "react";
 
-const ColorList = ({ name, value, color }) => {
+const ColorList = ({ name, value, color, isDataPresent }) => {
   const valueWrapper = value.toLocaleString("en-IN", {
     maximumFractionDigits: 2,
     style: "currency",
@@ -16,9 +16,19 @@ const ColorList = ({ name, value, color }) => {
         <span className="name" style={{ fontWeight: "600" }}>
           {name} :
         </span>
-        <span className="value" style={{ fontWeight: "700" }}>
-          {valueWrapper}
-        </span>
+        {isDataPresent && (
+          <span className="value" style={{ fontWeight: "700" }}>
+            {valueWrapper}
+          </span>
+        )}
+        {!isDataPresent && (
+          <span
+            className="value green"
+            style={{ fontWeight: "700", marginLeft: "10px", fontSize: "10px" }}
+          >
+            Working on it...
+          </span>
+        )}
       </div>
     </div>
   );

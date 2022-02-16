@@ -6,6 +6,8 @@ import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 import moment from "moment";
 
 const WhiteCard = (props) => {
+  const { currentProductIndex } = useSelector((state) => state.data);
+
   const customDate = moment(new Date())
     .add(-1, "months")
     .add(-10, "days")
@@ -25,15 +27,20 @@ const WhiteCard = (props) => {
   if (!isDataPresent) {
     return (
       <div
-        className="financial_a-card error-card"
+        className="financial_a-card"
         style={{
           display:
-            name === "Total Payout" || name === "Net Deduction" ? "none" : "",
+            (name === "Total Payout" && currentProductIndex === 0) ||
+            (name === "Net Deduction" && currentProductIndex === 0)
+              ? "none"
+              : "",
         }}
       >
         <div className="financial_a-card__text">
-          <h5 className="financial_a-card__text--heading">{name}</h5>
-          <div className="value error-value green">Working on it...</div>
+          <div className="financial_a-card__text--heading">
+            <h5 className="text">{name}</h5>
+          </div>
+          <div className="value green">Working on it...</div>
           <div className="financial_a-card__text--info">
             <p>{info}</p>
           </div>
@@ -51,7 +58,9 @@ const WhiteCard = (props) => {
       <div className="financial_a-card__text">
         <div className="financial_a-card__text--heading">
           <h5 className="text">{name}</h5>
-          {name !== "Total Sales" && <span className="date">{customDate}</span>}
+          {name !== "Swiggy Sales" && name !== "Zomato Sales" && (
+            <span className="date">{customDate}</span>
+          )}
         </div>
         <div className="value" style={{ color: `${color}` }}>
           {value.toLocaleString("en-IN", {
