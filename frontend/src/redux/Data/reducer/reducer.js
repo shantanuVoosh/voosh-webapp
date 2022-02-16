@@ -1,11 +1,13 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
+import {getCurrentMonthDate} from '../../../utils/dateProvider';
+
 
 const initialState = {
   res_name: "",
   data: [],
   // cuz no at first we don't have any data
   currentProductIndex: -1,
-  resultType: "This Week",
+  resultType: "This Month",
   restaurantList: [],
   // Todo new value for test
   allRestaurants: [],
@@ -15,7 +17,7 @@ const initialState = {
   listingID: "",
   isLoading: false,
   res_id: "",
-  date: "",
+  date: getCurrentMonthDate(),
   startDate: "",
   endDate: "",
 };
@@ -64,7 +66,7 @@ export const dataReducer = (state = initialState, action) => {
         swiggy_res_id: "",
         zomato_res_id: "",
         listingID: "",
-        resultType: "This Week",
+        resultType: "This Month",
         isLoading: false,
         res_id: "",
         date: "",

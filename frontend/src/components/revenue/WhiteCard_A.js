@@ -24,13 +24,16 @@ const WhiteCard = (props) => {
 
   if (!isDataPresent) {
     return (
-      <div className="financial_a-card error-card">
+      <div
+        className="financial_a-card error-card"
+        style={{
+          display:
+            name === "Total Payout" || name === "Net Deduction" ? "none" : "",
+        }}
+      >
         <div className="financial_a-card__text">
           <h5 className="financial_a-card__text--heading">{name}</h5>
-          <div className="value error-value">
-            {/* {"No successful order yesterday"} */}
-            {"Working on it..."}
-          </div>
+          <div className="value error-value green">Working on it...</div>
           <div className="financial_a-card__text--info">
             <p>{info}</p>
           </div>

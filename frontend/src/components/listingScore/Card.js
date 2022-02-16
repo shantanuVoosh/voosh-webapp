@@ -14,6 +14,8 @@ const Card = ({
 }) => {
   const resultType = useSelector((state) => state.data.resultType);
 
+  console.log(resultType)
+
   let showColor = "";
   let resultValue = 0;
   let resultBenchmark = 0;

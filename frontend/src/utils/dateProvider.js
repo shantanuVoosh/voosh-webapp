@@ -12,6 +12,8 @@ export function getWeekNumberFromDate(date) {
 
 //* console.log(getMonthNumberFromDate("2022-1-3")) -->1
 export function getMonthNumberFromDate(date) {
+
+  // console.log(date, "test----==============")
   var d = new Date(date);
   var month = d.getMonth() + 1;
   return month;

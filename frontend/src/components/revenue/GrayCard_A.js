@@ -14,7 +14,7 @@ const GrayCard = (props) => {
         <div className="card__text">
           <h5 className="card__text--heading">{name}</h5>
 
-          <div className="value error-value">{value}</div>
+          <div className="value error-value green">Working on it..</div>
 
           <div className="card__text--info">
             <p>{info}</p>

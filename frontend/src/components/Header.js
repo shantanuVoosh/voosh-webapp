@@ -165,8 +165,8 @@ const Header = ({
     }
     // !On Revenue page
     if (pathname === "/revenue") {
-      if (resultType !== "Previous Month") {
-        dispatch(setResultType("Previous Month"));
+      if (resultType !== "This Month") {
+        dispatch(setResultType("This Month"));
       }
 
       setAllResultType([
@@ -183,7 +183,7 @@ const Header = ({
       // ?
       if (resultType !== "Previous Day") {
         // ? seting week cuz by default it is "Previous Month"
-        dispatch(setResultType("This Week"));
+        dispatch(setResultType("This Month"));
         setAllResultType([
           "This Week",
           "Previous Week",
@@ -194,7 +194,7 @@ const Header = ({
       }
       // ? if prv day is selected,change to old dropdown and set result type Week
       else {
-        dispatch(setResultType("This Week"));
+        dispatch(setResultType("This Month"));
         setAllResultType([
           "This Week",
           "Previous Week",
@@ -336,6 +336,7 @@ const Header = ({
                     {(resultType === "This Month" ||
                       resultType === "Previous Month") &&
                       customDateString(dateInsideState)}
+                    
                   </span>
                 </div>
               ) : (

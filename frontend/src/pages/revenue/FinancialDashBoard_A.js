@@ -43,6 +43,7 @@ const FinancialDashBoard = () => {
   let finalRevenue =
     resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
 
+  const isFinalRevenuePresent = finalRevenue === undefined ? false : true;
   finalRevenue = finalRevenue === undefined ? 0 : finalRevenue;
 
   const pieColors = [
@@ -139,17 +140,7 @@ const FinancialDashBoard = () => {
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
             // color={"#262D30"}
-            isDataPresent={
-              (resultType === "Custom Range"
-                ? startOfMonth === startDate && endOfMonth === endDate
-                  ? totalSales
-                  : finalRevenue
-                : resultType === "Previous Month"
-                ? totalSales
-                : finalRevenue) === undefined
-                ? false
-                : true
-            }
+            isDataPresent={isFinalRevenuePresent}
           />
           <WhiteCard
             name={"Total Payout"}
@@ -157,7 +148,7 @@ const FinancialDashBoard = () => {
             value={netPayout}
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
-            isDataPresent={true}
+            isDataPresent={isDataPresent}
           />
           <WhiteCard
             name={"Net Deduction"}
@@ -165,10 +156,33 @@ const FinancialDashBoard = () => {
             value={totalSales - netPayout}
             info={"Total Sales includes all taxes"}
             color={"#f05a48"}
-            isDataPresent={true}
+            isDataPresent={isDataPresent}
           />
         </div>
-        <div className="financial_a-breakdown">
+        <div
+          className="show-more-btn"
+          style={{
+            gridColumn: "span 2",
+            flexDirection: "row",
+            // textDecoration: "underline",
+            fontWeight: "700",
+            marginTop: !isDataPresent ? "40px" : "10px",
+            textAlign: "center",
+            color: !isDataPresent ? "#FFF" : "",
+            display: !isDataPresent ? "" : "none",
+          }}
+          // onClick={() => showDetails()}
+        >
+          Your deduction information will start coming from next month, Until
+          then, please take financial explanation service below
+        </div>
+
+        <div
+          className="financial_a-breakdown"
+          style={{
+            display: isDataPresent ? "" : "none",
+          }}
+        >
           <div className="financial_a-breakdown__heading">
             <h5 className="text">Channel Breakdown</h5>
             <div className="date">{customDate}</div>
@@ -182,11 +196,7 @@ const FinancialDashBoard = () => {
               value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
               color={"#27AE60"}
-              isDataPresent={
-                deleveries !== "Please wait! We are working on It."
-                  ? true
-                  : false
-              }
+              isDataPresent={isDataPresent}
             />
             <GrayCard
               name={"Cancelled Orders"}
@@ -194,11 +204,7 @@ const FinancialDashBoard = () => {
               value={cancelledOrders}
               info={"Total Order cancelled by Merchant"}
               color={"#f05a48"}
-              isDataPresent={
-                cancelledOrders !== "Please wait! We are working on It."
-                  ? true
-                  : false
-              }
+              isDataPresent={isDataPresent}
             />
             <GrayCard
               name={"Total Sales"}
@@ -206,11 +212,7 @@ const FinancialDashBoard = () => {
               value={totalSales}
               info={"Including of GST lability of Merchant"}
               color={"#262D30"}
-              isDataPresent={
-                totalSales !== "Please wait! We are working on It."
-                  ? true
-                  : false
-              }
+              isDataPresent={isDataPresent}
             />
             <GrayCard
               name={"Net Payout"}
@@ -220,11 +222,7 @@ const FinancialDashBoard = () => {
                 "Inclusive of TDS TCS Platform Charges & deductions from breakdown"
               }
               color={"#27AE60"}
-              isDataPresent={
-                netPayout !== "Please wait! We are working on It."
-                  ? true
-                  : false
-              }
+              isDataPresent={isDataPresent}
             />
           </div>
           <div className="financial_a-breakdown__graph">

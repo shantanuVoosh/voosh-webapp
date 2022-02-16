@@ -40,8 +40,14 @@ function RequiredAuth({ children }) {
   const resultType = useSelector((state) => state.data.resultType);
   const res_name = useSelector((state) => state.data.res_name);
   const res_id = useSelector((state) => state.data.res_id);
-  const { startDate, endDate, zomato_res_id, swiggy_res_id, listingID, currentProductIndex } =
-    useSelector((state) => state.data);
+  const {
+    startDate,
+    endDate,
+    zomato_res_id,
+    swiggy_res_id,
+    listingID,
+    currentProductIndex,
+  } = useSelector((state) => state.data);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -75,10 +81,25 @@ function RequiredAuth({ children }) {
         "Previous Day": getWeekNumberFromDate(date),
         "This Week": getWeekNumberFromDate(date),
         "Previous Week": getWeekNumberFromDate(date),
-        "This Month": getMonthNumberFromDate(date),
+        // "This Month": getMonthNumberFromDate(date),
+        "This Month": ((date)=>{
+          console.log(date)
+          var d = new Date(date);
+          var month = d.getMonth() + 1;
+          return month;
+        })(date),
         "Previous Month": getMonthNumberFromDate(date),
         "Custom Range": null,
       };
+
+      console.log(
+        "test -1:",
+        tempNumberMap["This Month"],
+        resultType,
+        tempNumberMap[resultType]
+      );
+      console.log("tempNumberMap:", tempNumberMap[resultType]);
+      console.log("tempMonthMap:", tempMonthMap[resultType]);
 
       // const client_res_id = restaurantList.find((item) => item.name === res_name).id;
       const { data: response } = await axios.post("/voosh-data", {
@@ -108,7 +129,7 @@ function RequiredAuth({ children }) {
         } = response.data;
         // ! call of the first time
         console.log(newRestaurantList, "new list");
-        if (currentProductIndex===-1) {
+        if (currentProductIndex === -1) {
           console.log("call data with res_name and res_id");
           dispatch(
             fetchAllData({
@@ -135,7 +156,6 @@ function RequiredAuth({ children }) {
           //     date: date,
           //   })
           // );
-          
         }
         dispatch(isLoading(false));
       }
