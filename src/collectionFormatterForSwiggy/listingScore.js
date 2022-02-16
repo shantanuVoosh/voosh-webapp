@@ -17,8 +17,18 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
       .aggregate([
         {
           $match: {
-            swiggy_res_id: `${res_id}`,
+            swiggy_res_id: parseInt(res_id),
           },
+        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+    const rating = await db
+      .collection("swiggy_static_rating_products")
+      .aggregate([
+        {
+          $match: { res_id: parseInt(res_id) },
         },
         { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
         { $limit: 1 },
@@ -33,13 +43,18 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
     //   listingScoreData
     // );
     // console.log("------******------");
+    console.log("----------*****----------");
+    console.log("Listing rating:", rating);
+    console.log("----------*****----------");
+
     const listingScore = listingScoreData[0];
 
     client.close();
     return {
       score: listingScore?.score,
       safety_tag: listingScore?.safety_tag,
-      rating: listingScore?.rating,
+      // rating: listingScore?.rating,
+      rating: rating[0]?.customer_rating,
       number_of_rating: listingScore?.number_of_rating,
       offer_1: listingScore?.offer_1,
       offer_2: listingScore?.offer_2,
@@ -64,7 +79,7 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
 const listingScoreDataFormatter = async (res_id, number, resultType) => {
   try {
     // const data = await listingScoreMongoDBData(res_id, number, resultType);
-    
+
     const data = await listingScoreMostRecentMongoDBData(res_id);
     const {
       score,
@@ -84,7 +99,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
     // !If the values inside data is not present, then it will return undefined
     const listing = {
       // Todo: can we put like this?
-      listingScoreDate: listingScoreDate?listingScoreDate:"",
+      listingScoreDate: listingScoreDate ? listingScoreDate : "",
       listingScoreMain: {
         value:
           score === undefined
@@ -156,9 +171,9 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
         // ?Ratings
         {
           name: "Rating",
-          type: "string",
-          benchmark: "4.0",
-          compareThen: "string",
+          type: "number",
+          benchmark: 4,
+          compareThen: "grater",
           info: "Ratings is very directly related to sales",
           suggestions: [
             "Improve reviews by understanding the problem areas",

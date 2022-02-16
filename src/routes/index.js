@@ -2,7 +2,6 @@ const router = require("express").Router();
 const { MongoClient } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const {
-  getAllRestaurants,
   getAllSwiggyAndZomatoRestaurants,
 } = require("../utils/getAllRestaurants");
 
@@ -81,7 +80,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     } = req.payload;
     const date = req.body.date;
 
-    const {
+    let {
       number,
       resultType,
       startDate,
@@ -118,6 +117,13 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       "listingID:",
       listingID
     );
+
+    // ? for safari only
+    if(number===null && resultType==='month'){
+      var d = new Date(date);
+      var x = d.getMonth() + 1;
+      number=x
+    }
 
     console.log("************************************************");
     console.log(z_res_id, s_res_id, "z_res_id, s_res_id");

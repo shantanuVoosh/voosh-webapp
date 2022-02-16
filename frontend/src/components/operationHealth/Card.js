@@ -27,7 +27,7 @@ const Card = (props) => {
   }
 
   // !temp change Customer Reviews
-  if (name === "Customer Review") {
+  if (name === "Reviews") {
     return (
       <>
         <div className="op_card">

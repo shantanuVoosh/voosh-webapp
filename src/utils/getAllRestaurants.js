@@ -3,45 +3,6 @@ const VooshDB =
 const { MongoClient } = require("mongodb");
 const documentName = "operationsdb";
 
-async function getAllRestaurants(phoneNumber = 9886850338) {
-  const collectionName = "non_voosh_dashboard_products";
-  console.log("---------- <getAllRestaurants> ----------------");
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = await client.db(documentName);
-    const data = await db
-      .collection(collectionName)
-      .find({
-        swiggy_register_phone: Number(phoneNumber),
-      })
-      .toArray();
-
-    console.log(
-      "Hard coded phone number: 9886850338\n",
-      `current user number: ${phoneNumber}`
-    );
-
-    const restaurantList = data.map((item, index) => {
-      const res_id = item["swiggy_res_id"];
-      const res_name = item["nomenclature"];
-      // console.log(` res_id: ${res_id} - res_name: ${res_name}`);
-
-      return { res_id, res_name };
-    });
-    // console.log("restaurantList:", restaurantList);
-    console.log("---------- END-----------------");
-
-    return restaurantList;
-  } catch (err) {
-    console.log(err);
-    console.log("---------- END-----------------");
-
-    return err;
-  }
-}
-
 async function getAllSwiggyAndZomatoRestaurants(phone) {
   const nvdpColleaction = "non_voosh_dashboard_products";
   const swiggyNvdpColleaction = "swiggy_nvdp";
@@ -51,7 +12,9 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    const userData = await db.collection(nvdpColleaction).findOne({ owner_number:phone });
+    const userData = await db
+      .collection(nvdpColleaction)
+      .findOne({ owner_number: phone });
 
     if (userData) {
       const { kitchen_id } = userData;
@@ -76,6 +39,7 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
         const z_data = zomatoData.find((item) => item.listing_id === Lid);
         const swiggy_res_id = s_data?.swiggy_res_id;
         const zomato_res_id = z_data?.zomato_res_id;
+        const s_run_date = s_data?.run_date;
         const restaurant_name =
           s_data !== undefined
             ? s_data.nomenclature
@@ -86,12 +50,7 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
           listing_id: Lid,
           swiggy_res_id: swiggy_res_id === undefined ? null : swiggy_res_id,
           zomato_res_id: zomato_res_id === undefined ? null : zomato_res_id,
-          // swiggy: {
-          //   ...s_data,
-          // },
-          // zomato: {
-          //   ...z_data,
-          // },
+          swiggy_run_date: s_run_date === undefined ? null : s_run_date,
         };
       });
 
@@ -105,4 +64,4 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
   }
 }
 
-module.exports = { getAllRestaurants, getAllSwiggyAndZomatoRestaurants };
+module.exports = { getAllSwiggyAndZomatoRestaurants };

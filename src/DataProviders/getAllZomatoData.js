@@ -71,7 +71,8 @@ async function getAllZomatoData(
   return {
     name: "Zomato",
     operationHealth: oh,
-    revenue_score: revenue_score === undefined ? 0 : revenue_score,
+    // revenue_score: revenue_score === undefined ? 0 : revenue_score,
+    revenue_score: revenue_score,
 
     listingScore: ls,
 
@@ -81,7 +82,7 @@ async function getAllZomatoData(
         : customerReviews,
 
     previousMonthRevenue: {
-      previousDayRevenue: 0,
+      previousDayRevenue: undefined,
       isDataPresent: false,
       financicalData: {
         totalCancellation: 0,
@@ -89,7 +90,16 @@ async function getAllZomatoData(
         netPayout: 0,
         deleveries: 0,
         cancelledOrders: 0,
-        deductions: {},
+        deductions: {
+          "Platform Services Charges": 0,
+          "Cancellation Deduction": 0,
+          "Other OFD deduction": 0,
+          Promotions: 0,
+          "Previous Week Outstanding": 0,
+          Miscellaneous: 0,
+          TCS: 0,
+          TDS: 0,
+        },
       },
     },
   };

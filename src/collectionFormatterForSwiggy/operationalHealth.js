@@ -115,6 +115,21 @@ const operationalHealthMongoDBData = async (
       ])
       .toArray();
 
+    // // ! Operational Health Rating
+    // const rating = await db
+    //   .collection("swiggy_static_rating_products")
+    //   .aggregate([
+    //     {
+    //       $match: ratingQuery,
+    //     },
+    //     {
+    //       $group: {
+    //         _id: "$res_id",
+    //         rating_score: { $avg: "$customer_rating" },
+    //       },
+    //     },
+    //   ])
+    //   .toArray();
     // ! Operational Health Rating
     const rating = await db
       .collection("swiggy_static_rating_products")
@@ -122,12 +137,8 @@ const operationalHealthMongoDBData = async (
         {
           $match: ratingQuery,
         },
-        {
-          $group: {
-            _id: "$res_id",
-            rating_score: { $avg: "$customer_rating" },
-          },
-        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
       ])
       .toArray();
 
@@ -200,7 +211,7 @@ const operationalHealthMongoDBData = async (
     // console.log("----------*****----------");
     // console.log("igcc:", igcc);
     // console.log("----------*****----------");
-    console.log("acceptance:", acceptance);
+    // console.log("acceptance:", acceptance);
     // console.log("----------*****----------");
 
     // ? Error Handling Better krna hai, right now if value is not present in DB,
@@ -211,7 +222,7 @@ const operationalHealthMongoDBData = async (
       oh_score: oh_score[0]?.oh_score,
       serviceability_score: serviceability[0]?.oh_serviceability,
       rdc_score: rdc[0]?.rdc_score,
-      rating_score: rating[0]?.rating_score,
+      rating_score: rating[0]?.customer_rating,
       mfr_score: mfr[0]?.mfr_score,
       acceptance_score: acceptance[0]?.acceptance_score,
       igcc_score: igcc[0]?.igcc_score,
