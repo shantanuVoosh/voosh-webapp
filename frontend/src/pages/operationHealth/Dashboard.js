@@ -15,9 +15,9 @@ const Dashborad = () => {
     <>
       <div className="op_cards">
         <Card
-          name={"Customer Reviews"}
+          name={"Customer Review"}
           type={"average"}
-          info={"Customer Reviews are good or bad"}
+          info={"Click Know More to understand better"}
           value={customerReviews.value}
           benchmark={4}
           compareThen={"grater"}

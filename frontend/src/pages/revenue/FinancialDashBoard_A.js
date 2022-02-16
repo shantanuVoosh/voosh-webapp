@@ -162,19 +162,28 @@ const FinancialDashBoard = () => {
         <div
           className="show-more-btn"
           style={{
+            display: !isDataPresent ? "" : "none",
+            height: "160px",
             gridColumn: "span 2",
             flexDirection: "row",
-            // textDecoration: "underline",
-            fontWeight: "700",
-            marginTop: !isDataPresent ? "40px" : "10px",
+            marginTop: "10px",
             textAlign: "center",
             color: !isDataPresent ? "#FFF" : "",
-            display: !isDataPresent ? "" : "none",
           }}
           // onClick={() => showDetails()}
         >
-          Your deduction information will start coming from next month, Until
-          then, please take financial explanation service below
+          <b
+            style={{
+              fontWeight: "700",
+            }}
+          >
+            Your detailed financial deductions will be calculated on 10th Next
+            month. In the meantime, feel free to use our manual service.
+          </b>
+          {/* <div className="">
+            In the meantime, explore our free financial
+            <span>consultation service</span>
+          </div> */}
         </div>
 
         <div

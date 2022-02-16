@@ -76,6 +76,9 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
       resultValue = value;
       resultBenchmark = benchmark;
     }
+  } else if (type === "number") {
+    resultValue = value;
+    resultBenchmark = benchmark;
   }
 
   const colorOfBar = resultValue >= resultBenchmark ? "#27AE60" : "#f05a48";
@@ -85,7 +88,6 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
       legend: {
         display: false,
       },
-      
     },
 
     scales: {
@@ -121,9 +123,7 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
           color: "black",
           anchor: "end",
           align: "top",
-          offset:-2.6
-          
-          
+          offset: -2.6,
         },
       },
     ],

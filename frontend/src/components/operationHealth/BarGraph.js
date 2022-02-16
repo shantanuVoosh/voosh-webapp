@@ -49,7 +49,7 @@ const BarGraph = ({ compareThen, value, benchmark }) => {
           color: "black",
           anchor: "end",
           align: "top",
-          offset: -2.2,
+          offset: -2.6,
         },
       },
     ],
