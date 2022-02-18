@@ -109,7 +109,7 @@ const customerReviewsMongoDBData = async (
 
     client.close();
     return {
-      customerRatings: customerRatings[0]?.customer_rating,
+      customerRatings: customerRatings[0]?.delivery_ratings,
       ordersPerRating:
         ordersPerRating.length > 0
           ? ordersPerRating[0]

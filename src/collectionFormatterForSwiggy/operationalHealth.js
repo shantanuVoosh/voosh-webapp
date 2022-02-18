@@ -196,21 +196,27 @@ const operationalHealthMongoDBData = async (
     // ? close connection
     client.close();
 
-    // console.log("----------*****----------");
+    // console.log("*****************--------------------********************");
+    // console.log("Swiggy Operational Health Data - (Swiggy Query Output)");
     // console.log("oh_score: ", oh_score);
-    // console.log("----------*****----------");
     // console.log("serviceability: ", serviceability);
-    // console.log("----------*****----------");
     // console.log("rdc:", rdc);
-    // console.log("----------*****----------");
     // console.log("rating:", rating);
-    // console.log("----------*****----------");
     // console.log("mfr:", mfr);
-    // console.log("----------*****----------");
     // console.log("igcc:", igcc);
-    // console.log("----------*****----------");
     // console.log("acceptance:", acceptance);
-    // console.log("----------*****----------");
+    // console.log("*****************--------------------********************");
+
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Operational Health Data - (Swiggy OH Values)");
+    console.log("oh_score: ", oh_score[0]?.oh_score);
+    console.log("serviceability: ", serviceability[0]?.oh_serviceability);
+    console.log("rdc:", rdc[0]?.rdc_score);
+    console.log("rating:", rating[0]?.rating_score);
+    console.log("mfr:", mfr[0]?.mfr_score);
+    console.log("igcc:", igcc[0]?.igcc_score);
+    console.log("acceptance:", acceptance[0]?.acceptance_score);
+    console.log("*****************--------------------********************");
 
     // ? Error Handling Better krna hai, right now if value is not present in DB,
     // ? it will return empty result { }
@@ -251,8 +257,7 @@ const operationHealthDataFormatter = async (
       startDate,
       endDate
     );
-    // console.log("operationHealthDataFormatter res_id, num, resultType", res_id, number, resultType);
-    // console.log("operationHealthDataFormatter data", data);
+
     const {
       oh_score,
       serviceability_score,
@@ -404,6 +409,7 @@ module.exports = {
   operationHealthDataFormatter,
 };
 
+// ! for calculating the operational health score manually
 function calculateOHScoreManually({
   serviceability_score,
   rdc_score,
@@ -412,14 +418,14 @@ function calculateOHScoreManually({
   mfr_score,
   acceptance_score,
 }) {
-  console.log("*****************--------------------********************");
-  console.log("serviceability_score", serviceability_score);
-  console.log("rdc_score", rdc_score);
-  console.log("igcc_score", igcc_score);
-  console.log("rating_score", rating_score);
-  console.log("mfr_score", mfr_score);
-  console.log("acceptance_score", acceptance_score);
-  console.log("****************-------------------------*********************");
+  // console.log("*****************--------------------********************");
+  // console.log("serviceability_score", serviceability_score);
+  // console.log("rdc_score", rdc_score);
+  // console.log("igcc_score", igcc_score);
+  // console.log("rating_score", rating_score);
+  // console.log("mfr_score", mfr_score);
+  // console.log("acceptance_score", acceptance_score);
+  // console.log("****************-------------------------*********************");
   let score = 0;
   let count = 0;
   if (serviceability_score !== undefined) {
@@ -475,8 +481,11 @@ function calculateOHScoreManually({
       score += 0;
     }
   }
-  console.log("score", score);
-  console.log("count", count);
+  console.log("*****************--------------------********************");
+  console.log("Swiggy OH Manual Score");
+  console.log("oh score manually", score);
+  console.log("count oh categories", count);
+  console.log("*****************--------------------********************");
   if (count === 0) return 0;
   // ! if Nan then no data is present
   console.log(score * (200 / count));

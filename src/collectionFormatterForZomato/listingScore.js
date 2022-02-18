@@ -25,14 +25,25 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
       ])
       .toArray();
 
+    const static_rating = await db
+      .collection("zomato_static_rating_products")
+      .aggregate([
+        {
+          $match: { zomato_res_id: parseInt(res_id) },
+        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
     //! if resultType is not week or month!
 
-    // console.log("------******------");
-    // console.log(
-    //   "listingScoreData--------------------------.................:",
-    //   listingScoreData
-    // );
-    // console.log("------******------");
+    console.log("------******------");
+    console.log(
+      "listingScoreData--------------------------.................:",
+      listingScoreData
+    );
+    console.log("------******------");
     const listingScore = listingScoreData[0];
 
     client.close();
@@ -40,7 +51,6 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
     return {
       score: listingScore?.Score,
       delivery_no_review: listingScore?.delivery_no_review,
-      delivery_review: listingScore?.delivery_review,
       offer_1: listingScore?.offer1,
       offer_2: listingScore?.offer2,
       offer_3: listingScore?.offer3,
@@ -55,6 +65,10 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
       description: listingScore?.description,
       listingScoreDate: listingScore?.run_date,
       VoteScore: listingScore?.No_Add_items_in_rec,
+
+      // Todo: in place of delivery_review will use static rating
+      delivery_review: listingScore?.delivery_review,
+      static_rating: static_rating[0]?.delivery_ratings,
     };
   } catch (err) {
     console.log(err);
@@ -82,6 +96,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       description,
       listingScoreDate,
       VoteScore,
+      static_rating
     } = data;
 
     // !If the values inside data is not present, then it will return undefined
@@ -159,20 +174,34 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           isDataPresent: VoteScore === undefined ? false : true,
         },
 
-        // ! "Review(star)"
+        // // ! "Review(star)"
+        // {
+        //   name: "Rating",
+        //   type: "string",
+        //   benchmark: 3.7,
+        //   compareThen: "string",
+        //   info: "Ratings is very directly related to sales",
+        //   suggestions: [
+        //     "Improve reviews by understanding the problem areas",
+        //     "Contact Voosh for Rating Booster service",
+        //   ],
+        //   value: delivery_review === undefined ? null : delivery_review,
+        //   isDataPresent: delivery_review === undefined ? false : true,
+        // },
+        // ! "Rating "
 
         {
           name: "Rating",
           type: "string",
-          benchmark: 3.7,
+          benchmark: 4.5,
           compareThen: "string",
           info: "Ratings is very directly related to sales",
           suggestions: [
             "Improve reviews by understanding the problem areas",
             "Contact Voosh for Rating Booster service",
           ],
-          value: delivery_review === undefined ? null : delivery_review,
-          isDataPresent: delivery_review === undefined ? false : true,
+          value: static_rating === undefined ? null : static_rating,
+          isDataPresent: static_rating === undefined ? false : true,
         },
 
         // ?Offer1

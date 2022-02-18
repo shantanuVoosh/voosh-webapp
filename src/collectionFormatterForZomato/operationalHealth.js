@@ -45,9 +45,6 @@ const operationalHealthMongoDBData = async (
 
     ratings_query = {
       zomato_res_id: parseInt(res_id),
-      week_no: parseInt(number),
-      // week_no:2,
-      year_no: parseInt(year),
     };
   }
   // ? Query for month
@@ -71,12 +68,10 @@ const operationalHealthMongoDBData = async (
 
     ratings_query = {
       zomato_res_id: parseInt(res_id),
-      month_no: parseInt(number),
-      year_no: parseInt(year),
     };
   }
   // ? Query for Custom Range
-  else if (resultType === "Cumstom Range") {
+  else if (resultType === "Custom Range") {
     serviceability_query = {
       zomato_res_id: parseInt(res_id),
       date: {
@@ -97,7 +92,6 @@ const operationalHealthMongoDBData = async (
 
     ratings_query = {
       zomato_res_id: parseInt(res_id),
-      date: { $gte: startDate, $lte: endDate },
     };
   }
   // ? Error while providing wrong query
@@ -112,11 +106,6 @@ const operationalHealthMongoDBData = async (
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
-    // console.log(query, "query");
-    // console.log(mfr_query, "mfr_query");
-    // console.log(serviceability_query, "serviceability_query");
-    // console.log(rdc_query, "rdc_query");
-    console.log(ratings_query, "ratings_query");
 
     // ! Operational Health Serviceability
     const serviceability = await db
@@ -157,12 +146,8 @@ const operationalHealthMongoDBData = async (
         {
           $match: ratings_query,
         },
-        {
-          $group: {
-            _id: "$zomato_res_id",
-            rating_score: { $avg: "$delivery_ratings" },
-          },
-        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
       ])
       .toArray();
 
@@ -183,14 +168,20 @@ const operationalHealthMongoDBData = async (
       .toArray();
 
     // console.log("*****************--------------------********************");
+    // console.log("Zomato Operational Health Data - (Zomato Query Output)");
     // console.log("serviceability: ", serviceability);
     // console.log("rdc_score", rdc_score);
     // console.log("mfr_score", mfr_score);
     // console.log("rating", rating);
+    // console.log("*****************--------------------********************");
 
-    // console.log(
-    //   "****************-------------------------*********************"
-    // );
+    console.log("*****************--------------------********************");
+    console.log("Zomato Operational Health Data - (Zomato OH Values)");
+    console.log("serviceability_score: ", serviceability[0]?.oh_serviceability);
+    console.log("rdc_score: ", rdc_score[0]?.rdc_score);
+    console.log("mfr_score: ", mfr_score[0]?.mfr_score);
+    console.log("rating: ", rating[0]?.delivery_ratings);
+    console.log("*****************--------------------********************");
 
     client.close();
 
@@ -198,7 +189,7 @@ const operationalHealthMongoDBData = async (
       serviceability_score: serviceability[0]?.oh_serviceability,
       rdc_score: rdc_score[0]?.rdc_score,
       mfr_score: mfr_score[0]?.mfr_score,
-      rating_score: rating[0]?.rating_score,
+      rating_score: rating[0]?.delivery_ratings,
     };
   } catch (err) {
     console.log(err);
@@ -239,9 +230,6 @@ const operationHealthDataFormatter = async (
       serviceability_score,
       rating_score,
     });
-
-    // console.log("ohManually", ohManually);
-    // console.log(rdc_score, 'rdc_score------------------>')
 
     const operationHealth = {
       operationHealthMain: {
@@ -376,6 +364,7 @@ module.exports = {
   operationHealthDataFormatter,
 };
 
+// ! for calculating the operational health score manually
 function calculateOHScoreManually({
   serviceability_score,
   rdc_score,
@@ -384,14 +373,14 @@ function calculateOHScoreManually({
   mfr_score,
   acceptance_score,
 }) {
-  console.log("*****************--------------------********************");
-  console.log("serviceability_score", serviceability_score);
-  console.log("rdc_score", rdc_score);
-  console.log("igcc_score", igcc_score);
-  console.log("rating_score", rating_score);
-  console.log("mfr_score", mfr_score);
-  console.log("acceptance_score", acceptance_score);
-  console.log("****************-------------------------*********************");
+  // console.log("*****************--------------------********************");
+  // console.log("serviceability_score", serviceability_score);
+  // console.log("rdc_score", rdc_score);
+  // console.log("igcc_score", igcc_score);
+  // console.log("rating_score", rating_score);
+  // console.log("mfr_score", mfr_score);
+  // console.log("acceptance_score", acceptance_score);
+  // console.log("****************-------------------------*********************");
   let score = 0;
   let count = 0;
   if (serviceability_score !== undefined) {
@@ -448,8 +437,11 @@ function calculateOHScoreManually({
     }
   }
 
-  console.log("score", score);
-  console.log("count", count);
+  console.log("*****************--------------------********************");
+  console.log("Zomato OH Manual Score");
+  console.log("oh score manually", score);
+  console.log("count oh categories", count);
+  console.log("*****************--------------------********************");
   if (count === 0) return 0;
 
   // ! if Nan then no data is present

@@ -37,12 +37,12 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
 
     //! if resultType is not week or month!
 
-    // console.log("------******------");
-    // console.log(
-    //   "listingScoreData--------------------------.................:",
-    //   listingScoreData
-    // );
-    // console.log("------******------");
+    console.log("------******------");
+    console.log(
+      "listingScoreData--------------------------.................:",
+      listingScoreData
+    );
+
     console.log("----------*****----------");
     console.log("Listing rating:", rating);
     console.log("----------*****----------");
@@ -160,7 +160,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
         {
           name: "Rating",
           type: "number",
-          benchmark: 4,
+          benchmark: 4.5,
           compareThen: "grater",
           info: "Ratings is very directly related to sales",
           suggestions: [
