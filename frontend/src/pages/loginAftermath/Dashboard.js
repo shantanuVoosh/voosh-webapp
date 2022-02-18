@@ -39,60 +39,23 @@ const Dashboard = () => {
       <div className="dashboard-cards">
         {/* //? Revenue */}
         <Card
-        // Todo: Card name is changed Revenue to Sales, but cant change or pass name here
-        // Todo: other thing are getting effected, 
+          // Todo: Card name is changed Revenue to Sales, but cant change or pass name here
+          // Todo: other thing are getting effected,
           iconName={"bar"}
           name={"Revenue"}
           info={"Dive into sales, deduction, commissions, etc."}
-          cardStatistics={{
-            // Todo: temp solution for Prev Month Revenue
-            // ! if prev month is null then show 0
-            value: resultType === "Previous Month" ? totalSales : revenue_score,
-            change: null,
-            benchmark: null,
-            changeTypeDirection: "up",
-            type: "money",
-            isDataPresent:
-              (resultType === "Previous Month" ? totalSales : revenue_score) !==
-              undefined,
-          }}
         />
         {/* //? Operation Health */}
         <Card
           iconName={"bar"}
           name={"Operation Health"}
           info={"Analyse and improve your Operational Metrics."}
-          cardStatistics={{
-            value: operationHealthMain.value,
-            benchmark: operationHealthMain.benchmark,
-            type: operationHealthMain.type,
-            changeTypeDirection: !operationHealthMain.isDataPresent
-              ? "up"
-              : operationHealthMain.value >= operationHealthMain.benchmark
-              ? "up"
-              : "down",
-            change: operationHealthMain.benchmark,
-            isDataPresent: operationHealthMain.isDataPresent,
-          }}
         />
         {/* //?List Score */}
         <Card
           iconName={"bar"}
           name={"Listing Score"}
           info={"Visibility performance on Swiggy and Zomato"}
-          cardStatistics={{
-            value: listingScoreMain.value,
-            benchmark: listingScoreMain.benchmark,
-            type: listingScoreMain.type,
-            changeTypeDirection: !listingScoreMain.isDataPresent
-              ? "up"
-              : listingScoreMain.value >= listingScoreMain.benchmark
-              ? "up"
-              : "down",
-            // changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
-            change: listingScoreMain.benchmark,
-            isDataPresent: listingScoreMain.isDataPresent,
-          }}
         />
       </div>
       <div className="dashboard-bottom">

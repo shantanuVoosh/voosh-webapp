@@ -20,7 +20,8 @@ const FinancialDashBoard = () => {
     .add(-10, "days")
     .format("MMMM'YY");
   // ? this value is not constant
-  const { revenue_score } = data[currentProductIndex]["revenue_score"];
+  const { revenue_score, isDataPresent: isRevenueScorePresent } =
+    data[currentProductIndex]["revenue_score"];
   const {
     previousDayRevenue,
     financicalData: {
@@ -43,7 +44,6 @@ const FinancialDashBoard = () => {
   let finalRevenue =
     resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
 
-  const isFinalRevenuePresent = finalRevenue === undefined ? false : true;
   finalRevenue = finalRevenue === undefined ? 0 : finalRevenue;
 
   const pieColors = [
@@ -111,13 +111,6 @@ const FinancialDashBoard = () => {
     .endOf("month")
     .format("YYYY-MM-DD");
 
-  // console.log("startOfMonth =>", startOfMonth);
-  // console.log("endOfMonth =>", endOfMonth);
-  // console.log("start =>", startDate);
-  // console.log("enddate =>", endDate);
-
-  console.log();
-
   return (
     <>
       {/* //! use for only prev month */}
@@ -142,8 +135,29 @@ const FinancialDashBoard = () => {
             }
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
-            // color={"#262D30"}
-            isDataPresent={isFinalRevenuePresent}
+             // Todo: this should be use, if we dont use any break fix 😎
+            // isDataPresent={isRevenueScorePresent}
+             // ! Temp Fix cuz data is not present 😞
+            isDataPresent={
+              resultType !== "Previous Month" && resultType !== "Custom Range"
+                ? isRevenueScorePresent
+                : (resultType === "Custom Range"
+                    ? startOfMonth === startDate && endOfMonth === endDate
+                      ? totalSales
+                      : finalRevenue
+                    : resultType === "Previous Month"
+                    ? totalSales
+                    : finalRevenue) !== undefined &&
+                  (resultType === "Custom Range"
+                    ? startOfMonth === startDate && endOfMonth === endDate
+                      ? totalSales
+                      : finalRevenue
+                    : resultType === "Previous Month"
+                    ? totalSales
+                    : finalRevenue) !== 0
+                ? true
+                : false
+            }
           />
           <WhiteCard
             name={"Total Payout"}

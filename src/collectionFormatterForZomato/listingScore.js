@@ -54,6 +54,7 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
       //?  1 -> 100%
       description: listingScore?.description,
       listingScoreDate: listingScore?.run_date,
+      VoteScore: listingScore?.No_Add_items_in_rec,
     };
   } catch (err) {
     console.log(err);
@@ -80,6 +81,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       Image,
       description,
       listingScoreDate,
+      VoteScore,
     } = data;
 
     // !If the values inside data is not present, then it will return undefined
@@ -87,10 +89,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       // Todo: can we put like this?
       listingScoreDate: listingScoreDate ? listingScoreDate : "",
       listingScoreMain: {
-        value:
-          score === undefined
-            ? "Please wait! We are working on It."
-            : score * 10,
+        value: score === undefined ? null : score * 10,
         type: "percentage",
         compareThen: "grater",
         benchmark: 90,
@@ -110,7 +109,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             safety_tag === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : safety_tag === "Not present"
               ? "No"
               : "Yes",
@@ -129,15 +128,13 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Contact Voosh photoshoot service for quality images",
           ],
           value:
-            Image === undefined
-              ? "Please wait! We are working on It."
-              : parseFloat((Image * 100).toFixed(2)),
+            Image === undefined ? null : parseFloat((Image * 100).toFixed(2)),
           isDataPresent: Image === undefined ? false : true,
         },
 
         // !Number of Review
         {
-          name: "Number of review",
+          name: "Number of Rating",
           type: "number",
           benchmark: 5000,
           compareThen: "High Medium Low",
@@ -145,19 +142,27 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           suggestions: [
             "Increase number of reviews through personalized notes",
             -"Improve customer service",
-            "Provide complimentory dishes",
+            "Provide complimentary dishes",
           ],
-          value:
-            delivery_no_review === undefined
-              ? "Please wait! We are working on It."
-              : delivery_no_review,
+          value: delivery_no_review === undefined ? null : delivery_no_review,
           isDataPresent: delivery_no_review === undefined ? false : true,
+        },
+        // !Vote Score
+        {
+          name: "Vote Score",
+          type: "number",
+          benchmark: 5,
+          compareThen: "less",
+          info: "Items that not present in Recommended",
+          suggestions: [],
+          value: VoteScore === undefined ? null : VoteScore,
+          isDataPresent: VoteScore === undefined ? false : true,
         },
 
         // ! "Review(star)"
 
         {
-          name: "Review(star)",
+          name: "Rating",
           type: "string",
           benchmark: 3.7,
           compareThen: "string",
@@ -166,10 +171,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Improve reviews by understanding the problem areas",
             "Contact Voosh for Rating Booster service",
           ],
-          value:
-            delivery_review === undefined
-              ? "Please wait! We are working on It."
-              : delivery_review,
+          value: delivery_review === undefined ? null : delivery_review,
           isDataPresent: delivery_review === undefined ? false : true,
         },
 
@@ -187,7 +189,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             offer_1 === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : offer_1 === null
               ? "Not Applicable"
               : "Applicable",
@@ -207,7 +209,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             offer_2 === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : offer_2 === null
               ? "Not Applicable"
               : "Applicable",
@@ -227,7 +229,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             offer_3 === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : offer_3 === null
               ? "Not Applicable"
               : "Applicable",
@@ -247,7 +249,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value:
             offer_4 === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : offer_4 === null
               ? "Not Applicable"
               : "Applicable",
@@ -265,10 +267,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
             "Add descriptions into more items",
             "Use good keywords in item descriptions",
           ],
-          value:
-            description === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(description * 100),
+          value: description === undefined ? null : parseInt(description * 100),
           isDataPresent: description === undefined ? false : true,
         },
         // ?Beverage Category
@@ -281,7 +280,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           suggestions: ["Add breverage category and corrosponding item"],
           value:
             beverages_category === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : beverages_category === "no"
               ? "No"
               : "Yes",
@@ -296,11 +295,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           info: "Having a desert category improves listing score",
           suggestions: ["Add Desserts category and corrosponding item"],
           value:
-            desserts === undefined
-              ? "Please wait! We are working on It."
-              : desserts === "no"
-              ? "No"
-              : "Yes",
+            desserts === undefined ? null : desserts === "no" ? "No" : "Yes",
           isDataPresent: desserts === undefined ? false : true,
         },
       ],

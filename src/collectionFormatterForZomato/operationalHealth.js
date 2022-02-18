@@ -182,15 +182,15 @@ const operationalHealthMongoDBData = async (
       ])
       .toArray();
 
-    console.log("*****************--------------------********************");
-    console.log("serviceability: ", serviceability);
-    console.log("rdc_score", rdc_score);
-    console.log("mfr_score", mfr_score);
-    console.log("rating", rating);
+    // console.log("*****************--------------------********************");
+    // console.log("serviceability: ", serviceability);
+    // console.log("rdc_score", rdc_score);
+    // console.log("mfr_score", mfr_score);
+    // console.log("rating", rating);
 
-    console.log(
-      "****************-------------------------*********************"
-    );
+    // console.log(
+    //   "****************-------------------------*********************"
+    // );
 
     client.close();
 
@@ -267,7 +267,7 @@ const operationHealthDataFormatter = async (
         {
           name: "Rest. Serviceability",
           type: "percentage",
-          // info: "if your restaurent serviceability score is greater than 99% then it will get more orders",
+
           info: "Operation Health >= 99% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
@@ -275,7 +275,7 @@ const operationHealthDataFormatter = async (
           recommendations: ["Get the serviceability notification service"],
           value:
             serviceability_score === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : parseInt(serviceability_score),
           isDataPresent: serviceability_score === undefined ? false : true,
         },
@@ -283,7 +283,7 @@ const operationHealthDataFormatter = async (
         {
           name: "Rest. Cancellations",
           type: "percentage",
-          // info: "if your restaurent cancellation score is less than 5% then it will get more orders",
+
           info: "Cancellation Charges <= 5% Gets more orders",
           benchmark: 5,
           compareThen: "less",
@@ -293,9 +293,7 @@ const operationHealthDataFormatter = async (
             "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
           ],
           value:
-            rdc_score === undefined
-              ? "Please wait! We are working on It."
-              : parseFloat(rdc_score.toFixed(2)),
+            rdc_score === undefined ? null : parseFloat(rdc_score.toFixed(2)),
           isDataPresent: rdc_score === undefined ? false : true,
         },
         // Todo: Empty data
@@ -314,7 +312,7 @@ const operationHealthDataFormatter = async (
           ],
           value:
             rating_score === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : parseFloat(rating_score.toFixed(2)),
           isDataPresent: rating_score === undefined ? false : true,
         },
@@ -331,10 +329,7 @@ const operationHealthDataFormatter = async (
             "Press food ready button only when food prepared, not before",
             "If you forget to mark food ready, take the MFR calling service. Tap here!",
           ],
-          value:
-            mfr_score === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(mfr_score),
+          value: mfr_score === undefined ? null : parseInt(mfr_score),
           isDataPresent: mfr_score === undefined ? false : true,
         },
         // Todo: Empty data
@@ -350,7 +345,7 @@ const operationHealthDataFormatter = async (
             "Paste a menu + item poster at the packaging area",
             "Retrain packagers on high order days",
           ],
-          value: "Please wait! We are working on It.",
+          value: null,
           isDataPresent: false,
         },
         // Todo: Empty data
@@ -363,7 +358,7 @@ const operationHealthDataFormatter = async (
           benchmark: 99,
           compareThen: "grater",
           recommendations: ["Enable Auto acceptance"],
-          value: "Please wait! We are working on It.",
+          value: null,
           isDataPresent: false,
         },
       ],

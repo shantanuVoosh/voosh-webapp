@@ -7,9 +7,39 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
   } else {
     showColor = value <= benchmark ? "green-value" : "red-value";
   }
-  console.log(name, value, benchmark, compareThen, "info card");
+  // console.log(name, value, benchmark, compareThen, "info card");
 
-  if (value === "Please wait! We are working on It.") {
+  // ! for rating only
+  if (name === "Current Rating" && (value === 0 || value === null)) {
+    return (
+      <div className="info-card  ">
+        <div
+          className={
+            "name " +
+            `${name === "Current Rating" ? "customer_review_ratings" : ""}`
+          }
+        >
+          {name}
+        </div>
+
+        <div
+          className={`${showColor} value green`}
+          style={{
+            fontSize: "15px",
+            // marginBottom: "1rem",
+            padding: "0.5rem 0",
+            fontWeight: "700",
+          }}
+        >
+          {" "}
+          Rating not available
+        </div>
+      </div>
+    );
+  }
+
+  // ! for no data only
+  if (value === null) {
     return (
       <div className="info-card  ">
         <div
@@ -21,7 +51,15 @@ const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
           {name.length > 15 ? name.substring(0, 15) + "..." : name}
         </div>
 
-        <div className={`${showColor} value`}>Working on it!</div>
+        <div
+          className={`${showColor} value green`}
+          style={{
+            fontSize: "20px",
+            lineHeight: "2",
+          }}
+        >
+          Working on it!
+        </div>
       </div>
     );
   }

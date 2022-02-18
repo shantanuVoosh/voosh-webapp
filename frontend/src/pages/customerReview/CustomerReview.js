@@ -12,17 +12,17 @@ const CustomerReviews = () => {
   const navigate = useNavigate();
 
   const { customerReviews } = data[currentProductIndex];
-  const { negative, OrdersPerRating, value, totalRatings } = customerReviews;
+  const { negative, ordersPerRating, value, totalRatings } = customerReviews;
 
-  const ratings = Object.keys(OrdersPerRating).map((key) => {
+  const ratings = Object.keys(ordersPerRating).map((key) => {
     let rating = key.split("_")[0];
     let obj = {};
-    obj[rating] = OrdersPerRating[key];
+    obj[rating] = ordersPerRating[key];
     return obj;
   });
   console.log(
     negative,
-    OrdersPerRating,
+    ordersPerRating,
     value,
     totalRatings,
     "-----------------"

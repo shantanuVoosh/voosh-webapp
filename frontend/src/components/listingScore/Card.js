@@ -12,70 +12,19 @@ const Card = ({
   type,
   isDataPresent,
 }) => {
-  const resultType = useSelector((state) => state.data.resultType);
+  const { resultType } = useSelector((state) => state.data);
 
-  console.log(resultType)
+  console.log(resultType);
 
   let showColor = "";
-  let resultValue = 0;
-  let resultBenchmark = 0;
+  let resultValue = value;
+  let resultBenchmark = benchmark;
 
-  // console.log(name, value, benchmark, compareThen, type);
-
-  // Todo: String Working
-  if (type === "string") {
-    // ? Possible String Compariso
-    // ! Yes No
-    if (compareThen === "yes or no") {
-      resultValue = value === benchmark ? 100 : 0;
-      resultBenchmark = 100;
-    }
-    // ! String Number
-    else if (benchmark === "4.0") {
-      if (value.includes("<")) {
-        value = value.replace("<", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes(">")) {
-        value = value.replace(">", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("=")) {
-        value = value.replace("=", "");
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("to")) {
-        value = value.split("to")[1];
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      }
-    } else if (value === "Not Applicable" || value === "Applicable") {
-      resultValue = value === "Not Applicable" ? 0 : 100;
-      resultBenchmark = 100;
-    }
-  } else if (type === "percentage") {
-    if (compareThen === "High Medium Low") {
-      resultBenchmark = benchmark;
-      if (value === "High") {
-        resultValue = 90;
-      } else if (value === "Medium") {
-        console.log("here", name, value, benchmark, compareThen, type);
-        resultValue = 70;
-      } else if (value === "Low") {
-        resultValue = 50;
-      }
-    } else {
-      resultValue = value;
-      resultBenchmark = benchmark;
-    }
+  if (compareThen === "less") {
+    showColor = resultValue < resultBenchmark ? "green" : "red";
+  } else {
+    showColor = resultValue >= resultBenchmark ? "green" : "red";
   }
-  // Todo: Dont Touch this
-
-  showColor = resultValue >= resultBenchmark ? "green" : "red";
-
-  // console.log(resultValue, resultBenchmark, "resultValue", "resultBenchmark");
 
   return (
     <div className="listing_score_card">

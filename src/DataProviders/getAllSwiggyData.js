@@ -4,15 +4,13 @@ const {
 const {
   listingScoreDataFormatter,
 } = require("../collectionFormatterForSwiggy/listingScore");
-const {
-  revenueMongoDBData,
-} = require("../collectionFormatterForSwiggy/revenue");
 
 const {
   customerReviewsDataFormatter,
 } = require("../collectionFormatterForSwiggy/customerReviews");
 const {
   revenuDataOfPreviousMonth,
+  revenueScoreFromMongoDB,
 } = require("../collectionFormatterForSwiggy/revenue");
 
 async function getAllSwiggyData(
@@ -23,6 +21,7 @@ async function getAllSwiggyData(
   endDate = "2022-01-06"
 ) {
   console.log("-----------------");
+  console.log("inside---> Get All Swiggy Data");
   console.log(res_id, "res_id");
   console.log(number, "number");
   console.log(resultType, "resultType");
@@ -51,26 +50,26 @@ async function getAllSwiggyData(
     startDate,
     endDate
   );
-  const revenue_score = await revenueMongoDBData(
+  const { revenue_score } = await revenueScoreFromMongoDB(
     res_id,
     number,
     resultType,
     startDate,
     endDate
   );
-  
+
   const revenue_previous_month = await revenuDataOfPreviousMonth(res_id);
   return {
     name: "Swiggy",
     operationHealth: oh,
     listingScore: ls,
-    revenue_score,
+    revenue_score: {
+      revenue_score,
+      isDataPresent: revenue_score !== undefined ? true : false,
+    },
     previousMonthRevenue: revenue_previous_month,
-    // ! customerReviews wont work in this case
-    customerReviews:
-      resultType === "Custom Range"
-        ? { value: "working on It.", type: "average", compareType: "grater" }
-        : customerReviews,
+    
+    customerReviews: customerReviews,
   };
 }
 

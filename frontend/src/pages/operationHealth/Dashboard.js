@@ -25,36 +25,27 @@ const Dashborad = () => {
           isDataPresent={true}
         />
         {operationHealthData.map((item, index) => {
-          const {
-            name,
-            type,
-            value,
-            info,
-            benchmark,
-            compareThen,
-            monthlyResult,
-            weeklyResult,
-            videoLink,
-            recommendations,
-            isDataPresent,
-          } = item;
-          return isDataPresent ? (
+          return item.isDataPresent ? (
             <Card
               key={index}
-              name={name}
-              type={type}
-              value={value}
-              info={info}
-              monthlyResult={monthlyResult}
-              weeklyResult={weeklyResult}
-              benchmark={benchmark}
-              compareThen={compareThen}
-              videoLink={videoLink}
-              recommendations={recommendations}
-              isDataPresent={isDataPresent}
+              name={item.name}
+              type={item.type}
+              value={item.value}
+              info={item.info}
+              monthlyResult={item.monthlyResult}
+              weeklyResult={item.weeklyResult}
+              benchmark={item.benchmark}
+              compareThen={item.compareThen}
+              videoLink={item.videoLink}
+              recommendations={item.recommendations}
+              isDataPresent={item.isDataPresent}
             />
           ) : (
-            <CardWithNoData key={index} name={name} info={info} />
+            <CardWithNoData
+              key={item.index}
+              name={item.name}
+              info={item.info}
+            />
           );
         })}
       </div>

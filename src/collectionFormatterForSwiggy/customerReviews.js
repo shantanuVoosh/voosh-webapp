@@ -6,13 +6,14 @@ const documentName = "operationsdb";
 const customerReviewsMongoDBData = async (
   res_id,
   number,
-  resultType,
-  startDate,
-  endDate
+  resultType
+  // ! startDate and endDate are not needed in this function
+  // startDate,
+  // endDate
 ) => {
   let feedbackQuery = {};
   let allFeedbacksQuery = {};
-  let OrdersPerRatingQuery = {};
+  let ordersPerRatingQuery = {};
   let customerRatingsQuery = {};
 
   // ? Query for week
@@ -28,13 +29,12 @@ const customerReviewsMongoDBData = async (
       feedback: { $ne: null, $ne: NaN },
       rating: { $ne: null, $ne: NaN },
     };
-    OrdersPerRatingQuery = {
+    ordersPerRatingQuery = {
       swiggy_res_id: parseInt(res_id),
       week_no: parseInt(number),
     };
     customerRatingsQuery = {
       res_id: parseInt(res_id),
-      week_no: parseInt(number),
     };
   }
   // ? Query for month
@@ -47,16 +47,17 @@ const customerReviewsMongoDBData = async (
     allFeedbacksQuery = {
       swiggy_res_id: parseInt(res_id),
       month_no: parseInt(number),
-      feedback: { $ne: NaN },
-      rating: { $lt: 5 },
+      // feedback: { $ne: NaN },
+      // rating: { $lt: 5 },
+      feedback: { $ne: null },
+      rating: { $lte: "5" },
     };
-    OrdersPerRatingQuery = {
+    ordersPerRatingQuery = {
       swiggy_res_id: parseInt(res_id),
       month_no: parseInt(number),
     };
     customerRatingsQuery = {
       res_id: parseInt(res_id),
-      month_no: parseInt(number),
     };
   } else {
     return {
@@ -94,7 +95,7 @@ const customerReviewsMongoDBData = async (
             from: "swiggy_item_sales_products",
             pipeline: [
               // ? $match: { swiggy_res_id: 256302, week_no: 52 }
-              { $match: OrdersPerRatingQuery },
+              { $match: ordersPerRatingQuery },
               {
                 $group: {
                   _id: "item_sales",
@@ -147,23 +148,17 @@ const customerReviewsMongoDBData = async (
         {
           $match: customerRatingsQuery,
         },
-        {
-          $group: {
-            _id: "customer_ratings",
-            customer_rating: {
-              $avg: "$customer_rating",
-            },
-          },
-        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
       ])
       .toArray();
 
     // ? Rating Split
-    const OrdersPerRating = await db
+    const ordersPerRating = await db
       .collection("swiggy_rating_products")
       .aggregate([
         {
-          $match: OrdersPerRatingQuery,
+          $match: ordersPerRatingQuery,
         },
         {
           $group: {
@@ -191,17 +186,17 @@ const customerReviewsMongoDBData = async (
       ])
       .toArray();
 
-    console.log("------******------");
-    console.log("reviewOfProducts:", reviewOfProducts[0]);
-    console.log("------******------");
+    // console.log("------******------");
+    // console.log("reviewOfProducts:", reviewOfProducts[0]);
+    // console.log("------******------");
     // console.log("allFeedbacks:", allFeedbacks);
     // console.log("------******------");
     // console.log("customerRatings:", customerRatings);
     // console.log("------******------");
-    // console.log("OrdersPerRating:", OrdersPerRating);
-    console.log("------******------");
-    console.log("reviewOfProductsSales:", reviewOfProductsSales[0]);
-    console.log("------******------");
+    // console.log("ordersPerRating:", ordersPerRating);
+    // console.log("------******------");
+    // console.log("reviewOfProductsSales:", reviewOfProductsSales[0]);
+    // console.log("------******------");
 
     client.close();
     return {
@@ -209,9 +204,9 @@ const customerReviewsMongoDBData = async (
       reviewOfProductsSales,
       allFeedbacks,
       customerRatings: customerRatings[0]?.customer_rating,
-      OrdersPerRating:
-        OrdersPerRating.length > 0
-          ? OrdersPerRating[0]
+      ordersPerRating:
+        ordersPerRating.length > 0
+          ? ordersPerRating[0]
           : {
               "5_star": 0,
               "4_star": 0,
@@ -222,6 +217,9 @@ const customerReviewsMongoDBData = async (
             },
     };
   } catch (err) {
+    console.log(
+      "Error on customerReviewsMongoDBData, inside collectionFormatterSwiggy"
+    );
     console.log(err);
   }
 };
@@ -244,99 +242,124 @@ const customerReviewsDataFormatter = async (
     const {
       reviewOfProducts,
       allFeedbacks,
-      OrdersPerRating,
+      ordersPerRating,
       customerRatings,
       reviewOfProductsSales,
+      dataPresent,
     } = data;
-    // console.log(reviewOfProducts.length, "line no. 188");
-    //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
-    const negative_review_items = reviewOfProducts.map((item) => {
-      const { item_name } = item;
-      const {
-        quality,
-        taste,
-        cooking,
-        freshness_stale,
-        foreignobject,
-        oily,
-        spice,
-        hard,
-        temperature,
-        quantity,
-        missing,
-        wrong,
-        packaging,
-        price,
-        delivery_n_time,
-      } = item;
-      const food_negative_review_items = [
-        {
-          name: "quality",
-          value: parseFloat(quality),
-        },
-        {
-          name: "taste",
-          value: parseFloat(taste),
-        },
-        {
-          name: "cooking",
-          value: parseFloat(cooking),
-        },
-        {
-          name: "freshness_stale",
-          value: parseFloat(freshness_stale),
-        },
-        {
-          name: "foreignobject",
-          value: parseFloat(foreignobject),
-        },
-        {
-          name: "oily",
-          value: parseFloat(oily),
-        },
-        {
-          name: "spice",
-          value: parseFloat(spice),
-        },
-        {
-          name: "hard",
-          value: parseFloat(hard),
-        },
-        {
-          name: "temperature",
-          value: parseFloat(temperature),
-        },
-        {
-          name: "quantity",
-          value: parseFloat(quantity),
-        },
-        {
-          name: "missing",
-          value: parseFloat(missing),
-        },
-        {
-          name: "wrong",
-          value: parseFloat(wrong),
-        },
-        {
-          name: "packaging",
-          value: parseFloat(packaging),
-        },
-        {
-          name: "price",
-          value: parseFloat(price),
-        },
-        {
-          name: "delivery_n_time",
-          value: parseFloat(delivery_n_time),
-        },
-      ].sort((a, b) => (a.value > b.value ? -1 : 1));
 
+    if (dataPresent === false) {
       return {
-        item_name: item_name,
-        issues: [...food_negative_review_items.slice(0, 3)],
+        value: null,
+        type: "average",
+        compareType: "grater",
+        benchmark: 4.5,
+        totalRatings: 0,
+        ordersPerRating: {
+          "5_star": 0,
+          "4_star": 0,
+          "3_star": 0,
+          "2_star": 0,
+          "1_star": 0,
+        },
+        all_reviews: [],
+        negative: [],
+        reviewOfProductsSales: [],
       };
-    });
+    }
+
+    //? Grabbing the all negative reviews in {name: "item_name", Value: "value"} format
+
+    const negative_review_items =
+      reviewOfProducts === undefined
+        ? []
+        : reviewOfProducts.map((item) => {
+            const { item_name } = item;
+            const {
+              quality,
+              taste,
+              cooking,
+              freshness_stale,
+              foreignobject,
+              oily,
+              spice,
+              hard,
+              temperature,
+              quantity,
+              missing,
+              wrong,
+              packaging,
+              price,
+              delivery_n_time,
+            } = item;
+            const food_negative_review_items = [
+              {
+                name: "quality",
+                value: parseFloat(quality),
+              },
+              {
+                name: "taste",
+                value: parseFloat(taste),
+              },
+              {
+                name: "cooking",
+                value: parseFloat(cooking),
+              },
+              {
+                name: "freshness_stale",
+                value: parseFloat(freshness_stale),
+              },
+              {
+                name: "foreignobject",
+                value: parseFloat(foreignobject),
+              },
+              {
+                name: "oily",
+                value: parseFloat(oily),
+              },
+              {
+                name: "spice",
+                value: parseFloat(spice),
+              },
+              {
+                name: "hard",
+                value: parseFloat(hard),
+              },
+              {
+                name: "temperature",
+                value: parseFloat(temperature),
+              },
+              {
+                name: "quantity",
+                value: parseFloat(quantity),
+              },
+              {
+                name: "missing",
+                value: parseFloat(missing),
+              },
+              {
+                name: "wrong",
+                value: parseFloat(wrong),
+              },
+              {
+                name: "packaging",
+                value: parseFloat(packaging),
+              },
+              {
+                name: "price",
+                value: parseFloat(price),
+              },
+              {
+                name: "delivery_n_time",
+                value: parseFloat(delivery_n_time),
+              },
+            ].sort((a, b) => (a.value > b.value ? -1 : 1));
+
+            return {
+              item_name: item_name,
+              issues: [...food_negative_review_items.slice(0, 3)],
+            };
+          });
 
     const all_reviews =
       allFeedbacks === undefined
@@ -356,28 +379,28 @@ const customerReviewsDataFormatter = async (
           });
 
     const customerReviews = {
-      // value:
-      //   customerRatings === undefined
-      //     ? "Please wait! We are working on It."
-      //     : parseFloat(customerRatings.toFixed(1)),
       value:
         customerRatings === undefined
-          ? "working on It."
+          ? null
           : parseFloat(customerRatings.toFixed(1)),
       type: "average",
       compareType: "grater",
       benchmark: 4,
-      totalRatings: parseFloat(OrdersPerRating.total_ratings.toFixed(1)),
-      OrdersPerRating: {
-        "5_star": OrdersPerRating["5_star"],
-        "4_star": OrdersPerRating["4_star"],
-        "3_star": OrdersPerRating["3_star"],
-        "2_star": OrdersPerRating["2_star"],
-        "1_star": OrdersPerRating["1_star"],
+      totalRatings:
+        ordersPerRating.total_ratings !== undefined
+          ? parseFloat(ordersPerRating.total_ratings.toFixed(1))
+          : 0,
+      ordersPerRating: {
+        "5_star": ordersPerRating["5_star"],
+        "4_star": ordersPerRating["4_star"],
+        "3_star": ordersPerRating["3_star"],
+        "2_star": ordersPerRating["2_star"],
+        "1_star": ordersPerRating["1_star"],
       },
       all_reviews: [...all_reviews],
       negative: [...negative_review_items],
-      reviewOfProductsSales,
+      reviewOfProductsSales:
+        reviewOfProductsSales === undefined ? [] : [...reviewOfProductsSales],
     };
 
     return customerReviews;

@@ -13,35 +13,30 @@ const customerReviewsMongoDBData = async (
 ) => {
   let feedbackQuery = {};
   let allFeedbacksQuery = {};
-  let OrdersPerRatingQuery = {};
+  let ordersPerRatingQuery = {};
   let customerRatingsQuery = {};
 
   // ? Query for week
   if (resultType === "week") {
-    OrdersPerRatingQuery = {
+    ordersPerRatingQuery = {
       zomato_res_id: `${res_id}`,
       week_no: parseInt(number),
       year: parseInt(year),
     };
     customerRatingsQuery = {
       zomato_res_id: parseInt(res_id),
-      week_no: parseInt(number),
-      // week_no:2,
-      year_no: parseInt(year),
     };
   }
 
   // ? Query for month
   else if (resultType === "month") {
-    OrdersPerRatingQuery = {
+    ordersPerRatingQuery = {
       zomato_res_id: `${res_id}`,
       month_no: parseInt(number),
       year: parseInt(year),
     };
     customerRatingsQuery = {
       zomato_res_id: parseInt(res_id),
-      month_no: parseInt(number),
-      year_no: parseInt(year),
     };
   } else {
     return {
@@ -49,7 +44,7 @@ const customerReviewsMongoDBData = async (
     };
   }
 
-  console.log(OrdersPerRatingQuery);
+  console.log(ordersPerRatingQuery);
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -64,21 +59,17 @@ const customerReviewsMongoDBData = async (
         {
           $match: customerRatingsQuery,
         },
-        {
-          $group: {
-            _id: "$zomato_res_id",
-            customer_rating: { $avg: "$delivery_ratings" },
-          },
-        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
       ])
       .toArray();
 
     // ? Rating Split
-    const OrdersPerRating = await db
+    const ordersPerRating = await db
       .collection("zomato_rating_products")
       .aggregate([
         {
-          $match: OrdersPerRatingQuery,
+          $match: ordersPerRatingQuery,
         },
         {
           $group: {
@@ -106,22 +97,22 @@ const customerReviewsMongoDBData = async (
       ])
       .toArray();
 
-    console.log("------******------");
+    // console.log("------******------");
     // console.log("reviewOfProducts:", reviewOfProducts);
     // console.log("------******------");
     // console.log("allFeedbacks:", allFeedbacks);
     // console.log("------******------");
-    console.log("customerRatings:", customerRatings);
+    // console.log("customerRatings:", customerRatings);
     // console.log("------******------");
-    console.log("OrdersPerRating:", OrdersPerRating);
-    console.log("------******------");
+    // console.log("ordersPerRating:", ordersPerRating);
+    // console.log("------******------");
 
     client.close();
     return {
       customerRatings: customerRatings[0]?.customer_rating,
-      OrdersPerRating:
-        OrdersPerRating.length > 0
-          ? OrdersPerRating[0]
+      ordersPerRating:
+        ordersPerRating.length > 0
+          ? ordersPerRating[0]
           : {
               "5_star": 0,
               "4_star": 0,
@@ -132,6 +123,9 @@ const customerReviewsMongoDBData = async (
             },
     };
   } catch (err) {
+    console.log(
+      "Error on customerReviewsMongoDBData, inside collectionFormatterZomato"
+    );
     console.log(err);
   }
 };
@@ -153,26 +147,53 @@ const customerReviewsDataFormatter = async (
       endDate,
       year
     );
-    const { OrdersPerRating, customerRatings } = data;
+    const { ordersPerRating, customerRatings, dataPresent } = data;
+
+    if (dataPresent === false) {
+      return {
+        value: null,
+        type: "average",
+        compareType: "grater",
+        benchmark: 4.5,
+        totalRatings: 0,
+        ordersPerRating: {
+          "5_star": 0,
+          "4_star": 0,
+          "3_star": 0,
+          "2_star": 0,
+          "1_star": 0,
+        },
+        all_reviews: [],
+        negative: [],
+        reviewOfProductsSales: [],
+      };
+    }
 
     const customerReviews = {
       value:
         customerRatings === undefined
-          ? "working on It."
+          ? null
           : parseFloat(customerRatings.toFixed(1)),
       type: "average",
       compareType: "grater",
       benchmark: 4,
-
-      OrdersPerRating: {
-        "5_star": OrdersPerRating["5_star"],
-        "4_star": OrdersPerRating["4_star"],
-        "3_star": OrdersPerRating["3_star"],
-        "2_star": OrdersPerRating["2_star"],
-        "1_star": OrdersPerRating["1_star"],
+      totalRatings:
+        ordersPerRating["5_star"] +
+        ordersPerRating["4_star"] +
+        ordersPerRating["3_star"] +
+        ordersPerRating["2_star"] +
+        ordersPerRating["1_star"],
+      ordersPerRating: {
+        "5_star": ordersPerRating["5_star"],
+        "4_star": ordersPerRating["4_star"],
+        "3_star": ordersPerRating["3_star"],
+        "2_star": ordersPerRating["2_star"],
+        "1_star": ordersPerRating["1_star"],
       },
+      // !we dont have these now
       all_reviews: [],
       negative: [],
+      reviewOfProductsSales: [],
     };
 
     return customerReviews;

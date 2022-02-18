@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CardStatistics from "./CardStatistics";
 import moment from "moment";
 
-const Card = ({ iconName, name, info, cardStatistics }) => {
+const Card = ({ iconName, name, info }) => {
   const navigate = useNavigate();
   const { data, resultType, startDate, endDate } = useSelector(
     (state) => state.data
@@ -26,7 +26,7 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
   const {
     operationHealth: { operationHealthMain, operationHealthData },
     listingScore: { listingScoreMain, listingScoreData },
-    revenue_score: { revenue_score },
+    revenue_score: { revenue_score, isDataPresent: isRevenueScorePresent },
     previousMonthRevenue: {
       previousDayRevenue,
       financicalData: { totalSales },
@@ -47,8 +47,6 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
     .format("YYYY-MM-DD");
 
   const handelClick = () => {
-    // Removing white space, and first letter in smaller case
-    // Operation Metrics --> operationMetrics
     let pageName;
     pageName = name.replaceAll(" ", "");
     pageName = pageName.charAt(0).toLowerCase() + pageName.slice(1);
@@ -112,18 +110,34 @@ const Card = ({ iconName, name, info, cardStatistics }) => {
                     : resultType === "Previous Month"
                     ? totalSales
                     : revenue_score,
-                change: null,
+                    change: null,
                 benchmark: null,
                 changeTypeDirection: "up",
                 type: "money",
+                // Todo: this should be use, if we dont use any break fix 😎
+                // isDataPresent: isRevenueScorePresent,
+
+                // ! Temp Fix cuz data is not present 😞
                 isDataPresent:
-                  (resultType === "Custom Range"
-                    ? startOfMonth === startDate && endOfMonth === endDate
-                      ? totalSales
-                      : revenue_score
-                    : resultType === "Previous Month"
-                    ? totalSales
-                    : revenue_score) !== undefined,
+                  resultType !== "Previous Month" &&
+                  resultType !== "Custom Range"
+                    ? isRevenueScorePresent
+                    : (resultType === "Custom Range"
+                        ? startOfMonth === startDate && endOfMonth === endDate
+                          ? totalSales
+                          : revenue_score
+                        : resultType === "Previous Month"
+                        ? totalSales
+                        : revenue_score) !== undefined &&
+                      (resultType === "Custom Range"
+                        ? startOfMonth === startDate && endOfMonth === endDate
+                          ? totalSales
+                          : revenue_score
+                        : resultType === "Previous Month"
+                        ? totalSales
+                        : revenue_score) !== 0
+                    ? true
+                    : false,
               }}
             />
           )}

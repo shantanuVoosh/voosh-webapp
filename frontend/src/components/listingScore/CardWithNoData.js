@@ -13,10 +13,7 @@ const CardWithNoData = ({ name, info }) => {
         <div className="listing_score_card__text--info">
           <p>{info.length > 60 ? info.substring(0, 60) + "..." : info}</p>
         </div>
-        <div className="value error-value">
-          {/* No Successful Order {resultType} */}
-          Working on it...
-        </div>
+        <div className="value error-value green">Working on it...</div>
       </div>
 
       {/* <div className="card__btn">

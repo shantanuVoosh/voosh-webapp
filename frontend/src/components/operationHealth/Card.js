@@ -21,10 +21,7 @@ const Card = (props) => {
     isDataPresent,
   } = props;
 
-  // ? for customer reviews only
-  if (value === "working on It." && name !== "Rating") {
-    return <CardWithNoData {...props} />;
-  }
+ 
 
   // !temp change Customer Reviews
   if (name === "Reviews") {

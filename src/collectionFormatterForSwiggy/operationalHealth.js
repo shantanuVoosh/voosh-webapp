@@ -25,7 +25,6 @@ const operationalHealthMongoDBData = async (
     };
     ratingQuery = {
       res_id: parseInt(res_id),
-      week_no: parseInt(number),
     };
   } else if (resultType === "month") {
     query = {
@@ -34,7 +33,6 @@ const operationalHealthMongoDBData = async (
     };
     ratingQuery = {
       res_id: parseInt(res_id),
-      month_no: parseInt(number),
     };
   }
   // ? Custom date range
@@ -179,7 +177,7 @@ const operationalHealthMongoDBData = async (
       ])
       .toArray();
 
-    // ! Operational Health Acceptance--> String Propblem
+    // ! Operational Health Acceptance--> String Problem
     const acceptance = await db
       .collection("swiggy_acceptance_products")
       .aggregate([
@@ -228,7 +226,10 @@ const operationalHealthMongoDBData = async (
       igcc_score: igcc[0]?.igcc_score,
     };
   } catch (err) {
-    console.log(err);
+    console.log(
+      err,
+      "Error in getOperationalHealthScore, inside collectionFormatterSwiggy"
+    );
     return {
       error: err,
     };
@@ -300,7 +301,6 @@ const operationHealthDataFormatter = async (
         {
           name: "Rest. Serviceability",
           type: "percentage",
-          // info: "if your restaurent serviceability score is greater than 99% then it will get more orders",
           info: "Operation Health >= 99% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
@@ -308,7 +308,7 @@ const operationHealthDataFormatter = async (
           recommendations: ["Get the serviceability notification service"],
           value:
             serviceability_score === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : parseInt(serviceability_score),
           isDataPresent: serviceability_score === undefined ? false : true,
         },
@@ -316,7 +316,7 @@ const operationHealthDataFormatter = async (
         {
           name: "Rest. Cancellations",
           type: "percentage",
-          // info: "if your restaurent cancellation score is less than 5% then it will get more orders",
+
           info: "Cancellation Charges <= 5% Gets more orders",
           benchmark: 5,
           compareThen: "less",
@@ -324,12 +324,8 @@ const operationHealthDataFormatter = async (
           recommendations: [
             "Ensure Restaurant open at the given timings to swiggy and zomato",
             "Ensure stock of best seller items always ready.",
-            // "Ensure stock of best seller items always ready. Click <<here>> for list of items that are getting cancelled often because of stock outs",
           ],
-          value:
-            rdc_score === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(rdc_score * 100),
+          value: rdc_score === undefined ? null : parseInt(rdc_score * 100),
           isDataPresent: rdc_score === undefined ? false : true,
         },
 
@@ -337,7 +333,6 @@ const operationHealthDataFormatter = async (
         {
           name: "Rating",
           type: "average",
-          // info: "get more then 4.5 star rating to get more orders",
           info: "Rating > 4.5 Gets better orders",
           benchmark: 4.5,
           compareThen: "grater",
@@ -348,7 +343,7 @@ const operationHealthDataFormatter = async (
           ],
           value:
             rating_score === undefined
-              ? "Please wait! We are working on It."
+              ? null
               : parseFloat(rating_score.toFixed(1)),
           isDataPresent: rating_score === undefined ? false : true,
         },
@@ -356,7 +351,6 @@ const operationHealthDataFormatter = async (
         {
           name: "MFR Accuracy",
           type: "percentage",
-          // info: "MFR Accuracy grate than 95% to get more orders",
           info: "MFR Accuracy >=95 Gets more orders",
           benchmark: 95,
           compareThen: "grater",
@@ -365,17 +359,13 @@ const operationHealthDataFormatter = async (
             "Press food ready button only when food prepared, not before",
             "If you forget to mark food ready, take the MFR calling service. Tap here!",
           ],
-          value:
-            mfr_score === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(mfr_score),
+          value: mfr_score === undefined ? null : parseInt(mfr_score),
           isDataPresent: mfr_score === undefined ? false : true,
         },
         // ? IGCC
         {
           name: "Customer Complaints",
           type: "percentage",
-          // info: "if your customer complaints score is less than 1 then it will get more orders",
           info: "Complains <=1 Gets more orders",
           benchmark: 1,
           compareThen: "less",
@@ -383,25 +373,19 @@ const operationHealthDataFormatter = async (
             "Paste a menu + item poster at the packaging area",
             "Retrain packagers on high order days",
           ],
-          value:
-            igcc_score === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(igcc_score * 100),
+          value: igcc_score === undefined ? null : parseInt(igcc_score * 100),
           isDataPresent: igcc_score === undefined ? false : true,
         },
         // ?Swiggy_Acceptance
         {
           name: "Acceptance",
           type: "percentage",
-          // info: "if your acceptance score is grater than 99% then it will get more orders",
           info: "Acceptance = 100% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
           recommendations: ["Enable Auto acceptance"],
           value:
-            acceptance_score === undefined
-              ? "Please wait! We are working on It."
-              : parseInt(acceptance_score),
+            acceptance_score === undefined ? null : parseInt(acceptance_score),
           isDataPresent: acceptance_score === undefined ? false : true,
         },
       ],

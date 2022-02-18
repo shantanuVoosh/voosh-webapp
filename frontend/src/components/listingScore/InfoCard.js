@@ -1,74 +1,71 @@
 import React from "react";
-
+// ! value null means no data
 const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
   let showColor = "";
-  let resultValue = 0;
-  let resultBenchmark = 0;
-  // Todo: String Working
-  // ! String Working
-  if (type === "string") {
-    // ? Possible String Compariso
-    // ! Yes No
-    if (compareThen === "yes or no") {
-      resultValue = value === benchmark ? 100 : 0;
-      resultBenchmark = 100;
-    }
-    // ! String Number
-    else if (benchmark === "4.0") {
-      console.log("here");
-      // resultValue=value===benchmark?100:0;
-      // compare="equal";
-      if (value.includes("<")) {
-        value = value.replace("<", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes(">")) {
-        value = value.replace(">", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("=")) {
-        value = value.replace("=", "");
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("to")) {
-        value = value.split("to")[1];
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      }
-    } else if (value === "Not Applicable" || value === "Applicable") {
-      // console.log("here++++++++++++++++")
-      resultValue = value === "Not Applicable" ? 0 : 100;
-      resultBenchmark = 100;
-    }
-  } else if (type === "percentage") {
-    if (compareThen === "High Medium Low") {
-      resultBenchmark = benchmark;
-      if (value === "High") {
-        resultValue = 90;
-      } else if (value === "Medium") {
-        resultValue = 70;
-      } else if (value === "Low") {
-        resultValue = 50;
-      }
-    } else {
-      resultValue = value;
-      resultBenchmark = benchmark;
-    }
-  }
-  // Todo: Dont Touch this
-  console.log(type)
-  console.log(type === "percentage" && name !== "Number of Rating" ? "%" : "")
+  let resultValue = value;
+  let resultBenchmark = benchmark;
 
-  showColor = resultValue > resultBenchmark ? "green" : "red";
+  if (compareThen === "grater") {
+    showColor = value >= benchmark ? "green-value" : "red-value";
+  } else {
+    showColor = value <= benchmark ? "green-value" : "red-value";
+  }
+
+  if (name === "Rating" && (value === 0 || value === null)) {
+    return (
+      <div className="info-card">
+        <div className="name">{name}</div>
+        <div
+          className={`${showColor} value green`}
+          style={{
+            fontSize: "15px",
+
+            padding: "0.5rem 0",
+            fontWeight: "700",
+          }}
+        >
+          {" "}
+          Rating not available
+        </div>
+      </div>
+    );
+  }
+  if (value === null) {
+    return (
+      <div className="info-card  ">
+        <div
+          className={
+            "name " +
+            `${name === "Current Rating" ? "customer_review_ratings" : ""}`
+          }
+        >
+          {name.length > 15 ? name.substring(0, 15) + "..." : name}
+        </div>
+
+        <div
+          className={`${showColor} value green`}
+          style={{
+            fontSize: "20px",
+            lineHeight: "2",
+          }}
+        >
+          Working on it!
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="info-card">
       <div className="name">{name}</div>
       <div className={`${showColor} value`}>
         {`${value}`}
-        {type === "percentage" && name !== "Number of Rating" ? "%" : ""}
+        {type === "percentage" &&
+        name !== "Number of Rating" &&
+        name !== "Number of Reviews" &&
+        name !== "Images"
+          ? "%"
+          : ""}
       </div>
     </div>
   );

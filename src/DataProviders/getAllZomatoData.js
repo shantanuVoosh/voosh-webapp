@@ -7,7 +7,7 @@ const {
 } = require("../collectionFormatterForZomato/customerReviews");
 
 const {
-  revenueMongoDBData,
+  revenueScoreFromMongoDB,
 } = require("../collectionFormatterForZomato/revenue");
 
 const {
@@ -23,7 +23,7 @@ async function getAllZomatoData(
   year = 2022
 ) {
   console.log("-----------------");
-  console.log("inside--->get all zomato data");
+  console.log("inside---> Set All Zomato Data");
   console.log(res_id, "res_id");
   console.log(number, "number");
   console.log(resultType, "resultType");
@@ -56,7 +56,7 @@ async function getAllZomatoData(
     endDate
   );
 
-  const revenue_score = await revenueMongoDBData(
+  const { revenue_score } = await revenueScoreFromMongoDB(
     res_id,
     number,
     resultType,
@@ -71,15 +71,13 @@ async function getAllZomatoData(
   return {
     name: "Zomato",
     operationHealth: oh,
-    // revenue_score: revenue_score === undefined ? 0 : revenue_score,
-    revenue_score: revenue_score,
-
     listingScore: ls,
+    customerReviews,
 
-    customerReviews:
-      resultType === "Custom Range"
-        ? { value: "working on It.", type: "average", compareType: "grater" }
-        : customerReviews,
+    revenue_score: {
+      revenue_score,
+      isDataPresent: revenue_score !== undefined ? true : false,
+    },
 
     previousMonthRevenue: {
       previousDayRevenue: undefined,

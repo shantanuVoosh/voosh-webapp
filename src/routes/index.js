@@ -119,10 +119,10 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     );
 
     // ? for safari only
-    if(number===null && resultType==='month'){
+    if (number === null && resultType === "month") {
       var d = new Date(date);
       var x = d.getMonth() + 1;
-      number=x
+      number = x;
     }
 
     console.log("************************************************");
@@ -1058,65 +1058,81 @@ router.post("/test-listing", async (req, res) => {
     });
   }
 });
-router.post(
+router.get(
   "/sup",
   // checkAuthentication,
   async (req, res) => {
-    const { phone } = req.body;
+    // const { phone } = req.body;
+    const res_id = 256302;
+    const number = 1;
+
+    const feedbackQuery = {
+      swiggy_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+      sum: { $gt: 0 },
+    };
+    const OrdersPerRatingQuery = {
+      swiggy_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+    };
     try {
       const client = await MongoClient.connect(VooshDB, {
         useNewUrlParser: true,
       });
       const db = client.db(documentName);
-      const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+      // ? For Feedback Comments
+      // * sort by problem i.e. sum
+      const reviewOfProducts = await db
+        .collection("swiggy_weekly_review_products")
+        .aggregate([
+          {
+            $match: feedbackQuery,
+          },
+          { $sort: { sum: -1 } },
+        ])
+        .toArray();
 
-      const userAllNotifications = await db
-        .collection(onboardNotificationsCollection)
-        .findOne({ phone: parseInt(phone) });
-
-      console.log("userAllNotifications", userAllNotifications);
-      // ? if this is happing, then we have to add the user to the onboard collection
-      if (userAllNotifications === null) {
-        // await db.collection(onboardNotificationsCollection).insertOne({
-        //   phone: parseInt(phone),
-        //   notifications: [
-        //     {
-        //       title: SIGNUP_SUCCESS,
-        //       message: NotificationModel[SIGNUP_SUCCESS],
-        //       messageType: "success",
-        //       date: new Date(),
-        //       seen: false,
-        //     },
-        //   ],
-        // });
-
-        res.json({
-          status: "success",
-          notifications: [],
-        });
-        return;
-      }
-
-      await db.collection(onboardNotificationsCollection).updateOne(
-        { phone: parseInt(phone) },
-        {
-          $push: {
-            notifications: {
-              title: "you have been added to the onboarding process",
-              message: NotificationModel[SIGNUP_SUCCESS],
-              messageType: "success",
-              date: new Date(),
-              seen: false,
+      // * sort by sales
+      const reviewOfProductsSales = await db
+        .collection("swiggy_weekly_review_products")
+        .aggregate([
+          {
+            $match: feedbackQuery,
+          },
+          {
+            $lookup: {
+              from: "swiggy_item_sales_products",
+              pipeline: [
+                // ? $match: { swiggy_res_id: 256302, week_no: 52 }
+                { $match: OrdersPerRatingQuery },
+                {
+                  $group: {
+                    _id: "item_sales",
+                    item_sales: { $sum: "$item_income" },
+                  },
+                },
+              ],
+              localField: "item_name",
+              foreignField: "item_name",
+              as: "itemwise_sales",
             },
           },
-        }
-      );
-
-      const { notifications } = userAllNotifications;
+          {
+            $unwind: {
+              path: "$itemwise_sales",
+            },
+          },
+          {
+            $sort: {
+              "itemwise_sales.item_sales": -1,
+            },
+          },
+        ])
+        .toArray();
 
       res.json({
-        status: "success",
-        notifications,
+        reviewOfProducts,
+        reviewOfProductsSales,
       });
     } catch (err) {
       res.json({

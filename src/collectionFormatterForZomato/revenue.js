@@ -4,7 +4,7 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
-const revenueMongoDBData = async (
+const revenueScoreFromMongoDB = async (
   res_id,
   number,
   resultType,
@@ -76,4 +76,4 @@ const revenueMongoDBData = async (
   }
 };
 
-module.exports = { revenueMongoDBData };
+module.exports = { revenueScoreFromMongoDB };

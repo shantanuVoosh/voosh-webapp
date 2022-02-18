@@ -84,7 +84,7 @@ export function PreviousWeekStartAndEndDate() {
   return { startDate, endDate };
 }
 export function MonthStringProvider(date) {
-  console.log("date--------->", date);
+  // console.log("date---->", date);
   return moment(new Date(date)).format("MMM-YYYY");
 }
 

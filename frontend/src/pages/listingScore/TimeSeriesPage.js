@@ -17,10 +17,10 @@ import Loading from "../../components/Loading";
 
 const TimeSeriesPages = ({}) => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
-  const {resultType, isLoading} = useSelector((state) => state.data);
+  const { resultType, isLoading } = useSelector((state) => state.data);
   const location = useLocation();
 
-  if (data.length <= 0) return null;
+  if (data.length <= 0) return <Loading />;
 
   // ?Listing Score
   const listingScoreItems = data[currentProductIndex]["listingScore"];
@@ -31,24 +31,71 @@ const TimeSeriesPages = ({}) => {
   const pageName =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
 
-  console.log(pageName);
-  // console.log(listingScoreData);
+  console.log(
+    pageName,
+    "page name----",
+    currentProductIndex,
+    "currentProductIndex"
+  );
+
+  const allSwiggyListingCardsName = [
+    "Safety Tag",
+    "Images",
+    "Number of Rating",
+    "Rating",
+    "Offer 1",
+    "Offer 2",
+    "Item Description",
+    "Beverages Category",
+    "Best Seller Score",
+    "Desserts",
+  ];
+  const allZomatoListingCardsName = [
+    "Safety Tag",
+    "Images",
+    "Number of Rating",
+    "Rating",
+    "Vote Score",
+    "Offer 1",
+    "Offer 2",
+    "Offer 3",
+    "Offer 4",
+    "Item Description",
+    "Beverages Category",
+    "Desserts",
+  ];
 
   // ? check whether the page is in the listScoreDataItems or not
-  // ? user using nvigating from url
-  const pageData = listingScoreData.find((item) => {
-    let { name: itemName } = item;
-    itemName = itemName.replace(/\s+/g, "").toLowerCase();
-    let serachName = pageName.replace(/\s+/g, "").toLowerCase();
-    return itemName === serachName;
+  // ? user using navigating from url
+  // const pageData = listingScoreData.find((item) => {
+  //   let { name: itemName } = item;
+  //   itemName = itemName.replace(/\s+/g, "").toLowerCase();
+  //   let searchName = pageName.replace(/\s+/g, "").toLowerCase();
+  //   return itemName === searchName;
+  // });
+  const pageData = [
+    ...allSwiggyListingCardsName,
+    ...allZomatoListingCardsName,
+  ].find((item) => {
+    const itemName = item.replace(/\s+/g, "").toLowerCase();
+    let searchName = pageName.replace(/\s+/g, "").toLowerCase();
+    return itemName === searchName;
   });
-
-  
 
   if (pageData === undefined) return <Error />;
 
-  const timeSeriesData = listingScoreData.find(
-    (item) => item.name === pageData.name
+  // ? we use here cuz, if we change the current index, the ls of zomato and swiggy will be different
+  const {
+    listingScore: { listingScoreData: lsData },
+  } = data[currentProductIndex];
+
+  console.log(listingScoreData, "listingScoreData");
+  console.log(lsData, "lsData");
+  console.log(pageData, "pageData");
+
+
+  const timeSeriesData = lsData.find(
+    (item) => item.name === pageData
   );
 
   const {
@@ -66,9 +113,9 @@ const TimeSeriesPages = ({}) => {
     return (
       <>
         <MetaTags>
-        <title>Voosh | Listing-Score | {name}</title>
-        <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
-        <meta property="og:title" content="web app" />
+          <title>Voosh | Listing-Score | {name}</title>
+          <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+          <meta property="og:title" content="web app" />
         </MetaTags>
         <Header isErrorPage={true} />
         <Loading />

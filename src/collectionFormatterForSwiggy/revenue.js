@@ -11,13 +11,8 @@ const previousDay12HoursAgo = () => {
   return result;
 };
 
-function getPrevMonth() {
-  let d = new Date();
-  let month = d.getMonth() === 0 ? 12 : d.getMonth();
-  return month;
-}
 
-const revenueMongoDBData = async (
+const revenueScoreFromMongoDB = async (
   res_id,
   number,
   resultType,
@@ -291,6 +286,6 @@ async function revenuDataOfPreviousMonth(res_id) {
 }
 
 module.exports = {
-  revenueMongoDBData,
+  revenueScoreFromMongoDB,
   revenuDataOfPreviousMonth,
 };

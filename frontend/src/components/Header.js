@@ -95,10 +95,10 @@ const Header = ({
       result = `${moment(new Date(startDate)).format("D MMM'YY")} - ${moment(
         new Date(endDate)
       ).format("D MMM'YY")}`;
-      console.log("***************");
-      console.log(startDate, endDate);
-      console.log(result);
-      console.log("***************");
+      // console.log("***************");
+      // console.log(startDate, endDate);
+      // console.log(result);
+      // console.log("***************");
     }
 
     // console.log("result:", result);
@@ -115,7 +115,7 @@ const Header = ({
 
   //! Help's to Close the dropdown menu
   const handleOnClickAnywhere = (e) => {
-    console.log(e.target.classList);
+    // console.log(e.target.classList);
     // if (
     //   e.target.classList.contains("item") ||
     //   e.target.classList.contains("item--name") ||
@@ -129,7 +129,7 @@ const Header = ({
     // setResultTypeOpen(false);
   };
 
-  console.log(isResultTypeOpen, "isResultTypeOpen");
+  // console.log(isResultTypeOpen, "isResultTypeOpen");
 
   //! Help's to Close the dropdown menu
   const handleOnScroll = () => {
@@ -149,12 +149,29 @@ const Header = ({
 
   // ! When we visit the revenue page, set the result type to "Prev Day Only"
   React.useEffect(() => {
-    console.log(location.pathname, "path name from header");
+    // console.log(location.pathname, "path name from header");
     const pathname = location.pathname;
     setResultTypeOpen(false);
-    console.log(pathname === "/revenue");
+    // console.log(pathname === "/revenue");
 
     if (pathname === "/customerReviews") {
+      // * now check if the result type is "Custom Range" or not
+
+      // ? if Custom Range, the set this Month as default or skip this
+      if (resultType === "Custom Range") {
+        // console.log("yup, it is custom range");
+        dispatch(setResultType("This Month"));
+      }
+
+      setAllResultType([
+        "This Week",
+        "Previous Week",
+        "This Month",
+        "Previous Month",
+      ]);
+      return;
+    }
+    if (pathname === "/allReviews") {
       setAllResultType([
         "This Week",
         "Previous Week",
@@ -180,29 +197,18 @@ const Header = ({
     }
     // ! go back old dropdown
     else if (pathname !== "/revenue") {
+      // * check if the result type is "Prev Day" or not
       // ?
-      if (resultType !== "Previous Day") {
-        // ? seting week cuz by default it is "Previous Month"
+      if (resultType === "Previous Day") {
         dispatch(setResultType("This Month"));
-        setAllResultType([
-          "This Week",
-          "Previous Week",
-          "This Month",
-          "Previous Month",
-          "Custom Range",
-        ]);
       }
-      // ? if prv day is selected,change to old dropdown and set result type Week
-      else {
-        dispatch(setResultType("This Month"));
-        setAllResultType([
-          "This Week",
-          "Previous Week",
-          "This Month",
-          "Previous Month",
-          "Custom Range",
-        ]);
-      }
+      setAllResultType([
+        "This Week",
+        "Previous Week",
+        "This Month",
+        "Previous Month",
+        "Custom Range",
+      ]);
     }
   }, [location.pathname]);
 
@@ -336,7 +342,6 @@ const Header = ({
                     {(resultType === "This Month" ||
                       resultType === "Previous Month") &&
                       customDateString(dateInsideState)}
-                    
                   </span>
                 </div>
               ) : (
