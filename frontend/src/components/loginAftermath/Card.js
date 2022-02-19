@@ -29,7 +29,7 @@ const Card = ({ iconName, name, info }) => {
     revenue_score: { revenue_score, isDataPresent: isRevenueScorePresent },
     previousMonthRevenue: {
       previousDayRevenue,
-      financicalData: { totalSales },
+      financialData: { totalSales },
     },
   } = currentProductData;
 
@@ -110,7 +110,7 @@ const Card = ({ iconName, name, info }) => {
                     : resultType === "Previous Month"
                     ? totalSales
                     : revenue_score,
-                    change: null,
+                change: null,
                 benchmark: null,
                 changeTypeDirection: "up",
                 type: "money",

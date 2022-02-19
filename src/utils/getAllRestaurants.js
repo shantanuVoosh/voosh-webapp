@@ -54,7 +54,7 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
         };
       });
 
-      console.log("finalData:", finalData);
+      console.log("all restaurant linked with this number:", finalData);
 
       return finalData;
     }

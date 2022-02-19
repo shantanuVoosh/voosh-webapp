@@ -13,7 +13,22 @@ const CardWithNoData = ({ name, info }) => {
         <div className="listing_score_card__text--info">
           <p>{info.length > 60 ? info.substring(0, 60) + "..." : info}</p>
         </div>
-        <div className="value error-value green">Working on it...</div>
+        {name !== "Rating" && (
+          <div className="value error-value green">Working on it...</div>
+        )}
+        {name === "Rating" && (
+          <div
+            className={`green`}
+            style={{
+              fontSize: "15px",
+              // marginBottom: "1rem",
+              padding: "0.5rem 0",
+              fontWeight: "700",
+            }}
+          >
+            Rating not available
+          </div>
+        )}
       </div>
 
       {/* <div className="card__btn">

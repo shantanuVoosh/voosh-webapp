@@ -13,7 +13,7 @@ const operationalHealthMongoDBData = async (
   startDate,
   endDate
 ) => {
-  // ? key is different in collection
+  // ? key is different in collection, so different Queries
   let query = {};
   let ratingQuery = {};
 
@@ -43,10 +43,10 @@ const operationalHealthMongoDBData = async (
     };
     ratingQuery = {
       res_id: parseInt(res_id),
-      date: { $gte: startDate, $lte: endDate },
+      date: { $lte: endDate },
     };
   }
-  //! if resultType is not week or month!
+  // ? If the result type is not week, month or custom range
   else {
     return {
       dataPresent: false,
@@ -113,7 +113,7 @@ const operationalHealthMongoDBData = async (
       ])
       .toArray();
 
-    // // ! Operational Health Rating
+    // ! Operational Health Rating Old Way
     // const rating = await db
     //   .collection("swiggy_static_rating_products")
     //   .aggregate([
@@ -201,7 +201,7 @@ const operationalHealthMongoDBData = async (
     // console.log("oh_score: ", oh_score);
     // console.log("serviceability: ", serviceability);
     // console.log("rdc:", rdc);
-    // console.log("rating:", rating);
+    console.log("rating:", rating);
     // console.log("mfr:", mfr);
     // console.log("igcc:", igcc);
     // console.log("acceptance:", acceptance);
@@ -212,7 +212,7 @@ const operationalHealthMongoDBData = async (
     console.log("oh_score: ", oh_score[0]?.oh_score);
     console.log("serviceability: ", serviceability[0]?.oh_serviceability);
     console.log("rdc:", rdc[0]?.rdc_score);
-    console.log("rating:", rating[0]?.rating_score);
+    console.log("rating:", rating[0]?.customer_rating);
     console.log("mfr:", mfr[0]?.mfr_score);
     console.log("igcc:", igcc[0]?.igcc_score);
     console.log("acceptance:", acceptance[0]?.acceptance_score);
@@ -488,7 +488,7 @@ function calculateOHScoreManually({
   console.log("*****************--------------------********************");
   if (count === 0) return 0;
   // ! if Nan then no data is present
-  console.log(score * (200 / count));
+  console.log("calculated oh score: ", score * (200 / count));
 
   return score * (200 / count);
 }

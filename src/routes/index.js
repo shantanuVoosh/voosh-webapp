@@ -90,33 +90,21 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       listingID,
     } = req.body;
 
-    console.log(
-      "Current User:\n",
-      "id:",
-      id,
-      "res_id:",
-      res_id,
-      "phone:",
-      phone,
-      "Restaurant Name:",
-      res_name,
-      "date:",
-      date,
-      "number:",
-      number,
-      "resultType:",
-      resultType,
-      "startDate:",
-      startDate,
-      "endDate:",
-      endDate,
-      "zomato_res_id:",
-      zomato_res_id,
-      "swiggy_res_id:",
-      swiggy_res_id,
-      "listingID:",
-      listingID
-    );
+    console.log("Current User( req.payload): ", req.payload);
+    console.log("id: ", id);
+    console.log("res_id: ", res_id);
+    console.log("phone: ", phone);
+    console.log("Restaurant Name: ", res_name);
+    console.log("date: ", date);
+    console.log("number: ", number);
+    console.log("resultType: ", resultType);
+    console.log("startDate: ", startDate);
+    console.log("endDate: ", endDate);
+    console.log("zomato_res_id: ", zomato_res_id);
+    console.log("swiggy_res_id: ", swiggy_res_id);
+    console.log("listingID: ", listingID);
+    console.log("z_res_id: ", z_res_id);
+    console.log("s_res_id: ", s_res_id);
 
     // ? for safari only
     if (number === null && resultType === "month") {
@@ -124,11 +112,6 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       var x = d.getMonth() + 1;
       number = x;
     }
-
-    console.log("************************************************");
-    console.log(z_res_id, s_res_id, "z_res_id, s_res_id");
-    console.log(zomato_res_id, swiggy_res_id, "zomato_res_id, swiggy_res_id");
-    console.log("************************************************");
 
     let newRestaurantList = [];
 
@@ -147,7 +130,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       ((z_res_id !== null && z_res_id !== zomato_res_id) ||
         (s_res_id !== null && s_res_id !== swiggy_res_id))
     ) {
-      console.log("new call");
+      console.log("new call/n", "it means z_id or s_id is changed or provided");
       swiggyData = await getAllSwiggyData(
         parseInt(s_res_id),
         number,
@@ -163,7 +146,10 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         endDate
       );
     } else {
-      console.log("old call");
+      console.log(
+        "old call\n",
+        "it means we are using the base zomato id and swiggy id "
+      );
       swiggyData = await getAllSwiggyData(
         parseInt(swiggy_res_id),
         number,
@@ -349,14 +335,14 @@ router.post("/login-voosh", async (req, res) => {
       customPhoneNumber = phoneNumber;
     }
 
-    console.log(customPhoneNumber, typeof customPhoneNumber);
+    // console.log(customPhoneNumber, typeof customPhoneNumber);
 
     const db = client.db(documentName);
     // ! manually connection this number to CFH
     const isUserPresentInNVDP = await db.collection(nvdpColleaction).findOne({
       owner_number: parseInt(customPhoneNumber),
     });
-    console.log("isUserPresentInNVDP", isUserPresentInNVDP);
+    // console.log("isUserPresentInNVDP", isUserPresentInNVDP);
 
     // ! quick check if by mistake hack-number is not present in nvdp
     if (isUserPresentInNVDP === null && phoneNumber.includes("hack")) {
@@ -623,7 +609,7 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
     const { swiggy_register_phone, zomato_register_phone } = userData;
     const { notifications } = userAllNotifications;
 
-    console.log("userData", userData);
+    // console.log("userData", userData);
     res.json({
       status: "success",
       phone,
@@ -734,8 +720,8 @@ router.post(
 
             const { notifications } = userNotifications;
 
-            console.log("userNotifications", notifications);
-            console.log("this will happen after user data is save");
+            // console.log("userNotifications", notifications);
+            // console.log("this will happen after user data is save");
 
             // ? so this means user is providing swiggy or zomato number(maybe both!)
             await db.collection(onboardNotificationsCollection).updateOne(
@@ -831,8 +817,8 @@ router.post(
 router.post("/user/call-request", async (req, res) => {
   try {
     const { flagName, phoneNumber } = req.body;
-    console.log("flagName", flagName);
-    console.log("phoneNumber", phoneNumber);
+    // console.log("flagName", flagName);
+    // console.log("phoneNumber", phoneNumber);
 
     if (parseInt(phoneNumber) === 1231231239) {
       res.json({
@@ -856,7 +842,7 @@ router.post("/user/call-request", async (req, res) => {
       flag_name: flagName,
     });
 
-    console.log(isNumberPresent);
+    // console.log(isNumberPresent);
 
     if (isNumberPresent !== null) {
       const { flag_status } = isNumberPresent;
@@ -917,9 +903,9 @@ router.post("/user/email-request", checkAuthentication, async (req, res) => {
   const onboardProductsColleaction = "Onboard_New_Users_UAT";
   // const onboardProductsColleaction = "onboard_products";
 
-  console.log("email", email);
-  console.log("phoneNumber", phoneNumber);
-  console.log("phone", phone);
+  // console.log("email", email);
+  // console.log("phoneNumber", phoneNumber);
+  // console.log("phone", phone);
   const current_phone_number = parseInt(phone);
 
   // ? add new field email in onboard_products
@@ -942,7 +928,7 @@ router.post("/user/email-request", checkAuthentication, async (req, res) => {
     });
 
     const { email: userEmail } = userData;
-    console.log("userData", userEmail);
+    // console.log("userData", userEmail);
     if (userEmail !== undefined) {
       return res.json({
         status: "success",
@@ -955,7 +941,7 @@ router.post("/user/email-request", checkAuthentication, async (req, res) => {
       .updateOne(query, update, (err, result) => {
         if (err) {
         } else {
-          console.log(result, "result");
+          // console.log(result, "result");
           res.json({
             status: "success",
             message: "Email saved",
@@ -984,8 +970,8 @@ router.post(
   async (req, res) => {
     const { phone } = req.payload;
     const { notification_id } = req.body;
-    console.log("phone", phone);
-    console.log("notification_id", notification_id);
+    // console.log("phone", phone);
+    // console.log("notification_id", notification_id);
 
     const onboardNotificationsCollection = "Onboard_Notifications_UAT";
     // const onboardNotificationsCollection = "Onboard_Notifications";
@@ -1005,7 +991,7 @@ router.post(
         }
       );
 
-      console.log("notifications updated");
+      // console.log("notifications updated");
     } catch (err) {
       console.log(err);
       res.json({

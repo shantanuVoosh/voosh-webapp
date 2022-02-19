@@ -23,8 +23,11 @@ const FinancialDashBoard = () => {
   const { revenue_score, isDataPresent: isRevenueScorePresent } =
     data[currentProductIndex]["revenue_score"];
   const {
-    previousDayRevenue,
-    financicalData: {
+    previousDayRevenue: {
+      previousDayRevenue,
+      isDataPresent: isPreviousDayRevenuePresent,
+    },
+    financialData: {
       isDataPresent,
       totalSales,
       cancelledOrders,
@@ -34,17 +37,23 @@ const FinancialDashBoard = () => {
     },
   } = data[currentProductIndex]["previousMonthRevenue"];
 
+  console.log(
+    `index ${currentProductIndex} data: `,
+    data[currentProductIndex]["previousMonthRevenue"]
+  );
+
   const deductionTitles = Object.keys(deductions);
   const deductionValues = deductionTitles.map((item) => deductions[item]);
 
   console.log("deductionTitles =>", deductionTitles);
 
-  console.log("revenue =>", previousDayRevenue);
+  console.log("prev day revenue =>", previousDayRevenue);
 
   let finalRevenue =
     resultType !== "Previous Day" ? revenue_score : previousDayRevenue;
 
-  finalRevenue = finalRevenue === undefined ? 0 : finalRevenue;
+  finalRevenue =
+    finalRevenue === undefined || finalRevenue === null ? 0 : finalRevenue;
 
   const pieColors = [
     "#370665",
@@ -135,11 +144,15 @@ const FinancialDashBoard = () => {
             }
             info={"Total Sales includes all taxes"}
             color={"#27AE60"}
-             // Todo: this should be use, if we dont use any break fix 😎
+            // Todo: this should be use, if we dont use any break fix 😎
             // isDataPresent={isRevenueScorePresent}
-             // ! Temp Fix cuz data is not present 😞
+            // ! Temp Fix cuz data is not present 😞
             isDataPresent={
-              resultType !== "Previous Month" && resultType !== "Custom Range"
+              resultType === "Previous Day"
+                ? isPreviousDayRevenuePresent
+                : resultType !== "Previous Month" &&
+                  resultType !== "Custom Range" &&
+                  resultType !== "Previous Day"
                 ? isRevenueScorePresent
                 : (resultType === "Custom Range"
                     ? startOfMonth === startDate && endOfMonth === endDate
@@ -254,11 +267,20 @@ const FinancialDashBoard = () => {
             />
           </div>
           <div className="financial_a-breakdown__graph">
-            <div className="graph-pie">
+            {console.log(
+              isDataPresent,
+              isDataPresent === false,
+              "isDataPresent"
+            )}
+            <div
+              className={`graph-pie ${
+                isDataPresent === false ? "no-graph" : ""
+              }`}
+            >
               <Doughnut data={pie_data} options={options} />
             </div>
             <div className="graph-list">
-              {/* //? Single Item of deduction */}
+              {/* //! All deduction */}
               {deductionTitles.map((item, index) => {
                 const name = item;
                 const value = deductionValues[index];

@@ -1,6 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 const ColorList = ({ name, value, color, isDataPresent }) => {
+  const { resultType, currentProductIndex } = useSelector(
+    (state) => state.data
+  );
+
   const valueWrapper = value.toLocaleString("en-IN", {
     maximumFractionDigits: 2,
     style: "currency",
@@ -21,10 +26,25 @@ const ColorList = ({ name, value, color, isDataPresent }) => {
             {valueWrapper}
           </span>
         )}
-        {!isDataPresent && (
+        {!isDataPresent && currentProductIndex === 0 ? (
           <span
             className="value green"
-            style={{ fontWeight: "700", marginLeft: "10px", fontSize: "10px" }}
+            style={{
+              fontWeight: "700",
+              marginLeft: "10px",
+              fontSize: "10px",
+            }}
+          >
+            From Next Month
+          </span>
+        ) : (
+          <span
+            className="value green"
+            style={{
+              fontWeight: "700",
+              marginLeft: "10px",
+              fontSize: "10px",
+            }}
           >
             Working on it...
           </span>

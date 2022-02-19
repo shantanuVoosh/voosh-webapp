@@ -2,7 +2,7 @@ import React from "react";
 import { Line, Bar } from "react-chartjs-2";
 import { useLocation } from "react-router-dom";
 import Header from "../../components/Header";
-import InfoCard from "../../components/InfoCard";
+import InfoCard from "../../components/operationHealth/InfoCard";
 import Footer from "../../components/Footer";
 import { useSelector } from "react-redux";
 import SectionButtons from "../../components/SectionButtons";

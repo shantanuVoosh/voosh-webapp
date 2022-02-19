@@ -25,8 +25,13 @@ const checkAuthentication = (req, res, next) => {
       });
     } catch (err) {
       console.log("Error while verifying token:", err);
+      res.json({
+        status: "error",
+        message: `Error while verifying token:${err}`,
+        isAuth: false,
+      });
     }
   }
 };
 
-module.exports = {checkAuthentication};
+module.exports = { checkAuthentication };

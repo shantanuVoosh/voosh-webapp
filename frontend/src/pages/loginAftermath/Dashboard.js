@@ -10,18 +10,10 @@ const Dashboard = () => {
   const { data, currentProductIndex } = useSelector((state) => state.data);
   const { resultType } = useSelector((state) => state.data);
 
-  const operationHealth = data[currentProductIndex]["operationHealth"];
-  const { operationHealthMain, operationHealthData } = operationHealth;
-
-  const { listingScoreMain, listingScoreData } =
-    data[currentProductIndex]["listingScore"];
-  const { revenue_score } = data[currentProductIndex]["revenue_score"];
-
-  // Todo: temp solution for Prev Month Revenue
-  const {
-    previousDayRevenue,
-    financicalData: { totalSales },
-  } = data[currentProductIndex]["previousMonthRevenue"];
+  const { operationHealth } = data[currentProductIndex];
+  const { operationHealthData } = operationHealth;
+  const { listingScore } = data[currentProductIndex];
+  const { listingScoreData } = listingScore;
 
   // ! get top 5 suggestions
   let getTopSuggestions = getTopSuggestionsProvider(

@@ -8,6 +8,7 @@ const {
 
 const {
   revenueScoreFromMongoDB,
+  getPreviousDaySales,
 } = require("../collectionFormatterForZomato/revenue");
 
 const {
@@ -65,7 +66,8 @@ async function getAllZomatoData(
     year
   );
 
-  // console.log(ls);
+  const {previousDayRevenue} = await getPreviousDaySales(res_id);
+  console.log(previousDayRevenue);
 
   // ?Temp Data Ls
   return {
@@ -80,9 +82,13 @@ async function getAllZomatoData(
     },
 
     previousMonthRevenue: {
-      previousDayRevenue: undefined,
-      isDataPresent: false,
-      financicalData: {
+      previousDayRevenue: {
+        isDataPresent: previousDayRevenue === undefined ? false : true,
+        previousDayRevenue:
+          previousDayRevenue === undefined ? null : previousDayRevenue,
+      },
+      financialData: {
+        isDataPresent: false,
         totalCancellation: 0,
         totalSales: 0,
         netPayout: 0,

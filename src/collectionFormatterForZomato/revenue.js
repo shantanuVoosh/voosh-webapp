@@ -4,6 +4,13 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
+const previousDay12HoursAgo = () => {
+  const m = moment();
+  const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
+  // console.log(result, "result");
+  return result;
+};
+
 const revenueScoreFromMongoDB = async (
   res_id,
   number,
@@ -61,8 +68,16 @@ const revenueScoreFromMongoDB = async (
       ])
       .toArray();
 
-
-      console.log("revenue", revenue);
+    console.log("*****************--------------------********************");
+    console.log(
+      `Swiggy Revenue of ${
+        resultType === "Custom Range"
+          ? `Custom Range from ${startDate}-${endDate}`
+          : `${resultType} - ${number}`
+      }`
+    );
+    console.log("revenue: ", revenue[0]?.revenue);
+    console.log("*****************--------------------********************");
 
     client.close();
     return {
@@ -76,4 +91,40 @@ const revenueScoreFromMongoDB = async (
   }
 };
 
-module.exports = { revenueScoreFromMongoDB };
+// ! in swiggy it is called inside revenueDataOfPreviousMonth function
+const getPreviousDaySales = async (res_id) => {
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    const previousDayRevenue = await db
+      .collection("zomato_revenue_products")
+      .aggregate([
+        {
+          $match: {
+            date: `${previousDay12HoursAgo()}`,
+            zomato_res_id: parseInt(res_id),
+          },
+        },
+      ])
+      .toArray();
+
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Previous Day Revenue - (Swiggy  Previous Day)");
+    console.log("Previous Date: ", previousDay12HoursAgo());
+    console.log("PreviousDayRevenue: ", previousDayRevenue[0]?.day_revenue);
+    console.log("*****************--------------------********************");
+
+    return {
+      previousDayRevenue: previousDayRevenue[0]?.day_revenue,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: err,
+    };
+  }
+};
+
+module.exports = { revenueScoreFromMongoDB, getPreviousDaySales };

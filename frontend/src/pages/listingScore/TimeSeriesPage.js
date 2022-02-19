@@ -2,7 +2,6 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { useLocation } from "react-router-dom";
 import Header from "../../components/Header";
-import InfoCardWithNoData from "../../components/InfoCardWithNoData";
 import InfoCard from "../../components/listingScore/InfoCard";
 import Footer from "../../components/Footer";
 import { useSelector } from "react-redux";

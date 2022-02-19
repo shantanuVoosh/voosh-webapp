@@ -4,84 +4,19 @@ import { Line, Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
-  const resultType = useSelector((state) => state.data.resultType);
-  console.log(
-    "value:",
-    value,
-    "benchmark:",
-    benchmark,
-    "compareThen:",
-    compareThen,
-    "----------?"
+  const { resultType, currentProductIndex } = useSelector(
+    (state) => state.data
   );
-  // console.log((compareThen === "4.0"))
-  let resultValue = 0;
-  let resultBenchmark = 0;
 
-  // ! String Working
-  if (type === "string") {
-    // ? Possible String Compariso
-    // ! Yes No
-    if (compareThen === "yes or no") {
-      resultValue = value === benchmark ? 100 : 0;
-      resultBenchmark = 100;
-    }
-    // ! String Number
-    else if (benchmark === "4.0") {
-      console.log("here");
-      // resultValue=value===benchmark?100:0;
-      // compare="equal";
-      if (value.includes("<")) {
-        value = value.replace("<", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes(">")) {
-        value = value.replace(">", "");
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("=")) {
-        value = value.replace("=", "");
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      } else if (value.includes("to")) {
-        value = value.split("to")[1];
-        value = parseFloat(value);
-        resultValue = parseFloat(value);
-        resultBenchmark = parseFloat(benchmark);
-      }
-    } else if (value === "Not Applicable" || value === "Applicable") {
-      resultValue = value === "Not Applicable" ? 0 : 100;
-      resultBenchmark = 100;
-    }
-  }
+  let partner_name = "";
+  partner_name = currentProductIndex === 0 ? "swiggy" : "zomato";
+  const { showColor, resultValue, resultBenchmark } = listingScoreBenchmarks(
+    name,
+    partner_name,
+    value
+  );
 
-  // Todo:
-  else if (type === "percentage") {
-    if (compareThen === "High Medium Low") {
-      resultBenchmark = benchmark;
-      if (name === "Number of Rating") {
-        if (value === "High") {
-          resultValue = 90;
-        } else if (value === "Medium") {
-          resultValue = 70;
-        } else if (value === "Low") {
-          resultValue = 50;
-        }
-      } else if (name === "Images") {
-        resultValue = value;
-        resultBenchmark = benchmark;
-      }
-    } else {
-      resultValue = value;
-      resultBenchmark = benchmark;
-    }
-  } else if (type === "number") {
-    resultValue = value;
-    resultBenchmark = benchmark;
-  }
-
-  const colorOfBar = resultValue >= resultBenchmark ? "#27AE60" : "#f05a48";
+  const colorOfBar = showColor === "green" ? "#27AE60" : "#f05a48";
 
   const options = {
     plugins: {
@@ -142,3 +77,180 @@ const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
 };
 
 export default BarGraph;
+
+function listingScoreBenchmarks(name, partner_name, value) {
+  let showColor = "";
+  let isKnowMorePresent = false;
+  let resultValue = 0;
+  let resultBenchmark = 0;
+
+  // ?for Swiggy ls Items
+  if (partner_name === "swiggy") {
+    // *1 this will not have know more btn(Time Graph)
+    if (name === "Safety Tag") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+      console.log("Safety Tag", resultValue, resultBenchmark, showColor);
+    }
+    // *2 (Time Graph)
+    else if (name === "Images") {
+      resultValue = value;
+      resultBenchmark = 200;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *3 (Time Graph)
+    else if (name === "Number of Rating") {
+      resultValue =
+        value === "High"
+          ? 100
+          : value === "Medium"
+          ? 50
+          : value === "Low"
+          ? 0
+          : 0;
+      resultBenchmark = 100;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *4 (Time Graph)
+    else if (name === "Rating") {
+      resultValue = value;
+      resultBenchmark = 4.5;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *5 this will not have know more btn(Time Graph)
+    else if (name === "Offer 1") {
+      resultValue = value === "Applicable" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *6 this will not have know more btn(Time Graph)
+    else if (name === "Offer 2") {
+      resultValue = value === "Applicable" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *7 (Time Graph)
+    else if (name === "Item Description") {
+      resultValue = value;
+      resultBenchmark = 70;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *8 No Know More Button (Time Graph)
+    else if (name === "Beverages Category") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *9 (Time Graph)
+    else if (name === "Best Seller Score") {
+      resultValue = value;
+      resultBenchmark = 80;
+      // isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *10 No Know More Button (Time Graph)
+    else if (name === "Desserts") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+
+    return {
+      resultValue,
+      resultBenchmark,
+      isKnowMorePresent,
+      showColor,
+    };
+  }
+  // ?for Zomato ls Items
+  else if (partner_name === "zomato") {
+    // *1 this will not have know more btn(Time Graph)
+    if (name === "Safety Tag") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *2 (Time Graph)
+    else if (name === "Images") {
+      resultValue = value;
+      resultBenchmark = 100;
+      // isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *3 (Time Graph)
+    // ! this is not in Swiggy
+    else if (name === "Number of Review") {
+      resultValue = value;
+      resultBenchmark = 5000;
+      // isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // Todo:delivery_review
+    // *4 (Time Graph)
+    // ! this is not in Swiggy
+    else if (name === "Delivery Review") {
+      resultValue = value;
+      resultBenchmark = 3.7;
+      // isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+
+    // *5 (Time Graph)
+    // ! this is not in Swiggy
+    else if (name === "Vote Score") {
+      resultValue = value;
+      resultBenchmark = 5;
+      // isKnowMorePresent = true;
+      showColor = resultValue < resultBenchmark ? "green" : "red";
+    }
+    // *6 (Time Graph)
+    else if (name === "Rating") {
+      resultValue = value;
+      resultBenchmark = 4.5;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *7-10 this will not have know more btn(Time Graph)
+    else if (
+      name === "Offer 1" ||
+      name === "Offer 2" ||
+      name === "Offer 3" ||
+      name === "Offer 4"
+    ) {
+      resultValue = value === " Applicable" ? 0 : 1;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *11 (Time Graph)
+    else if (name === "Item Description") {
+      resultValue = value;
+      resultBenchmark = 85;
+      isKnowMorePresent = true;
+      showColor = resultValue >= resultBenchmark ? "green" : "red";
+    }
+    // *12 No Know More Button (Time Graph)
+    else if (name === "Beverages Category") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+    // *13 No Know More Button (Time Graph)
+    else if (name === "Desserts") {
+      resultValue = value === "Yes" ? 1 : 0;
+      resultBenchmark = 1;
+      showColor = resultValue === resultBenchmark ? "green" : "red";
+    }
+
+    return {
+      resultValue,
+      resultBenchmark,
+      isKnowMorePresent,
+      showColor,
+    };
+  }
+}

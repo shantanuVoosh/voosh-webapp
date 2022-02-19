@@ -26,8 +26,6 @@ import Notification from "./pages/Notification";
 import Signup from "./pages/signup/Signup";
 import SignupA from "./pages/signup/SignupA";
 import SignupB from "./pages/signup/SignupB";
-import Greeting from "./pages/Greeting";
-import PreSignUp from "./pages/PreSignUp";
 import OnboardingDashboard from "./pages/onboardingDashboard/Dashboard";
 // import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
@@ -46,7 +44,7 @@ function App() {
 
     ReactGA.initialize([
       {
-        trackingId: "G-BNX0KV0H7M",
+        // trackingId: "G-BNX0KV0H7M",
       },
     ]);
 
@@ -119,42 +117,8 @@ function App() {
 
         {/* //? New Onboarding dashboard */}
         <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
+        {/* //Todo: only for testing */}
         <Route path="/amplitude" element={<AmplitudePage />} />
-        {/* <Route path="/test" element={<OnboardingDashboard />} /> */}
-        {/* <Route
-          path="/signup"
-          element={
-            <RedirectRoute>
-              <MetaTags>
-                <title>Voosh | Signup</title>
-                <meta
-                  name="voosh web app, Signup page"
-                  content="voosh signup page"
-                />
-                <meta property="og:title" content="web-app" />
-              </MetaTags>
-              <Signup />
-              <SignupA />
-              <SignupB />
-            </RedirectRoute>
-          }
-        /> */}
-        {/* <Route
-          path="/greeting"
-          element={
-            <RedirectRoute>
-              <MetaTags>
-                <title>Voosh | Greeting</title>
-                <meta
-                  name="voosh web app, Signup page"
-                  content="voosh signup page"
-                />
-                <meta property="og:title" content="web-app" />
-              </MetaTags>
-              <Greeting />
-            </RedirectRoute>
-          }
-        /> */}
         <Route
           path="/settings"
           element={
@@ -191,7 +155,7 @@ function App() {
             </>
           }
         />
-        {/* <Route path="/pre-signup" element={<PreSignUp />} /> */}
+    
         <Route
           path="/dashboard"
           element={

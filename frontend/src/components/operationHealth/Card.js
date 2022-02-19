@@ -7,7 +7,7 @@ import CardWithNoData from "./CardWithNoData";
 import { VscPreview } from "react-icons/vsc";
 
 const Card = (props) => {
-  const resultType = useSelector((state) => state.resultType);
+  const { resultType } = useSelector((state) => state.data);
   const {
     name,
     value,
@@ -20,8 +20,6 @@ const Card = (props) => {
     recommendations,
     isDataPresent,
   } = props;
-
- 
 
   // !temp change Customer Reviews
   if (name === "Reviews") {
@@ -172,6 +170,14 @@ const Card = (props) => {
       </>
     );
   }
+
+  // Todo: copy only the need data from above, use show color for value
+  const ForRatingCard = () => {
+    return <></>;
+  };
+  const ForCustomerReviewsCard = () => {
+    return <></>;
+  };
 
   return (
     <div className="op_card">

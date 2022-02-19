@@ -68,7 +68,6 @@ async function getAllSwiggyData(
       isDataPresent: revenue_score !== undefined ? true : false,
     },
     previousMonthRevenue: revenue_previous_month,
-    
     customerReviews: customerReviews,
   };
 }

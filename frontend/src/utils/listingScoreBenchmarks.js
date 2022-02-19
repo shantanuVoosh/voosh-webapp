@@ -1,111 +1,4 @@
-import React from "react";
-import { AiOutlineRight } from "react-icons/ai";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-const Card = ({
-  name,
-  value,
-  benchmark,
-  info,
-  compareThen,
-  type,
-  isDataPresent,
-}) => {
-  const { resultType, currentProductIndex } = useSelector(
-    (state) => state.data
-  );
-
-  // console.log(resultType);
-
-  let partner_name = "";
-  partner_name = currentProductIndex === 0 ? "swiggy" : "zomato";
-  const { showColor, isKnowMorePresent, resultValue, resultBenchmark } =
-    listingScoreBenchmarks(name, partner_name, value);
-
-  // console.log({
-  //   showColor,
-  //   isKnowMorePresent,
-  //   resultValue,
-  //   resultBenchmark,
-  //   name,
-  // });
-
-  if (name === "Rating" && (value === 0 || value === null)) {
-    return (
-      <>
-        <div className="listing_score_card">
-          <div className="listing_score_card__text">
-            <h5 className="listing_score_card__text--heading">{name}</h5>
-
-            <div className="listing_score_card__text--info">
-              <p>{info.length > 55 ? info.substring(0, 55) + "..." : info}</p>
-            </div>
-            <div
-              className={`green`}
-              style={{
-                fontSize: "15px",
-                // marginBottom: "1rem",
-                padding: "0.5rem 0",
-                fontWeight: "700",
-              }}
-            >
-              Rating not available
-            </div>
-          </div>
-          {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
-          {name === "Rating" && value !== 0 && value !== null && (
-            <Link
-              to={`${name.replace(/\s/g, "")}`}
-              className="listing_score_card__btn"
-            >
-              <span className="listing_score_card__btn--text">Know more</span>
-              <AiOutlineRight className="listing_score_card__btn--icon" />
-            </Link>
-          )}
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <div className="listing_score_card">
-      <div className="listing_score_card__text">
-        <h5 className="listing_score_card__text--heading">{name}</h5>
-
-        <div className="listing_score_card__text--info">
-          <p>{info.length > 55 ? info.substring(0, 55) + "..." : info}</p>
-        </div>
-
-        <div className={`value ${showColor}`}>
-          {value}
-          {type === "percentage" &&
-          name !== "Number of Rating" &&
-          name !== "Number of Reviews" &&
-          name !== "Images"
-            ? "%"
-            : ""}
-        </div>
-      </div>
-      {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
-      {(name === "Images" ||
-        name === "Rating" ||
-        name === "Item Description") && (
-        <Link
-          to={`${name.replace(/\s/g, "")}`}
-          className="listing_score_card__btn"
-        >
-          <span className="listing_score_card__btn--text">Know more</span>
-          <AiOutlineRight className="listing_score_card__btn--icon" />
-        </Link>
-      )}
-    </div>
-  );
-};
-
-export default Card;
-
-function listingScoreBenchmarks(name, partner_name, value) {
+function ListingScoreBenchmarks(name, partner_name, value) {
   let showColor = "";
   let isKnowMorePresent = false;
   let resultValue = 0;
@@ -118,7 +11,6 @@ function listingScoreBenchmarks(name, partner_name, value) {
       resultValue = value === "Yes" ? 1 : 0;
       resultBenchmark = 1;
       showColor = resultValue === resultBenchmark ? "green" : "red";
-      console.log("Safety Tag", resultValue, resultBenchmark, showColor);
     }
     // *2 (Time Graph)
     else if (name === "Images") {
@@ -191,7 +83,6 @@ function listingScoreBenchmarks(name, partner_name, value) {
       resultValue,
       resultBenchmark,
       isKnowMorePresent,
-      showColor,
     };
   }
   // ?for Zomato ls Items
@@ -237,7 +128,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
     }
     // *6 (Time Graph)
     else if (name === "Rating") {
-      resultValue = value;
+      resultValue = value === "Applicable" ? 1 : 0;
       resultBenchmark = 4.5;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
@@ -249,28 +140,23 @@ function listingScoreBenchmarks(name, partner_name, value) {
       name === "Offer 3" ||
       name === "Offer 4"
     ) {
-      resultValue = value ===' Applicable' ? 0 : 1;
+      resultValue = value === null ? 0 : 1;
       resultBenchmark = 1;
-      showColor = resultValue === resultBenchmark ? "green" : "red";
     }
     // *11 (Time Graph)
     else if (name === "Item Description") {
       resultValue = value;
       resultBenchmark = 85;
-      isKnowMorePresent = true;
-      showColor = resultValue >= resultBenchmark ? "green" : "red";
     }
     // *12 No Know More Button (Time Graph)
     else if (name === "Beverages Category") {
       resultValue = value === "Yes" ? 1 : 0;
       resultBenchmark = 1;
-      showColor = resultValue === resultBenchmark ? "green" : "red";
     }
     // *13 No Know More Button (Time Graph)
     else if (name === "Desserts") {
       resultValue = value === "Yes" ? 1 : 0;
       resultBenchmark = 1;
-      showColor = resultValue === resultBenchmark ? "green" : "red";
     }
 
     return {
@@ -281,3 +167,5 @@ function listingScoreBenchmarks(name, partner_name, value) {
     };
   }
 }
+
+export { ListingScoreBenchmarks };

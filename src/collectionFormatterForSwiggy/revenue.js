@@ -7,10 +7,9 @@ const documentName = "operationsdb";
 const previousDay12HoursAgo = () => {
   const m = moment();
   const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
-  console.log(result, "result");
+  // console.log(result, "result");
   return result;
 };
-
 
 const revenueScoreFromMongoDB = async (
   res_id,
@@ -21,7 +20,7 @@ const revenueScoreFromMongoDB = async (
 ) => {
   let query = {};
 
-  console.log(res_id, "revenue res_id---------->");
+  // console.log(res_id, "revenue res_id---------->");
 
   // ? Query for week
   if (resultType === "week") {
@@ -71,7 +70,16 @@ const revenueScoreFromMongoDB = async (
       ])
       .toArray();
 
-    console.log(revenue, "revenue***************************************score");
+    console.log("*****************--------------------********************");
+    console.log(
+      `Swiggy Revenue of ${
+        resultType === "Custom Range"
+          ? `Custom Range from ${startDate}-${endDate}`
+          : `${resultType} - ${number}`
+      }`
+    );
+    console.log("revenue: ", revenue[0]?.revenue);
+    console.log("*****************--------------------********************");
 
     client.close();
     return {
@@ -86,7 +94,6 @@ const revenueScoreFromMongoDB = async (
 };
 
 const getPreviousDaySales = async (res_id) => {
-  console.log("for prev day sale/revenue: yyyy-mm-dd", previousDay12HoursAgo());
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
@@ -104,12 +111,12 @@ const getPreviousDaySales = async (res_id) => {
       ])
       .toArray();
 
-    // console.log(
-    //   "previousDaySales:",
-    //   previousDayRevenue,
-    //   "previousDayDate:",
-    //   getPreviousDay12HoursAgo()
-    // );
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Previous Day Revenue - (Swiggy  Previous Day)");
+    console.log("Previous Date: ", previousDay12HoursAgo());
+    console.log("PreviousDayRevenue: ", previousDayRevenue[0]?.final_revenue);
+    console.log("*****************--------------------********************");
+
     return {
       previousDayRevenue: previousDayRevenue[0]?.final_revenue,
     };
@@ -128,13 +135,6 @@ async function revenuDataOfPreviousMonth(res_id) {
 
   // ? provide a date which is 1 month 10 days ago
   // ? then get month number from that date
-  const prevMonthPlus10Days = moment(new Date())
-    .add(-1, "months")
-    .add(-10, "days")
-    .format("DD-MM-YYYY");
-  //in* 11-10-2022
-  //op- 01-12-2021
-
   const customYearNumber = moment(new Date())
     .add(-1, "months")
     .add(-10, "days")
@@ -142,9 +142,6 @@ async function revenuDataOfPreviousMonth(res_id) {
   //? Dec -11(month starts from 0-11)
   const customMonthNumber =
     moment(new Date()).add(-1, "months").add(-10, "days").month() + 1;
-
-  console.log("customYearNumber", customYearNumber);
-  console.log("customMonthNumber", customMonthNumber);
 
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -182,9 +179,13 @@ async function revenuDataOfPreviousMonth(res_id) {
     // ? If data is not available send this
     if (swiggyReconsilation === null || swiggyReconsilation === undefined) {
       return {
-        previousDayRevenue: previousDayRevenue,
-        isDataPresent: false,
-        financicalData: {
+        previousDayRevenue: {
+          isDataPresent: previousDayRevenue === undefined ? false : true,
+          previousDayRevenue:
+            previousDayRevenue === undefined ? null : previousDayRevenue,
+        },
+        financialData: {
+          isDataPresent: false,
           totalCancellation: 0,
           totalSales: 0,
           netPayout: 0,
@@ -269,9 +270,33 @@ async function revenuDataOfPreviousMonth(res_id) {
       TDS: parseFloat((swiggyReconsilation?.["tds"]).toFixed(2)),
     };
 
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Reconsilation Data - (Swiggy  Reconsilation)");
+    console.log("customYearNumber: ", customYearNumber);
+    console.log("customMonthNumber: ", customMonthNumber);
+    console.log("Revenue: ", {
+      previousDayRevenue: {
+        isDataPresent: previousDayRevenue === undefined ? false : true,
+        previousDayRevenue:
+          previousDayRevenue === undefined ? null : previousDayRevenue,
+      },
+      financialData: {
+        isDataPresent: true,
+        totalSales,
+        netPayout,
+        deleveries,
+        cancelledOrders,
+        deductions,
+      },
+    });
+    console.log("*****************--------------------********************");
     return {
-      previousDayRevenue: previousDayRevenue,
-      financicalData: {
+      previousDayRevenue: {
+        isDataPresent: previousDayRevenue === undefined ? false : true,
+        previousDayRevenue:
+          previousDayRevenue === undefined ? null : previousDayRevenue,
+      },
+      financialData: {
         isDataPresent: true,
         totalSales,
         netPayout,

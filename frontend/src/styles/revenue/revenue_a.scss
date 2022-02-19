@@ -195,6 +195,29 @@
 
   &__graph {
     .graph-pie {
+      position: relative;
+      height: 100%;
+      width: 100%;
+
+      &.no-graph {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        &::after {
+          content: "Graph Not Available";
+          position: absolute;
+          width: 100%;
+          // height: 100%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #000;
+          margin-top: 5rem;
+          text-align: center;
+          color: #27ae60;
+        }
+      }
     }
   }
 }

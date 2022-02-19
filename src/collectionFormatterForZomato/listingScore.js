@@ -38,37 +38,55 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
 
     //! if resultType is not week or month!
 
-    console.log("------******------");
-    console.log(
-      "listingScoreData--------------------------.................:",
-      listingScoreData
-    );
-    console.log("------******------");
+    // console.log("*****************--------------------********************");
+    // console.log("listingScoreData", listingScoreData);
+    // console.log("*****************--------------------********************");
     const listingScore = listingScoreData[0];
+
+    console.log("*****************--------------------********************");
+    console.log("Zomato Listing Score Data - (Zomato LS Values)");
+    console.log("score: ", listingScore?.Score);
+    console.log("safety_tag: ", listingScore?.safety);
+    console.log("static_rating: ", static_rating[0]?.delivery_ratings);
+    console.log("delivery_no_review: ", listingScore?.delivery_no_review);
+    console.log("delivery_review: ", listingScore?.delivery_review);
+    console.log(
+      "VoteScore or No_Add_items_in_rec: ",
+      listingScore?.No_Add_items_in_rec
+    );
+    console.log("offer_1: ", listingScore?.offer1);
+    console.log("offer_2: ", listingScore?.offer2);
+    console.log("offer_3: ", listingScore?.offer3);
+    console.log("offer_4: ", listingScore?.offer4);
+    console.log("beverages_category: ", listingScore?.beverages);
+    console.log("desserts: ", listingScore?.dessert);
+    console.log("Image: ", listingScore?.images);
+    console.log("description: ", listingScore?.description);
+    console.log("listingScoreDate: ", listingScore?.run_date);
+
+    console.log("*****************--------------------********************");
+
 
     client.close();
 
     return {
       score: listingScore?.Score,
+      safety_tag: listingScore?.safety,
+      static_rating: static_rating[0]?.delivery_ratings,
       delivery_no_review: listingScore?.delivery_no_review,
+      delivery_review: listingScore?.delivery_review,
+      VoteScore: listingScore?.No_Add_items_in_rec,
       offer_1: listingScore?.offer1,
       offer_2: listingScore?.offer2,
       offer_3: listingScore?.offer3,
       offer_4: listingScore?.offer4,
-
       beverages_category: listingScore?.beverages,
       desserts: listingScore?.dessert,
-      safety_tag: listingScore?.safety,
-      //?  .30701754385964913 --> 30%
-      Image: listingScore?.images,
-      //?  1 -> 100%
-      description: listingScore?.description,
+      Image: listingScore?.images, //?  .30701754385964913 --> 30%
+      description: listingScore?.description, //?  1 -> 100%
       listingScoreDate: listingScore?.run_date,
-      VoteScore: listingScore?.No_Add_items_in_rec,
 
       // Todo: in place of delivery_review will use static rating
-      delivery_review: listingScore?.delivery_review,
-      static_rating: static_rating[0]?.delivery_ratings,
     };
   } catch (err) {
     console.log(err);
@@ -96,7 +114,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
       description,
       listingScoreDate,
       VoteScore,
-      static_rating
+      static_rating,
     } = data;
 
     // !If the values inside data is not present, then it will return undefined
@@ -140,7 +158,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           info: "Make sure that all your menu items have different images! Swiggy increases your visibility!",
           suggestions: [
             "Add images to minimum 30 items",
-            "Contact Voosh photoshoot service for quality images",
+            "Contact Voosh photo-shoot service for quality images",
           ],
           value:
             Image === undefined ? null : parseFloat((Image * 100).toFixed(2)),
@@ -149,7 +167,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
 
         // !Number of Review
         {
-          name: "Number of Rating",
+          name: "Number of Review",
           type: "number",
           benchmark: 5000,
           compareThen: "High Medium Low",
@@ -174,22 +192,22 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           isDataPresent: VoteScore === undefined ? false : true,
         },
 
-        // // ! "Review(star)"
-        // {
-        //   name: "Rating",
-        //   type: "string",
-        //   benchmark: 3.7,
-        //   compareThen: "string",
-        //   info: "Ratings is very directly related to sales",
-        //   suggestions: [
-        //     "Improve reviews by understanding the problem areas",
-        //     "Contact Voosh for Rating Booster service",
-        //   ],
-        //   value: delivery_review === undefined ? null : delivery_review,
-        //   isDataPresent: delivery_review === undefined ? false : true,
-        // },
-        // ! "Rating "
+        // ! "Delivery Review"
+        {
+          name: "Delivery Review",
+          type: "number",
+          benchmark: 3.7,
+          compareThen: "string",
+          info: "Ratings is very directly related to sales",
+          suggestions: [
+            "Improve reviews by understanding the problem areas",
+            "Contact Voosh for Rating Booster service",
+          ],
+          value: delivery_review === undefined ? null : delivery_review,
+          isDataPresent: delivery_review === undefined ? false : true,
+        },
 
+        // ! "Rating "
         {
           name: "Rating",
           type: "string",

@@ -37,17 +37,30 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
 
     //! if resultType is not week or month!
 
-    console.log("------******------");
-    console.log(
-      "listingScoreData--------------------------.................:",
-      listingScoreData
-    );
-
-    console.log("----------*****----------");
-    console.log("Listing rating:", rating);
-    console.log("----------*****----------");
-
+    // console.log("*****************--------------------********************");
+    // console.log("listingScoreData", listingScoreData);
+    // console.log("*****************--------------------********************");
     const listingScore = listingScoreData[0];
+    
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Listing Score Data - (Swiggy LS Values)");
+    console.log("score: ", listingScore?.score);
+    console.log("safety_tag: ", listingScore?.safety_tag);
+    console.log("rating:", rating[0]?.customer_rating);
+    console.log("rating: ", listingScore?.customer_rating);
+    console.log("number_of_rating: ", listingScore?.number_of_rating);
+    console.log("offer_1: ", listingScore?.offer_1);
+    console.log("offer_2: ", listingScore?.offer_2);
+    console.log("desserts: ", listingScore?.["desserts/sweet_category"]);
+    console.log("image: ", listingScore?.["image_%"]);
+    console.log(
+      "bestsellers_score: ",
+      listingScore?.["bestseller_%_in_recommended_vs_without_recommended_data"]
+    );
+    console.log("description: ", listingScore?.["description_%"]);
+    console.log("listingScoreDate: ", listingScore?.start_date);
+
+    console.log("*****************--------------------********************");
 
     client.close();
     return {

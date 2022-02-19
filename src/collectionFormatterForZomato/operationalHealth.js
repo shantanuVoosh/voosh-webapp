@@ -8,6 +8,7 @@ const documentName = "operationsdb";
 // Todo mfr, rdc, rating
 // - res id added servicebility
 // ! serviceability_score fix krna hai cuz right now it is config manually
+
 const operationalHealthMongoDBData = async (
   res_id,
   number,
@@ -16,6 +17,7 @@ const operationalHealthMongoDBData = async (
   endDate,
   year
 ) => {
+  // ? key is different in collection, so different Queries
   let query = {};
   let rdc_query = {};
   let mfr_query = {};
@@ -92,9 +94,10 @@ const operationalHealthMongoDBData = async (
 
     ratings_query = {
       zomato_res_id: parseInt(res_id),
+      // date: { $lte: endDate },
     };
   }
-  // ? Error while providing wrong query
+  // ? If the result type is not week, month or custom range
   else {
     query = {
       dataPresent: false,
@@ -289,7 +292,6 @@ const operationHealthDataFormatter = async (
         {
           name: "Rating",
           type: "average",
-          // info: "get more then 4.5 star rating to get more orders",
           info: "Rating > 4.5 Gets better orders",
           benchmark: 4.5,
           compareThen: "grater",
@@ -308,7 +310,6 @@ const operationHealthDataFormatter = async (
         {
           name: "MFR Accuracy",
           type: "percentage",
-          // info: "MFR Accuracy grate than 95% to get more orders",
           info: "MFR Accuracy >=95 Gets more orders",
           benchmark: 95,
           compareThen: "grater",
@@ -325,7 +326,6 @@ const operationHealthDataFormatter = async (
         {
           name: "Customer Complaints",
           type: "percentage",
-          // info: "if your customer complaints score is less than 1 then it will get more orders",
           info: "Complains <=1 Gets more orders",
           benchmark: 1,
           compareThen: "less",
@@ -341,7 +341,6 @@ const operationHealthDataFormatter = async (
         {
           name: "Acceptance",
           type: "percentage",
-          // info: "if your acceptance score is grater than 99% then it will get more orders",
           info: "Acceptance = 100% Gets more orders",
           benchmark: 99,
           compareThen: "grater",
@@ -445,7 +444,7 @@ function calculateOHScoreManually({
   if (count === 0) return 0;
 
   // ! if Nan then no data is present
-  console.log(score * (200 / count));
+  console.log("calculated oh score: ", score * (200 / count));
 
   return score * (200 / count);
 }
