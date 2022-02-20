@@ -12,7 +12,6 @@ export function getWeekNumberFromDate(date) {
 
 //* console.log(getMonthNumberFromDate("2022-1-3")) -->1
 export function getMonthNumberFromDate(date) {
-
   // console.log(date, "test----==============")
   var d = new Date(date);
   var month = d.getMonth() + 1;
@@ -85,10 +84,10 @@ export function PreviousWeekStartAndEndDate() {
 }
 export function MonthStringProvider(date) {
   // console.log("date---->", date);
-  return moment(new Date(date)).format("MMM-YYYY");
+  return moment(date, "YYYY-MM-DD").format("MMM-YYYY");
 }
 
 // ! this is for Custom Date Range
 export function getCustomDateInFormat(date) {
-  return moment(new Date(date)).format("YYYY-MM-DD");
+  return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
 }
