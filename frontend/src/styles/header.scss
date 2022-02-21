@@ -190,9 +190,9 @@
 
 .header-large {
   position: relative;
-  height: $header-height-large;
+  height: $header-height-large + 30px;
   @include breakpoint-up(xxsmall) {
-    height: $header-height-large + 25;
+    height: $header-height-large + 60px;
   }
 
   &::after {

@@ -20,20 +20,20 @@ import MetaTags from "react-meta-tags";
 // TODO: daynamic data change!
 // TODO: aager path ka name match nhi hua, then show the Error page
 
-const TimeSeriesPages = ({}) => {
+const TimeSeriesPages = ({ sectionName }) => {
   const { resultType, isLoading } = useSelector((state) => state.data);
   const location = useLocation();
 
   // ?can be usefull to grab data for this Graph
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, oh_currentProductIndex } = useSelector((state) => state.data);
 
   // * manually handeling the data, cuz this not present in the LayoutWrapper
   if (data.length <= 0) return null;
 
-  const operationHealth = data[currentProductIndex]["operationHealth"];
+  const operationHealth = data[oh_currentProductIndex]["operationHealth"];
   const { operationHealthData } = operationHealth;
   const operationHealthItems =
-    currentProductIndex < 0 ? [] : operationHealthData;
+    oh_currentProductIndex < 0 ? [] : operationHealthData;
 
   let name;
   let type;
@@ -54,7 +54,7 @@ const TimeSeriesPages = ({}) => {
       return itemName === serachName;
     });
     // console.log(d)
-   
+
     if (d === undefined) return <Error />;
 
     name = d.name;
@@ -104,7 +104,7 @@ const TimeSeriesPages = ({}) => {
         isDropdownNeeded={true}
       />
       <div className="container">
-        <SectionButtons />
+        <SectionButtons sectionName={sectionName} />
         <InfoCard
           name={name}
           value={value}

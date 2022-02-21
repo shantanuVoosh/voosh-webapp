@@ -28,7 +28,8 @@ const LayoutWrapper = (props) => {
     isClientBtnNeeded,
     headerSize = "small",
     isDropdownNeeded,
-    onlyShowDate=false,
+    onlyShowDate = false,
+    sectionName,
   } = props;
 
   const { data } = useSelector((state) => state.data);
@@ -58,7 +59,9 @@ const LayoutWrapper = (props) => {
       />
       <div className="container">
         <div className="layout_warraper-container">
-          {!isClientBtnNeeded ? null : <SectionButtons />}
+          {!isClientBtnNeeded ? null : (
+            <SectionButtons sectionName={sectionName} />
+          )}
           {children}
         </div>
       </div>

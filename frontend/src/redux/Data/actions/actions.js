@@ -32,11 +32,42 @@ export const fetchData = ({ data, date }) => {
   };
 };
 
-export const seetCurrentProductIndex = (index) => {
+export const setCurrentProductIndex = (index) => {
   return {
     type: ActionTypes.SET_CURRENT_PRODUCT_INDEX,
     payload: {
       currentProductIndex: index,
+    },
+  };
+};
+
+// ? Set Nav Button For OH
+export const setOhProductIndex = (index) => {
+  return {
+    type: ActionTypes.SET_OH_PRODUCT_INDEX,
+    payload: {
+      oh_currentProductIndex: index,
+    },
+  };
+};
+
+// ? Set Nav Buttons Ls
+export const setLSProductIndex = (index) => {
+  return {
+    type: ActionTypes.SET_LS_PRODUCT_INDEX,
+    payload: {
+      ls_currentProductIndex: index,
+    },
+  };
+};
+
+// ? Set Nav Buttons Sales
+export const setSalesProductIndex = (index) => {
+  console.log('setSalesProductIndex new index', index)
+  return {
+    type: ActionTypes.SET_SALES_PRODUCT_INDEX,
+    payload: {
+      sales_currentProductIndex: index,
     },
   };
 };

@@ -6,7 +6,7 @@ import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 import moment from "moment";
 
 const WhiteCard = (props) => {
-  const { currentProductIndex } = useSelector((state) => state.data);
+  const { sales_currentProductIndex } = useSelector((state) => state.data);
 
   const customDate = moment(new Date())
     .add(-1, "months")
@@ -30,8 +30,8 @@ const WhiteCard = (props) => {
         className="financial_a-card"
         style={{
           display:
-            (name === "Total Payout" && currentProductIndex === 0) ||
-            (name === "Net Deduction" && currentProductIndex === 0)
+            (name === "Total Payout" && sales_currentProductIndex === 0) ||
+            (name === "Net Deduction" && sales_currentProductIndex === 0)
               ? "none"
               : "",
         }}

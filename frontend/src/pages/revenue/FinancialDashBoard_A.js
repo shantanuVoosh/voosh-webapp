@@ -10,18 +10,18 @@ import ScrollButton from "../../components/ScrollButton";
 import moment from "moment";
 
 const FinancialDashBoard = () => {
-  const { data, currentProductIndex, startDate, endDate } = useSelector(
+  const { data, sales_currentProductIndex, startDate, endDate } = useSelector(
     (state) => state.data
   );
   const { resultType } = useSelector((state) => state.data);
-  const revenue = data[currentProductIndex]["revenue"];
+  const revenue = data[sales_currentProductIndex]["revenue"];
   const customDate = moment(new Date())
     .add(-1, "months")
     .add(-10, "days")
     .format("MMMM'YY");
   // ? this value is not constant
   const { revenue_score, isDataPresent: isRevenueScorePresent } =
-    data[currentProductIndex]["revenue_score"];
+    data[sales_currentProductIndex]["revenue_score"];
   const {
     previousDayRevenue: {
       previousDayRevenue,
@@ -35,11 +35,11 @@ const FinancialDashBoard = () => {
       deleveries,
       deductions,
     },
-  } = data[currentProductIndex]["previousMonthRevenue"];
+  } = data[sales_currentProductIndex]["previousMonthRevenue"];
 
   console.log(
-    `index ${currentProductIndex} data: `,
-    data[currentProductIndex]["previousMonthRevenue"]
+    `index ${sales_currentProductIndex} data: `,
+    data[sales_currentProductIndex]["previousMonthRevenue"]
   );
 
   const deductionTitles = Object.keys(deductions);
@@ -124,12 +124,13 @@ const FinancialDashBoard = () => {
     <>
       {/* //! use for only prev month */}
       <div className="financial_a">
+        <SectionButtons sectionName={"Sales"} isSalesPage={true} />
         {/* //? Orange, White cards */}
         <div className="financial_a-cards">
           <WhiteCard
             // name={"Total Sales"}
             name={`${
-              currentProductIndex === 0 ? "Swiggy Sales" : "Zomato Sales"
+              sales_currentProductIndex === 0 ? "Swiggy Sales" : "Zomato Sales"
             }`}
             type={"Pecentage"}
             // value={resultType === "Previous Month" ? totalSales : finalRevenue}
@@ -192,7 +193,8 @@ const FinancialDashBoard = () => {
         <div
           className="show-more-btn"
           style={{
-            display: !isDataPresent && currentProductIndex === 0 ? "" : "none",
+            display:
+              !isDataPresent && sales_currentProductIndex === 0 ? "" : "none",
             height: "160px",
             gridColumn: "span 2",
             flexDirection: "row",
@@ -228,7 +230,7 @@ const FinancialDashBoard = () => {
             <h5 className="text">Channel Breakdown</h5>
             <div className="date">{customDate}</div>
           </div>
-          <SectionButtons />
+          {/* <SectionButtons sectionName={"Sales"} /> */}
           {/* //? Swiggy or Zomato, Cards */}
           <div className="financial_a-breakdown__cards">
             <GrayCard

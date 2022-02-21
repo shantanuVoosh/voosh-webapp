@@ -5,12 +5,26 @@ import SectionButtons from "../SectionButtons";
 import { useSelector, useDispatch } from "react-redux";
 import CardStatistics from "./CardStatistics";
 import moment from "moment";
+import {
+  setCurrentProductIndex,
+  setOhProductIndex,
+  setLSProductIndex,
+  setSalesProductIndex,
+} from "../../redux/Data/actions/actions";
 
-const Card = ({ iconName, name, info }) => {
+const Card = ({ iconName, name, info, sectionName }) => {
   const navigate = useNavigate();
-  const { data, resultType, startDate, endDate } = useSelector(
-    (state) => state.data
-  );
+  const {
+    data,
+    resultType,
+    oh_currentProductIndex,
+    ls_currentProductIndex,
+    sales_currentProductIndex,
+    startDate,
+    endDate,
+  } = useSelector((state) => state.data);
+
+  const dispatch = useDispatch();
   const buttons = data.map((item) => item.name);
   const navBtnRef = data.map((_, index) => React.createRef(null));
 
@@ -23,12 +37,33 @@ const Card = ({ iconName, name, info }) => {
     "currentProductData-----------------------------"
   );
 
+  React.useEffect(() => {
+    console.log(sectionName, "sectionName");
+    // ?for the first time
+    // ! OH
+    if (sectionName === "Operation Health") {
+      setNavindex(oh_currentProductIndex);
+    }
+    // ! LS
+    else if (sectionName === "Listing Score") {
+      setNavindex(ls_currentProductIndex);
+    }
+    // ! Sales
+    else if (sectionName === "Sales") {
+      setNavindex(sales_currentProductIndex);
+    }
+  }, [
+    sectionName,
+    oh_currentProductIndex,
+    ls_currentProductIndex,
+    sales_currentProductIndex,
+  ]);
+
   const {
-    operationHealth: { operationHealthMain, operationHealthData },
-    listingScore: { listingScoreMain, listingScoreData },
+    operationHealth: { operationHealthMain },
+    listingScore: { listingScoreMain },
     revenue_score: { revenue_score, isDataPresent: isRevenueScorePresent },
     previousMonthRevenue: {
-      previousDayRevenue,
       financialData: { totalSales },
     },
   } = currentProductData;
@@ -55,7 +90,19 @@ const Card = ({ iconName, name, info }) => {
 
   const handelChange = (index) => {
     console.log("handelChange Pending");
-    setNavindex(index);
+    console.log(sectionName, "sectionName");
+
+    if (sectionName === "Operation Health") {
+      dispatch(setOhProductIndex(index));
+    }
+    // ! LS
+    else if (sectionName === "Listing Score") {
+      dispatch(setLSProductIndex(index));
+    }
+    // ! Sales
+    else if (sectionName === "Sales") {
+      dispatch(setSalesProductIndex(index));
+    }
   };
 
   return (
@@ -83,7 +130,14 @@ const Card = ({ iconName, name, info }) => {
         </div>
         {/* //? right side */}
         <div className="home-card-right">
-          <div className="nav-btns">
+          <div
+            className="nav-btns"
+            style={{
+              padding: 0,
+              marginTop: 0,
+              // margin: 0,
+            }}
+          >
             {buttons.map((button, index) => (
               <span
                 key={index}

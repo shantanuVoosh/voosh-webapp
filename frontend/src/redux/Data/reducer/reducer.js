@@ -1,6 +1,5 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
-import {getCurrentMonthDate} from '../../../utils/dateProvider';
-
+import { getCurrentMonthDate } from "../../../utils/dateProvider";
 
 const initialState = {
   res_name: "",
@@ -20,6 +19,9 @@ const initialState = {
   date: getCurrentMonthDate(),
   startDate: "",
   endDate: "",
+  oh_currentProductIndex: -1,
+  ls_currentProductIndex: -1,
+  sales_currentProductIndex: -1,
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -33,8 +35,13 @@ export const dataReducer = (state = initialState, action) => {
     IS_LOADING,
     SET_RESTAURANT_NAME_AND_ID,
     SET_LISTING_ID,
+    SET_OH_PRODUCT_INDEX,
+    SET_LS_PRODUCT_INDEX,
+    SET_SALES_PRODUCT_INDEX,
   } = ActionTypes;
   const { type, payload } = action;
+
+  console.log(payload, "payload");
 
   switch (type) {
     case FETCH_ALL_DATA:
@@ -47,13 +54,35 @@ export const dataReducer = (state = initialState, action) => {
         allRestaurants: payload.allRestaurants,
         res_id: payload.res_id,
         date: payload.date,
+        oh_currentProductIndex: 0,
+        ls_currentProductIndex: 0,
+        sales_currentProductIndex: 0,
       };
     case SET_CURRENT_PRODUCT_INDEX:
       return {
         ...state,
         currentProductIndex: payload.currentProductIndex,
       };
-    // ? Bring back to initial state
+
+    case SET_OH_PRODUCT_INDEX:
+      return {
+        ...state,
+        oh_currentProductIndex: payload.oh_currentProductIndex,
+      };
+
+    case SET_LS_PRODUCT_INDEX:
+      return {
+        ...state,
+        ls_currentProductIndex: payload.ls_currentProductIndex,
+      };
+
+    case SET_SALES_PRODUCT_INDEX:
+      return {
+        ...state,
+        sales_currentProductIndex: payload.sales_currentProductIndex,
+      };
+
+    // ! Bring back to initial state
     case CLEAR_DATA:
       return {
         ...state,
@@ -107,7 +136,7 @@ export const dataReducer = (state = initialState, action) => {
         ...state,
         data: payload.data,
         date: payload.date,
-        currentProductIndex: 0,
+        // currentProductIndex: 0,
       };
 
     case SET_LISTING_ID:

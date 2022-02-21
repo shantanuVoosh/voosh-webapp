@@ -36,18 +36,21 @@ const Dashboard = () => {
           iconName={"bar"}
           name={"Revenue"}
           info={"Dive into sales, deduction, commissions, etc."}
+          sectionName={"Sales"}
         />
         {/* //? Operation Health */}
         <Card
           iconName={"bar"}
           name={"Operation Health"}
           info={"Analyse and improve your Operational Metrics."}
+          sectionName={"Operation Health"}
         />
         {/* //?List Score */}
         <Card
           iconName={"bar"}
           name={"Listing Score"}
           info={"Visibility performance on Swiggy and Zomato"}
+          sectionName={"Listing Score"}
         />
       </div>
       <div className="dashboard-bottom">

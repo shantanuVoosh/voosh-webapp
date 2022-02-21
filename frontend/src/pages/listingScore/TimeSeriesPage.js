@@ -14,18 +14,22 @@ import ScrollButton from "../../components/ScrollButton";
 import MetaTags from "react-meta-tags";
 import Loading from "../../components/Loading";
 
-const TimeSeriesPages = ({}) => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+const TimeSeriesPages = ({ sectionName }) => {
+  const { data, ls_currentProductIndex } = useSelector((state) => state.data);
   const { resultType, isLoading } = useSelector((state) => state.data);
   const location = useLocation();
 
   if (data.length <= 0) return <Loading />;
 
   // ?Listing Score
-  const listingScoreItems = data[currentProductIndex]["listingScore"];
+  const listingScoreItems = data[ls_currentProductIndex]["listingScore"];
 
-  const listScoreDataItems = currentProductIndex < 0 ? [] : listingScoreItems;
+  const listScoreDataItems = ls_currentProductIndex < 0 ? [] : listingScoreItems;
   const { listingScoreData } = listScoreDataItems;
+
+
+
+
 
   const pageName =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
@@ -33,8 +37,8 @@ const TimeSeriesPages = ({}) => {
   console.log(
     pageName,
     "page name----",
-    currentProductIndex,
-    "currentProductIndex"
+    ls_currentProductIndex,
+    "ls_currentProductIndex"
   );
 
   const allSwiggyListingCardsName = [
@@ -86,16 +90,13 @@ const TimeSeriesPages = ({}) => {
   // ? we use here cuz, if we change the current index, the ls of zomato and swiggy will be different
   const {
     listingScore: { listingScoreData: lsData },
-  } = data[currentProductIndex];
+  } = data[ls_currentProductIndex];
 
   console.log(listingScoreData, "listingScoreData");
   console.log(lsData, "lsData");
   console.log(pageData, "pageData");
 
-
-  const timeSeriesData = lsData.find(
-    (item) => item.name === pageData
-  );
+  const timeSeriesData = lsData.find((item) => item.name === pageData);
 
   const {
     name,
@@ -132,7 +133,7 @@ const TimeSeriesPages = ({}) => {
       </MetaTags>
       <Header heading={name} isHomePage={false} onlyShowDate={true} />
       <div className="container">
-        <SectionButtons />
+        <SectionButtons sectionName={sectionName} />
         {/* <InfoCardWithNoData name={name} /> */}
         <InfoCard name={name} value={value} info={info} type={type} />
         <BarGrap

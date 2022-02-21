@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const ColorList = ({ name, value, color, isDataPresent }) => {
-  const { resultType, currentProductIndex } = useSelector(
+  const { resultType, sales_currentProductIndex } = useSelector(
     (state) => state.data
   );
 
@@ -26,7 +26,7 @@ const ColorList = ({ name, value, color, isDataPresent }) => {
             {valueWrapper}
           </span>
         )}
-        {!isDataPresent && currentProductIndex === 0 ? (
+        {!isDataPresent && sales_currentProductIndex === 0 && (
           <span
             className="value green"
             style={{
@@ -37,7 +37,8 @@ const ColorList = ({ name, value, color, isDataPresent }) => {
           >
             From Next Month
           </span>
-        ) : (
+        )}
+        {!isDataPresent && sales_currentProductIndex === 1 && (
           <span
             className="value green"
             style={{

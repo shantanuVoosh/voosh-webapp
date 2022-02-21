@@ -17,10 +17,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import LayoutWrapper from "./components/LayoutWrapper";
 import Error from "./components/Error";
-import FinancialDashBoard from "./pages/revenue/FinancialDashBoard";
 // ! For testing purpose A and B
-import FinancialDashBoard_A from "./pages/revenue/FinancialDashBoard_A";
-import FinancialDashBoard_B from "./pages/revenue/FinancialDashBoard_B";
+import FinancialDashBoard from "./pages/revenue/FinancialDashBoard_A";
 import Settings from "./pages/Settings";
 import Notification from "./pages/Notification";
 import Signup from "./pages/signup/Signup";
@@ -34,7 +32,6 @@ import MetaTags from "react-meta-tags";
 import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
 import NewSignupA from "./pages/signup/NewSignupA";
 import AmplitudePage from "./pages/amplitudeCopy/Amplitude";
-
 
 function App() {
   const location = useLocation();
@@ -60,40 +57,6 @@ function App() {
   return (
     <div className="main-container">
       <Routes>
-        {/* <Route
-          path="/"
-          element={
-            <RedirectRoute>
-              <MetaTags>
-                <title>Voosh | Login</title>
-                <meta
-                  name="voosh web app, login page"
-                  content="voosh login page"
-                />
-                <meta property="og:title" content="web app" />
-              </MetaTags>
-              <Login />
-            </RedirectRoute>
-          }
-        /> */}
-        {/* //Todo: New Onboarding dashboard */}
-        {/* <Route
-          path="/"
-          element={
-            <RedirectRoute>
-              <MetaTags>
-                <title>Voosh | Login</title>
-                <meta
-                  name="voosh web app, Signup page"
-                  content="voosh signup page"
-                />
-                <meta property="og:title" content="web-app" />
-              </MetaTags>
-              <NewSignup />
-            </RedirectRoute>
-          }
-        /> */}
-
         {/* //Todo new signup part -2 :> */}
         <Route
           path="/"
@@ -114,11 +77,12 @@ function App() {
 
         {/* //Todo: ne swiggy signup */}
         {/* <Route path="/swiggy-path" /> */}
+        <Route path="/amplitude" element={<AmplitudePage />} />
 
         {/* //? New Onboarding dashboard */}
         <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
         {/* //Todo: only for testing */}
-        <Route path="/amplitude" element={<AmplitudePage />} />
+
         <Route
           path="/settings"
           element={
@@ -155,7 +119,7 @@ function App() {
             </>
           }
         />
-    
+
         <Route
           path="/dashboard"
           element={
@@ -173,13 +137,15 @@ function App() {
                 isHomePage={true}
                 headerSize={"big"}
                 isDropdownNeeded={true}
+                isClientBtnNeeded={false}
               >
                 <LoginAftermathDashboard />
               </LayoutWrapper>
             </RequiredAuth>
           }
         />
-        <Route
+        {/* //Todo: Delete */}
+        {/* <Route
           path="/dashboard-sample"
           element={
             <>
@@ -194,9 +160,9 @@ function App() {
               <LoginAftermathDashboardWithNoData />
             </>
           }
-        />
+        /> */}
         <Route
-          path="revenue"
+          path="/revenue"
           element={
             <RequiredAuth>
               <MetaTags>
@@ -213,10 +179,11 @@ function App() {
                 isClientBtnNeeded={false}
                 headerSize={"large"}
                 isDropdownNeeded={true}
+                sectionName={"Sales"}
               >
-                <FinancialDashBoard_A />
+                <FinancialDashBoard />
+                {/* <FinancialDashBoard_A /> */}
                 {/* <FinancialDashBoard_B /> */}
-                {/* <FinancialDashBoard /> */}
               </LayoutWrapper>
             </RequiredAuth>
           }
@@ -238,6 +205,7 @@ function App() {
                 heading={"Operation Health"}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={true}
+                sectionName={"Operation Health"}
               >
                 <OperationHealthDashboard />
               </LayoutWrapper>
@@ -251,7 +219,7 @@ function App() {
           element={
             // ? add meta tags in TimeSeries component
             <RequiredAuth>
-              <TimeSeriesPages />
+              <TimeSeriesPages sectionName={"Operation Health"} />
             </RequiredAuth>
           }
         />
@@ -274,6 +242,7 @@ function App() {
                 isClientBtnNeeded={true}
                 isDropdownNeeded={false}
                 onlyShowDate={true}
+                sectionName={"Listing Score"}
               >
                 <ListingScoreDashBoard />
               </LayoutWrapper>
@@ -285,7 +254,7 @@ function App() {
           path="/listingScore/:id"
           element={
             <RequiredAuth>
-              <ListingScoreTimeSeriesPage />
+              <ListingScoreTimeSeriesPage sectionName={"Listing Score"} />
             </RequiredAuth>
           }
         />
@@ -316,6 +285,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={true}
+                sectionName={"Operation Health"}
               >
                 <CustomerReviews />
               </LayoutWrapper>
@@ -339,6 +309,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={true}
+                sectionName={"Operation Health"}
               >
                 <AllReviews />
               </LayoutWrapper>
