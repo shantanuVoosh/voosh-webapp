@@ -5,10 +5,10 @@ import CardWithNoData from "../../components/listingScore/CardWithNoData";
 import ScrollButton from "../../components/ScrollButton";
 
 const Dashboard = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
-  const listingScoreItems = data[currentProductIndex]["listingScore"];
+  const { data, ls_currentProductIndex } = useSelector((state) => state.data);
+  const listingScoreItems = data[ls_currentProductIndex]["listingScore"];
   const listingScoreData = listingScoreItems["listingScoreData"];
-
+  const productIndex = ls_currentProductIndex;
   return (
     <>
       <div className="listing_score_cards">
@@ -32,6 +32,7 @@ const Dashboard = () => {
               info={info}
               compareThen={compareThen}
               type={type}
+              productIndex={productIndex}
               isDataPresent={isDataPresent}
             />
           ) : (

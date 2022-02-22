@@ -1,11 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
 // ! value null means no data
-const InfoCard = ({ name, value, type, benchmark, compareThen }) => {
-  const { currentProductIndex } = useSelector((state) => state.data);
+const InfoCard = ({
+  name,
+  value,
+  type,
+  benchmark,
+  compareThen,
+  productIndex,
+}) => {
 
   let partner_name = "";
-  partner_name = currentProductIndex === 0 ? "swiggy" : "zomato";
+  partner_name = productIndex === 0 ? "swiggy" : "zomato";
   const { showColor, resultValue, resultBenchmark } = listingScoreBenchmarks(
     name,
     partner_name,
@@ -132,7 +138,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
     // *7 (Time Graph)
     else if (name === "Item Description") {
       resultValue = value;
-      resultBenchmark = 70;
+      resultBenchmark = 85;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
     }

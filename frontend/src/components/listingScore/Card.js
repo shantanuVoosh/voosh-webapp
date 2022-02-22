@@ -10,16 +10,20 @@ const Card = ({
   info,
   compareThen,
   type,
+  productIndex,
   isDataPresent,
 }) => {
-  const { resultType, currentProductIndex } = useSelector(
-    (state) => state.data
-  );
+  const {
+    resultType,
+    currentProductIndex,
+    oh_currentProductIndex,
+    ls_currentProductIndex,
+  } = useSelector((state) => state.data);
 
   // console.log(resultType);
 
   let partner_name = "";
-  partner_name = currentProductIndex === 0 ? "swiggy" : "zomato";
+  partner_name = productIndex === 0 ? "swiggy" : "zomato";
   const { showColor, isKnowMorePresent, resultValue, resultBenchmark } =
     listingScoreBenchmarks(name, partner_name, value);
 
@@ -249,7 +253,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
       name === "Offer 3" ||
       name === "Offer 4"
     ) {
-      resultValue = value ===' Applicable' ? 0 : 1;
+      resultValue = value === " Applicable" ? 0 : 1;
       resultBenchmark = 1;
       showColor = resultValue === resultBenchmark ? "green" : "red";
     }

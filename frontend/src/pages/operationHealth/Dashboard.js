@@ -5,12 +5,12 @@ import CardWithNoData from "../../components/operationHealth/CardWithNoData";
 import ScrollButton from "../../components/ScrollButton";
 
 const Dashborad = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, oh_currentProductIndex } = useSelector((state) => state.data);
 
-  const operationHealthItems = data[currentProductIndex]["operationHealth"];
+  const operationHealthItems = data[oh_currentProductIndex]["operationHealth"];
   const { operationHealthData } = operationHealthItems;
 
-  const customerReviews = data[currentProductIndex]["customerReviews"];
+  const customerReviews = data[oh_currentProductIndex]["customerReviews"];
   return (
     <>
       <div className="op_cards">

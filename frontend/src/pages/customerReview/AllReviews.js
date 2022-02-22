@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import ReviewCard from "../../components/customerReviews/ReviewCard";
 
 const AllReviews = () => {
-  const { data, currentProductIndex, resultType } = useSelector(
+  const { data, oh_currentProductIndex, resultType } = useSelector(
     (state) => state.data
   );
 
-  const customerReviews = data[currentProductIndex]["customerReviews"];
+  const customerReviews = data[oh_currentProductIndex]["customerReviews"];
   const { all_reviews } = customerReviews;
   console.log("all_reviews", all_reviews);
 

@@ -23,13 +23,10 @@ const TimeSeriesPages = ({ sectionName }) => {
 
   // ?Listing Score
   const listingScoreItems = data[ls_currentProductIndex]["listingScore"];
-
-  const listScoreDataItems = ls_currentProductIndex < 0 ? [] : listingScoreItems;
+  const productIndex = ls_currentProductIndex;
+  const listScoreDataItems =
+    ls_currentProductIndex < 0 ? [] : listingScoreItems;
   const { listingScoreData } = listScoreDataItems;
-
-
-
-
 
   const pageName =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
@@ -135,7 +132,13 @@ const TimeSeriesPages = ({ sectionName }) => {
       <div className="container">
         <SectionButtons sectionName={sectionName} />
         {/* <InfoCardWithNoData name={name} /> */}
-        <InfoCard name={name} value={value} info={info} type={type} />
+        <InfoCard
+          name={name}
+          value={value}
+          info={info}
+          type={type}
+          productIndex={productIndex}
+        />
         <BarGrap
           name={name}
           value={value}
@@ -143,6 +146,7 @@ const TimeSeriesPages = ({ sectionName }) => {
           type={type}
           benchmark={benchmark}
           compareThen={compareThen}
+          productIndex={productIndex}
         />
         <div className="time_series__bottom">
           <div className="time_series__bottom--heading">

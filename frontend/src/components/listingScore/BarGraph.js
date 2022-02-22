@@ -3,13 +3,20 @@ import { useSelector } from "react-redux";
 import { Line, Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-const BarGraph = ({ name, compareThen, value, benchmark, type }) => {
-  const { resultType, currentProductIndex } = useSelector(
+const BarGraph = ({
+  name,
+  compareThen,
+  value,
+  benchmark,
+  type,
+  productIndex,
+}) => {
+  const { resultType, } = useSelector(
     (state) => state.data
   );
 
   let partner_name = "";
-  partner_name = currentProductIndex === 0 ? "swiggy" : "zomato";
+  partner_name = productIndex === 0 ? "swiggy" : "zomato";
   const { showColor, resultValue, resultBenchmark } = listingScoreBenchmarks(
     name,
     partner_name,

@@ -7,11 +7,11 @@ import { useSelector } from "react-redux";
 // const resultType = "month";
 
 const CustomerReviews = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, oh_currentProductIndex } = useSelector((state) => state.data);
   const resultType = useSelector((state) => state.data.resultType);
   const navigate = useNavigate();
 
-  const { customerReviews } = data[currentProductIndex];
+  const { customerReviews } = data[oh_currentProductIndex];
   const { negative, ordersPerRating, value, totalRatings } = customerReviews;
 
   const ratings = Object.keys(ordersPerRating).map((key) => {
