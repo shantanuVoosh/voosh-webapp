@@ -98,9 +98,7 @@ const FinancialDashBoard = () => {
     datasets: [
       {
         data:
-          totalSales !== "working on it"
-            ? [...deductionValues]
-            : [1, 2, 3, 2, 1, 1.5],
+          isDataPresent === true ? [...deductionValues] : [1, 2, 3, 2, 1, 1.5],
         // borderColor: ["rgba(255,21,86,0.2)"],
         backgroundColor: [...pieColors],
         pointBackgroundColor: "rgba(255,26,86,0.2)",
@@ -239,7 +237,9 @@ const FinancialDashBoard = () => {
               value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
               color={"#27AE60"}
-              isDataPresent={isDataPresent}
+              isDataPresent={
+                sales_currentProductIndex !== 1 ? isDataPresent : false
+              }
             />
             <GrayCard
               name={"Cancelled Orders"}

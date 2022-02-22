@@ -62,8 +62,23 @@ const revenueScoreFromMongoDB = async (
         {
           $group: {
             _id: "$swiggy_res_id",
-            revenue: {
-              $sum: "$daily_total_revenue",
+            daily_sub_total: {
+              $sum: "$daily_sub_total",
+            },
+            daily_package_charge: {
+              $sum: "$daily_package_charge",
+            },
+            daily_total_tax: {
+              $sum: "$daily_total_tax",
+            },
+            swiggy_service_tax: {
+              $sum: "$swiggy_service_tax",
+            },
+            swiggy_tds: {
+              $sum: "$swiggy_tds",
+            },
+            swiggy_tcs: {
+              $sum: "$swiggy_tcs",
             },
           },
         },
@@ -78,12 +93,20 @@ const revenueScoreFromMongoDB = async (
           : `${resultType} - ${number}`
       }`
     );
-    console.log("revenue: ", revenue[0]?.revenue);
+    console.log("full revenue: ", revenue);
+    // console.log("revenue: ", revenue[0]?.revenue);
     console.log("*****************--------------------********************");
 
     client.close();
     return {
-      revenue_score: revenue[0]?.revenue,
+      revenue_score: revenue[0]?.daily_sub_total,
+      
+      daily_sub_total: revenue[0]?.daily_sub_total,
+      daily_package_charge: revenue[0]?.daily_package_charge,
+      daily_total_tax: revenue[0]?.daily_total_tax,
+      swiggy_service_tax: revenue[0]?.swiggy_service_tax,
+      swiggy_tds: revenue[0]?.swiggy_tds,
+      swiggy_tcs: revenue[0]?.swiggy_tcs,
     };
   } catch (err) {
     console.log(err);

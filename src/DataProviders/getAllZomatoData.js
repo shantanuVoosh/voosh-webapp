@@ -9,6 +9,7 @@ const {
 const {
   revenueScoreFromMongoDB,
   getPreviousDaySales,
+  revenuDataOfPreviousMonth,
 } = require("../collectionFormatterForZomato/revenue");
 
 const {
@@ -66,8 +67,9 @@ async function getAllZomatoData(
     year
   );
 
-  const {previousDayRevenue} = await getPreviousDaySales(res_id);
+  const { previousDayRevenue } = await getPreviousDaySales(res_id);
   console.log(previousDayRevenue);
+  const revenue_previous_month = await revenuDataOfPreviousMonth(res_id);
 
   // ?Temp Data Ls
   return {
@@ -80,32 +82,33 @@ async function getAllZomatoData(
       revenue_score,
       isDataPresent: revenue_score !== undefined ? true : false,
     },
+    previousMonthRevenue: revenue_previous_month,
 
-    previousMonthRevenue: {
-      previousDayRevenue: {
-        isDataPresent: previousDayRevenue === undefined ? false : true,
-        previousDayRevenue:
-          previousDayRevenue === undefined ? null : previousDayRevenue,
-      },
-      financialData: {
-        isDataPresent: false,
-        totalCancellation: 0,
-        totalSales: 0,
-        netPayout: 0,
-        deleveries: 0,
-        cancelledOrders: 0,
-        deductions: {
-          "Platform Services Charges": 0,
-          "Cancellation Deduction": 0,
-          "Other OFD deduction": 0,
-          Promotions: 0,
-          "Previous Week Outstanding": 0,
-          Miscellaneous: 0,
-          TCS: 0,
-          TDS: 0,
-        },
-      },
-    },
+    // previousMonthRevenue: {
+    //   previousDayRevenue: {
+    //     isDataPresent: previousDayRevenue === undefined ? false : true,
+    //     previousDayRevenue:
+    //       previousDayRevenue === undefined ? null : previousDayRevenue,
+    //   },
+    //   financialData: {
+    //     isDataPresent: false,
+    //     totalCancellation: 0,
+    //     totalSales: 0,
+    //     netPayout: 0,
+    //     deleveries: 0,
+    //     cancelledOrders: 0,
+    //     deductions: {
+    //       "Platform Services Charges": 0,
+    //       "Cancellation Deduction": 0,
+    //       "Other OFD deduction": 0,
+    //       Promotions: 0,
+    //       "Previous Week Outstanding": 0,
+    //       Miscellaneous: 0,
+    //       TCS: 0,
+    //       TDS: 0,
+    //     },
+    //   },
+    // },
   };
 }
 

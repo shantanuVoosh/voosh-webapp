@@ -50,7 +50,15 @@ async function getAllSwiggyData(
     startDate,
     endDate
   );
-  const { revenue_score } = await revenueScoreFromMongoDB(
+  const {
+    revenue_score,
+    daily_sub_total,
+    daily_package_charge,
+    daily_total_tax,
+    swiggy_service_tax,
+    swiggy_tds,
+    swiggy_tcs,
+  } = await revenueScoreFromMongoDB(
     res_id,
     number,
     resultType,
@@ -58,13 +66,21 @@ async function getAllSwiggyData(
     endDate
   );
 
+  const rv_score =
+    daily_sub_total +
+    daily_package_charge +
+    daily_total_tax +
+    swiggy_service_tax +
+    swiggy_tds +
+    swiggy_tcs;
+
   const revenue_previous_month = await revenuDataOfPreviousMonth(res_id);
   return {
     name: "Swiggy",
     operationHealth: oh,
     listingScore: ls,
     revenue_score: {
-      revenue_score,
+      revenue_score: revenue_score !== undefined?rv_score:0,
       isDataPresent: revenue_score !== undefined ? true : false,
     },
     previousMonthRevenue: revenue_previous_month,

@@ -127,4 +127,169 @@ const getPreviousDaySales = async (res_id) => {
   }
 };
 
-module.exports = { revenueScoreFromMongoDB, getPreviousDaySales };
+// ! only month wise data is available
+async function revenuDataOfPreviousMonth(res_id) {
+  const { previousDayRevenue } = await getPreviousDaySales(res_id);
+
+  // ? provide a date which is 1 month 10 days ago
+  // ? then get month number from that date
+  const customYearNumber = moment(new Date())
+    .add(-1, "months")
+    .add(-10, "days")
+    .year();
+  //? Dec -11(month starts from 0-11)
+  const customMonthNumber =
+    moment(new Date()).add(-1, "months").add(-10, "days").month() + 1;
+
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    // ? Previous month Swiggy Revenue
+    const zomatoReconsilation = await db
+      .collection("zomato_revenue_reconsilation")
+      .findOne({
+        res_id: parseInt(res_id),
+        month_no: parseInt(customMonthNumber),
+        year_no: parseInt(customYearNumber),
+      });
+
+    // ? RDC or total Cancellation for previous month
+    const rdc = await db
+      .collection("zomato_rdc_products")
+      .aggregate([
+        {
+          $match: {
+            zomato_res_id: parseInt(res_id),
+            month_no: parseInt(customMonthNumber),
+          },
+        },
+        {
+          $group: {
+            _id: "$zomato_res_id",
+            rdc_score: { $sum: "$reject_count" },
+          },
+        },
+      ])
+      .toArray();
+
+    // ? If data is not available send this
+    if (zomatoReconsilation === null || zomatoReconsilation === undefined) {
+      return {
+        previousDayRevenue: {
+          isDataPresent: previousDayRevenue === undefined ? false : true,
+          previousDayRevenue:
+            previousDayRevenue === undefined ? null : previousDayRevenue,
+        },
+        financialData: {
+          isDataPresent: false,
+          totalCancellation: 0,
+          totalSales: 0,
+          netPayout: 0,
+          deleveries: 0,
+          cancelledOrders: 0,
+          deductions: {
+            "Piggy Bank": 0,
+            "logistics Charge": 0,
+            "Penalty Amount": 0,
+            "Credits Charge": 0,
+            Miscellaneous: 0,
+            TCS: 0,
+            TDS: 0,
+          },
+        },
+      };
+    }
+
+    // ? If data is available send this
+    // Todo: totalCancellation is undefined the zero cancelled orders
+    const totalCancellation = rdc[0]?.rdc_score;
+
+    const totalSales = zomatoReconsilation["gross_revenue_(INR)"];
+    // ? maybe this this is net payout Net Payout E=A-B-C-D   +Cancellation Refund (INR) (net payout)
+    const commissionable_amount =
+      zomatoReconsilation["commissionable_amount_(INR)"] -
+      zomatoReconsilation["pro_discount_share_(INR)"] -
+      zomatoReconsilation["customer_compensation_(INR)"] -
+      zomatoReconsilation["customer_discount_amount_(INR)"] +
+      zomatoReconsilation["cancellation_refund_(INR)"];
+
+    const netPayout = zomatoReconsilation["net_receivable_(INR)"];
+
+    // const deleveries = zomatoReconsilation["number_of_orders"];
+    // ! temp use this
+    const deleveries = 0;
+
+    const cancelledOrders = totalCancellation ? totalCancellation : 0;
+
+    const deductions = {
+      "Piggy Bank": zomatoReconsilation["piggybank_(INR)"],
+      "logistics Charge": zomatoReconsilation["logistics_charge_(INR)"],
+      "Penalty Amount": zomatoReconsilation["penalty_amount_(INR)"],
+      "Credits Charge": zomatoReconsilation["credits_charge_(INR)"],
+
+      Miscellaneous:
+        zomatoReconsilation["amount_received_in_cash_(INR)"] +
+        zomatoReconsilation["credit_note_adjustment_(INR)"] +
+        zomatoReconsilation["promo_recovery_adjustment_(INR)"] +
+        zomatoReconsilation["ice_cream_deductions_-_hyperpure_(INR)"] +
+        zomatoReconsilation["ice_cream_handling_charge_(INR)"] +
+        zomatoReconsilation["support_cost_adjustment_(INR)"],
+
+      TCS: zomatoReconsilation["tax_collected_at_source_(INR)"],
+      TAX: zomatoReconsilation["taxes_on_zomato_fees_(INR)"],
+
+      TDS:
+        zomatoReconsilation["tds_194O_amount_(INR)"] +
+        zomatoReconsilation["tds_194h_amount_(INR)"],
+    };
+
+    console.log("*****************--------------------********************");
+    console.log("Swiggy Reconsilation Data - (Swiggy  Reconsilation)");
+    console.log("customYearNumber: ", customYearNumber);
+    console.log("customMonthNumber: ", customMonthNumber);
+
+    console.log("Revenue: ", {
+      previousDayRevenue: {
+        isDataPresent: previousDayRevenue === undefined ? false : true,
+        previousDayRevenue:
+          previousDayRevenue === undefined ? null : previousDayRevenue,
+      },
+      financialData: {
+        isDataPresent: true,
+        commissionable_amount,
+        totalSales,
+        netPayout,
+        deleveries,
+        cancelledOrders,
+        deductions,
+      },
+    });
+    console.log("*****************--------------------********************");
+    return {
+      previousDayRevenue: {
+        isDataPresent: previousDayRevenue === undefined ? false : true,
+        previousDayRevenue:
+          previousDayRevenue === undefined ? null : previousDayRevenue,
+      },
+      financialData: {
+        isDataPresent: true,
+        totalSales,
+        netPayout,
+        deleveries,
+        cancelledOrders,
+        deductions,
+      },
+    };
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+module.exports = {
+  revenueScoreFromMongoDB,
+  getPreviousDaySales,
+  revenuDataOfPreviousMonth,
+};

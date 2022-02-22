@@ -67,7 +67,7 @@ function RequiredAuth({ children }) {
       dispatch(isLoading(true));
       // ? To identify if the slected option is week or month
       const tempMonthMap = {
-        // ? we have prev day sales in all colleaction but, if ravenue pagew is
+        // ? we have prev day sales in all collection but, if revenue page is
         // ? reloaded then we have to fetch data from api again
         "Previous Day": "week",
         "This Week": "week",
@@ -93,7 +93,7 @@ function RequiredAuth({ children }) {
       };
 
       console.log(
-        "test -1:",
+        "test-1:",
         tempNumberMap["This Month"],
         resultType,
         tempNumberMap[resultType]

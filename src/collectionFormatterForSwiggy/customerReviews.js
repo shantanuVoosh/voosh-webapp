@@ -11,14 +11,14 @@ const customerReviewsMongoDBData = async (
   // startDate,
   // endDate
 ) => {
-  let feedbackQuery = {};
+  let weeklyReviewQuery = {};
   let allFeedbacksQuery = {};
   let ordersPerRatingQuery = {};
   let customerRatingsQuery = {};
 
   // ? Query for week
   if (resultType === "week") {
-    feedbackQuery = {
+    weeklyReviewQuery = {
       swiggy_res_id: parseInt(res_id),
       week_no: parseInt(number),
       sum: { $gt: 0 },
@@ -39,7 +39,7 @@ const customerReviewsMongoDBData = async (
   }
   // ? Query for month
   else if (resultType === "month") {
-    feedbackQuery = {
+    weeklyReviewQuery = {
       swiggy_res_id: parseInt(res_id),
       month_no: parseInt(number),
       sum: { $gt: 0 },
@@ -77,7 +77,7 @@ const customerReviewsMongoDBData = async (
       .collection("swiggy_weekly_review_products")
       .aggregate([
         {
-          $match: feedbackQuery,
+          $match: weeklyReviewQuery,
         },
         { $sort: { sum: -1 } },
       ])
@@ -88,7 +88,7 @@ const customerReviewsMongoDBData = async (
       .collection("swiggy_weekly_review_products")
       .aggregate([
         {
-          $match: feedbackQuery,
+          $match: weeklyReviewQuery,
         },
         {
           $lookup: {
@@ -121,7 +121,7 @@ const customerReviewsMongoDBData = async (
       ])
       .toArray();
 
-    // ? For All Feedbacks
+    // ? For All rEVIEWS
     const allFeedbacks = await db
       .collection("swiggy_feedback_products")
       .aggregate([

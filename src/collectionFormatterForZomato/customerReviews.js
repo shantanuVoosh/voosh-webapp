@@ -11,13 +11,19 @@ const customerReviewsMongoDBData = async (
   endDate,
   year
 ) => {
-  let feedbackQuery = {};
+  let weeklyReviewQuery = {};
   let allFeedbacksQuery = {};
   let ordersPerRatingQuery = {};
   let customerRatingsQuery = {};
 
   // ? Query for week
   if (resultType === "week") {
+    weeklyReviewQuery = {
+      swiggy_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      sum: { $gt: 0 },
+      year_no: parseInt(year),
+    };
     ordersPerRatingQuery = {
       zomato_res_id: `${res_id}`,
       week_no: parseInt(number),
@@ -30,6 +36,12 @@ const customerReviewsMongoDBData = async (
 
   // ? Query for month
   else if (resultType === "month") {
+    weeklyReviewQuery = {
+      swiggy_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+      sum: { $gt: 0 },
+      year_no: parseInt(year),
+    };
     ordersPerRatingQuery = {
       zomato_res_id: `${res_id}`,
       month_no: parseInt(number),
@@ -51,6 +63,16 @@ const customerReviewsMongoDBData = async (
       useNewUrlParser: true,
     });
     const db = client.db(documentName);
+
+    const reviewOfProducts = await db
+      .collection("zomato_weekly_review_products")
+      .aggregate([
+        {
+          $match: weeklyReviewQuery,
+        },
+        { $sort: { sum: -1 } },
+      ])
+      .toArray();
 
     // ? Customer Ratings
     const customerRatings = await db
@@ -97,9 +119,9 @@ const customerReviewsMongoDBData = async (
       ])
       .toArray();
 
-    // console.log("------******------");
-    // console.log("reviewOfProducts:", reviewOfProducts);
-    // console.log("------******------");
+    console.log("------******------");
+    console.log("reviewOfProducts:", reviewOfProducts);
+    console.log("------******------");
     // console.log("allFeedbacks:", allFeedbacks);
     // console.log("------******------");
     // console.log("customerRatings:", customerRatings);
@@ -121,6 +143,7 @@ const customerReviewsMongoDBData = async (
               "1_star": 0,
               total_ratings: 0,
             },
+      reviewOfProducts: reviewOfProducts,
     };
   } catch (err) {
     console.log(
@@ -147,7 +170,8 @@ const customerReviewsDataFormatter = async (
       endDate,
       year
     );
-    const { ordersPerRating, customerRatings, dataPresent } = data;
+    const { ordersPerRating, customerRatings, dataPresent, reviewOfProducts } =
+      data;
 
     if (dataPresent === false) {
       return {
@@ -194,6 +218,7 @@ const customerReviewsDataFormatter = async (
       all_reviews: [],
       negative: [],
       reviewOfProductsSales: [],
+      reviewOfProducts: reviewOfProducts,
     };
 
     return customerReviews;

@@ -26,40 +26,6 @@ const NotificationModel = {
   "Registration Successful": `You have now successfully entered all details! Sit tight and Relax and we'll analyze and provide you restaurant recommendations!`,
 };
 
-router.post("/user-save-details", async (req, res) => {
-  // ?Main Collection
-  // ? Test Collection
-  const newCollectionName = "Onboard_New_Users_UAT";
-
-  const { name, phone, email, restaurant_name } = req.body;
-
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-
-    const user = await client
-      .db(documentName)
-      .collection(newCollectionName)
-      .insertOne({
-        name,
-        phone,
-        email,
-        restaurant_name,
-        form_submit_date: new Date(),
-      });
-
-    return res.json({
-      status: "success",
-      message: `User Basic Details Saved Successfully!`,
-    });
-  } catch (err) {
-    res.json({
-      status: "error",
-      message: `Error while signup :${err}`,
-    });
-  }
-});
 
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
@@ -106,6 +72,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     console.log("z_res_id: ", z_res_id);
     console.log("s_res_id: ", s_res_id);
 
+    // Todo: check before removing
     // ? for safari only
     if (number === null && resultType === "month") {
       var d = new Date(date);
@@ -121,6 +88,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
 
     let swiggyData;
     let zomatoData;
+
 
     // ?if client is set, then we are selection new restaurant
     // ?if not then it is running for the first time
@@ -1129,5 +1097,47 @@ router.get(
     }
   }
 );
+
+router.get("/revenue", async (req, res) => {
+  const res_id = 56834;
+  const client = await MongoClient.connect(VooshDB, {
+    useNewUrlParser: true,
+  });
+  const db = client.db(documentName);
+
+  // ? Previous month Swiggy Revenue
+  const zomatoReconsilation = await db
+    .collection("zomato_revenue_reconsilation")
+    .findOne({
+      res_id: parseInt(res_id),
+      // month_no: customMonthNumber,
+      // year_no: customYearNumber,
+    });
+
+  // ? RDC or total Cancellation for previous month
+  const rdc = await db
+    .collection("zomato_rdc_products")
+    .aggregate([
+      {
+        $match: {
+          zomato_res_id: parseInt(res_id),
+          month_no: parseInt(1),
+        },
+      },
+      {
+        $group: {
+          _id: "$zomato_res_id",
+          rdc_score: { $sum: "$rdc" },
+        },
+      },
+    ])
+    .toArray();
+
+  res.json({
+    status: "success",
+    zomatoReconsilation,
+    rdc,
+  });
+});
 
 module.exports = router;
