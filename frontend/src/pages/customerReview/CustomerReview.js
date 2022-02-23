@@ -82,12 +82,23 @@ const CustomerReviews = () => {
         <div className="negative-reviews">
           {negative.length > 0
             ? negative.map((item, index) => {
-                const { item_name, issues } = item;
+                const {
+                  item_name,
+                  issues,
+                  item_total_order,
+                  item_total_reviewed,
+                  item_total_rated,
+                  item_sales,
+                } = item;
                 return (
                   <NegativeReviewCard
                     key={index}
                     name={item_name}
                     issues={issues}
+                    totalOrders={item_total_order}
+                    totalReviewed={item_total_reviewed}
+                    totalRated={item_total_rated}
+                    sales={item_sales}
                   />
                 );
               })

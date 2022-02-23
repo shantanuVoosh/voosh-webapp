@@ -19,7 +19,7 @@ const customerReviewsMongoDBData = async (
   // ? Query for week
   if (resultType === "week") {
     weeklyReviewQuery = {
-      swiggy_res_id: parseInt(res_id),
+      zomato_res_id: parseInt(res_id),
       week_no: parseInt(number),
       sum: { $gt: 0 },
       year_no: parseInt(year),
@@ -37,7 +37,7 @@ const customerReviewsMongoDBData = async (
   // ? Query for month
   else if (resultType === "month") {
     weeklyReviewQuery = {
-      swiggy_res_id: parseInt(res_id),
+      zomato_res_id: parseInt(res_id),
       month_no: parseInt(number),
       sum: { $gt: 0 },
       year_no: parseInt(year),

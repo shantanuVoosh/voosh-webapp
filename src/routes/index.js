@@ -1139,16 +1139,16 @@ router.get("/revenue", async (req, res) => {
 });
 
 router.get("/test-review", async (req, res) => {
-  const res_id = 256302;
-  const number = 2;
-  const ordersPerRatingQuery = {
-    swiggy_res_id: parseInt(res_id),
-    month_no: parseInt(number),
-  };
+  const res_id = 56834;
+  const number = 1;
+  // const ordersPerRatingQuery = {
+  //   zomato_res_id: parseInt(res_id),
+  //   month_no: parseInt(number),
+  // };
   const weeklyReviewQuery = {
-    swiggy_res_id: parseInt(res_id),
+    zomato_res_id: parseInt(res_id),
     month_no: parseInt(number),
-    sum: { $gt: 0 },
+    // sum: { $gt: 0 },
   };
   try {
     const client = await MongoClient.connect(VooshDB, {
@@ -1156,42 +1156,11 @@ router.get("/test-review", async (req, res) => {
     });
     const db = client.db(documentName);
 
-    // ? For Feedback Comments
-    // * sort by problem i.e. sum
     const reviewOfProducts = await db
-      .collection("swiggy_weekly_review_products")
+      .collection("zomato_weekly_review_products")
       .aggregate([
         {
           $match: weeklyReviewQuery,
-        },
-        {
-          $lookup: {
-            from: "swiggy_item_sales_products",
-            pipeline: [
-              // ? $match: { swiggy_res_id: 256302, week_no: 52 }
-              { $match: ordersPerRatingQuery },
-              {
-                $group: {
-                  _id: "item_sales",
-                  item_sales: { $sum: "$item_income" },
-                },
-              },
-            ],
-            localField: "item_name",
-            foreignField: "item_name",
-            as: "itemwise_sales",
-          },
-        },
-        {
-          $unwind: {
-            path: "$itemwise_sales",
-          },
-        },
-        {
-          $sort: {
-            // "itemwise_sales.item_sales": -1,
-            sum: -1,
-          },
         },
 
         // { $sort: { sum: -1 } },

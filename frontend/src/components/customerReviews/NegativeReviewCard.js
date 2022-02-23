@@ -1,7 +1,9 @@
 import React from "react";
 import { IoAlertCircleSharp } from "react-icons/io5";
 
-const NegativeReviewCard = ({ name, issues }) => {
+const NegativeReviewCard = (props) => {
+  const { name, issues, totalOrders, totalReviewed, totalRated, sales } = props;
+
   console.log(issues);
   return (
     <div className="review-card__negative">
