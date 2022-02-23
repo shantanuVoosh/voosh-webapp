@@ -329,18 +329,15 @@ const NewSignupA = () => {
             cookie.remove(VOOSH_APP_PHONE);
             dispatch(loginSuccess(response.token));
             const restaurant = response.restaurantDetails;
-            // listing_id: "P0081"
-            // restaurant_name: "Chettinad Food House"
-            // swiggy_res_id: 256302
-            // zomato_res_id: 56834
-            dispatch(
-              setListingIdWithRestaurantDetails({
-                listingID: restaurant.listing_id,
-                swiggy_res_id: restaurant.swiggy_res_id,
-                zomato_res_id: restaurant.zomato_res_id,
-                restaurant_name: restaurant.restaurant_name,
-              })
-            );
+         
+            // dispatch(
+            //   setListingIdWithRestaurantDetails({
+            //     listingID: restaurant.listing_id,
+            //     swiggy_res_id: restaurant.swiggy_res_id,
+            //     zomato_res_id: restaurant.zomato_res_id,
+            //     restaurant_name: restaurant.restaurant_name,
+            //   })
+            // );
             navigate("/dashboard");
           }
 

@@ -1,22 +1,13 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
 
-export const fetchAllData = ({
-  data,
-  res_name,
-  restaurantList = [],
-  res_id,
-  date,
-  allRestaurants,
-}) => {
-  // console.log("res name", res_name);
+export const fetchAllData = (props) => {
+  const { data, res_name, date, allRestaurants } = props;
   return {
     type: ActionTypes.FETCH_ALL_DATA,
     payload: {
       data,
       res_name,
-      restaurantList,
       allRestaurants,
-      res_id,
       date,
     },
   };
@@ -63,7 +54,7 @@ export const setLSProductIndex = (index) => {
 
 // ? Set Nav Buttons Sales
 export const setSalesProductIndex = (index) => {
-  console.log('setSalesProductIndex new index', index)
+  // console.log('setSalesProductIndex new index', index)
   return {
     type: ActionTypes.SET_SALES_PRODUCT_INDEX,
     payload: {

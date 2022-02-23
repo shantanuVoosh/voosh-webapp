@@ -237,9 +237,7 @@ const FinancialDashBoard = () => {
               value={deleveries}
               info={"Total Order successfuly delivered by Swiggy"}
               color={"#27AE60"}
-              isDataPresent={
-                sales_currentProductIndex !== 1 ? isDataPresent : false
-              }
+              isDataPresent={isDataPresent}
             />
             <GrayCard
               name={"Cancelled Orders"}

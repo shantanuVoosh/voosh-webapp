@@ -14,6 +14,8 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
     oh_currentProductIndex,
     ls_currentProductIndex,
     sales_currentProductIndex,
+    swiggy_res_id: swiggy_res_id_inside_state,
+    zomato_res_id: zomato_res_id_inside_state,
   } = useSelector((state) => state.data);
 
   const [productIndex, setProductIndex] = React.useState(-1);
@@ -74,12 +76,38 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
           key={index}
           ref={navBtnRef[index]}
           className={
+            // Todo: Old Check
+            // isSalesPage === true
+            //   ? "nav-btn-white" +
+            //     (index === productIndex ? " active-white" : "")
+            //   : "nav-btn" + (index === productIndex ? " active" : "")
+
+            // ?new Checking
             isSalesPage === true
-              ? "nav-btn-white" +
-                (index === productIndex ? " active-white" : "")
-              : "nav-btn" + (index === productIndex ? " active" : "")
+              ? // ! Sales
+                index === 0 && swiggy_res_id_inside_state === null
+                ? "nav-btn-white nav-btn-disable-white"
+                : index === 1 && zomato_res_id_inside_state === null
+                ? "nav-btn-white nav-btn-disable-white"
+                : (index === productIndex ? " active-white" : "") + " nav-btn-white"
+              : // ! this for common for all the pages except sales
+              index === 0 && swiggy_res_id_inside_state === null
+              ? "nav-btn nav-btn-disable"
+              : index === 1 && zomato_res_id_inside_state === null
+              ? "nav-btn nav-btn-disable"
+              : (index === productIndex ? " active" : "") + " nav-btn"
           }
-          onClick={(e) => handelChange(index)}
+          onClick={(e) => {
+            if (
+              (index === 0 && swiggy_res_id_inside_state === null) ||
+              (index === 1 && zomato_res_id_inside_state === null)
+            ) {
+              return;
+            }
+            console.log("click index", index);
+
+            handelChange(index);
+          }}
           // disabled={index !== 0}
         >
           {button}

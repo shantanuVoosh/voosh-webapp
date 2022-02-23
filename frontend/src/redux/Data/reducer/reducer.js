@@ -7,7 +7,6 @@ const initialState = {
   // cuz no at first we don't have any data
   currentProductIndex: -1,
   resultType: "This Month",
-  restaurantList: [],
   // Todo new value for test
   allRestaurants: [],
   phone: "",
@@ -15,7 +14,6 @@ const initialState = {
   zomato_res_id: "",
   listingID: "",
   isLoading: false,
-  res_id: "",
   date: getCurrentMonthDate(),
   startDate: "",
   endDate: "",
@@ -41,7 +39,7 @@ export const dataReducer = (state = initialState, action) => {
   } = ActionTypes;
   const { type, payload } = action;
 
-  console.log(payload, "payload");
+  // console.log(payload, "payload");
 
   switch (type) {
     case FETCH_ALL_DATA:
@@ -50,9 +48,7 @@ export const dataReducer = (state = initialState, action) => {
         data: payload.data,
         res_name: payload.res_name,
         currentProductIndex: 0,
-        restaurantList: payload.restaurantList,
         allRestaurants: payload.allRestaurants,
-        res_id: payload.res_id,
         date: payload.date,
         oh_currentProductIndex: 0,
         ls_currentProductIndex: 0,
@@ -89,7 +85,6 @@ export const dataReducer = (state = initialState, action) => {
         data: [],
         res_name: "",
         currentProductIndex: -1,
-        restaurantList: [],
         allRestaurants: [],
         phone: "",
         swiggy_res_id: "",
@@ -97,7 +92,6 @@ export const dataReducer = (state = initialState, action) => {
         listingID: "",
         resultType: "This Month",
         isLoading: false,
-        res_id: "",
         date: "",
         startDate: "",
         endDate: "",

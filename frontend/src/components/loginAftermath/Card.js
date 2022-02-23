@@ -22,6 +22,8 @@ const Card = ({ iconName, name, info, sectionName }) => {
     sales_currentProductIndex,
     startDate,
     endDate,
+    swiggy_res_id: swiggy_res_id_inside_state,
+    zomato_res_id: zomato_res_id_inside_state,
   } = useSelector((state) => state.data);
 
   const dispatch = useDispatch();
@@ -142,9 +144,24 @@ const Card = ({ iconName, name, info, sectionName }) => {
               <span
                 key={index}
                 ref={navBtnRef[index]}
-                className={"btn" + (index === Navindex ? " active" : "")}
-                onClick={(e) => handelChange(index)}
-                disabled={index !== 0}
+                className={
+                  index === 0 && swiggy_res_id_inside_state === null
+                    ? "nav-btn nav-btn-disable"
+                    : index === 1 && zomato_res_id_inside_state === null
+                    ? "nav-btn nav-btn-disable"
+                    : (index === Navindex ? " active" : "") + " nav-btn"
+                }
+                onClick={(e) => {
+                  if (
+                    (index === 0 && swiggy_res_id_inside_state === null) ||
+                    (index === 1 && zomato_res_id_inside_state === null)
+                  ) {
+                    return;
+                  }
+                  console.log("click index", index);
+
+                  handelChange(index);
+                }}
               >
                 {button}
               </span>

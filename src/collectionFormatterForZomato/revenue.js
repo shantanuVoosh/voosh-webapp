@@ -175,6 +175,22 @@ async function revenuDataOfPreviousMonth(res_id) {
       ])
       .toArray();
 
+    const revenue_deliver = await db
+      .collection("zomato_revenue_products")
+      .aggregate([
+        {
+          $match: {
+            zomato_res_id: parseInt(res_id),
+            month_no: parseInt(customMonthNumber),
+          },
+        },
+        {
+          $count: "zomato_delivery_orders",
+        },
+      ])
+      .toArray();
+
+
     // ? If data is not available send this
     if (zomatoReconsilation === null || zomatoReconsilation === undefined) {
       return {
@@ -220,7 +236,7 @@ async function revenuDataOfPreviousMonth(res_id) {
 
     // const deleveries = zomatoReconsilation["number_of_orders"];
     // ! temp use this
-    const deleveries = 0;
+    const deleveries = revenue_deliver[0]?.zomato_delivery_orders;
 
     const cancelledOrders = totalCancellation ? totalCancellation : 0;
 

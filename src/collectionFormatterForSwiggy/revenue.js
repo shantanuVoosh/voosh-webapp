@@ -100,7 +100,7 @@ const revenueScoreFromMongoDB = async (
     client.close();
     return {
       revenue_score: revenue[0]?.daily_sub_total,
-      
+
       daily_sub_total: revenue[0]?.daily_sub_total,
       daily_package_charge: revenue[0]?.daily_package_charge,
       daily_total_tax: revenue[0]?.daily_total_tax,
@@ -137,6 +137,8 @@ const getPreviousDaySales = async (res_id) => {
     console.log("*****************--------------------********************");
     console.log("Swiggy Previous Day Revenue - (Swiggy  Previous Day)");
     console.log("Previous Date: ", previousDay12HoursAgo());
+    // Todo
+    // ! Change this
     console.log("PreviousDayRevenue: ", previousDayRevenue[0]?.final_revenue);
     console.log("*****************--------------------********************");
 

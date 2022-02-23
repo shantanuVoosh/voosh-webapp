@@ -51,14 +51,14 @@
 
   &:first-child {
     margin-right: 1rem;
-    &:hover {
-      color: $color-black-1;
-    }
+    // &:hover {
+    //   color: $color-black-1;
+    // }
   }
 
-  &:hover {
-    color: $color-black-1;
-  }
+  // &:hover {
+  //   color: $color-black-1;
+  // }
 }
 
 .nav-btn::after {
@@ -73,6 +73,23 @@
   background: linear-gradient(to right, $color-primary-1, $color-primary-2);
 }
 
+.nav-btn-disable {
+}
+.nav-btn-disable::before {
+  content: "Not Available";
+  position: absolute;
+  top: 15px;
+  left: 0%;
+  width: 0%;
+  width: 100%;
+  height: auto;
+  font-size: 6px;
+  font-weight: 200;
+  background: transparent;
+  color: $red;
+  text-align: center;
+}
+
 .active {
   color: $color-black-1;
   &.nav-btn::after {
@@ -81,12 +98,12 @@
     opacity: 1;
   }
 }
-// ?coming soon remove it when zomato is available
-.nav-btn:hover::after {
-  cursor: pointer;
-  width: 100%;
-  opacity: 1;
-}
+// // ?coming soon remove it when zomato is available
+// .nav-btn:hover::after {
+//   cursor: pointer;
+//   width: 100%;
+//   opacity: 1;
+// }
 
 // ! for revenue dashboard
 .nav-btn-white {
@@ -103,14 +120,14 @@
 
   &:first-child {
     margin-right: 1rem;
-    &:hover {
-      color: $color-white-1;
-    }
+    // &:hover {
+    //   color: $color-white-1;
+    // }
   }
 
-  &:hover {
-    color: $color-white-1;
-  }
+  // &:hover {
+  //   color: $color-white-1;
+  // }
 }
 
 .nav-btn-white::after {
@@ -124,6 +141,23 @@
   transition: all ease-in-out 0.3s;
   border-radius: 10px;
   background: linear-gradient(to right, $color-white-1, $color-white-2);
+}
+
+.nav-btn-disable-white {
+}
+.nav-btn-disable-white::before {
+  content: "Not Available";
+  position: absolute;
+  top: 17px;
+  left: 0%;
+  width: 0%;
+  width: 100%;
+  height: auto;
+  font-size: 6px;
+  font-weight: 200;
+  background: transparent;
+  color: $color-white-1;
+  text-align: center;
 }
 
 .active-white {

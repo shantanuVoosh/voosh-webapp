@@ -26,7 +26,6 @@ const NotificationModel = {
   "Registration Successful": `You have now successfully entered all details! Sit tight and Relax and we'll analyze and provide you restaurant recommendations!`,
 };
 
-
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
   console.log("---------- <Get All Data Start> ----------------");
@@ -88,7 +87,6 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
 
     let swiggyData;
     let zomatoData;
-
 
     // ?if client is set, then we are selection new restaurant
     // ?if not then it is running for the first time
@@ -1138,6 +1136,76 @@ router.get("/revenue", async (req, res) => {
     zomatoReconsilation,
     rdc,
   });
+});
+
+router.get("/test-review", async (req, res) => {
+  const res_id = 256302;
+  const number = 2;
+  const ordersPerRatingQuery = {
+    swiggy_res_id: parseInt(res_id),
+    month_no: parseInt(number),
+  };
+  const weeklyReviewQuery = {
+    swiggy_res_id: parseInt(res_id),
+    month_no: parseInt(number),
+    sum: { $gt: 0 },
+  };
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    // ? For Feedback Comments
+    // * sort by problem i.e. sum
+    const reviewOfProducts = await db
+      .collection("swiggy_weekly_review_products")
+      .aggregate([
+        {
+          $match: weeklyReviewQuery,
+        },
+        {
+          $lookup: {
+            from: "swiggy_item_sales_products",
+            pipeline: [
+              // ? $match: { swiggy_res_id: 256302, week_no: 52 }
+              { $match: ordersPerRatingQuery },
+              {
+                $group: {
+                  _id: "item_sales",
+                  item_sales: { $sum: "$item_income" },
+                },
+              },
+            ],
+            localField: "item_name",
+            foreignField: "item_name",
+            as: "itemwise_sales",
+          },
+        },
+        {
+          $unwind: {
+            path: "$itemwise_sales",
+          },
+        },
+        {
+          $sort: {
+            // "itemwise_sales.item_sales": -1,
+            sum: -1,
+          },
+        },
+
+        // { $sort: { sum: -1 } },
+      ])
+      .toArray();
+
+    res.json({
+      reviewOfProducts,
+    });
+  } catch (err) {
+    res.json({
+      err: err,
+    });
+  }
 });
 
 module.exports = router;

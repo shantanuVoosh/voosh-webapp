@@ -79,7 +79,37 @@ const customerReviewsMongoDBData = async (
         {
           $match: weeklyReviewQuery,
         },
-        { $sort: { sum: -1 } },
+        {
+          $lookup: {
+            from: "swiggy_item_sales_products",
+            pipeline: [
+              // ? $match: { swiggy_res_id: 256302, week_no: 52 }
+              { $match: ordersPerRatingQuery },
+              {
+                $group: {
+                  _id: "item_sales",
+                  item_sales: { $sum: "$item_income" },
+                },
+              },
+            ],
+            localField: "item_name",
+            foreignField: "item_name",
+            as: "itemwise_sales",
+          },
+        },
+        {
+          $unwind: {
+            path: "$itemwise_sales",
+          },
+        },
+        {
+          $sort: {
+            // "itemwise_sales.item_sales": -1,
+            sum: -1,
+          },
+        },
+
+        // { $sort: { sum: -1 } },
       ])
       .toArray();
 
@@ -291,6 +321,16 @@ const customerReviewsDataFormatter = async (
               packaging,
               price,
               delivery_n_time,
+
+              // Todo: for orders
+              itemwise_sales: { item_sales },
+
+              weekly_total_order,
+              weekly_reviewed,
+              weekly_total_rated,
+              monthly_total_order,
+              monthly_reviewed,
+              monthly_total_rated,
             } = item;
             const food_negative_review_items = [
               {
@@ -355,8 +395,20 @@ const customerReviewsDataFormatter = async (
               },
             ].sort((a, b) => (a.value > b.value ? -1 : 1));
 
+            const item_total_order =
+              resultType === "week" ? weekly_total_order : monthly_total_order;
+            const item_total_reviewed =
+              resultType === "week" ? weekly_reviewed : monthly_reviewed;
+
+            const item_total_rated =
+              resultType === "week" ? weekly_total_rated : monthly_total_rated;
+
             return {
               item_name: item_name,
+              item_total_order: item_total_order,
+              item_total_reviewed: item_total_reviewed,
+              item_total_rated: item_total_rated,
+              item_sales: item_sales,
               issues: [...food_negative_review_items.slice(0, 3)],
             };
           });

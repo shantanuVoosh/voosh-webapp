@@ -9,6 +9,10 @@ import {
   setRestaurantNameAndId,
   fetchAllData,
   setResultType,
+  setListingIdWithRestaurantDetails,
+  setOhProductIndex,
+  setLSProductIndex,
+  setSalesProductIndex,
 } from "../redux/Data/actions/actions";
 import cookie from "react-cookies";
 import {
@@ -39,7 +43,7 @@ function RequiredAuth({ children }) {
     useSelector((state) => state.auth);
   const resultType = useSelector((state) => state.data.resultType);
   const res_name = useSelector((state) => state.data.res_name);
-  const res_id = useSelector((state) => state.data.res_id);
+
   const {
     startDate,
     endDate,
@@ -82,8 +86,8 @@ function RequiredAuth({ children }) {
         "This Week": getWeekNumberFromDate(date),
         "Previous Week": getWeekNumberFromDate(date),
         // "This Month": getMonthNumberFromDate(date),
-        "This Month": ((date)=>{
-          console.log(date)
+        "This Month": ((date) => {
+          console.log(date);
           var d = new Date(date);
           var month = d.getMonth() + 1;
           return month;
@@ -106,7 +110,6 @@ function RequiredAuth({ children }) {
         //? 1st time token will be null or undefined
         token: token,
         date: date,
-        client_res_id: res_id,
         number: tempNumberMap[resultType],
         resultType: tempMonthMap[resultType],
         startDate: startDate ? startDate : "",
@@ -122,8 +125,6 @@ function RequiredAuth({ children }) {
         const {
           api_data,
           res_name: name,
-          restaurantList,
-          res_id: id,
           api_data2,
           newRestaurantList,
         } = response.data;
@@ -131,33 +132,76 @@ function RequiredAuth({ children }) {
         console.log(newRestaurantList, "new list");
         if (currentProductIndex === -1) {
           console.log("call data with res_name and res_id");
+          console.log("response form api on 1st call");
+
+          // ? grab the 1st restaurant details from the list
+          // ? it will contain atleast one restaurant
+
+          // listing_id: "P0051"
+          // restaurant_name: "CHETTINAD FOOD HOUSE"
+          // swiggy_res_id: 256302
+          // swiggy_run_date: "31-01-2022"
+          // zomato_res_id: 56834
+
+          const firstRestaurant = newRestaurantList[0];
+
+          const {
+            listing_id,
+            restaurant_name,
+            swiggy_res_id: response_swiggy_res_id,
+            zomato_res_id: response_zomato_res_id,
+          } = firstRestaurant;
+
           dispatch(
             fetchAllData({
               data: api_data2,
               res_name: name,
-              restaurantList: restaurantList,
               allRestaurants: newRestaurantList,
-              res_id: id,
               date: date,
             })
           );
+
+          dispatch(
+            setListingIdWithRestaurantDetails({
+              listing_id,
+              restaurant_name,
+              swiggy_res_id: response_swiggy_res_id,
+              zomato_res_id: response_zomato_res_id,
+            })
+          );
+
+          // ! which ever is available will be shown first
+          if (response_swiggy_res_id !== null) {
+            dispatch(setOhProductIndex(0));
+            dispatch(setLSProductIndex(0));
+            dispatch(setSalesProductIndex(0));
+          } else {
+            dispatch(setOhProductIndex(1));
+            dispatch(setLSProductIndex(1));
+            dispatch(setSalesProductIndex(1));
+          }
+
+          dispatch(isLoading(false));
         }
         // ! only restaurant data will change or dispatch
         else {
           console.log("only data");
+          console.log(response.data, "response form api on 2nd call");
           dispatch(fetchData({ data: api_data2, date }));
-          // dispatch(
-          //   fetchAllData({
-          //     data: api_data2,
-          //     res_name: name,
-          //     restaurantList: restaurantList,
-          //     allRestaurants: newRestaurantList,
-          //     res_id: id,
-          //     date: date,
-          //   })
-          // );
+          console.log(zomato_res_id, swiggy_res_id);
+          // ! which ever is available will be shown first
+          if (swiggy_res_id !== null) {
+            dispatch(setOhProductIndex(0));
+            dispatch(setLSProductIndex(0));
+            dispatch(setSalesProductIndex(0));
+          } else {
+            dispatch(setOhProductIndex(1));
+            dispatch(setLSProductIndex(1));
+            dispatch(setSalesProductIndex(1));
+          }
+
+          dispatch(isLoading(false));
         }
-        dispatch(isLoading(false));
       }
       // *if token expired, login will fail, will redirect to login page and relogin
       else {
@@ -176,8 +220,6 @@ function RequiredAuth({ children }) {
       dispatch(isLoading(false));
     }
   }, [
-    token,
-    dispatch,
     resultType,
     zomato_res_id,
     swiggy_res_id,
@@ -191,7 +233,7 @@ function RequiredAuth({ children }) {
     if (isAuthenticated && token) {
       getDataFromApi();
     }
-  }, [isAuthenticated, token, getDataFromApi, resultType, res_id]);
+  }, [isAuthenticated, token, getDataFromApi, resultType]);
 
   // return isAuthenticated ? (
   //   children
