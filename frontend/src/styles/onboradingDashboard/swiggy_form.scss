@@ -1,0 +1,207 @@
+.swiggy-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+  }
+  
+  .swiggy-form__page-btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #feece9;
+    padding: 1rem 1rem 0 1rem;
+  
+    .previous{
+      color: $color-grey-3;
+    }
+    .close{
+      color: $color-grey-3;
+    }
+  }
+  
+  // ?Header
+  .swiggy-form__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #feece9;
+    padding: 1rem 1rem 1rem 1rem;
+    border-bottom-right-radius: 50px;
+  
+    &--text {
+      color: #e5744f;
+      h2 {
+        font-weight: 400;
+        font-size: 30px;
+        span {
+          font-size: 30px;
+          font-weight: 700;
+        }
+      }
+      p {
+        color: $color-grey-4;
+      }
+    }
+  
+    &--logo {
+      position: relative;
+      height: 100%;
+      img {
+        margin-bottom: -2.8rem;
+        height: 100%;
+      }
+    }
+  }
+  
+  // ?Form or body
+  .swiggy-form__body {
+    flex: 1;
+    width: 100%;
+    padding: 0rem 1rem;
+    display: flex;
+    flex-direction: column;
+  
+    margin-top: 3rem;
+  
+    &--heading {
+      margin-bottom: 1rem;
+      font-size: 25px;
+      font-weight: 700;
+      color: $color-grey-6;
+    }
+  
+    &--sub-heading {
+      margin-bottom: 0.5rem;
+      color: $color-grey-6;
+      display: flex;
+      .text {
+        // width: 100%;
+        // margin-right: 2rem;
+      }
+      .icon {
+        display: none;
+        width: 100%;
+        max-width: 50px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+      }
+    }
+  
+    // *Inputs
+    &--input-feild {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+  
+      input[type="text"] {
+        font-size: 18px;
+        line-height: 14px;
+        font-weight: 700;
+      }
+  
+      .form-input {
+        width: 100%;
+        margin-top: 0.8rem;
+        padding: 1.3rem 1rem;
+        border-radius: 5px;
+        border: none;
+        background-color: $color-white-2;
+        font-size: 18px;
+  
+        &.phone-number {
+          width: 75%;
+          padding: 1rem;
+          border-radius: $radius-1;
+          border: none;
+          background-color: $color-white-2;
+          font-size: 18px;
+        }
+  
+        &::placeholder {
+          color: $color-grey-3;
+          font-size: 16px;
+          font-weight: 400;
+        }
+      }
+    }
+    // *Checkbox
+    &--check-box {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+  
+      .text {
+        font-size: $text-medium;
+        font-weight: 400;
+        color: $color-grey-4;
+        margin-right: 1rem;
+        font-size: 14px;
+        // color: $color-greyblue-2;
+      }
+      .box-feild {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 0.5rem;
+        font-size: 14px;
+      }
+    }
+  
+    &--skip-btn {
+      display: flex;
+      align-items: center;
+    }
+  
+    // * Submit button
+    &--btn {
+      margin-top: auto;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 2rem;
+  
+      .btn {
+        max-width: 400px;
+        width: 90%;
+        // background: linear-gradient(
+        //   to right,
+        //   $color-primary-orange-red,
+        //   $color-primary-2
+        // );
+        background-color: #e5744f;
+        color: $color-white-1;
+        border: none;
+        padding: 1.1rem 1.2rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0px 9px 17px rgb(255 175 82 / 30%);
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        &.btn-disabled {
+          background: $color-white-4;
+          color: $color-white-1;
+        }
+      }
+      .contact-us {
+        color: $color-grey-5;
+        font-size: 16px;
+        .text {
+          font-weight: 400;
+          margin-left: 0.5rem;
+          color: $color-grey-4;
+        }
+        .text-bold {
+          font-weight: 700;
+        }
+      }
+    }
+  }
+  

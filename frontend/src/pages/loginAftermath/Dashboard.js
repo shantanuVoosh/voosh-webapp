@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../../components/loginAftermath/Card";
+import MiniCard from "../../components/loginAftermath/MiniCard";
 import { BsBagCheckFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
@@ -46,12 +47,27 @@ const Dashboard = () => {
           sectionName={"Operation Health"}
         />
         {/* //?List Score */}
-        <Card
+        {/* <Card
           iconName={"bar"}
           name={"Listing Score"}
           info={"Visibility performance on Swiggy and Zomato"}
           sectionName={"Listing Score"}
-        />
+        /> */}
+
+        <div className="mini-cards-container">
+          <MiniCard
+            iconName={"bar"}
+            name={"Listing Score"}
+            info={"Visibility performance on Swiggy and Zomato"}
+            sectionName={"Listing Score"}
+          />
+          <MiniCard
+            iconName={"bar"}
+            name={"Customer Reviews"}
+            info={"Visibility performance on Swiggy and Zomato"}
+            sectionName={"Customer Reviews"}
+          />
+        </div>
       </div>
       <div className="dashboard-bottom">
         <div className="dashboard-bottom__heading">

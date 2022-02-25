@@ -63,6 +63,16 @@ export const setSalesProductIndex = (index) => {
   };
 };
 
+export const setCustomerReviewsProductIndex = (index) => {
+  // console.log('setSalesProductIndex new index', index)
+  return {
+    type: ActionTypes.SET_CUSTOMER_REVIEWS_INDEX,
+    payload: {
+      customer_reviews_currentProductIndex: index,
+    },
+  };
+};
+
 export const clearData = () => {
   console.log("clear data");
   return {

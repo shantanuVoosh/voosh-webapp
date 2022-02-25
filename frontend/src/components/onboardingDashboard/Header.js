@@ -106,6 +106,10 @@ const Header = ({
               <div className="list" onClick={() => changePage("swiggy-form")}>
                 Swiggy Form
               </div>
+              <Divider />
+              <div className="list" onClick={() => changePage("faq")}>
+                FAQ
+              </div>
               {/* <Divider />
               <div className="list is-disabled">Settings</div> */}
               {/* <Divider /> */}

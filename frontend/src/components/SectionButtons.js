@@ -1,10 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setCurrentProductIndex,
+  // setCurrentProductIndex,
   setOhProductIndex,
   setLSProductIndex,
   setSalesProductIndex,
+  setCustomerReviewsProductIndex,
 } from "../redux/Data/actions/actions";
 
 const SectionButtons = ({ sectionName, isSalesPage }) => {
@@ -14,6 +15,7 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
     oh_currentProductIndex,
     ls_currentProductIndex,
     sales_currentProductIndex,
+    customer_reviews_currentProductIndex,
     swiggy_res_id: swiggy_res_id_inside_state,
     zomato_res_id: zomato_res_id_inside_state,
   } = useSelector((state) => state.data);
@@ -38,11 +40,16 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
     else if (sectionName === "Sales") {
       setProductIndex(sales_currentProductIndex);
     }
+    // ! Customer Reviews
+    else if (sectionName === "Customer Reviews") {
+      setProductIndex(customer_reviews_currentProductIndex);
+    }
   }, [
     sectionName,
     oh_currentProductIndex,
     ls_currentProductIndex,
     sales_currentProductIndex,
+    customer_reviews_currentProductIndex,
   ]);
 
   const handelChange = (index) => {
@@ -51,6 +58,7 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
     // }
     console.log(sectionName, "sectionName");
 
+    // ! OH
     if (sectionName === "Operation Health") {
       dispatch(setOhProductIndex(index));
     }
@@ -61,6 +69,10 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
     // ! Sales
     else if (sectionName === "Sales") {
       dispatch(setSalesProductIndex(index));
+    }
+    // ! Customer Reviews
+    else if (sectionName === "Customer Reviews") {
+      dispatch(setCustomerReviewsProductIndex(index));
     }
 
     // dispatch(setCurrentProductIndex(index));
@@ -89,7 +101,8 @@ const SectionButtons = ({ sectionName, isSalesPage }) => {
                 ? "nav-btn-white nav-btn-disable-white"
                 : index === 1 && zomato_res_id_inside_state === null
                 ? "nav-btn-white nav-btn-disable-white"
-                : (index === productIndex ? " active-white" : "") + " nav-btn-white"
+                : (index === productIndex ? " active-white" : "") +
+                  " nav-btn-white"
               : // ! this for common for all the pages except sales
               index === 0 && swiggy_res_id_inside_state === null
               ? "nav-btn nav-btn-disable"

@@ -13,6 +13,7 @@ import CongratulationsPage from "./CongratulationsPage";
 import FindMore from "./FindMore";
 import SwiggyForm from "./SwiggyForm";
 import UserProfile from "./UserProfile";
+import FAQ from "./Faq";
 
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -28,11 +29,15 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const [dataSubmitted, setDataSubmitted] = React.useState(false);
   const [currentUserDetails, setCurrentUserDetails] = React.useState({
-    name: "",
     email: "",
     restaurantName: "",
     phoneNumber: parseInt("6008237257"),
+    email: "",
+    zomatoNumber: "",
+    swiggyNumber: "",
+    swiggyPassword: "",
   });
+
   const [userAllNotifications, setUserAllNotifications] = React.useState([]);
   // const [unSeenNotifications, setUnSeenNotifications] = React.useState(0);
   const [numberOfNotifications, setNumberOfNotifications] = React.useState(0);
@@ -45,15 +50,57 @@ const Dashboard = () => {
         token: temporaryToken,
       });
       console.log(response);
+      //   userDetails:
+      // email: "shanu@gmail.com"
+      // join_date: "2022-02-10T13:50:11.317Z"
+      // phone: 7008237257
+      // restaurant_name: "Test Bug"
+      // swiggy_password: ""
+      // swiggy_register_phone: ""
+      // zomato_register_phone: 7008237257
+
       if (response.status === "success") {
-        const { userDetails, notifications } = response;
+        const {
+          userDetails: {
+            email,
+            join_date,
+            phone,
+            restaurant_name,
+            zomato_register_phone: z_reg_num,
+            swiggy_register_phone: s_reg_num,
+            swiggy_password: s_pass,
+          },
+          notifications,
+        } = response;
+
+        let zomatoNumberFromApi =
+          z_reg_num === undefined || z_reg_num === "" ? "" : z_reg_num;
+        let swiggyNumberFromApi =
+          s_reg_num === undefined || s_reg_num === "" ? "" : s_reg_num;
+
+        let swiggyPassword =
+          s_pass === undefined || s_pass === "" ? "" : s_pass;
+
         setCurrentUserDetails({
-          name: userDetails.name,
-          email: userDetails.email,
-          restaurantName: userDetails.restaurant_name,
-          phoneNumber: userDetails.phone,
+          email: email === undefined || email === "" ? "" : email,
+          restaurantName: restaurant_name,
+          phoneNumber: phone,
+          zomatoNumber: zomatoNumberFromApi,
+          swiggyNumber: swiggyNumberFromApi,
+          swiggyPassword: swiggyPassword,
         });
-        console.log("response success---user details", userDetails);
+        console.log("response success---user details", {
+          email,
+          join_date,
+          phone,
+          restaurant_name,
+          zomatoNumber: zomatoNumberFromApi,
+          swiggyNumber: swiggyNumberFromApi,
+          swiggyPassword: swiggyPassword,
+          z_reg_num,
+          s_reg_num,
+          s_pass,
+        });
         setUserAllNotifications(notifications);
         console.log("response success---notifications", notifications);
         setDataSubmitted(response.dataSubmitted);
@@ -136,6 +183,21 @@ const Dashboard = () => {
       )}
       {pageName === "user-profile" && (
         <UserProfile
+          currentUserDetails={currentUserDetails}
+          setCurrentUserDetails={setCurrentUserDetails}
+          dataSubmitted={dataSubmitted}
+          setDataSubmitted={setDataSubmitted}
+          isLoading={isLoading}
+          changePage={changePage}
+          pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
+      )}
+      {pageName === "faq" && (
+        <FAQ
           currentUserDetails={currentUserDetails}
           setCurrentUserDetails={setCurrentUserDetails}
           dataSubmitted={dataSubmitted}

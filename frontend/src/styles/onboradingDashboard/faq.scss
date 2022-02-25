@@ -1,0 +1,52 @@
+.onboard-faq {
+}
+
+.onboard-faq-container {
+  //   background-color: aqua;
+  height: 100%;
+  width: 100%;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.onboard-faq__head {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  color: $color-primary-1;
+}
+.onboard-faq__body {
+  height: 100%;
+  width: 100%;
+  margin-bottom: 8rem;
+
+  &--item {
+    border: 0.5px solid #f752102a;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    background: #f7521010;
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    .question {
+      color: $color-black-1;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .answer {
+      &--text {
+        color: $color-black-1;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+      }
+      &--points {
+        .point {
+          color: $color-grey-4;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

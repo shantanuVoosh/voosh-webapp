@@ -14,7 +14,7 @@ const Dashborad = () => {
   return (
     <>
       <div className="op_cards">
-        <Card
+        {/* <Card
           name={"Reviews"}
           type={"average"}
           info={"Click Know More to understand better"}
@@ -23,7 +23,7 @@ const Dashborad = () => {
           compareThen={"grater"}
           redirection={"/customerReviews"}
           isDataPresent={true}
-        />
+        /> */}
         {operationHealthData.map((item, index) => {
           return item.isDataPresent ? (
             <Card

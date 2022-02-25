@@ -1,166 +1,120 @@
 import React from "react";
-import swiggy_logo_svg from "../../styles/assets/swiggy-bag.svg";
-import { useSelector } from "react-redux";
 import ReactGA from "react-ga4";
 import MetaTags from "react-meta-tags";
 import ReactPixel from "react-facebook-pixel";
-import { useForm } from "react-hook-form";
-import { GrFormPreviousLink } from "react-icons/gr";
-import { RiCloseCircleLine } from "react-icons/ri";
-import { BsShieldFillCheck } from "react-icons/bs";
-import { IoIosInformationCircleOutline } from "react-icons/io";
+import { IoIosPerson } from "react-icons/io";
+import Footer from "../../components/onboardingDashboard/Footer";
+import Header from "../../components/onboardingDashboard/Header";
+import { BsPersonCircle } from "react-icons/bs";
+import { FiEdit } from "react-icons/fi";
 
-const Amplitude = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    getValues,
-    setValue,
-  } = useForm();
-  const [isButtonDisable, setIsButtonDisable] = React.useState(false);
-  const onSubmitForm = (data) => {
-    console.log(data);
-  };
+const UserProfile = ({
+  changePage,
+  pageName,
+  currentUserDetails,
+  userAllNotifications,
+  setUserAllNotifications,
+  numberOfNotifications,
+  setNumberOfNotifications,
+}) => {
+  // const { name, email, restaurantName, phoneNumber } = currentUserDetails;
+
+  const handelOnUdateClick = () => {};
 
   return (
     <>
       <MetaTags>
-        <title>Voosh | Form-2 Swiggy Details</title>
+        <title>Voosh | User-Profile</title>
         <meta
-          name="voosh web app, Form-2 Swiggy Details"
-          content="voosh Form-2 Swiggy Details page"
+          name="voosh web app,  User-Profile page"
+          content="voosh User-Profile page"
         />
         <meta property="og:title" content="web-app" />
       </MetaTags>
-      <div className="swiggy-form">
-        <div className="swiggy-form__header">
-          <div className="swiggy-form__header--text">
-            <h2 className="">
-              <span>Swiggy</span> Partner
-            </h2>
-            <p>Manage your restaurant on Swiggy</p>
-          </div>
-          <div
-            className="swiggy-form__header--logo"
-            // style={{ height: "90px", position: "relative" }}
-          >
-            <img
-              src={swiggy_logo_svg}
-              alt="swiggy_logo_svg"
-              // style={{ height: "100%" }}
-            />
-          </div>
-        </div>
-        <form
-          className="swiggy-form__body"
-          onSubmit={handleSubmit(onSubmitForm)}
-        >
-          {/* //!Swiggy Rest. Phone */}
-
-          <div className="swiggy-form__body--heading">Login</div>
-          <div className="swiggy-form__body--sub-heading">
-            <div className="text">
-              Enter a registered mobile number or restaurant ID to login
+      <div className="user-profile">
+        <Header
+          changePage={changePage}
+          pageName={pageName}
+          userAllNotifications={userAllNotifications}
+          setUserAllNotifications={setUserAllNotifications}
+          numberOfNotifications={numberOfNotifications}
+          setNumberOfNotifications={setNumberOfNotifications}
+        />
+        <>
+          <div className="user-profile-container">
+            <div className="user-profile__head">
+              {/* <img src="" alt="" /> */}
+              <div className="user-profile__head--top"></div>
+              <div className="user-profile__head--user-icon">
+                <BsPersonCircle size={150} />
+              </div>
+              <div className="user-profile__head--bottom"></div>
             </div>
-            <div className="icon">
-              <IoIosInformationCircleOutline size={25} />
+            <div className="user-profile__body">
+              <div className="user-profile__body--item">
+                <div className="item-heading">
+                  <div className="text">User Details</div>
+                  <span>
+                    <FiEdit />
+                  </span>
+                </div>
+                <div className="item-content">
+                  <div className="info">
+                    <span className="label">Restaurant Name:</span>
+                    <span className="value">You Me And Tea</span>
+                  </div>
+                  <div className="info">
+                    <span className="label">Phone Number:</span>
+                    <span className="value">7008237257</span>
+                  </div>
+                  <div className="info">
+                    <span className="label">Email:</span>
+                    <span className="value">Shantanu@gamil.com</span>
+                  </div>
+                </div>
+              </div>
+              <div className="user-profile__body--item">
+                <div className="item-heading">
+                  <div className="text"> Swiggy Details</div>
+                  <span>
+                    <FiEdit />
+                  </span>
+                </div>
+                <div className="item-content">
+                  <div className="info">
+                    <span className="label">Phone Number:</span>
+                    <span className="value">7008237257</span>
+                  </div>
+                  <div className="info">
+                    <span className="label">Password:</span>
+                    <span className="value">shanu@12345</span>
+                  </div>
+                </div>
+              </div>
+              <div className="user-profile__body--item">
+                <div className="item-heading">
+                  <div className="text">Zomato Details</div>
+                  <span>
+                    <FiEdit />
+                  </span>
+                </div>
+                <div className="item-content">
+                  <div className="info">
+                    <span className="label">Phone Number:</span>
+                    <span className="value">7008237257</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="user-profile__bottom">
+              <button>Update</button>
             </div>
           </div>
-
-          <div className="swiggy-form__body--input-feild">
-            <input
-              className="form-input"
-              type="tel"
-              name="swiggy-number"
-              placeholder="Swiggy Number"
-              {...register("swiggy-number", {
-                // required: true,
-                maxLength: 10,
-                // minLength: 10,
-              })}
-            />
-          </div>
-          <div className="swiggy-form__body--error">
-            {errors["swiggy-number"] && (
-              <p className="error red">
-                Provide a valid number, your Swiggy Registered Phone Number
-              </p>
-            )}
-          </div>
-
-          {/* //!Swiggy Password */}
-          <div className="swiggy-form__body--input-feild">
-            <input
-              className="form-input"
-              type="password"
-              name="swiggy-password"
-              placeholder="Swiggy Password"
-              {...register("swiggy-password", {
-                // required: true,
-                // minLength: 3,
-              })}
-            />
-          </div>
-          <div className="swiggy-form__body--error">
-            {errors["swiggy-password"] && (
-              <p className="error red">
-                Your Swiggy password should be atleast 3 characters long
-              </p>
-            )}
-          </div>
-          <div
-            className="swiggy-form__body--skip-btn"
-            onClick={() => {
-              const data = getValues();
-              const isCheckboxChecked = data["checkbox_not-in-swiggy"];
-
-              if (!isCheckboxChecked) {
-                setValue("checkbox_not-in-swiggy", true);
-                setValue("swiggy-number", "");
-                setValue("swiggy-password", "");
-              } else {
-                setValue("checkbox_not-in-swiggy", false);
-                setValue("swiggy-number", "");
-                setValue("swiggy-password", "");
-              }
-
-              console.log(data, "data insde skip");
-
-              // setDisplayPageNumber(3);
-            }}
-          >
-            <input
-              {...register("checkbox_not-in-swiggy")}
-              type="checkbox"
-              className="checkbox-not-in-swiggy"
-              style={{
-                marginRight: ".3rem",
-              }}
-            />
-            <span
-              style={{
-                fontWeight: "600",
-              }}
-            >
-              Skip
-            </span>
-          </div>
-
-          {/*// ?Proceed Button */}
-          <div className={"swiggy-form__body--btn"}>
-            <button
-              className={"btn" + ` ${isButtonDisable ? "btn-disabled" : ""}`}
-            >
-              {isButtonDisable ? "Wait..." : "Continue"}
-              {/* Proceed */}
-            </button>
-          </div>
-        </form>
+        </>
+        <Footer changePage={changePage} pageName={pageName} />
       </div>
     </>
   );
 };
 
-export default Amplitude;
+export default UserProfile;

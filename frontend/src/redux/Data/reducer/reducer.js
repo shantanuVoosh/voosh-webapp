@@ -20,6 +20,7 @@ const initialState = {
   oh_currentProductIndex: -1,
   ls_currentProductIndex: -1,
   sales_currentProductIndex: -1,
+  customer_reviews_currentProductIndex: -1,
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -36,6 +37,7 @@ export const dataReducer = (state = initialState, action) => {
     SET_OH_PRODUCT_INDEX,
     SET_LS_PRODUCT_INDEX,
     SET_SALES_PRODUCT_INDEX,
+    SET_CUSTOMER_REVIEWS_INDEX,
   } = ActionTypes;
   const { type, payload } = action;
 
@@ -53,6 +55,7 @@ export const dataReducer = (state = initialState, action) => {
         oh_currentProductIndex: 0,
         ls_currentProductIndex: 0,
         sales_currentProductIndex: 0,
+        customer_reviews_currentProductIndex: 0,
       };
     case SET_CURRENT_PRODUCT_INDEX:
       return {
@@ -77,6 +80,12 @@ export const dataReducer = (state = initialState, action) => {
         ...state,
         sales_currentProductIndex: payload.sales_currentProductIndex,
       };
+    case SET_CUSTOMER_REVIEWS_INDEX:
+      return {
+        ...state,
+        customer_reviews_currentProductIndex:
+          payload.customer_reviews_currentProductIndex,
+      };
 
     // ! Bring back to initial state
     case CLEAR_DATA:
@@ -95,6 +104,10 @@ export const dataReducer = (state = initialState, action) => {
         date: "",
         startDate: "",
         endDate: "",
+        oh_currentProductIndex: -1,
+        ls_currentProductIndex: -1,
+        sales_currentProductIndex: -1,
+        customer_reviews_currentProductIndex: -1,
       };
     case SET_RESULT_TYPE:
       return {

@@ -98,6 +98,65 @@
     opacity: 1;
   }
 }
+
+// ! for outside cards in dashboard
+.nav-btn-small {
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 10px;
+  @include breakpoint-up(xsmall) {
+    font-size: 9px;
+  }
+  letter-spacing: 0.5px;
+  color: $color-grey-2;
+
+  @include breakpoint-up(xxsmall) {
+    font-size: 12px;
+  }
+
+  &:first-child {
+    margin-right: 0.5rem;
+  }
+}
+
+.nav-btn-small::after {
+  content: " ";
+  position: absolute;
+  top: 13px;
+  left: 0%;
+  width: 0%;
+  height: 1.5px;
+  opacity: 0;
+  transition: all ease-in-out 0.3s;
+  background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+}
+
+.nav-btn-small-disable {
+}
+.nav-btn-small-disable::before {
+  content: "Not Available";
+  position: absolute;
+  top: 15px;
+  left: 0%;
+  width: 0%;
+  width: 100%;
+  height: auto;
+  font-size: 4px;
+  font-weight: 200;
+  background: transparent;
+  color: $red;
+  text-align: center;
+}
+
+.active {
+  color: $color-black-1;
+  &.nav-btn-small::after {
+    cursor: pointer;
+    width: 100%;
+    opacity: 1;
+  }
+}
 // // ?coming soon remove it when zomato is available
 // .nav-btn:hover::after {
 //   cursor: pointer;

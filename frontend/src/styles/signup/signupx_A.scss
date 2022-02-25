@@ -197,6 +197,7 @@ $light: 200;
   grid-auto-flow: column;
   gap: 5px;
   padding: 0 1rem;
+  padding-top: 1rem;
   &__item {
     text-align: center;
     &--number {
@@ -299,7 +300,7 @@ $light: 200;
         font-size: 14px;
         font-weight: $medium;
         text-align: left;
-        color:$color-grey-1;
+        color: $color-grey-1;
       }
     }
   }

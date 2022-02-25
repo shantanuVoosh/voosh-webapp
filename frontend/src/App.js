@@ -285,7 +285,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={true}
-                sectionName={"Operation Health"}
+                sectionName={"Customer Reviews"}
               >
                 <CustomerReviews />
               </LayoutWrapper>
@@ -309,7 +309,7 @@ function App() {
                 isHomePage={false}
                 isClientBtnNeeded={true}
                 isDropdownNeeded={true}
-                sectionName={"Operation Health"}
+                sectionName={"Customer Reviews"}
               >
                 <AllReviews />
               </LayoutWrapper>

@@ -541,8 +541,8 @@ router.post("/user/onboard-data", checkAuthentication, async (req, res) => {
       phone,
       isAuthTemp: tempUser,
       userDetails: {
-        name: "",
-        email: "",
+        name: "Test bug",
+        email: "test-bug@gmail.com",
         restaurant_name: "test",
         phone: 1231231239,
       },
@@ -1173,6 +1173,68 @@ router.get("/test-review", async (req, res) => {
   } catch (err) {
     res.json({
       err: err,
+    });
+  }
+});
+
+router.get("/get-cfh-data", async (req, res) => {
+  try {
+    // TODO get all data from mongodb specified resturant
+    // ? res_id & documnetName needed,
+    // ?or by default is set as some static value
+
+    const date = req.body.date;
+
+    const swiggy_res_id = 256302;
+    const zomato_res_id = 56834;
+    const z_res_id = 56834;
+    const s_res_id = 256302;
+    const listing_id = "P0051";
+    const phone = 9448467130;
+    const resultType = "Custom Range";
+    const number = null;
+    const startDate = "2020-12-01";
+    const endDate = "2021-02-24";
+
+    let { listingID } = req.body;
+
+    let newRestaurantList = [];
+
+    const getAllSwiggyAndZomatoRestaurantsData =
+      await getAllSwiggyAndZomatoRestaurants(phone);
+    newRestaurantList = [...getAllSwiggyAndZomatoRestaurantsData];
+
+    const swiggyData = await getAllSwiggyData(
+      parseInt(s_res_id),
+      number,
+      resultType,
+      startDate,
+      endDate
+    );
+    const zomatoData = await getAllZomatoData(
+      parseInt(z_res_id),
+      number,
+      resultType,
+      startDate,
+      endDate
+    );
+
+    console.log("---------- <Get All Data Success End> ----------------");
+    res.json({
+      data: {
+        res_name: "Sample Restaurant",
+        newRestaurantList: newRestaurantList,
+        api_data2: [swiggyData, zomatoData],
+        listingID: listingID !== "" ? listingID : listing_id,
+      },
+      status: "success",
+    });
+  } catch (err) {
+    console.log("Error:", err);
+    console.log("---------- <Get All Data Error End> ----------------");
+    res.json({
+      status: "error",
+      message: `Error while getting data :${err}`,
     });
   }
 });

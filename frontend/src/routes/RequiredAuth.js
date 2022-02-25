@@ -68,7 +68,6 @@ function RequiredAuth({ children }) {
     //   return;
     // }
     try {
-      dispatch(isLoading(true));
       // ? To identify if the slected option is week or month
       const tempMonthMap = {
         // ? we have prev day sales in all collection but, if revenue page is
@@ -104,7 +103,7 @@ function RequiredAuth({ children }) {
       );
       console.log("tempNumberMap:", tempNumberMap[resultType]);
       console.log("tempMonthMap:", tempMonthMap[resultType]);
-
+      dispatch(isLoading(true));
       // const client_res_id = restaurantList.find((item) => item.name === res_name).id;
       const { data: response } = await axios.post("/voosh-data", {
         //? 1st time token will be null or undefined
@@ -163,7 +162,7 @@ function RequiredAuth({ children }) {
 
           dispatch(
             setListingIdWithRestaurantDetails({
-              listing_id,
+              listingID: listing_id,
               restaurant_name,
               swiggy_res_id: response_swiggy_res_id,
               zomato_res_id: response_zomato_res_id,
@@ -171,17 +170,15 @@ function RequiredAuth({ children }) {
           );
 
           // ! which ever is available will be shown first
-          if (response_swiggy_res_id !== null) {
-            dispatch(setOhProductIndex(0));
-            dispatch(setLSProductIndex(0));
-            dispatch(setSalesProductIndex(0));
-          } else {
-            dispatch(setOhProductIndex(1));
-            dispatch(setLSProductIndex(1));
-            dispatch(setSalesProductIndex(1));
-          }
-
-          dispatch(isLoading(false));
+          // if (response_swiggy_res_id !== null) {
+          //   dispatch(setOhProductIndex(0));
+          //   dispatch(setLSProductIndex(0));
+          //   dispatch(setSalesProductIndex(0));
+          // } else {
+          //   dispatch(setOhProductIndex(1));
+          //   dispatch(setLSProductIndex(1));
+          //   dispatch(setSalesProductIndex(1));
+          // }
         }
         // ! only restaurant data will change or dispatch
         else {
@@ -190,18 +187,17 @@ function RequiredAuth({ children }) {
           dispatch(fetchData({ data: api_data2, date }));
           console.log(zomato_res_id, swiggy_res_id);
           // ! which ever is available will be shown first
-          if (swiggy_res_id !== null) {
-            dispatch(setOhProductIndex(0));
-            dispatch(setLSProductIndex(0));
-            dispatch(setSalesProductIndex(0));
-          } else {
-            dispatch(setOhProductIndex(1));
-            dispatch(setLSProductIndex(1));
-            dispatch(setSalesProductIndex(1));
-          }
-
-          dispatch(isLoading(false));
+          // if (swiggy_res_id !== null) {
+          //   dispatch(setOhProductIndex(0));
+          //   dispatch(setLSProductIndex(0));
+          //   dispatch(setSalesProductIndex(0));
+          // } else {
+          //   dispatch(setOhProductIndex(1));
+          //   dispatch(setLSProductIndex(1));
+          //   dispatch(setSalesProductIndex(1));
+          // }
         }
+        dispatch(isLoading(false));
       }
       // *if token expired, login will fail, will redirect to login page and relogin
       else {

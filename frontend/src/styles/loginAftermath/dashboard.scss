@@ -6,6 +6,72 @@
   flex-direction: column;
   align-items: center;
 }
+
+// ! mini-cards or half-cards
+.mini-cards-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0.5rem;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  @include breakpoint-up(xsmall) {
+    gap: 1rem;
+  }
+}
+
+.mini-card {
+  background-color: #fff;
+  border: 1.8px solid $color-primary-1;
+  border-radius: $radius-2;
+  padding: 1rem 0.8rem;
+
+  &__header {
+    &--heading {
+      font-size: 12px;
+      @include breakpoint-up(xxsmall) {
+        font-size: $text-large;
+      }
+    }
+  }
+  &__body {
+    margin-top: 0.3rem;
+    &--score {
+      font-weight: 700;
+      font-size: 18px;
+
+      @include breakpoint-up(xxsmall) {
+        font-size: 21px;
+      }
+
+      @include breakpoint-up(xsmall) {
+        font-size: 24px;
+      }
+    }
+  }
+  &__footer {
+    margin-top: 0.3rem;
+    &--btn {
+      width: 100%;
+      max-width: 100px;
+      text-align: center;
+      background-color: $color-white-1;
+      background: linear-gradient(to right, $color-primary-1, $color-primary-2);
+      color: $color-white-1;
+      padding: 6px 12px;
+      font-size: $text-small;
+      border-radius: $radius-2;
+      // @include breakpoint-up(xxsmall) {
+      //   font-size: $text-medium;
+      // }
+    }
+  }
+}
+
 // ?Whole card
 .home-card {
   background: $color-white-1;
