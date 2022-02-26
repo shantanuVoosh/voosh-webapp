@@ -26,16 +26,16 @@ const array = [
     image: voosh_article_image_4,
     link: "https://www.inventiva.co.in/business/top-30-way-promote-a-restaurant/",
   },
-  {
-    title: "To help us locate you better",
-    subTitle:
-      "‘Location’ is one of the most critical aspects that drives customer experience through ‘Search & Discovery’ and ‘Online Ordering’ on Zomato.",
-    name: "Sumanshu Dwivedi",
-    date: "Sep 06, 2021",
-    readTime: "5 min",
-    image: voosh_article_image_6,
-    link: "https://www.zomato.com/blog/to-help-us-locate-you-better",
-  },
+  // {
+  //   title: "To help us locate you better",
+  //   subTitle:
+  //     "‘Location’ is one of the most critical aspects that drives customer experience through ‘Search & Discovery’ and ‘Online Ordering’ on Zomato.",
+  //   name: "Sumanshu Dwivedi",
+  //   date: "Sep 06, 2021",
+  //   readTime: "5 min",
+  //   image: voosh_article_image_6,
+  //   link: "https://www.zomato.com/blog/to-help-us-locate-you-better",
+  // },
   {
     // title: "6 Ways to Improve Your Restaurant's Speed of Service",
     title: "Improve Restaurant's Speed of Service",

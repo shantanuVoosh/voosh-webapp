@@ -26,6 +26,18 @@ import {
   getWeekNumberFromDate,
   getMonthNumberFromDate,
 } from "../utils/dateProvider";
+
+// ? Sample Data -- Static data
+import {
+  sampleName,
+  cfhRestaurantList,
+  cfh_month_data,
+  cfh_prev_month_data,
+  cfh_this_week_data,
+  cfh_prev_week_data,
+  cfh_cr_data,
+} from "../miscellaneous/sampleData";
+
 const APP_TOKEN_BY_GOOGLE = "voosh-token-by-google";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -39,8 +51,14 @@ const allResultTypeMap = {
 
 // !Protecting routes
 function RequiredAuth({ children }) {
-  const { isAuthenticated, token, isTemporaryAuthenticated, temporaryToken } =
-    useSelector((state) => state.auth);
+  const {
+    isAuthenticated,
+    token,
+    isTemporaryAuthenticated,
+    temporaryToken,
+    dummyUser,
+    isDummyUserAuthenticated,
+  } = useSelector((state) => state.auth);
   const resultType = useSelector((state) => state.data.resultType);
   const res_name = useSelector((state) => state.data.res_name);
 
@@ -226,17 +244,71 @@ function RequiredAuth({ children }) {
   ]);
 
   React.useEffect(() => {
-    if (isAuthenticated && token) {
+    if (dummyUser === false && isAuthenticated && token) {
       getDataFromApi();
     }
   }, [isAuthenticated, token, getDataFromApi, resultType]);
 
-  // return isAuthenticated ? (
-  //   children
-  // ) : (
-  //   <Navigate to="/" replace state={{ path: location.pathname }}></Navigate>
-  // );
-  // isTemporaryAuthenticated, temporaryToken
+  React.useEffect(() => {
+    if (dummyUser) {
+      dispatch(
+        setListingIdWithRestaurantDetails({
+          listingID: "P0051",
+          swiggy_res_id: 256302,
+          zomato_res_id: 56834,
+          restaurant_name: "Sample Restaurant",
+        })
+      );
+      dispatch(
+        fetchAllData({
+          data: cfh_month_data,
+          res_name: sampleName,
+          allRestaurants: cfhRestaurantList,
+          date: "2022-02-25",
+        })
+      );
+    }
+  }, []);
+
+  React.useEffect(() => {
+    console.log("cfhRestaurantList:------------>", cfhRestaurantList);
+    if (dummyUser) {
+      dispatch(isLoading(true));
+
+      // ? CR data
+      if (resultType === "Custom Range") {
+        dispatch(fetchData({ data: cfh_cr_data, date: "2022-02-24" }));
+      }
+      // ? This Month data
+      else if (resultType === "This Month") {
+        dispatch(fetchData({ data: cfh_month_data, date: "2022-02-25" }));
+      }
+      // ? Previous Month data
+      else if (resultType === "Previous Month") {
+        dispatch(fetchData({ data: cfh_prev_month_data, date: "2022-02-24" }));
+      }
+      // ? This Week data
+      else if (resultType === "This Week") {
+        dispatch(fetchData({ data: cfh_this_week_data, date: "2022-02-25" }));
+      }
+      // ? Previous Week data
+      else if (resultType === "Previous Week") {
+        dispatch(fetchData({ data: cfh_prev_week_data, date: "2022-02-24" }));
+      }
+      dispatch(isLoading(false));
+    }
+  }, [resultType]);
+
+  if (dummyUser) {
+    return isDummyUserAuthenticated ? (
+      children
+    ) : (
+      <>
+        <Navigate to="/" replace state={{ path: location.pathname }}></Navigate>
+      </>
+    );
+  }
+
   return isAuthenticated ? (
     children
   ) : isTemporaryAuthenticated ? (

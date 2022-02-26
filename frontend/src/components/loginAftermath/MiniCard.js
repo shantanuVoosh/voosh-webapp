@@ -2,17 +2,17 @@ import React from "react";
 import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { VscPreview } from "react-icons/vsc";
 
 import {
   setLSProductIndex,
   setCustomerReviewsProductIndex,
 } from "../../redux/Data/actions/actions";
 
-const MiniCard = ({ iconName, name, info, sectionName }) => {
+const MiniCard = ({ name, info, sectionName }) => {
   const navigate = useNavigate();
   const {
     data,
-    resultType,
     oh_currentProductIndex,
     ls_currentProductIndex,
     sales_currentProductIndex,
@@ -97,6 +97,11 @@ const MiniCard = ({ iconName, name, info, sectionName }) => {
     }
   };
 
+  const isCustomerReviewsPresent =
+    customerReviewsRating !== 0 &&
+    customerReviewsRating !== undefined &&
+    customerReviewsRating !== null;
+
   return (
     <>
       <div className="mini-card">
@@ -145,7 +150,7 @@ const MiniCard = ({ iconName, name, info, sectionName }) => {
         </div>
         <div className="mini-card__body">
           <div className="mini-card__body--score">
-            {name === "Customer Reviews" && (
+            {name === "Customer Reviews" && isCustomerReviewsPresent && (
               <>
                 {customerReviewsRating > customerReviewsRatingBenchmark ? (
                   <div className="green">
@@ -163,6 +168,27 @@ const MiniCard = ({ iconName, name, info, sectionName }) => {
                   </div>
                 )}
               </>
+            )}
+            {/* {name === "Customer Reviews" && (
+              <div className="green">
+                <VscPreview size={30} />
+              </div>
+            )} */}
+            {name === "Customer Reviews" && !isCustomerReviewsPresent && (
+              <div
+                className="green"
+                style={{
+                  fontSize: "10px",
+                  padding: "0.5rem 0",
+                  fontWeight: "700",
+                  "@media (max-width: 360px)": {
+                    fontSize: "15px",
+                  },
+                }}
+              >
+                {" "}
+                Rating not available
+              </div>
             )}
             {name === "Listing Score" && (
               <>

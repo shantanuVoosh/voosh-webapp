@@ -2,25 +2,11 @@
 const sampleName = "Sample Restaurant";
 const cfhRestaurantList = [
   {
-    restaurant_name: "CHETTINAD FOOD HOUSE",
+    restaurant_name: "Sample Restaurant",
     listing_id: "P0051",
     swiggy_res_id: 256302,
     zomato_res_id: 56834,
     swiggy_run_date: "31-01-2022",
-  },
-  {
-    restaurant_name: "Voosh Thalis & Bowls",
-    listing_id: "P0052",
-    swiggy_res_id: null,
-    zomato_res_id: 19619742,
-    swiggy_run_date: null,
-  },
-  {
-    restaurant_name: "Voosh Dakshin",
-    listing_id: "P0053",
-    swiggy_res_id: null,
-    zomato_res_id: 19624041,
-    swiggy_run_date: null,
   },
 ];
 const cfh_month_data = [
@@ -6959,3 +6945,13 @@ const cfh_cr_data = [
     },
   },
 ];
+
+export {
+  sampleName,
+  cfhRestaurantList,
+  cfh_month_data,
+  cfh_prev_month_data,
+  cfh_this_week_data,
+  cfh_prev_week_data,
+  cfh_cr_data,
+};

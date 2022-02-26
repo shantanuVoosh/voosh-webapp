@@ -28,6 +28,15 @@ export const tempLoginSuccess = (token) => {
     },
   };
 };
+// ! Dummy login
+export const dummyLoginSuccess = (token) => {
+  return {
+    type: ActionTypes.DUMMY_LOGIN_SUCCESS,
+    payload: {
+      token,
+    },
+  };
+};
 
 export const signoutSuccess = () => {
   return {

@@ -98,7 +98,7 @@ const FinancialDashBoard = () => {
     datasets: [
       {
         data:
-          isDataPresent === true ? [...deductionValues] : [1, 2, 3, 2, 1, 1.5],
+          isDataPresent === true ? [...deductionValues] : [0, 0, 0, 0, 0, 0],
         // borderColor: ["rgba(255,21,86,0.2)"],
         backgroundColor: [...pieColors],
         pointBackgroundColor: "rgba(255,26,86,0.2)",

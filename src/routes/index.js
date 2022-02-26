@@ -282,6 +282,29 @@ router.post("/login-voosh", async (req, res) => {
       useNewUrlParser: true,
     });
 
+    // ! testing, Demo purpose
+    if (phoneNumber === "5432112345") {
+      const token = jwt.sign(
+        { phone: phoneNumber, tempUser: true },
+        secret,
+        {}
+      );
+      return res.json({
+        status: "success",
+        isAuth: true,
+        isAuthTemp: false,
+        token: token,
+        restaurantList: [],
+        restaurantDetails: {
+          listing_id: "P0101",
+          restaurant_name: "Sample Restaurant",
+          swiggy_res_id: 256302,
+          zomato_res_id: 56834,
+        },
+        dummyUser: true,
+      });
+    }
+
     // !testing purpose
     // ? You Me and Tea
     // ?CFH

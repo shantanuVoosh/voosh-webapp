@@ -4,7 +4,6 @@ import { getCurrentMonthDate } from "../../../utils/dateProvider";
 const initialState = {
   res_name: "",
   data: [],
-  // cuz no at first we don't have any data
   currentProductIndex: -1,
   resultType: "This Month",
   // Todo new value for test
@@ -49,9 +48,9 @@ export const dataReducer = (state = initialState, action) => {
         ...state,
         data: payload.data,
         res_name: payload.res_name,
-        currentProductIndex: 0,
         allRestaurants: payload.allRestaurants,
         date: payload.date,
+        currentProductIndex: 0,
         oh_currentProductIndex: 0,
         ls_currentProductIndex: 0,
         sales_currentProductIndex: 0,

@@ -18,6 +18,7 @@ import {
   loginFailure,
   loginSuccess,
   tempLoginSuccess,
+  dummyLoginSuccess,
 } from "../../redux/Auth/actions/authAction";
 import { setListingIdWithRestaurantDetails } from "../../redux/Data/actions/actions";
 import cookie from "react-cookies";
@@ -183,9 +184,13 @@ const NewSignupA = () => {
   const onSubmitPhone = (data) => {
     // setShowPage(1);
     // return;
-    // if (data["phone-number"].length === 0 && phoneInCookie.length === 10) {
-    //   data["phone-number"] = phoneInCookie;
-    // }
+
+    // ! for testing, and for demo purpose
+    if (data["phone-number"] === "5432112345") {
+      setShowPage(1);
+      setTimeLeft(10);
+      return;
+    }
 
     // ! testing purpose
     if (data["phone-number"].length > 10) {
@@ -312,8 +317,8 @@ const NewSignupA = () => {
       (otp === "123456" &&
         (data["phone-number"] === "1234554321" ||
           data["phone-number"] === "1234567890" ||
+          data["phone-number"] === "5432112345" ||
           data["phone-number"] === "1231231239")) ||
-      
       (data["phone-number"].includes("hack") &&
         data["phone-number"].replace(/hack/g, "").length === 10)
     ) {
@@ -327,9 +332,15 @@ const NewSignupA = () => {
             // ?set token
             cookie.save(APP_TOKEN, response.token, { path: "/" });
             cookie.remove(VOOSH_APP_PHONE);
-            dispatch(loginSuccess(response.token));
+
+            if (response.dummyUser) {
+              dispatch(dummyLoginSuccess(response.token));
+            } else {
+              dispatch(loginSuccess(response.token));
+            }
+
             const restaurant = response.restaurantDetails;
-         
+
             // dispatch(
             //   setListingIdWithRestaurantDetails({
             //     listingID: restaurant.listing_id,

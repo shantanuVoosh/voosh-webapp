@@ -11,6 +11,8 @@ const initialAuthState = {
   token: cookie.load(APP_TOKEN) || null,
   isTemporaryAuthenticated: cookie.load(TEMP_APP_TOKEN) ? true : false,
   temporaryToken: cookie.load(TEMP_APP_TOKEN) || null,
+  dummyUser: false,
+  isDummyUserAuthenticated: cookie.load(APP_TOKEN) ? true : false,
 };
 
 export const authReducer = (state = initialAuthState, action) => {
@@ -20,6 +22,7 @@ export const authReducer = (state = initialAuthState, action) => {
     SIGNOUT_SUCCESS,
     TEMP_LOGIN_SUCCESS,
     TEMP_LOGIN_FAILURE,
+    DUMMY_LOGIN_SUCCESS,
   } = ActionTypes;
   const { type, payload } = action;
 
@@ -37,6 +40,8 @@ export const authReducer = (state = initialAuthState, action) => {
         token: null,
         isTemporaryAuthenticated: false,
         temporaryToken: null,
+        dummyUser: false,
+        isDummyUserAuthenticated: false,
       };
     case TEMP_LOGIN_SUCCESS:
       return {
@@ -49,6 +54,8 @@ export const authReducer = (state = initialAuthState, action) => {
         ...state,
         isTemporaryAuthenticated: false,
         temporaryToken: null,
+        dummyUser: false,
+        isDummyUserAuthenticated: false,
       };
 
     case SIGNOUT_SUCCESS:
@@ -58,7 +65,18 @@ export const authReducer = (state = initialAuthState, action) => {
         token: null,
         isTemporaryAuthenticated: false,
         temporaryToken: null,
+        dummyUser: false,
+        isDummyUserAuthenticated: false,
       };
+    // ? only for showing static data, im doing it!
+    case DUMMY_LOGIN_SUCCESS:
+      return {
+        ...state,
+        token: payload.token,
+        dummyUser: true,
+        isDummyUserAuthenticated: true,
+      };
+
     default:
       return state;
   }
