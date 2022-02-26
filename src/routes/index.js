@@ -750,6 +750,158 @@ router.post(
   }
 );
 
+// ! Update user details Onboard Users
+// Todo: now for Uat
+router.post(
+  "/user/update/onboard-data/basic-details",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone, tempUser } = req.payload;
+    const { userName, userEmail } = req.body;
+    const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    console.log("Update onboard data basic details");
+
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      const query = { phone: parseInt(phone) };
+      const update = {
+        $set: {
+          name: userName,
+          email: userEmail,
+        },
+      };
+
+      await db
+        .collection(onboardProductsColleaction)
+        .updateOne(query, update, async (err, result) => {
+          if (err) {
+            res.json({
+              status: "error",
+              message: "Error while saving user details, Server Error",
+              error: err,
+            });
+          } else {
+            res.json({
+              status: "success",
+              message: "User details updated Successfully",
+            });
+          }
+        });
+    } catch (error) {
+      res.json({
+        status: "error",
+        message: "Error while saving user details, Server Error",
+        error: error,
+      });
+    }
+  }
+);
+
+//! Update user Swiggy details Onboard Users
+// Todo: now for Uat
+router.post(
+  "/user/update/onboard-data/swiggy-details",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone, tempUser } = req.payload;
+    const { swiggyNumber, swiggyPassword } = req.body;
+    const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    console.log("Update onboard data swiggy details");
+
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      const query = { phone: parseInt(phone) };
+      const update = {
+        $set: {
+          swiggy_register_phone: swiggyNumber,
+          swiggy_password: swiggyPassword,
+        },
+      };
+
+      await db
+        .collection(onboardProductsColleaction)
+        .updateOne(query, update, async (err, result) => {
+          if (err) {
+            res.json({
+              status: "error",
+              message: "Error while saving swiggy details, Server Error",
+              error: err,
+            });
+          } else {
+            res.json({
+              status: "success",
+              message: "User swiggy details updated Successfully",
+            });
+          }
+        });
+    } catch (error) {
+      res.json({
+        status: "error",
+        message: "Error while saving swiggy details, Server Error",
+        error: error,
+      });
+    }
+  }
+);
+
+// ! Update user Zomato details Onboard Users
+// Todo: now for Uat
+router.post(
+  "/user/update/onboard-data/zomato-details",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone, tempUser } = req.payload;
+    const { zomatoNumber } = req.body;
+    const onboardProductsColleaction = "Onboard_New_Users_UAT";
+    const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    console.log("Update onboard data Zomato details");
+
+    try {
+      const client = await MongoClient.connect(VooshDB, {
+        useNewUrlParser: true,
+      });
+      const db = client.db(documentName);
+      const query = { phone: parseInt(phone) };
+      const update = {
+        $set: {
+          zomato_register_phone: zomatoNumber,
+        },
+      };
+
+      await db
+        .collection(onboardProductsColleaction)
+        .updateOne(query, update, async (err, result) => {
+          if (err) {
+            res.json({
+              status: "error",
+              message: "Error while saving zomato details, Server Error",
+              error: err,
+            });
+          } else {
+            res.json({
+              status: "success",
+              message: "User zomato details updated Successfully",
+            });
+          }
+        });
+    } catch (error) {
+      res.json({
+        status: "error",
+        message: "Error while saving zomato details, Server Error",
+        error: error,
+      });
+    }
+  }
+);
+
 // ! get all  user Notifications
 // Todo: now for UAT
 router.post(

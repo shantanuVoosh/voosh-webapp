@@ -10,6 +10,9 @@ import { FiEdit } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { GrFormPreviousLink } from "react-icons/gr";
 import { RiCloseCircleLine } from "react-icons/ri";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
 
 const UserProfile = ({
   changePage,
@@ -21,15 +24,6 @@ const UserProfile = ({
   setNumberOfNotifications,
 }) => {
   const {
-    email,
-    restaurantName,
-    phoneNumber,
-    zomatoNumber,
-    swiggyNumber,
-    swiggyPassword,
-  } = currentUserDetails;
-
-  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -39,17 +33,150 @@ const UserProfile = ({
   } = useForm();
 
   const [profilePage, setProfilePage] = React.useState("user-profile");
+  const { temporaryToken } = useSelector((state) => state.auth);
+  const notifyError = (msg) => toast.error(msg);
+  const notifySuccess = (msg) => toast.success(msg);
+  const notiftAlert = (msg) => toast.warn(msg);
 
-  console.log("currentUserDetails--------user profile", currentUserDetails);
+  const [userDeatils, setUserDeatils] = React.useState({
+    email: currentUserDetails.email,
+    restaurantName: currentUserDetails.restaurantName,
+    phoneNumber: currentUserDetails.phoneNumber,
+    zomatoNumber: currentUserDetails.zomatoNumber,
+    swiggyNumber: currentUserDetails.swiggyNumber,
+    swiggyPassword: currentUserDetails.swiggyPassword,
+    userName: currentUserDetails.userName,
+  });
 
-  const handelEditBasicDetails = () => {
-    console.log("handelEditBasicDetails");
+  const {
+    email,
+    restaurantName,
+    phoneNumber,
+    zomatoNumber,
+    swiggyNumber,
+    swiggyPassword,
+    userName,
+  } = userDeatils;
+
+  React.useEffect(() => {
+    // const Formdata = getValues();
+    // console.log("Formdata", Formdata);
+    // console.log("userDeatils", userDeatils);
+
+    reset({});
+  }, [profilePage]);
+
+  // ! Update user  basic details
+  const handelEditBasicDetails = async (data) => {
+    console.log("handelEditBasicDetails Data: ****", data);
+    // {user-name: 'hi', email: 'shanu@gmail.com'}
+
+    // ? no changes so no need to update
+    if (
+      data["user-name"] === currentUserDetails.userName &&
+      data.email === currentUserDetails.email
+    ) {
+      console.log("No changes so no need to update");
+      notiftAlert("No changes so no need to update");
+      return;
+    }
+
+    const { data: response } = await axios.post(
+      "/user/update/onboard-data/basic-details",
+      {
+        token: temporaryToken,
+        userName: data["user-name"],
+        userEmail: data.email,
+      }
+    );
+    console.log("handelEditBasicDetails Response: ****", response);
+    if (response.status === "success") {
+      setUserDeatils((prevState) => {
+        return {
+          ...prevState,
+          userName: data["user-name"],
+          email: data.email,
+        };
+      });
+
+      notifySuccess("Basic details updated successfully");
+      setProfilePage("user-profile");
+    } else {
+      notifyError("Something went wrong");
+    }
   };
-  const handelEditSwiggyDeatils = () => {
+
+  // ! Update user Swiggy details
+  const handelEditSwiggyDeatils = async (data) => {
     console.log("handelSwiggyDeatils");
+    console.log("handelEditSwiggyDeatils Data: ****", data);
+
+    if (
+      data["swiggy-password"] === currentUserDetails.swiggyPassword &&
+      data["swiggy-number"] === currentUserDetails.swiggyNumber
+    ) {
+      console.log("No changes so no need to update");
+      notiftAlert("No changes so no need to update");
+
+      return;
+    }
+
+    const { data: response } = await axios.post(
+      "/user/update/onboard-data/swiggy-details",
+      {
+        token: temporaryToken,
+        swiggyNumber: data["swiggy-number"],
+        swiggyPassword: data["swiggy-password"],
+      }
+    );
+    console.log("handelEditBasicDetails Response: ****", response);
+    if (response.status === "success") {
+      setUserDeatils((prevState) => {
+        return {
+          ...prevState,
+          swiggyNumber: data["swiggy-number"],
+          swiggyPassword: data["swiggy-password"],
+        };
+      });
+
+      notifySuccess("Zomato details updated successfully");
+      setProfilePage("user-profile");
+    } else {
+      notifyError("Something went wrong");
+    }
   };
-  const handelEditZomatoDeatils = () => {
-    console.log("handelZonatoDeatils");
+
+  // ! Update user Zomato details
+  const handelEditZomatoDeatils = async (data) => {
+    console.log("handelZonatoDeatilsData ****", data);
+
+    if (data["zomato-number"] === zomatoNumber) {
+      console.log("No changes so no need to update");
+      notiftAlert("No changes so no need to update");
+      return;
+    }
+
+    const { data: response } = await axios.post(
+      "/user/update/onboard-data/zomato-details",
+      {
+        token: temporaryToken,
+        zomatoNumber: data["zomato-number"],
+      }
+    );
+    console.log("handelEditBasicDetails Response: ****", response);
+    if (response.status === "success") {
+      setUserDeatils((prevState) => {
+        return {
+          ...prevState,
+          zomatoNumber: data["zomato-number"],
+        };
+      });
+
+      notifySuccess("Zomato details updated successfully");
+      setProfilePage("user-profile");
+    } else {
+      notifyError("Something went wrong");
+    }
   };
 
   const UserProfilePage = () => {
@@ -101,6 +228,12 @@ const UserProfile = ({
                         {restaurantName === ""
                           ? "Not Provided"
                           : restaurantName}
+                      </span>
+                    </div>
+                    <div className="info">
+                      <span className="label">Name:</span>
+                      <span className="value">
+                        {userName === "" ? "Not Provided" : userName}
                       </span>
                     </div>
                     <div className="info">
@@ -215,7 +348,9 @@ const UserProfile = ({
           </div>
           <div className="page-body">
             <div className="page-body__title">
-              <div className="page-body__title--text">Restaurant Name</div>
+              <div className="page-body__title--text">
+                Update Your Basic Details
+              </div>
             </div>
             <form
               className="page-body__form"
@@ -233,7 +368,6 @@ const UserProfile = ({
               </div>
 
               {/* //! Phone Number */}
-              {console.log(currentUserDetails)}
               <div className="page-body__form--input-feild">
                 <input
                   className="form-input in-number"
@@ -255,16 +389,17 @@ const UserProfile = ({
                   className="form-input"
                   type="text"
                   placeholder="Your Name"
+                  defaultValue={userName}
                   {...register("user-name", {
                     required: true,
-                    minLength: 3,
+                    minLength: 2,
                   })}
                 />
               </div>
               <div className="page-body__form--error">
                 {errors["user-name"] && (
                   <p className="error red">
-                    Name should be atleast 1 characters long
+                    Name should be atleast 2 characters long
                   </p>
                 )}
               </div>
@@ -274,6 +409,7 @@ const UserProfile = ({
                   className="form-input"
                   type="email"
                   // required
+                  defaultValue={email}
                   placeholder="Email"
                   {...register("email", {
                     required: "Email is required",
@@ -453,7 +589,7 @@ const UserProfile = ({
                   type="tel"
                   name="zomato-number"
                   placeholder="Zomato Number"
-                  defaultValue={zomatoNumber}
+                  // defaultValue={zomatoNumber}
                   {...register("zomato-number", {
                     // required: true,
                     maxLength: 10,
@@ -482,6 +618,17 @@ const UserProfile = ({
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {/* //? Profile Page */}
       {profilePage === "user-profile" && <UserProfilePage />}
       {profilePage === "edit-basic-details" && <EditBasicDetails />}

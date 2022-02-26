@@ -36,6 +36,7 @@ const Dashboard = () => {
     zomatoNumber: "",
     swiggyNumber: "",
     swiggyPassword: "",
+    userName: "",
   });
 
   const [userAllNotifications, setUserAllNotifications] = React.useState([]);
@@ -69,6 +70,7 @@ const Dashboard = () => {
             zomato_register_phone: z_reg_num,
             swiggy_register_phone: s_reg_num,
             swiggy_password: s_pass,
+            name: user_name,
           },
           notifications,
         } = response;
@@ -81,6 +83,9 @@ const Dashboard = () => {
         let swiggyPassword =
           s_pass === undefined || s_pass === "" ? "" : s_pass;
 
+        let userName =
+          user_name !== undefined && user_name !== "" ? user_name : "";
+
         setCurrentUserDetails({
           email: email === undefined || email === "" ? "" : email,
           restaurantName: restaurant_name,
@@ -88,6 +93,7 @@ const Dashboard = () => {
           zomatoNumber: zomatoNumberFromApi,
           swiggyNumber: swiggyNumberFromApi,
           swiggyPassword: swiggyPassword,
+          userName: userName,
         });
         console.log("response success---user details", {
           email,
@@ -100,6 +106,7 @@ const Dashboard = () => {
           z_reg_num,
           s_reg_num,
           s_pass,
+          user_name,
         });
         setUserAllNotifications(notifications);
         console.log("response success---notifications", notifications);
