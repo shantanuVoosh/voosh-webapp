@@ -32,6 +32,7 @@ import MetaTags from "react-meta-tags";
 import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and B
 import NewSignupA from "./pages/signup/NewSignupA";
 import AmplitudePage from "./pages/amplitudeCopy/Amplitude";
+import UserProfile from "./pages/userProfile/UserProfile";
 
 function App() {
   const location = useLocation();
@@ -98,6 +99,24 @@ function App() {
                 </MetaTags>
                 <Settings />
               </RequiredAuth>
+            </>
+          }
+        />
+        <Route
+          path="/userProfile"
+          element={
+            <>
+              {/* <RequiredAuth> */}
+                <MetaTags>
+                  <title>Voosh | User-Profile</title>
+                  <meta
+                    name="voosh web app,  User-Profile page"
+                    content="voosh User-Profile page"
+                  />
+                  <meta property="og:title" content="web-app" />
+                </MetaTags>
+                <UserProfile />
+              {/* </RequiredAuth> */}
             </>
           }
         />

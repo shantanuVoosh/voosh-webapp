@@ -6,6 +6,7 @@ import cookie from "react-cookies";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import StaticHeader from "../components/StaticHeader";
+import { Box, Drawer, Button, List, Divider, ListItem } from "@mui/material";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
@@ -34,14 +35,14 @@ const Settings = () => {
     <>
       <StaticHeader name={"Settings"} addBtn={true} />
       <div className="container">
-        <div className="setting">
-          {/* <div className="setting-container "> */}
-
+        {/* <div className="setting">
+        
           <a href="tel:9015317006" className="long-btn screen-btn btn">
             Call us at +91-9015317006
           </a>
-          {/* </div> */}
-        </div>
+        </div> */}
+
+        
       </div>
       <Footer />
     </>

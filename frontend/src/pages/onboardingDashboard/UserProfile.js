@@ -183,10 +183,10 @@ const UserProfile = ({
     return (
       <>
         <MetaTags>
-          <title>Voosh | User-Profile</title>
+          <title>Voosh | Onboard-User-Profile</title>
           <meta
-            name="voosh web app,  User-Profile page"
-            content="voosh User-Profile page"
+            name="voosh web app,  Onboard-User-Profile page"
+            content="voosh Onboard-User-Profile page"
           />
           <meta property="og:title" content="web-app" />
         </MetaTags>

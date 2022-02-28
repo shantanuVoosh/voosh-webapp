@@ -3,6 +3,7 @@ import { AiOutlineRise, AiOutlineFall } from "react-icons/ai";
 
 const CardStatistics = ({ cardStatistics }) => {
   const {
+    name,
     value: currentValue,
     change,
     benchmark,
@@ -11,7 +12,7 @@ const CardStatistics = ({ cardStatistics }) => {
     isDataPresent,
   } = cardStatistics;
   // ? handle Error if no data
-  if (!isDataPresent) {
+  if (!isDataPresent && name !== "Customer Reviews") {
     return (
       <>
         <div className=" error-card green">
@@ -22,10 +23,37 @@ const CardStatistics = ({ cardStatistics }) => {
       </>
     );
   }
+  if (!isDataPresent) {
+    return (
+      <>
+        <div className=" error-card green">
+          {/* //?top value */}
+          <div className="card-statistics__info">
+            <span
+              className="green"
+              style={{
+                fontSize: "15px",
+                padding: "0.5rem 0",
+                fontWeight: "700",
+                // "@media (max-width: 360px)": {
+                //   fontSize: "15px",
+                // },
+              }}
+            >
+              {" "}
+              Rating not
+              <br />
+              available
+            </span>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   // ?Else Show the value
-  let value = parseInt(currentValue);
-  const diff = value - change;
+  let value = parseFloat(currentValue.toFixed(1));
+  const diff = parseFloat((value - change).toFixed(1));
 
   return (
     <>
@@ -51,36 +79,63 @@ const CardStatistics = ({ cardStatistics }) => {
             })}
           </span>
         )}
-        {type === "percentage" && (
+
+        {type === "number" && (
           <span
             className={`value ${
               changeTypeDirection === "up" ? "green" : "red"
             }`}
           >
-            {value}%
+            {value}
           </span>
         )}
       </div>
-      {/* //?bottom value */}
-      {change !== null ? (
-        <div className="card-statistics__info">
-          {diff >= 0 ? (
-            // ? Positive value
-            <span className="change change-green">{diff}% over target</span>
-          ) : (
-            // ? Negative value
-            <span className="change change-red">
-              {Math.abs(diff)}% below target
+
+      {/* //! Customer Review */}
+      {name === "Revenue" && isDataPresent ? (
+        <>
+          <div className="card-statistics__info">
+            competition comparison
+            <br /> coming soon
+          </div>
+        </>
+      ) : null}
+      {/* //! Customer Review */}
+      {name === "Customer Reviews" && isDataPresent ? (
+        <>
+          <div className="card-statistics__info">
+            <span
+              className={
+                "change  " + `${diff >= 0 ? "change-green" : "change-red"}`
+              }
+            >
+              {diff} below target
             </span>
-          )}{" "}
-        </div>
-      ) : (
-        <div className="card-statistics__info">
-          {/* //! for not present data */}
-          competition comparison
-          <br /> coming soon
-        </div>
-      )}
+          </div>
+        </>
+      ) : null}
+
+      {/* //? for no rating */}
+      {name === "Customer Reviews" && !isDataPresent ? (
+        <>
+          <div className="card-statistics__info">
+            <span
+              className="green"
+              style={{
+                fontSize: "10px",
+                padding: "0.5rem 0",
+                fontWeight: "700",
+                "@media (max-width: 360px)": {
+                  fontSize: "15px",
+                },
+              }}
+            >
+              {" "}
+              Rating not available
+            </span>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };

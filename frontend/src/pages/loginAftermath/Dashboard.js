@@ -40,19 +40,19 @@ const Dashboard = () => {
           sectionName={"Sales"}
         />
         {/* //? Operation Health */}
-        <Card
+        {/* <Card
           iconName={"bar"}
           name={"Operation Health"}
           info={"Analyse and improve your Operational Metrics."}
           sectionName={"Operation Health"}
-        />
-        {/* //?List Score */}
-        {/* <Card
-          iconName={"bar"}
-          name={"Listing Score"}
-          info={"Visibility performance on Swiggy and Zomato"}
-          sectionName={"Listing Score"}
         /> */}
+        {/* //?Customer Reviews */}
+        <Card
+          iconName={"bar"}
+          name={"Customer Reviews"}
+          info={"Click see details to see customer reviews."}
+          sectionName={"Customer Reviews"}
+        />
 
         <div className="mini-cards-container">
           <MiniCard
@@ -63,9 +63,9 @@ const Dashboard = () => {
           />
           <MiniCard
             iconName={"bar"}
-            name={"Customer Reviews"}
-            info={"Visibility performance on Swiggy and Zomato"}
-            sectionName={"Customer Reviews"}
+            name={"Operation Health"}
+            info={"Analyse and improve your Operational Metrics."}
+            sectionName={"Operation Health"}
           />
         </div>
       </div>

@@ -1,14 +1,15 @@
 .static_header-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   grid-gap: 0.5rem;
   width: 100%;
   height: 100%;
   z-index: 1;
   height: 85px;
   padding: 1rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  margin-bottom: 0.5rem;
 }
 
 .add_btn{

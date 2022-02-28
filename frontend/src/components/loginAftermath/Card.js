@@ -10,6 +10,8 @@ import {
   setOhProductIndex,
   setLSProductIndex,
   setSalesProductIndex,
+  setCustomerReviewsProductIndex,
+  customer_reviews_currentProductIndex,
 } from "../../redux/Data/actions/actions";
 
 const Card = ({ iconName, name, info, sectionName }) => {
@@ -17,9 +19,8 @@ const Card = ({ iconName, name, info, sectionName }) => {
   const {
     data,
     resultType,
-    oh_currentProductIndex,
-    ls_currentProductIndex,
     sales_currentProductIndex,
+    customer_reviews_currentProductIndex,
     startDate,
     endDate,
     swiggy_res_id: swiggy_res_id_inside_state,
@@ -34,21 +35,12 @@ const Card = ({ iconName, name, info, sectionName }) => {
   const [Navindex, setNavindex] = React.useState(0);
   const currentProductData = data[Navindex];
 
-  console.log(
-    currentProductData,
-    "currentProductData-----------------------------"
-  );
-
   React.useEffect(() => {
-    console.log(sectionName, "sectionName");
+    // console.log(sectionName, "sectionName");
     // ?for the first time
-    // ! OH
-    if (sectionName === "Operation Health") {
-      setNavindex(oh_currentProductIndex);
-    }
-    // ! LS
-    else if (sectionName === "Listing Score") {
-      setNavindex(ls_currentProductIndex);
+    // ! Customer Reviews
+    if (sectionName === "Customer Reviews") {
+      setNavindex(customer_reviews_currentProductIndex);
     }
     // ! Sales
     else if (sectionName === "Sales") {
@@ -56,17 +48,19 @@ const Card = ({ iconName, name, info, sectionName }) => {
     }
   }, [
     sectionName,
-    oh_currentProductIndex,
-    ls_currentProductIndex,
     sales_currentProductIndex,
+    customer_reviews_currentProductIndex,
   ]);
 
   const {
     operationHealth: { operationHealthMain },
-    listingScore: { listingScoreMain },
     revenue_score: { revenue_score, isDataPresent: isRevenueScorePresent },
     previousMonthRevenue: {
       financialData: { totalSales },
+    },
+    customerReviews: {
+      value: customerReviewsRating,
+      benchmark: customerReviewsRatingBenchmark,
     },
   } = currentProductData;
 
@@ -91,21 +85,22 @@ const Card = ({ iconName, name, info, sectionName }) => {
   };
 
   const handelChange = (index) => {
-    console.log("handelChange Pending");
-    console.log(sectionName, "sectionName");
+    // console.log("handelChange Pending");
+    // console.log(sectionName, "sectionName");
 
-    if (sectionName === "Operation Health") {
-      dispatch(setOhProductIndex(index));
-    }
-    // ! LS
-    else if (sectionName === "Listing Score") {
-      dispatch(setLSProductIndex(index));
+    if (sectionName === "Customer Reviews") {
+      dispatch(setCustomerReviewsProductIndex(index));
     }
     // ! Sales
     else if (sectionName === "Sales") {
       dispatch(setSalesProductIndex(index));
     }
   };
+
+  const isCustomerReviewsPresent =
+    customerReviewsRating !== 0 &&
+    customerReviewsRating !== undefined &&
+    customerReviewsRating !== null;
 
   return (
     <>
@@ -173,6 +168,7 @@ const Card = ({ iconName, name, info, sectionName }) => {
               cardStatistics={{
                 // Todo: temp solution for Prev Month Revenue
                 // ! if prev month is null then show 0
+                name: name,
                 value:
                   resultType === "Custom Range"
                     ? startOfMonth === startDate && endOfMonth === endDate
@@ -212,38 +208,21 @@ const Card = ({ iconName, name, info, sectionName }) => {
               }}
             />
           )}
-          {/* //! Operation Health */}
-          {name === "Operation Health" && (
+          {/* //! Customer Reviews */}
+          {name === "Customer Reviews" && (
             <CardStatistics
               cardStatistics={{
-                value: operationHealthMain.value,
-                benchmark: operationHealthMain.benchmark,
-                type: operationHealthMain.type,
+                name: name,
+                value: customerReviewsRating,
+                benchmark: customerReviewsRatingBenchmark,
+                type: "number",
                 changeTypeDirection: !operationHealthMain.isDataPresent
                   ? "up"
-                  : operationHealthMain.value >= operationHealthMain.benchmark
+                  : customerReviewsRating >= customerReviewsRatingBenchmark
                   ? "up"
                   : "down",
-                change: operationHealthMain.benchmark,
-                isDataPresent: operationHealthMain.isDataPresent,
-              }}
-            />
-          )}
-          {/* //! Listing Score */}
-          {name === "Listing Score" && (
-            <CardStatistics
-              cardStatistics={{
-                value: listingScoreMain.value,
-                benchmark: listingScoreMain.benchmark,
-                type: listingScoreMain.type,
-                changeTypeDirection: !listingScoreMain.isDataPresent
-                  ? "up"
-                  : listingScoreMain.value >= listingScoreMain.benchmark
-                  ? "up"
-                  : "down",
-                // changeTypeDirection: listingScoreMain - 90 > 0 ? "up" : "down",
-                change: listingScoreMain.benchmark,
-                isDataPresent: listingScoreMain.isDataPresent,
+                change: customerReviewsRatingBenchmark,
+                isDataPresent: isCustomerReviewsPresent,
               }}
             />
           )}

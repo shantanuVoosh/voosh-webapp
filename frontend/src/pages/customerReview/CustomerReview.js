@@ -4,15 +4,40 @@ import InfoCard from "../../components/InfoCard";
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Switch from "@mui/material/Switch";
 // const resultType = "month";
 
 const CustomerReviews = () => {
   const { data, oh_currentProductIndex } = useSelector((state) => state.data);
-  const resultType = useSelector((state) => state.data.resultType);
+  const { resultType } = useSelector((state) => state.data);
   const navigate = useNavigate();
 
   const { customerReviews } = data[oh_currentProductIndex];
   const { negative, ordersPerRating, value, totalRatings } = customerReviews;
+
+  const [negativeItemList, setNegativeItemList] = React.useState([]);
+  const [toggleButtonChecked, setToggleButtonChecked] = React.useState(false);
+
+  const handleToggleButtonChange = (event) => {
+    if (!toggleButtonChecked) sortByTotalOrders();
+    else setNegativeItemList([...negative]);
+
+    setToggleButtonChecked(event.target.checked);
+  };
+
+  React.useEffect(() => {
+    setNegativeItemList([...negative]);
+  }, []);
+
+  const sortByTotalOrders = () => {
+
+    console.log("sortByTotalOrders before", negativeItemList);
+    const sorted = negativeItemList.sort((a, b) => {
+      return b.item_sales - a.item_sales;
+    });
+    setNegativeItemList(sorted);
+    console.log("sortByTotalOrders after", sorted);
+  };
 
   const ratings = Object.keys(ordersPerRating).map((key) => {
     let rating = key.split("_")[0];
@@ -27,7 +52,7 @@ const CustomerReviews = () => {
     totalRatings,
     "-----------------"
   );
-  console.log(ratings, "ratings");
+  // console.log(ratings, "ratings");
   // console.log(ratings, "ratings", value, "value");
   const colors = ["#2A327D", "#00C689", "#FFCA00", "#FFB039", "#FE645A"];
 
@@ -72,15 +97,42 @@ const CustomerReviews = () => {
           })}
         </div>
         <div className="customer_review__sub-heading">
-          {negative.length > 0 && (
-            <div className="customer_review__sub-heading--text">
-              Major Complains By Customer In{" "}
-              {resultType !== "Custom Range" ? resultType : "In this Range"}
+          {negativeItemList.length > 0 && (
+            <div
+              className="customer_review__sub-heading--text"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>
+                Major Complains By Customer In
+                <br />
+                {resultType}
+              </span>
+              <span className="">
+                {" "}
+                <Switch
+                  checked={toggleButtonChecked}
+                  onChange={handleToggleButtonChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+                <br />
+                <span
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "500",
+                  }}
+                >
+                  Sort By Sales
+                </span>
+              </span>
             </div>
           )}
         </div>
         <div className="negative-reviews">
-          {negative.length > 0
+          {negativeItemList.length > 0
             ? negative.map((item, index) => {
                 const {
                   item_name,

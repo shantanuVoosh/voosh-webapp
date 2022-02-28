@@ -58,6 +58,15 @@
 @import "loginAftermath/dashboard";
 @import "amplitudeCopy/amplitude";
 @import "operationHealth/operationHealth";
+@import "timeSeries/timeSeries";
+@import "listingScore/listingScore";
+@import "revenue/revenue_a";
+@import "revenue/revenue_b";
+@import "revenue/revenue";
+@import "adsAndAnalytics/adsAndAnalytics";
+@import "customerReviews/customerReviews";
+@import "userProfile/userProfile";
+
 @import "onboradingDashboard/home";
 @import "onboradingDashboard/explore";
 @import "onboradingDashboard/findMore";
@@ -69,10 +78,3 @@
 @import "onboradingDashboard/congratulationPage.scss";
 @import "onboradingDashboard/partnerRegistrationPage.scss";
 @import "onboradingDashboard/notification";
-@import "timeSeries/timeSeries";
-@import "listingScore/listingScore";
-@import "revenue/revenue_a";
-@import "revenue/revenue_b";
-@import "revenue/revenue";
-@import "adsAndAnalytics/adsAndAnalytics";
-@import "customerReviews/customerReviews";

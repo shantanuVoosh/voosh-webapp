@@ -7,6 +7,7 @@ import { VscPreview } from "react-icons/vsc";
 import {
   setLSProductIndex,
   setCustomerReviewsProductIndex,
+  setOhProductIndex,
 } from "../../redux/Data/actions/actions";
 
 const MiniCard = ({ name, info, sectionName }) => {
@@ -15,10 +16,7 @@ const MiniCard = ({ name, info, sectionName }) => {
     data,
     oh_currentProductIndex,
     ls_currentProductIndex,
-    sales_currentProductIndex,
-    customer_reviews_currentProductIndex,
-    startDate,
-    endDate,
+
     swiggy_res_id: swiggy_res_id_inside_state,
     zomato_res_id: zomato_res_id_inside_state,
   } = useSelector((state) => state.data);
@@ -31,11 +29,6 @@ const MiniCard = ({ name, info, sectionName }) => {
   const [Navindex, setNavindex] = React.useState(0);
   const currentProductData = data[Navindex];
 
-  console.log(
-    currentProductData,
-    "currentProductData-----------------------------"
-  );
-
   React.useEffect(() => {
     console.log(sectionName, "sectionName");
     // ?for the first time
@@ -47,32 +40,22 @@ const MiniCard = ({ name, info, sectionName }) => {
     else if (sectionName === "Listing Score") {
       setNavindex(ls_currentProductIndex);
     }
-    // ! Sales
-    else if (sectionName === "Sales") {
-      setNavindex(sales_currentProductIndex);
-    }
-    // ! Customer Reviews
-    else if (sectionName === "Customer Reviews") {
-      setNavindex(customer_reviews_currentProductIndex);
-    }
-  }, [
-    sectionName,
-    oh_currentProductIndex,
-    ls_currentProductIndex,
-    sales_currentProductIndex,
-    customer_reviews_currentProductIndex,
-  ]);
+  }, [sectionName, oh_currentProductIndex, ls_currentProductIndex]);
 
   const {
     listingScore: {
       listingScoreMain: {
         value: listingScoreValue,
         benchmark: listingScoreBenchmark,
+        isDataPresent: listingScoreIsDataPresent,
       },
     },
-    customerReviews: {
-      value: customerReviewsRating,
-      benchmark: customerReviewsRatingBenchmark,
+    operationHealth: {
+      operationHealthMain: {
+        value: operationHealthValue,
+        benchmark: operationHealthBenchmark,
+        isDataPresent: isOperationHealthDataPresent,
+      },
     },
   } = currentProductData;
 
@@ -84,12 +67,9 @@ const MiniCard = ({ name, info, sectionName }) => {
   };
 
   const handelChange = (index) => {
-    // console.log("handelChange Pending");
-    // console.log(sectionName, "sectionName");
-
-    // ! Customer Reviews
-    if (sectionName === "Customer Reviews") {
-      dispatch(setCustomerReviewsProductIndex(index));
+    // ! "Operation Health"
+    if (sectionName === "Operation Health") {
+      dispatch(setOhProductIndex(index));
     }
     // ! LS
     else if (sectionName === "Listing Score") {
@@ -97,10 +77,40 @@ const MiniCard = ({ name, info, sectionName }) => {
     }
   };
 
-  const isCustomerReviewsPresent =
-    customerReviewsRating !== 0 &&
-    customerReviewsRating !== undefined &&
-    customerReviewsRating !== null;
+  // Todo: not used
+  const ValueContainer = ({ value, benchmark, isDataPresent }) => {
+    if (!isDataPresent) {
+      return (
+        <div className="mini-card__body">
+          <div className="mini-card__body--score">
+            <div className="green">Working on it..</div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mini-card__body">
+        <div className="mini-card__body--score">
+          {value > benchmark ? (
+            <div className="green">
+              <span>
+                <AiOutlineRise />
+              </span>
+              <span> {value.toFixed(2)}%</span>
+            </div>
+          ) : (
+            <div className="red">
+              <span>
+                <AiOutlineFall />
+              </span>
+              <span> {value.toFixed(2)}%</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -150,64 +160,53 @@ const MiniCard = ({ name, info, sectionName }) => {
         </div>
         <div className="mini-card__body">
           <div className="mini-card__body--score">
-            {name === "Customer Reviews" && isCustomerReviewsPresent && (
+            {isOperationHealthDataPresent && name === "Operation Health" && (
               <>
-                {customerReviewsRating > customerReviewsRatingBenchmark ? (
+                {operationHealthValue > operationHealthBenchmark ? (
                   <div className="green">
                     <span>
                       <AiOutlineRise />
                     </span>
-                    <span>{customerReviewsRating}</span>
+                    <span> {operationHealthValue.toFixed(1)}%</span>
                   </div>
                 ) : (
                   <div className="red">
                     <span>
                       <AiOutlineFall />
                     </span>
-                    <span>{customerReviewsRating}</span>
+                    <span> {operationHealthValue.toFixed(1)}%</span>
                   </div>
                 )}
               </>
             )}
-            {/* {name === "Customer Reviews" && (
-              <div className="green">
-                <VscPreview size={30} />
-              </div>
-            )} */}
-            {name === "Customer Reviews" && !isCustomerReviewsPresent && (
-              <div
-                className="green"
-                style={{
-                  fontSize: "10px",
-                  padding: "0.5rem 0",
-                  fontWeight: "700",
-                  "@media (max-width: 360px)": {
-                    fontSize: "15px",
-                  },
-                }}
-              >
-                {" "}
-                Rating not available
+            {!isOperationHealthDataPresent && name === "Operation Health" && (
+              <div className="mini-card__body--score">
+                <div className="green">Working on it..</div>
               </div>
             )}
-            {name === "Listing Score" && (
+            {listingScoreIsDataPresent && name === "Listing Score" && (
               <>
                 {listingScoreValue > listingScoreBenchmark ? (
                   <div className="green">
                     <span>
                       <AiOutlineRise />
                     </span>
-                    <span> {listingScoreValue}%</span>
+                    <span> {listingScoreValue.toFixed(1)}%</span>
                   </div>
                 ) : (
                   <div className="red">
                     <span>
                       <AiOutlineFall />
                     </span>
-                    <span> {listingScoreValue}%</span>
+                    <span> {listingScoreValue.toFixed(1)}%</span>
                   </div>
                 )}
               </>
+            )}
+            {!listingScoreIsDataPresent && name === "Listing Score" && (
+              <div className="mini-card__body--score">
+                <div className="green">Working on it..</div>
+              </div>
             )}
           </div>
         </div>
