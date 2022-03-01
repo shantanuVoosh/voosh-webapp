@@ -39,13 +39,6 @@ const Dashboard = () => {
           info={"Dive into sales, deduction, commissions, etc."}
           sectionName={"Sales"}
         />
-        {/* //? Operation Health */}
-        {/* <Card
-          iconName={"bar"}
-          name={"Operation Health"}
-          info={"Analyse and improve your Operational Metrics."}
-          sectionName={"Operation Health"}
-        /> */}
         {/* //?Customer Reviews */}
         <Card
           iconName={"bar"}
