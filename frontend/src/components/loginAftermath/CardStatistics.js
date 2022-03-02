@@ -11,6 +11,17 @@ const CardStatistics = ({ cardStatistics }) => {
     type,
     isDataPresent,
   } = cardStatistics;
+
+  console.log({
+    name,
+    value: currentValue,
+    change,
+    benchmark,
+    changeTypeDirection,
+    type,
+    isDataPresent,
+  });
+
   // ? handle Error if no data
   if (!isDataPresent && name !== "Customer Reviews") {
     return (
@@ -106,10 +117,10 @@ const CardStatistics = ({ cardStatistics }) => {
           <div className="card-statistics__info">
             <span
               className={
-                "change  " + `${diff >= 0 ? "change-green" : "change-red"}`
+                "change " + `${diff >= 0 ? "change-green" : "change-red"}`
               }
             >
-              {diff} below target
+              {diff >= 0 ? `${diff} above target` : `${diff} below target`}
             </span>
           </div>
         </>

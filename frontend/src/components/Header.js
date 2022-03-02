@@ -35,6 +35,11 @@ const APP_TOKEN = "voosh-token";
 const clientId =
   "383868004224-r359p669am3jbghshp42l4h7c7ab62s7.apps.googleusercontent.com";
 
+// Todo: Month bug fix
+const currentDateMinus12Hours = moment().add(-12, "hours").format("YYYY-MM-DD");
+
+const startOfMonth = moment().startOf("month").format("YYYY-MM-DD");
+
 const Header = ({
   heading,
   restaurantName,
@@ -63,14 +68,17 @@ const Header = ({
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [isRestaurantListOpen, setRestaurantListOpen] = React.useState(false);
   const [isResultTypeOpen, setResultTypeOpen] = React.useState(false);
-  const [allResultType, setAllResultType] = React.useState([
-    "This Week",
-    "Previous Week",
-    "This Month",
-    "Previous Month",
-    // Todo: testing purpose
-    "Custom Range",
-  ]);
+  const [allResultType, setAllResultType] = React.useState(
+    startOfMonth === currentDateMinus12Hours
+      ? ["This Week", "Previous Week", "Previous Month", "Custom Range"]
+      : [
+          "This Week",
+          "Previous Week",
+          "This Month",
+          "Previous Month",
+          "Custom Range",
+        ]
+  );
   const resultTypeRef = React.useRef(null);
   const restaurantListRef = React.useRef(null);
 
@@ -160,24 +168,24 @@ const Header = ({
       // ? if Custom Range, the set this Month as default or skip this
       if (resultType === "Custom Range") {
         // console.log("yup, it is custom range");
-        dispatch(setResultType("This Month"));
+        if (startOfMonth !== currentDateMinus12Hours) {
+          dispatch(setResultType("This Month"));
+        }
       }
 
-      setAllResultType([
-        "This Week",
-        "Previous Week",
-        "This Month",
-        "Previous Month",
-      ]);
+      setAllResultType(
+        startOfMonth === currentDateMinus12Hours
+          ? ["This Week", "Previous Week", "Previous Month"]
+          : ["This Week", "Previous Week", "This Month", "Previous Month"]
+      );
       return;
     }
     if (pathname === "/allReviews") {
-      setAllResultType([
-        "This Week",
-        "Previous Week",
-        "This Month",
-        "Previous Month",
-      ]);
+      setAllResultType(
+        startOfMonth === currentDateMinus12Hours
+          ? ["This Week", "Previous Week", "Previous Month"]
+          : ["This Week", "Previous Week", "This Month", "Previous Month"]
+      );
       return;
     }
     // !On Revenue page
@@ -186,29 +194,47 @@ const Header = ({
         dispatch(setResultType("This Month"));
       }
 
-      setAllResultType([
-        "Previous Day",
-        "This Week",
-        "Previous Week",
-        "This Month",
-        "Previous Month",
-        "Custom Range",
-      ]);
+      setAllResultType(
+        startOfMonth === currentDateMinus12Hours
+          ? [
+              "Previous Day",
+              "This Week",
+              "Previous Week",
+              "Previous Month",
+              "Custom Range",
+            ]
+          : [
+              "Previous Day",
+              "This Week",
+              "Previous Week",
+              "This Month",
+              "Previous Month",
+              "Custom Range",
+            ]
+      );
     }
     // ! go back old dropdown
     else if (pathname !== "/revenue") {
       // * check if the result type is "Prev Day" or not
       // ?
       if (resultType === "Previous Day") {
-        dispatch(setResultType("This Month"));
+        if (startOfMonth !== currentDateMinus12Hours) {
+          dispatch(setResultType("This Month"));
+        }else{
+          dispatch(setResultType("This Week"));
+        }
       }
-      setAllResultType([
-        "This Week",
-        "Previous Week",
-        "This Month",
-        "Previous Month",
-        "Custom Range",
-      ]);
+      setAllResultType(
+        startOfMonth === currentDateMinus12Hours
+          ? ["This Week", "Previous Week", "Previous Month", "Custom Range"]
+          : [
+              "This Week",
+              "Previous Week",
+              "This Month",
+              "Previous Month",
+              "Custom Range",
+            ]
+      );
     }
   }, [location.pathname]);
 

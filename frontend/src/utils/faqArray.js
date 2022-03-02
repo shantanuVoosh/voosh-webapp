@@ -21,7 +21,8 @@ const faqArray = [
   },
   {
     question: "My data is wrong. What do I do?",
-    answer: `We really apologize if this is the case. Please raise a query here`,
+    answer: `We really apologize if this is the case.
+     Please raise a query here +91-6366183606`,
     points: [],
   },
   {
@@ -58,7 +59,7 @@ const faqArray = [
   },
   {
     question: "My account has been locked; how do I unlock it?",
-    answer: `You can raise a request at products@voosh.in or call support`,
+    answer: `You can raise a request at products@voosh.in or call 6366183606`,
     points: [],
   },
   {

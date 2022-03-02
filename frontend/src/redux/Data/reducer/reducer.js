@@ -1,11 +1,18 @@
 import { ActionTypes } from "../actionTypes/actionTypes";
 import { getCurrentMonthDate } from "../../../utils/dateProvider";
+import moment from "moment";
+
+// Todo: Month bug fix
+const currentDateMinus12Hours = moment().add(-12, "hours").format("YYYY-MM-DD");
+
+const startOfMonth = moment().startOf("month").format("YYYY-MM-DD");
 
 const initialState = {
   res_name: "",
   data: [],
   currentProductIndex: -1,
-  resultType: "This Month",
+  resultType:
+    currentDateMinus12Hours !== startOfMonth ? "This Month" : "This Week",
   // Todo new value for test
   allRestaurants: [],
   phone: "",

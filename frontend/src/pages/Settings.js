@@ -6,6 +6,7 @@ import cookie from "react-cookies";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import StaticHeader from "../components/StaticHeader";
+import { RiCloseCircleFill } from "react-icons/ri";
 import { Box, Drawer, Button, List, Divider, ListItem } from "@mui/material";
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
@@ -35,14 +36,21 @@ const Settings = () => {
     <>
       <StaticHeader name={"Settings"} addBtn={true} />
       <div className="container">
-        {/* <div className="setting">
-        
-          <a href="tel:9015317006" className="long-btn screen-btn btn">
-            Call us at +91-9015317006
-          </a>
-        </div> */}
+        <Box sx={{ width: "100%" }}>
+          <div className="sidebar-list">
+            {/* <Divider /> */}
 
-        
+            <div className="list" onClick={() => navigate("/userProfile")}>
+              Profile
+            </div>
+            <Divider />
+
+            <div className="list" onClick={() => navigate("/faq")}>
+              FAQ
+            </div>
+            <Divider />
+          </div>
+        </Box>
       </div>
       <Footer />
     </>

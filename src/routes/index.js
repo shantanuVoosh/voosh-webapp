@@ -5,6 +5,8 @@ const {
   getAllSwiggyAndZomatoRestaurants,
 } = require("../utils/getAllRestaurants");
 
+const { getUserDetails } = require("../utils/getUserDetails");
+
 const { checkAuthentication } = require("../controller/checkAuth");
 
 const { getAllSwiggyData } = require("../DataProviders/getAllSwiggyData");
@@ -80,6 +82,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     }
 
     let newRestaurantList = [];
+    const userDeatils = await getUserDetails({ phone: phone });
 
     const getAllSwiggyAndZomatoRestaurantsData =
       await getAllSwiggyAndZomatoRestaurants(phone);
@@ -138,6 +141,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         res_name: restaurant_name,
         newRestaurantList: newRestaurantList,
         res_id: res_id,
+        userDeatils: userDeatils,
         api_data2: [swiggyData, zomatoData],
         listingID: listingID !== "" ? listingID : listing_id,
       },
@@ -274,36 +278,33 @@ router.post("/login-voosh", async (req, res) => {
 
   const nvdpColleaction = "non_voosh_dashboard_products";
 
-  // console.log("phoneNumber", phoneNumber);
+  console.log("phoneNumber", typeof phoneNumber);
+
   // return;
+  // ! testing, Demo purpose
+  if (phoneNumber === "5432112345") {
+    console.log("sample user set");
+    const token = jwt.sign({ phone: phoneNumber, tempUser: true }, secret, {});
+    return res.json({
+      status: "success",
+      isAuth: true,
+      isAuthTemp: false,
+      token: token,
+      restaurantList: [],
+      restaurantDetails: {
+        listing_id: "P0101",
+        restaurant_name: "Sample Restaurant",
+        swiggy_res_id: 256302,
+        zomato_res_id: 56834,
+      },
+      dummyUser: true,
+    });
+  }
 
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
-
-    // ! testing, Demo purpose
-    if (phoneNumber === "5432112345") {
-      const token = jwt.sign(
-        { phone: phoneNumber, tempUser: true },
-        secret,
-        {}
-      );
-      return res.json({
-        status: "success",
-        isAuth: true,
-        isAuthTemp: false,
-        token: token,
-        restaurantList: [],
-        restaurantDetails: {
-          listing_id: "P0101",
-          restaurant_name: "Sample Restaurant",
-          swiggy_res_id: 256302,
-          zomato_res_id: 56834,
-        },
-        dummyUser: true,
-      });
-    }
 
     // !testing purpose
     // ? You Me and Tea
@@ -470,11 +471,11 @@ router.post("/login-voosh", async (req, res) => {
     }
   } catch (err) {
     // ! Error while connecting to DB, or While Querying
-    console.log("Error while saving user: " + err);
+    console.log("Error while connecting to database: " + err);
     res.json({
       status: "error",
       isAuthTemp: false,
-      message: "Error while saving user, Server Error",
+      message: "Error while connecting to database, Server Error",
       isSwiggyNumberPresent: false,
       isZomatoNumberPresent: false,
       isDataReady: false,
@@ -1144,6 +1145,13 @@ router.post(
   }
 );
 
+// Todo: route incomplete
+router.post("/user/update/swiggy-password", async (req, res) => {
+  res.json({
+    status: "success",
+  });
+});
+
 //! test route
 
 // ? zomato lsitings
@@ -1410,6 +1418,63 @@ router.get("/get-cfh-data", async (req, res) => {
     res.json({
       status: "error",
       message: `Error while getting data :${err}`,
+    });
+  }
+});
+
+router.get("/data-x", async (req, res) => {
+  const nvdpColleaction = "non_voosh_dashboard_products";
+  let phone = 9448467130;
+  console.log("*****************--------------------********************");
+  console.log("inside getUserDetails");
+  console.log("phone", phone);
+
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    const userData = await db
+      .collection(nvdpColleaction)
+      .findOne({ owner_number: phone });
+
+    console.log("userData", userData);
+
+    if (userData) {
+      const {
+        owner_name,
+        owner_number,
+        kitchen_id,
+        swiggy_password,
+        swiggy_register_phone,
+        zomato_register_phone,
+      } = userData;
+
+      console.log("*****************--------------------********************");
+
+      res.json({
+        owner_name,
+        owner_number,
+        kitchen_id,
+        swiggy_password,
+        swiggy_register_phone,
+        zomato_register_phone,
+      });
+    } else {
+      console.log("*****************--------------------********************");
+      res.json({
+        owner_name: null,
+        owner_number: null,
+        kitchen_id: null,
+        swiggy_password: null,
+        swiggy_register_phone: null,
+        zomato_register_phone: null,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: "error",
     });
   }
 });

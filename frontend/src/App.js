@@ -33,6 +33,7 @@ import NewSignup from "./pages/signup/NewSignup"; // ! For testing purpose A and
 import NewSignupA from "./pages/signup/NewSignupA";
 import AmplitudePage from "./pages/amplitudeCopy/Amplitude";
 import UserProfile from "./pages/userProfile/UserProfile";
+import FAQ from "./pages/faq/Faq";
 
 function App() {
   const location = useLocation();
@@ -102,24 +103,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/userProfile"
-          element={
-            <>
-              {/* <RequiredAuth> */}
-                <MetaTags>
-                  <title>Voosh | User-Profile</title>
-                  <meta
-                    name="voosh web app,  User-Profile page"
-                    content="voosh User-Profile page"
-                  />
-                  <meta property="og:title" content="web-app" />
-                </MetaTags>
-                <UserProfile />
-              {/* </RequiredAuth> */}
-            </>
-          }
-        />
+
         <Route
           path="/notification"
           element={
@@ -163,23 +147,61 @@ function App() {
             </RequiredAuth>
           }
         />
-        {/* //Todo: Delete */}
-        {/* <Route
-          path="/dashboard-sample"
+
+        <Route
+          path="/userProfile"
           element={
             <>
               <MetaTags>
-                <title>Voosh | Sample-Dashboard</title>
+                <title>Voosh | User-Profile</title>
                 <meta
-                  name="voosh web app, Sample-Dashboard page"
-                  content="voosh Sample-Dashboard page"
+                  name="voosh web app, User-Profile page"
+                  content="voosh User-Profile page"
                 />
                 <meta property="og:title" content="web-app" />
               </MetaTags>
-              <LoginAftermathDashboardWithNoData />
+              <RequiredAuth>
+                <UserProfile />
+              </RequiredAuth>
             </>
           }
-        /> */}
+        />
+        <Route
+          path="/faq"
+          element={
+            <>
+              <MetaTags>
+                <title>Voosh | FAQ</title>
+                <meta
+                  name="voosh web app,  FAQ page"
+                  content="voosh FAQ page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <RequiredAuth>
+                <FAQ />
+              </RequiredAuth>
+            </>
+          }
+        />
+        <Route
+          path="/faq"
+          element={
+            <>
+              <MetaTags>
+                <title>Voosh | User-Profile</title>
+                <meta
+                  name="voosh web app, User-Profile page"
+                  content="voosh User-Profile page"
+                />
+                <meta property="og:title" content="web-app" />
+              </MetaTags>
+              <RequiredAuth>
+                <UserProfile />
+              </RequiredAuth>
+            </>
+          }
+        />
         <Route
           path="/revenue"
           element={

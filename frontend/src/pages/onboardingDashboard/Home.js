@@ -1205,7 +1205,8 @@ const Home = ({
                       // );
                     }}
                   >
-                    Call Us @ +91-9015317006
+                    
+                    Call Us @ +91-6366183606
                   </span>
                 </div>
               </div>
@@ -1402,7 +1403,7 @@ const Home = ({
                       // );
                     }}
                   >
-                    Call Us +91-9015317006
+                    Call Us +91-6366183606
                   </span>
                 </div>
               </div>
@@ -1563,7 +1564,7 @@ const Home = ({
                       });
                     }}
                   >
-                    Call Us @+91-9015317006
+                    Call Us @+91-6366183606
                   </span>
                 </div>
               </div>

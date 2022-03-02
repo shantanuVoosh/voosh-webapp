@@ -39,6 +39,9 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
         const z_data = zomatoData.find((item) => item.listing_id === Lid);
         const swiggy_res_id = s_data?.swiggy_res_id;
         const zomato_res_id = z_data?.zomato_res_id;
+        const zomato_register_phone = z_data?.zomato_register_phone;
+        const swiggy_register_phone = s_data?.swiggy_register_phone;
+        const swiggy_password = s_data?.swiggy_password;
         const s_run_date = s_data?.run_date;
         const restaurant_name =
           s_data !== undefined
@@ -47,6 +50,9 @@ async function getAllSwiggyAndZomatoRestaurants(phone) {
 
         return {
           restaurant_name,
+          zomato_register_phone,
+          swiggy_register_phone,
+          swiggy_password,
           listing_id: Lid,
           swiggy_res_id: swiggy_res_id === undefined ? null : swiggy_res_id,
           zomato_res_id: zomato_res_id === undefined ? null : zomato_res_id,
