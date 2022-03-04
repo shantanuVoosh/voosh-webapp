@@ -276,7 +276,8 @@ router.post("/login-voosh", async (req, res) => {
   // const onboardProductsColleaction = "onboard_products";
   // const onboardNotificationsCollection = "Onboard_Notifications";
 
-  const nvdpColleaction = "non_voosh_dashboard_products";
+  // const nvdpColleaction = "non_voosh_dashboard_products";
+  const nvdpColleaction = "non_voosh_dashboard_products_UAT";
 
   console.log("phoneNumber", typeof phoneNumber);
 
@@ -761,6 +762,8 @@ router.post(
     const { userName, userEmail } = req.body;
     const onboardProductsColleaction = "Onboard_New_Users_UAT";
     const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    // const onboardProductsColleaction = "onboard_products";
+    // const onboardNotificationsCollection = "Onboard_Notifications";
     console.log("Update onboard data basic details");
 
     try {
@@ -812,6 +815,8 @@ router.post(
     const { swiggyNumber, swiggyPassword } = req.body;
     const onboardProductsColleaction = "Onboard_New_Users_UAT";
     const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    // const onboardProductsColleaction = "onboard_products";
+    // const onboardNotificationsCollection = "Onboard_Notifications";
     console.log("Update onboard data swiggy details");
 
     try {
@@ -863,6 +868,8 @@ router.post(
     const { zomatoNumber } = req.body;
     const onboardProductsColleaction = "Onboard_New_Users_UAT";
     const onboardNotificationsCollection = "Onboard_Notifications_UAT";
+    // const onboardProductsColleaction = "onboard_products";
+    // const onboardNotificationsCollection = "Onboard_Notifications";
     console.log("Update onboard data Zomato details");
 
     try {
@@ -1145,16 +1152,241 @@ router.post(
   }
 );
 
-// Todo: route incomplete
-router.post("/user/update/swiggy-password", async (req, res) => {
-  res.json({
-    status: "success",
-  });
+// Todo: all related docs will be updated
+// ! update swiggy password on main app
+router.post(
+  "/user/update/swiggy-password",
+  checkAuthentication,
+  async (req, res) => {
+    const nvdpColleaction = "non_voosh_dashboard_products_UAT";
+    // const nvdpColleaction = "non_voosh_dashboard_products";
+
+    const swiggyNvdpCollection = "swiggy_nvdp_UAT";
+    // const swiggyNvdpCollection='swiggy_nvdp'
+    const { phone } = req.payload;
+    const { swiggy_register_phone, swiggy_password, listing_id } = req.body;
+    const fetch = (...args) =>
+      import("node-fetch").then(({ default: fetch }) => fetch(...args));
+    const swiggyURL =
+      "https://partner.swiggy.com/registration/v2/registration-status?userId=";
+
+    const swiggyPasswordCheckURL =
+      "https://partner.swiggy.com/authentication/v1/login";
+
+    console.log(swiggy_register_phone, swiggy_password, listing_id);
+
+    try {
+      console.log(swiggy_register_phone);
+      const swiggyNumberResponse = await (
+        await fetch(`${swiggyURL}${swiggy_register_phone}`)
+      ).json();
+
+      console.log(swiggyNumberResponse);
+      const { statusCode, statusMessage } = swiggyNumberResponse;
+      const userPresentMessage =
+        "User already registered with this mobile number";
+      const userNotPresentMessage = "Invalid Mobile Number";
+
+      // ? if in future swiggy api response json is changed
+      if (statusCode === undefined || statusMessage === undefined) {
+        res.json({
+          status: "error",
+          message: `Server Error While Checking Swiggy Details, Please Try Again Later`,
+        });
+        return;
+      }
+
+      // ? if swiggy number is not registered this the response
+      if (statusCode === -1 || statusMessage === userNotPresentMessage) {
+        return res.json({
+          status: "error",
+          message: `Your Swiggy Number is no longer registered With Swiggy!`,
+        });
+      }
+
+      // ? if swiggy number is registered then,
+      // *now check password!
+      if (statusCode === -2 || statusMessage === userPresentMessage) {
+        // if (true) {
+        // console.log("swiggy check", swiggy_register_phone, swiggy_password);
+        const userPasswordCorrectMessage = "Login Successful";
+        const userPasswordIncorrectMessage = "incorrect password entered";
+
+        const swiggyPasswordResponse = await (
+          await fetch(`${swiggyPasswordCheckURL}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              username: swiggy_register_phone,
+              password: swiggy_password,
+              accept_tnc: true,
+            }),
+          })
+        ).json();
+
+        console.log(
+          swiggyPasswordResponse,
+          "swiggyPasswordResponse",
+          "********************--------------------------"
+        );
+
+        const {
+          statusCode,
+          statusMessage,
+          user_id: user_register_phone,
+          permissions,
+          outlets,
+        } = swiggyPasswordResponse;
+
+        // ! now if statusCode is -1 then password is wrong, and 0 means success
+        // if (true) {
+        if (statusCode === 0 || statusMessage === userPasswordCorrectMessage) {
+          // Todo: update the password here
+
+          try {
+            const client = await MongoClient.connect(VooshDB, {
+              useNewUrlParser: true,
+            });
+            const db = client.db(documentName);
+            const query = { owner_number: parseInt(phone) };
+            const update = {
+              $set: {
+                swiggy_password: swiggy_password,
+              },
+            };
+
+            const res_w = await db
+              .collection(nvdpColleaction)
+              .updateOne(query, update, async (err, result) => {
+                console.log("here--1");
+                if (err) {
+                  console.log("here--1.2");
+                  return res.json({
+                    status: "error",
+                    message: "Error while saving details, Server Error",
+                    error: err,
+                  });
+                } else {
+                  // update all docs
+                  console.log("here--2");
+                  await db
+                    .collection(swiggyNvdpCollection)
+                    .updateMany(query, update, async (err, result) => {
+                      if (err) {
+                        console.log("here--2.1");
+                        return res.json({
+                          status: "error",
+                          message: "Error while saving details, Server Error",
+                          error: err,
+                        });
+                      } else {
+                        console.log("here--2.2");
+                        return res.json({
+                          status: "success",
+                          message: "Password updated successfully",
+                        });
+                      }
+                    });
+                }
+              });
+
+            console.log(res_w);
+          } catch (error) {
+            console.log("Error while updating", error);
+            res.json({
+              status: "error",
+              message: "Error while updating swiggy number",
+              error: error,
+            });
+          }
+        }
+
+        if (
+          statusCode === -1 ||
+          statusMessage === userPasswordIncorrectMessage
+        ) {
+          return res.json({
+            status: "error",
+            message: `Password is incorrect!`,
+          });
+        }
+
+        // // * if  no match found then return server error
+        // return res.json({
+        //   status: "error",
+        //   message: `Server Error While Checking Swiggy Password, Please Try Again Later`,
+        // });
+      }
+    } catch (err) {
+      res.json({
+        status: "error",
+        message: `Error while checking swiggy number :${err}`,
+      });
+    }
+  }
+);
+
+// Todo: Now for UAT
+// ! Save email main app
+router.post("/user/update/email", checkAuthentication, async (req, res) => {
+  const { email, phoneNumber } = req.body;
+  const { phone } = req.payload;
+
+  console.log(email, "email");
+  const nvdpColleaction = "non_voosh_dashboard_products_UAT";
+  // const nvdpColleaction = "non_voosh_dashboard_products";
+
+  // console.log("email", email);
+  // console.log("phoneNumber", phoneNumber);
+  // console.log("phone", phone);
+  const current_phone_number = parseInt(phone);
+
+  // ? add new field email in onboard_products
+  // ? but check if user is already provided email?
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+
+    const query = { owner_number: current_phone_number };
+    const update = {
+      $set: {
+        email: email,
+      },
+    };
+
+    await db
+      .collection(nvdpColleaction)
+      .updateOne(query, update, (err, result) => {
+        if (err) {
+        } else {
+          // console.log(result, "result");
+          res.json({
+            status: "success",
+            message: "Email saved",
+          });
+        }
+      });
+  } catch (err) {
+    res.json({
+      status: "error",
+      message: "Error while sending data from server data",
+      error: err,
+    });
+  }
+
+  // res.json({
+  //   status: "success",
+  //   message: "Email sent successfully",
+  // });
 });
 
 //! test route
-
-// ? zomato lsitings
+//? zomato lsitings
 router.post("/test-listing", async (req, res) => {
   const { res_id } = req.body;
   const collectionName = "zomato_audit_score";

@@ -7,3 +7,33 @@ const video_urls = {
 };
 
 module.exports = {video_urls};
+
+
+// .updateOne(query, update, async (err, result) => {
+//   if (err) {
+//     res.json({
+//       status: "error",
+//       message: "Error while saving details, Server Error",
+//       error: err,
+//     });
+//   } else {
+//     await db
+//       .collection(swiggyNvdpCollection)
+//       .updateOne(query, update, async (err, result) => {
+//         if (err) {
+//           res.json({
+//             status: "error",
+//             message:
+//               "Error while saving zomato details, Server Error",
+//             error: err,
+//           });
+//         } else {
+//           res.json({
+//             status: "success",
+//             message: "Password Updated!",
+//             error: err,
+//           });
+//         }
+//       });
+//   }
+// });

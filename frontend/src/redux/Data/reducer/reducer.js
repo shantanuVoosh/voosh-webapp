@@ -8,6 +8,13 @@ const currentDateMinus12Hours = moment().add(-12, "hours").format("YYYY-MM-DD");
 const startOfMonth = moment().startOf("month").format("YYYY-MM-DD");
 
 const initialState = {
+  owner_name: "",
+  owner_number: "",
+  swiggy_password: "",
+  swiggy_register_phone: "",
+  zomato_register_phone: "",
+  email: "",
+
   res_name: "",
   data: [],
   currentProductIndex: -1,
@@ -44,6 +51,7 @@ export const dataReducer = (state = initialState, action) => {
     SET_LS_PRODUCT_INDEX,
     SET_SALES_PRODUCT_INDEX,
     SET_CUSTOMER_REVIEWS_INDEX,
+    SET_USER_DETAILS,
   } = ActionTypes;
   const { type, payload } = action;
 
@@ -97,6 +105,13 @@ export const dataReducer = (state = initialState, action) => {
     case CLEAR_DATA:
       return {
         ...state,
+        owner_name: "",
+        owner_number: "",
+        swiggy_password: "",
+        swiggy_register_phone: "",
+        zomato_register_phone: "",
+        email: "",
+
         data: [],
         res_name: "",
         currentProductIndex: -1,
@@ -159,6 +174,17 @@ export const dataReducer = (state = initialState, action) => {
         zomato_res_id: payload.zomato_res_id,
         listingID: payload.listingID,
         res_name: payload.res_name,
+      };
+
+    case SET_USER_DETAILS:
+      return {
+        ...state,
+        owner_name: payload.owner_name,
+        owner_number: payload.owner_number,
+        swiggy_password: payload.swiggy_password,
+        swiggy_register_phone: payload.swiggy_register_phone,
+        zomato_register_phone: payload.zomato_register_phone,
+        email: payload.email,
       };
 
     default:

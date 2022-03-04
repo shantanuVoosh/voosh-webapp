@@ -8,11 +8,11 @@ import Switch from "@mui/material/Switch";
 // const resultType = "month";
 
 const CustomerReviews = () => {
-  const { data, oh_currentProductIndex } = useSelector((state) => state.data);
+  const { data, customer_reviews_currentProductIndex } = useSelector((state) => state.data);
   const { resultType } = useSelector((state) => state.data);
   const navigate = useNavigate();
 
-  const { customerReviews } = data[oh_currentProductIndex];
+  const { customerReviews } = data[customer_reviews_currentProductIndex];
   const { negative, ordersPerRating, value, totalRatings } = customerReviews;
 
   const [negativeItemList, setNegativeItemList] = React.useState([]);

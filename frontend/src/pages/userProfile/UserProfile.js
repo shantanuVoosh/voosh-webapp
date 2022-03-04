@@ -10,16 +10,29 @@ import { RiCloseCircleLine } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import Loading from "../../components/Loading";
 
 const UserProfile = () => {
+  const {
+    owner_name,
+    owner_number,
+    swiggy_password,
+    swiggy_register_phone,
+    zomato_register_phone,
+    res_name,
+    email: userEmailId,
+    listingID,
+    isLoading,
+  } = useSelector((state) => state.data);
+
   const [userDeatils, setUserDeatils] = React.useState({
-    email: "test@gamil.com",
-    restaurantName: "xyz Restaurant",
-    phoneNumber: "7008237257",
-    zomatoNumber: "7008237257",
-    swiggyNumber: "7008237257",
-    swiggyPassword: "donotshare",
-    userName: "test",
+    email: userEmailId,
+    restaurantName: res_name,
+    phoneNumber: owner_number,
+    zomatoNumber: zomato_register_phone,
+    swiggyNumber: swiggy_register_phone,
+    swiggyPassword: swiggy_password,
+    userName: owner_name,
   });
   const [profilePage, setProfilePage] = React.useState("user-profile");
   const {
@@ -56,77 +69,80 @@ const UserProfile = () => {
   const notifySuccess = (msg) => toast.success(msg);
   const notiftAlert = (msg) => toast.warn(msg);
 
+  React.useEffect(() => {
+    if (!isLoading) {
+      setUserDeatils({
+        email: userEmailId,
+        restaurantName: res_name,
+        phoneNumber: owner_number,
+        zomatoNumber: zomato_register_phone,
+        swiggyNumber: swiggy_register_phone,
+        swiggyPassword: swiggy_password,
+        userName: owner_name,
+      });
+    }
+  }, [isLoading]);
+
   // Todo:
   // ! Update user  basic details
   const handelUpdateEmail = async (data) => {
     console.log("handelUpdateEmail Data: ****", data);
-    // // {user-name: 'hi', email: 'shanu@gmail.com'}
-    // // ? no changes so no need to update
-    // if (
-    //   data["user-name"] === userName &&
-    //   data.email === email
-    // ) {
-    //   console.log("No changes so no need to update");
-    //   notiftAlert("No changes so no need to update");
-    //   return;
-    // }
-    // const { data: response } = await axios.post(
-    //   "/user/update/onboard-data/basic-details",
-    //   {
-    //     token: temporaryToken,
-    //     userName: data["user-name"],
-    //     userEmail: data.email,
-    //   }
-    // );
-    // console.log("handelUpdateEmail Response: ****", response);
-    // if (response.status === "success") {
-    //   setUserDeatils((prevState) => {
-    //     return {
-    //       ...prevState,
-    //       userName: data["user-name"],
-    //       email: data.email,
-    //     };
-    //   });
-    //   notifySuccess("Basic details updated successfully");
-    //   setProfilePage("user-profile");
-    // } else {
-    //   notifyError("Something went wrong");
-    // }
+    // {user-name: 'hi', email: 'shanu@gmail.com'}
+    // ? no changes so no need to update
+    if (data.email === email) {
+      console.log("No changes so no need to update");
+      notiftAlert("No changes so no need to update");
+      return;
+    }
+    const { data: response } = await axios.post("/user/update/email", {
+      token: token,
+      email: data.email,
+    });
+    console.log("handelUpdateEmail Response: ****", response);
+    if (response.status === "success") {
+      setUserDeatils((prevState) => {
+        return {
+          ...prevState,
+          email: data.email,
+        };
+      });
+      notifySuccess("Basic details updated successfully");
+      setProfilePage("user-profile");
+    } else {
+      notifyError("Something went wrong");
+    }
   };
 
   // ! Update user Swiggy details
   const handelUpdateSwiggyPassword = async (data) => {
-   
     console.log("handelUpdateSwiggyPassword Data: ****", data);
-    // if (
-    //   data["swiggy-password"] === swiggyPassword
-    // ) {
-    //   console.log("No changes so no need to update");
-    //   notiftAlert("No changes so no need to update");
-    //   return;
-    // }
-    // const { data: response } = await axios.post(
-    //   "/user/update/onboard-data/swiggy-details",
-    //   {
-    //     token: temporaryToken,
-    //     swiggyNumber: data["swiggy-number"],
-    //     swiggyPassword: data["swiggy-password"],
-    //   }
-    // );
-    // console.log("handelUpdateEmail Response: ****", response);
-    // if (response.status === "success") {
-    //   setUserDeatils((prevState) => {
-    //     return {
-    //       ...prevState,
-    //       swiggyNumber: data["swiggy-number"],
-    //       swiggyPassword: data["swiggy-password"],
-    //     };
-    //   });
-    //   notifySuccess("Zomato details updated successfully");
-    //   setProfilePage("user-profile");
-    // } else {
-    //   notifyError("Something went wrong");
-    // }
+    if (data["swiggy-password"] === swiggyPassword) {
+      console.log("No changes so no need to update");
+      notiftAlert("No changes so no need to update");
+      return;
+    }
+    const { data: response } = await axios.post(
+      "/user/update/swiggy-password",
+      {
+        token: token,
+        swiggy_register_phone: swiggyNumber,
+        swiggy_password: data["swiggy-password"],
+        listing_id: listingID,
+      }
+    );
+    console.log("handelUpdateEmail Response: ****", response);
+    if (response.status === "success") {
+      setUserDeatils((prevState) => {
+        return {
+          ...prevState,
+          swiggyPassword: data["swiggy-password"],
+        };
+      });
+      notifySuccess("Password updated successfully");
+      setProfilePage("user-profile");
+    } else {
+      notifyError(response.message);
+    }
   };
 
   const UserProfilePage = () => {
@@ -178,7 +194,7 @@ const UserProfile = () => {
                     <div className="info">
                       <span className="label">Email:</span>
                       <span className="value">
-                        {email === "" || email === undefined
+                        {email === "" || email === undefined || email === null
                           ? "Not Provided"
                           : email}
                       </span>
@@ -337,9 +353,9 @@ const UserProfile = () => {
                 )}
               </div>
 
-              {/*// ?Proceed Button */}
-              <div className={"page-body__form--btn"}>
-                <button>Update</button>
+              {/*// ?Update Button */}
+              <div className="page-body__form--btn">
+                <button className="btn">Update</button>
               </div>
             </form>
           </div>
@@ -382,9 +398,7 @@ const UserProfile = () => {
           </div>
           <div className="page-body">
             <div className="page-body__title">
-              <div className="page-body__title--text">
-                Update Your EMAIL ID
-              </div>
+              <div className="page-body__title--text">Update Your EMAIL ID</div>
             </div>
             <form
               className="page-body__form"
@@ -475,8 +489,23 @@ const UserProfile = () => {
     );
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {profilePage === "user-profile" && <UserProfilePage />}
       {profilePage === "update-user-email" && <EditBasicDetails />}
       {profilePage === "update-user-swiggy-password" && (

@@ -725,7 +725,7 @@ const NewSignupA = () => {
             <div className="logo">
               <img src={logo_img} alt="footer logo" />
             </div>
-            <div className="text">products@voosh.in</div>
+            <div className="text">products@voosh.in,  +91-6366183606</div>
           </div>
         </div>
       </>

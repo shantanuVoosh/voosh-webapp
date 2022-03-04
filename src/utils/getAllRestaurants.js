@@ -4,9 +4,13 @@ const { MongoClient } = require("mongodb");
 const documentName = "operationsdb";
 
 async function getAllSwiggyAndZomatoRestaurants(phone) {
-  const nvdpColleaction = "non_voosh_dashboard_products";
-  const swiggyNvdpColleaction = "swiggy_nvdp";
-  const zomatoNvdpColleaction = "zomato_nvdp";
+  const nvdpColleaction = "non_voosh_dashboard_products_UAT";
+  const swiggyNvdpColleaction = "swiggy_nvdp_UAT";
+  const zomatoNvdpColleaction = "zomato_nvdp_UAT";
+
+  // const nvdpColleaction = "non_voosh_dashboard_products";
+  // const swiggyNvdpColleaction = "swiggy_nvdp";
+  // const zomatoNvdpColleaction = "zomato_nvdp";
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,

@@ -4,7 +4,8 @@ const { MongoClient } = require("mongodb");
 const documentName = "operationsdb";
 
 async function getUserDetails({phone}) {
-  const nvdpColleaction = "non_voosh_dashboard_products";
+  // const nvdpColleaction = "non_voosh_dashboard_products";
+  const nvdpColleaction = "non_voosh_dashboard_products_UAT";
 
   console.log("*****************--------------------********************");
   console.log("inside getUserDetails");
@@ -29,6 +30,9 @@ async function getUserDetails({phone}) {
         swiggy_password,
         swiggy_register_phone,
         zomato_register_phone,
+        email,
+
+        
       } = userData;
 
       console.log("*****************--------------------********************");
@@ -40,6 +44,7 @@ async function getUserDetails({phone}) {
         swiggy_password,
         swiggy_register_phone,
         zomato_register_phone,
+        email: email === undefined ? null : email,
       };
     } else {
       console.log("*****************--------------------********************");

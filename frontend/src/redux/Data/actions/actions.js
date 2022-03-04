@@ -107,11 +107,32 @@ export const setRestaurantNameAndId = (name, id) => {
     },
   };
 };
+export const setUserDetails = ({
+  owner_name,
+  owner_number,
+  swiggy_password,
+  swiggy_register_phone,
+  zomato_register_phone,
+  email,
+}) => {
+  return {
+    type: ActionTypes.SET_USER_DETAILS,
+    payload: {
+      owner_name: owner_name,
+      owner_number: owner_number,
+      swiggy_password: swiggy_password,
+      swiggy_register_phone: swiggy_register_phone,
+      zomato_register_phone: zomato_register_phone,
+      email,
+    },
+  };
+};
 export const setListingIdWithRestaurantDetails = ({
   listingID,
   swiggy_res_id,
   zomato_res_id,
   restaurant_name,
+ 
 }) => {
   return {
     type: ActionTypes.SET_LISTING_ID,

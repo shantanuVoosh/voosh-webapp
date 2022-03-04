@@ -8,12 +8,12 @@ import { getTopSuggestionsProvider } from "../../utils/getTopSuggestionsProvider
 import ScrollButton from "../../components/ScrollButton";
 
 const Dashboard = () => {
-  const { data, currentProductIndex } = useSelector((state) => state.data);
+  const { data, currentProductIndex, oh_currentProductIndex,ls_currentProductIndex } = useSelector((state) => state.data);
   const { resultType } = useSelector((state) => state.data);
 
-  const { operationHealth } = data[currentProductIndex];
+  const { operationHealth } = data[oh_currentProductIndex];
   const { operationHealthData } = operationHealth;
-  const { listingScore } = data[currentProductIndex];
+  const { listingScore } = data[ls_currentProductIndex];
   const { listingScoreData } = listingScore;
 
   // ! get top 5 suggestions

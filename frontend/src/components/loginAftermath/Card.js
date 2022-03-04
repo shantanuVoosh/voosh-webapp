@@ -216,7 +216,7 @@ const Card = ({ iconName, name, info, sectionName }) => {
                 value: customerReviewsRating,
                 benchmark: customerReviewsRatingBenchmark,
                 type: "number",
-                changeTypeDirection: !operationHealthMain.isDataPresent
+                changeTypeDirection: isCustomerReviewsPresent.isDataPresent
                   ? "up"
                   : customerReviewsRating >= customerReviewsRatingBenchmark
                   ? "up"

@@ -10,6 +10,7 @@ import {
   fetchAllData,
   setResultType,
   setListingIdWithRestaurantDetails,
+  setUserDetails,
   setOhProductIndex,
   setLSProductIndex,
   setSalesProductIndex,
@@ -144,6 +145,7 @@ function RequiredAuth({ children }) {
           res_name: name,
           api_data2,
           newRestaurantList,
+          userDeatils,
         } = response.data;
         // ! call of the first time
         console.log(newRestaurantList, "new list");
@@ -161,6 +163,14 @@ function RequiredAuth({ children }) {
           // zomato_res_id: 56834
 
           const firstRestaurant = newRestaurantList[0];
+          const {
+            owner_name,
+            owner_number,
+            swiggy_password,
+            swiggy_register_phone,
+            zomato_register_phone,
+            email,
+          } = userDeatils;
 
           const {
             listing_id,
@@ -178,12 +188,31 @@ function RequiredAuth({ children }) {
             })
           );
 
+          // userDeatils:
+          // kitchen_id: "P010"
+          // owner_name: "Narender Danu"
+          // owner_number: 7353932111
+          // swiggy_password: "top@1234"
+          // swiggy_register_phone: 7353932111
+          // zomato_register_phone: 7353932111
+          // !temp user details
           dispatch(
             setListingIdWithRestaurantDetails({
               listingID: listing_id,
               restaurant_name,
               swiggy_res_id: response_swiggy_res_id,
               zomato_res_id: response_zomato_res_id,
+            })
+          );
+
+          dispatch(
+            setUserDetails({
+              owner_name,
+              owner_number,
+              swiggy_password,
+              swiggy_register_phone,
+              zomato_register_phone,
+              email,
             })
           );
 
