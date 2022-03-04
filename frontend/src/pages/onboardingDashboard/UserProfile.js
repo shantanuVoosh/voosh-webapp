@@ -139,10 +139,10 @@ const UserProfile = ({
         };
       });
 
-      notifySuccess("Zomato details updated successfully");
+      notifySuccess("Swiggy details updated successfully");
       setProfilePage("user-profile");
     } else {
-      notifyError("Something went wrong");
+      notifyError(response.message);
     }
   };
 
@@ -530,8 +530,8 @@ const UserProfile = ({
               </div>
 
               {/*// ?Proceed Button */}
-              <div className={"page-body__form--btn"}>
-                <button>Update</button>
+              <div className="page-body__form--btn">
+                <button className="btn">Update</button>
               </div>
             </form>
           </div>

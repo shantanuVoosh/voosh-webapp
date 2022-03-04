@@ -819,35 +819,83 @@ router.post(
     // const onboardNotificationsCollection = "Onboard_Notifications";
     console.log("Update onboard data swiggy details");
 
-    try {
-      const client = await MongoClient.connect(VooshDB, {
-        useNewUrlParser: true,
-      });
-      const db = client.db(documentName);
-      const query = { phone: parseInt(phone) };
-      const update = {
-        $set: {
-          swiggy_register_phone: swiggyNumber,
-          swiggy_password: swiggyPassword,
-        },
-      };
+    const fetch = (...args) =>
+      import("node-fetch").then(({ default: fetch }) => fetch(...args));
+    const swiggyURL =
+      "https://partner.swiggy.com/registration/v2/registration-status?userId=";
 
-      await db
-        .collection(onboardProductsColleaction)
-        .updateOne(query, update, async (err, result) => {
-          if (err) {
-            res.json({
-              status: "error",
-              message: "Error while saving swiggy details, Server Error",
-              error: err,
-            });
-          } else {
-            res.json({
-              status: "success",
-              message: "User swiggy details updated Successfully",
-            });
-          }
+    const swiggyPasswordCheckURL =
+      "https://partner.swiggy.com/authentication/v1/login";
+
+    const userPasswordCorrectMessage = "Login Successful";
+    const userPasswordIncorrectMessage = "incorrect password entered";
+
+    const swiggyPasswordResponse = await (
+      await fetch(`${swiggyPasswordCheckURL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          username: swiggyNumber,
+          password: swiggyPassword,
+          accept_tnc: true,
+        }),
+      })
+    ).json();
+
+    console.log(
+      swiggyPasswordResponse,
+      "swiggyPasswordResponse",
+      "********************--------------------------"
+    );
+
+    const {
+      statusCode,
+      statusMessage,
+      user_id: user_register_phone,
+      permissions,
+      outlets,
+    } = swiggyPasswordResponse;
+
+    try {
+      if (statusCode === 0 || statusMessage === userPasswordCorrectMessage) {
+        const client = await MongoClient.connect(VooshDB, {
+          useNewUrlParser: true,
         });
+        const db = client.db(documentName);
+        const query = { phone: parseInt(phone) };
+        const update = {
+          $set: {
+            swiggy_register_phone: swiggyNumber,
+            swiggy_password: swiggyPassword,
+          },
+        };
+
+        await db
+          .collection(onboardProductsColleaction)
+          .updateOne(query, update, async (err, result) => {
+            if (err) {
+              res.json({
+                status: "error",
+                message: "Error while saving swiggy details, Server Error",
+                error: err,
+              });
+            } else {
+              res.json({
+                status: "success",
+                message: "User swiggy details updated Successfully",
+              });
+            }
+          });
+      } else {
+        res.json({
+          status: "error",
+          message: "Provide valid Swiggy details, Incorrect Password or Number",
+          error: "Incorrect Password or Number",
+        });
+      }
     } catch (error) {
       res.json({
         status: "error",
