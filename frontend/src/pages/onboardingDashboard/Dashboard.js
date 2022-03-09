@@ -7,6 +7,7 @@ import {
   loginFailure,
   signoutSuccess,
   loginSuccess,
+  tempLogout
 } from "../../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
 import Loading from "../../components/Loading";
@@ -141,7 +142,7 @@ const Dashboard = () => {
       });
       console.log(response, "check user response");
       if (response.status === "success") {
-        dispatch(signoutSuccess());
+        
         const { phone: phoneNumberInToken } = response;
 
         const { data: loginResponse } = await axios.post("/login-voosh", {
@@ -154,6 +155,8 @@ const Dashboard = () => {
           setIsUserPresentInNvdp(true);
           cookie.save(APP_TOKEN, loginResponse.token, { path: "/" });
           cookie.remove(TEMP_APP_TOKEN);
+          dispatch(tempLogout());
+          navigate("/");
           dispatch(loginSuccess(loginResponse.token));
         }
 

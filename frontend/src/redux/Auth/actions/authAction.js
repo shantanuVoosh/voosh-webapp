@@ -28,6 +28,12 @@ export const tempLoginSuccess = (token) => {
     },
   };
 };
+// ! TEMP login
+export const tempLogout = () => {
+  return {
+    type: ActionTypes.TEMP_LOGOUT,
+  };
+};
 // ! Dummy login
 export const dummyLoginSuccess = (token) => {
   return {

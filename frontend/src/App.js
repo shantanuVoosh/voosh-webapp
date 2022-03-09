@@ -82,7 +82,14 @@ function App() {
         <Route path="/amplitude" element={<AmplitudePage />} />
 
         {/* //? New Onboarding dashboard */}
-        <Route path="/onboarding-dashboard" element={<OnboardingDashboard />} />
+        <Route
+          path="/onboarding-dashboard"
+          element={
+            // <RequiredAuth>
+              <OnboardingDashboard />
+            // </RequiredAuth>
+          }
+        />
         {/* //Todo: only for testing */}
 
         <Route

@@ -23,6 +23,7 @@ export const authReducer = (state = initialAuthState, action) => {
     TEMP_LOGIN_SUCCESS,
     TEMP_LOGIN_FAILURE,
     DUMMY_LOGIN_SUCCESS,
+    TEMP_LOGOUT,
   } = ActionTypes;
   const { type, payload } = action;
 
@@ -48,6 +49,12 @@ export const authReducer = (state = initialAuthState, action) => {
         ...state,
         isTemporaryAuthenticated: true,
         temporaryToken: payload.token,
+      };
+    case TEMP_LOGOUT:
+      return {
+        ...state,
+        isTemporaryAuthenticated: false,
+        temporaryToken: null,
       };
     case TEMP_LOGIN_FAILURE:
       return {
