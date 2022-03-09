@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { loginFailure } from "../../redux/Auth/actions/authAction";
+import {
+  loginFailure,
+  signoutSuccess,
+  loginSuccess,
+} from "../../redux/Auth/actions/authAction";
 import cookie from "react-cookies";
 import Loading from "../../components/Loading";
 import Explore from "./Explore";
@@ -14,7 +18,6 @@ import FindMore from "./FindMore";
 import SwiggyForm from "./SwiggyForm";
 import UserProfile from "./UserProfile";
 import FAQ from "./Faq";
-
 const APP_TOKEN = "voosh-token";
 const TEMP_APP_TOKEN = "temp-voosh-token";
 
@@ -42,6 +45,7 @@ const Dashboard = () => {
   const [userAllNotifications, setUserAllNotifications] = React.useState([]);
   // const [unSeenNotifications, setUnSeenNotifications] = React.useState(0);
   const [numberOfNotifications, setNumberOfNotifications] = React.useState(0);
+  const [isUserPresentInNvdp, setIsUserPresentInNvdp] = React.useState(false);
 
   // ? Check if user is authenticated
   const getUserOnboardData = async () => {
@@ -126,15 +130,65 @@ const Dashboard = () => {
     }
   };
 
+  // Todo: if the response is success then remove the
+  // temp token and make a login call cuz nvdp wala token mein more data h
+
+  const checkUserInNvdp = async () => {
+    setIsLoading(true);
+    try {
+      const { data: response } = await axios.post("/user/check/user-in-nvdp", {
+        token: temporaryToken,
+      });
+      console.log(response, "check user response");
+      if (response.status === "success") {
+        dispatch(signoutSuccess());
+        const { phone: phoneNumberInToken } = response;
+
+        const { data: loginResponse } = await axios.post("/login-voosh", {
+          phoneNumber: phoneNumberInToken,
+        });
+
+        console.log(loginResponse, "login response");
+        if (loginResponse.isAuth) {
+          // ?set token
+          setIsUserPresentInNvdp(true);
+          cookie.save(APP_TOKEN, loginResponse.token, { path: "/" });
+          cookie.remove(TEMP_APP_TOKEN);
+          dispatch(loginSuccess(loginResponse.token));
+        }
+
+        //  !now get response and do as login does
+
+        setIsLoading(false);
+        return true;
+      } else {
+        setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
   const changePage = (pageName) => {
     console.log(pageName);
     setPageName(pageName);
   };
 
   React.useEffect(() => {
-    getUserOnboardData();
-    setPageName("home");
-  }, [temporaryToken]);
+    checkUserInNvdp();
+  }, []);
+
+  React.useEffect(() => {
+    // ? if it not present then get the user details
+    if (!isUserPresentInNvdp) {
+      console.log("not super user");
+      getUserOnboardData();
+      setPageName("home");
+    }
+  }, [temporaryToken, isUserPresentInNvdp]);
 
   if (isLoading) {
     return <Loading />;

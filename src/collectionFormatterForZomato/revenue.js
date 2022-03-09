@@ -190,7 +190,6 @@ async function revenuDataOfPreviousMonth(res_id) {
       ])
       .toArray();
 
-
     // ? If data is not available send this
     if (zomatoReconsilation === null || zomatoReconsilation === undefined) {
       return {
@@ -224,13 +223,6 @@ async function revenuDataOfPreviousMonth(res_id) {
     const totalCancellation = rdc[0]?.rdc_score;
 
     const totalSales = zomatoReconsilation["gross_revenue_(INR)"];
-    // ? maybe this this is net payout Net Payout E=A-B-C-D   +Cancellation Refund (INR) (net payout)
-    const commissionable_amount =
-      zomatoReconsilation["commissionable_amount_(INR)"] -
-      zomatoReconsilation["pro_discount_share_(INR)"] -
-      zomatoReconsilation["customer_compensation_(INR)"] -
-      zomatoReconsilation["customer_discount_amount_(INR)"] +
-      zomatoReconsilation["cancellation_refund_(INR)"];
 
     const netPayout = zomatoReconsilation["net_receivable_(INR)"];
 
@@ -241,26 +233,111 @@ async function revenuDataOfPreviousMonth(res_id) {
     const cancelledOrders = totalCancellation ? totalCancellation : 0;
 
     const deductions = {
-      "Piggy Bank": zomatoReconsilation["piggybank_(INR)"],
-      "logistics Charge": zomatoReconsilation["logistics_charge_(INR)"],
-      "Penalty Amount": zomatoReconsilation["penalty_amount_(INR)"],
-      "Credits Charge": zomatoReconsilation["credits_charge_(INR)"],
-
-      Miscellaneous:
-        zomatoReconsilation["amount_received_in_cash_(INR)"] +
-        zomatoReconsilation["credit_note_adjustment_(INR)"] +
-        zomatoReconsilation["promo_recovery_adjustment_(INR)"] +
-        zomatoReconsilation["ice_cream_deductions_-_hyperpure_(INR)"] +
-        zomatoReconsilation["ice_cream_handling_charge_(INR)"] +
-        zomatoReconsilation["support_cost_adjustment_(INR)"],
+      "Zomato Fees":
+        zomatoReconsilation["commission_value_(INR)"] +
+        zomatoReconsilation["taxes_on_zomato_fees_(INR)"] +
+        zomatoReconsilation["convenience_fee_(INR)"],
 
       TCS: zomatoReconsilation["tax_collected_at_source_(INR)"],
-      TAX: zomatoReconsilation["taxes_on_zomato_fees_(INR)"],
-
       TDS:
         zomatoReconsilation["tds_194O_amount_(INR)"] +
         zomatoReconsilation["tds_194h_amount_(INR)"],
+      Advertisement:
+        zomatoReconsilation["ads"] +
+        zomatoReconsilation["promo_recovery_adjustment_(INR)"],
+      "Other deductions": zomatoReconsilation["promo_recovery_adjustment_(INR)"],
+      "Cancellation charges":
+        zomatoReconsilation["credit_note_adjustment_(INR)"],
+
+      "Discount Deduction":
+        zomatoReconsilation["pro_discount_share_(INR)"] +
+        zomatoReconsilation["customer_compensation_(INR)"] +
+        zomatoReconsilation["customer_discount_amount_(INR)"],
     };
+
+    console.log("===================================================");
+    console.log("deductions:");
+    console.log("Zomato Fees: ", deductions["Zomato Fees"]);
+    console.log(
+      `Zomato Fees: cost: commission_value_${zomatoReconsilation["commission_value_(INR)"]} + taxes_on_zomato_fees_: ${zomatoReconsilation["taxes_on_zomato_fees_(INR)"]} + convenience_fee_: ${zomatoReconsilation["convenience_fee_(INR)"]}`,
+      zomatoReconsilation["commission_value_(INR)"] +
+        zomatoReconsilation["taxes_on_zomato_fees_(INR)"] +
+        zomatoReconsilation["convenience_fee_(INR)"]
+    );
+    console.log("TCS: ", deductions["TCS"]);
+    console.log(
+      `TCS: ${zomatoReconsilation["tax_collected_at_source_(INR)"]}`,
+      zomatoReconsilation["tax_collected_at_source_(INR)"]
+    );
+    console.log("TDS: ", deductions["TDS"]);
+    console.log(
+      `TDS: ${
+        zomatoReconsilation["tds_194O_amount_(INR)"] +
+        zomatoReconsilation["tds_194h_amount_(INR)"]
+      }`,
+      zomatoReconsilation["tds_194O_amount_(INR)"] +
+        zomatoReconsilation["tds_194h_amount_(INR)"]
+    );
+    console.log("Advertisement: ", deductions["Advertisement"]);
+    console.log(
+      `Advertisement: ${
+        zomatoReconsilation["ads"] +
+        zomatoReconsilation["promo_recovery_adjustment_(INR)"]
+      }`,
+      zomatoReconsilation["ads"] +
+        zomatoReconsilation["promo_recovery_adjustment_(INR)"]
+    );
+    console.log("Other deductions: ", deductions["Other deductions"]);
+    console.log(
+      `Other deductions: ${zomatoReconsilation["support_cost_adjustment_(INR)"]}`,
+      zomatoReconsilation["support_cost_adjustment_(INR)"]
+    );
+    console.log("Cancellation charges: ", deductions["Cancellation charges"]);
+    console.log(
+      `Cancellation charges: ${zomatoReconsilation["credit_note_adjustment_(INR)"]}`,
+      zomatoReconsilation["credit_note_adjustment_(INR)"]
+    );
+
+    console.log("GST on Revenue: ", deductions["GST on Revenue"]);
+    console.log(
+      `GST on Revenue: ${zomatoReconsilation["services_tax_(INR)"]}`,
+      zomatoReconsilation["services_tax_(INR)"]
+    );
+    console.log("Discount Deduction: ", deductions["Discount Deduction"]);
+    console.log(
+      `Discount Deduction: ${
+        zomatoReconsilation["pro_discount_share_(INR)"] +
+        zomatoReconsilation["customer_compensation_(INR)"] +
+        zomatoReconsilation["customer_discount_amount_(INR)"]
+      }`,
+      zomatoReconsilation["pro_discount_share_(INR)"] +
+        zomatoReconsilation["customer_compensation_(INR)"] +
+        zomatoReconsilation["customer_discount_amount_(INR)"]
+    );
+
+    console.log("===================================================");
+
+    // const deductions = {
+    //   "Piggy Bank": zomatoReconsilation["piggybank_(INR)"],
+    //   "logistics Charge": zomatoReconsilation["logistics_charge_(INR)"],
+    //   "Penalty Amount": zomatoReconsilation["penalty_amount_(INR)"],
+    //   "Credits Charge": zomatoReconsilation["credits_charge_(INR)"],
+
+    //   Miscellaneous:
+    //     zomatoReconsilation["amount_received_in_cash_(INR)"] +
+    //     zomatoReconsilation["credit_note_adjustment_(INR)"] +
+    //     zomatoReconsilation["promo_recovery_adjustment_(INR)"] +
+    //     zomatoReconsilation["ice_cream_deductions_-_hyperpure_(INR)"] +
+    //     zomatoReconsilation["ice_cream_handling_charge_(INR)"] +
+    //     zomatoReconsilation["support_cost_adjustment_(INR)"],
+
+    //   TCS: zomatoReconsilation["tax_collected_at_source_(INR)"],
+    //   TAX: zomatoReconsilation["taxes_on_zomato_fees_(INR)"],
+
+    //   TDS:
+    //     zomatoReconsilation["tds_194O_amount_(INR)"] +
+    //     zomatoReconsilation["tds_194h_amount_(INR)"],
+    // };
 
     console.log("*****************--------------------********************");
     console.log("Swiggy Reconsilation Data - (Swiggy  Reconsilation)");
@@ -275,7 +352,6 @@ async function revenuDataOfPreviousMonth(res_id) {
       },
       financialData: {
         isDataPresent: true,
-        commissionable_amount,
         totalSales,
         netPayout,
         deleveries,

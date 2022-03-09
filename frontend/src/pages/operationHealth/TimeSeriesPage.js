@@ -35,6 +35,8 @@ const TimeSeriesPages = ({ sectionName }) => {
   const operationHealthItems =
     oh_currentProductIndex < 0 ? [] : operationHealthData;
 
+  let pageNameFromURl =
+    location.pathname.split("/")[location.pathname.split("/").length - 1];
   let name;
   let type;
   // ? user using navigation from links
@@ -66,6 +68,49 @@ const TimeSeriesPages = ({ sectionName }) => {
     (item) => item.name === name
   );
   // console.log(timeSeriesData)
+  console.log(timeSeriesData, "tables=====================");
+
+  if (timeSeriesData === undefined) {
+    return (
+      <>
+        <MetaTags>
+          <title>Voosh | Operation-Health | {name}</title>
+          <meta name={`voosh web app, ${name}`} content={`voosh ${name}`} />
+          <meta property="og:title" content="web app" />
+        </MetaTags>
+        <Header
+          heading={pageNameFromURl}
+          isHomePage={false}
+          isDropdownNeeded={true}
+        />
+
+        <div className="container">
+          <SectionButtons sectionName={sectionName} />
+          <div
+            style={{
+              // display: "flex",
+              width: "100%",
+              textAlign: "center",
+              paddingTop: "50%",
+            }}
+          >
+            <span style={{
+              fontSize: "20px",
+              color: "#000",
+              fontWeight: "bold",
+
+            }}>
+              Not present of{" "}
+              {oh_currentProductIndex === 0 ? "Swiggy" : "Zomato"}
+            </span>
+          </div>
+          
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   const {
     name: currentName,
     value,

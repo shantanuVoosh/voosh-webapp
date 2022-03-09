@@ -73,7 +73,7 @@ const listingScoreMostRecentMongoDBData = async (res_id) => {
       offer_2: listingScore?.offer_2,
       beverages_category: listingScore?.beverages_category,
       desserts: listingScore?.["desserts/sweet_category"],
-      image: listingScore?.["image_%"],
+      image: listingScore?.["number_of_images"],
       bestsellers_score_in_recommended:
         listingScore?.[
           "bestseller_%_in_recommended_vs_without_recommended_data"
@@ -134,6 +134,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value: safety_tag === undefined ? null : safety_tag,
           isDataPresent: safety_tag === undefined ? false : true,
+          contentType: "safetyTag",
         },
 
         // ?Image %
@@ -141,15 +142,17 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
         {
           name: "Images",
           type: "percentage",
-          benchmark: 200,
+          benchmark: 60,
           compareThen: "High Medium Low",
           info: "Make sure that all your menu items have different images! Swiggy increases your visibility!",
           suggestions: [
             "Add images to minimum 30 items",
             "Contact Voosh photoshoot service for quality images",
           ],
-          value: image === undefined ? null : image * 100,
+          value: image === undefined ? null : image,
           isDataPresent: image === undefined ? false : true,
+          contentType: "image",
+          contentType: "image/description",
         },
         // !Number of Ratings
         // ?Number of Rating
@@ -166,6 +169,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value: number_of_rating === undefined ? null : number_of_rating,
           isDataPresent: number_of_rating === undefined ? false : true,
+          contentType: "number of rating",
         },
 
         // ! Rating
@@ -182,6 +186,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value: rating === undefined ? null : rating,
           isDataPresent: rating === undefined ? false : true,
+          contentType: "rating",
         },
 
         // ?Offer1
@@ -203,6 +208,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
               ? "Not Applicable"
               : "Applicable",
           isDataPresent: offer_1 === undefined ? false : true,
+          contentType: "offer",
         },
         // ?Offer2
         {
@@ -223,6 +229,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
               ? "Not Applicable"
               : "Applicable",
           isDataPresent: offer_2 === undefined ? false : true,
+          contentType: "offer",
         },
 
         // ?Description %
@@ -238,6 +245,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           ],
           value: description === undefined ? null : parseInt(description * 100),
           isDataPresent: description === undefined ? false : true,
+          contentType: "image/description",
         },
         // ?Beverage Category
         {
@@ -249,6 +257,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           suggestions: ["Add breverage category and corrosponding item"],
           value: beverages_category === undefined ? null : beverages_category,
           isDataPresent: beverages_category === undefined ? false : true,
+          contentType: "beverage",
         },
         // ?"bestseller_%_in_recommended_vs_without_recommended_data"
         {
@@ -264,6 +273,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
               : parseInt(bestsellers_score_in_recommended * 100),
           isDataPresent:
             bestsellers_score_in_recommended === undefined ? false : true,
+            contentType: "bestseller",
         },
         // ?Desserts/Sweet category
         {
@@ -275,6 +285,7 @@ const listingScoreDataFormatter = async (res_id, number, resultType) => {
           suggestions: ["Add Desserts category and corrosponding item"],
           value: desserts === undefined ? null : desserts,
           isDataPresent: desserts === undefined ? false : true,
+          contentType: "dessert",
         },
       ],
     };

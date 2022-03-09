@@ -98,7 +98,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
     // *2 (Time Graph)
     else if (name === "Images") {
       resultValue = value;
-      resultBenchmark = 200;
+      resultBenchmark = 60;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
     }
@@ -112,7 +112,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
           : value === "Low"
           ? 0
           : 0;
-      resultBenchmark = 100;
+      resultBenchmark = 90;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
     }

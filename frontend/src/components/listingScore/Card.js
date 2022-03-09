@@ -71,6 +71,40 @@ const Card = ({
       </>
     );
   }
+  if (name === "Number of Rating") {
+    return (
+      <>
+        <div className="listing_score_card">
+          <div className="listing_score_card__text">
+            <h5 className="listing_score_card__text--heading">{name}</h5>
+
+            <div className="listing_score_card__text--info">
+              <p>{info.length > 55 ? info.substring(0, 55) + "..." : info}</p>
+            </div>
+
+            <div className={`value ${showColor}`}>
+              {resultValue}
+              <span
+                style={{
+                  fontSize: "20px",
+                }}
+              >{`+`}</span>
+            </div>
+          </div>
+
+          {isKnowMorePresent && (
+            <Link
+              to={`${name.replace(/\s/g, "")}`}
+              className="listing_score_card__btn"
+            >
+              <span className="listing_score_card__btn--text">Know more</span>
+              <AiOutlineRight className="listing_score_card__btn--icon" />
+            </Link>
+          )}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="listing_score_card">
@@ -92,9 +126,7 @@ const Card = ({
         </div>
       </div>
       {/*Safety Tag  Offer 1  Offer 2  Beverages Category  Desserts*/}
-      {(name === "Images" ||
-        name === "Rating" ||
-        name === "Item Description") && (
+      {isKnowMorePresent && (
         <Link
           to={`${name.replace(/\s/g, "")}`}
           className="listing_score_card__btn"
@@ -127,7 +159,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
     // *2 (Time Graph)
     else if (name === "Images") {
       resultValue = value;
-      resultBenchmark = 200;
+      resultBenchmark = 60;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
     }
@@ -141,7 +173,7 @@ function listingScoreBenchmarks(name, partner_name, value) {
           : value === "Low"
           ? 0
           : 0;
-      resultBenchmark = 100;
+      resultBenchmark = 90;
       isKnowMorePresent = true;
       showColor = resultValue >= resultBenchmark ? "green" : "red";
     }

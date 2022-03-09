@@ -53,7 +53,7 @@ const TimeSeriesPages = ({ sectionName }) => {
   const allZomatoListingCardsName = [
     "Safety Tag",
     "Images",
-    "Number of Rating",
+    "Number of Review",
     "Rating",
     "Vote Score",
     "Offer 1",
@@ -94,6 +94,47 @@ const TimeSeriesPages = ({ sectionName }) => {
   console.log(pageData, "pageData");
 
   const timeSeriesData = lsData.find((item) => item.name === pageData);
+  console.log(timeSeriesData, "==============timeSeriesData");
+
+  if (timeSeriesData === undefined) {
+    return (
+      <>
+        <MetaTags>
+          <title>Voosh | Listing-Score | {pageName}</title>
+          <meta
+            name={`voosh web app, ${pageName}`}
+            content={`voosh ${pageName}`}
+          />
+          <meta property="og:title" content="web app" />
+        </MetaTags>
+        <Header heading={pageName} isHomePage={false} isDropdownNeeded={true} />
+
+        <div className="container">
+          <SectionButtons sectionName={sectionName} />
+          <div
+            style={{
+              // display: "flex",
+              width: "100%",
+              textAlign: "center",
+              paddingTop: "50%",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "20px",
+                color: "#000",
+                fontWeight: "bold",
+              }}
+            >
+              Not present of{" "}
+              {ls_currentProductIndex === 0 ? "Swiggy" : "Zomato"}
+            </span>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   const {
     name,

@@ -22,6 +22,7 @@ const operationalHealthMongoDBData = async (
   let rdc_query = {};
   let mfr_query = {};
   let ratings_query = {};
+  let acc_query = {};
   // ! temp use
   let serviceability_query = {};
 
@@ -48,6 +49,12 @@ const operationalHealthMongoDBData = async (
     ratings_query = {
       zomato_res_id: parseInt(res_id),
     };
+
+    acc_query = {
+      zomato_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      year: parseInt(year),
+    };
   }
   // ? Query for month
   else if (resultType === "month") {
@@ -70,6 +77,12 @@ const operationalHealthMongoDBData = async (
 
     ratings_query = {
       zomato_res_id: parseInt(res_id),
+    };
+
+    acc_query = {
+      zomato_res_id: parseInt(res_id),
+      month_no: parseInt(number),
+      year: parseInt(year),
     };
   }
   // ? Query for Custom Range
@@ -95,6 +108,14 @@ const operationalHealthMongoDBData = async (
     ratings_query = {
       zomato_res_id: parseInt(res_id),
       // date: { $lte: endDate },
+    };
+    //
+    acc_query = {
+      zomato_res_id: parseInt(res_id),
+      date: {
+        $gte: moment(startDate).format("DD-MM-YYYY"),
+        $lte: moment(endDate).format("DD-MM-YYYY"),
+      },
     };
   }
   // ? If the result type is not week, month or custom range
@@ -170,12 +191,29 @@ const operationalHealthMongoDBData = async (
       ])
       .toArray();
 
+    // ! Operational Health Acceptance
+    const acceptance = await db
+      .collection("zomato_acceptance_products")
+      .aggregate([
+        {
+          $match: acc_query,
+        },
+        {
+          $group: {
+            _id: "$zomato_res_Id",
+            acceptance_score: { $avg: "$accepted_percentage" },
+          },
+        },
+      ])
+      .toArray();
+
     // console.log("*****************--------------------********************");
     // console.log("Zomato Operational Health Data - (Zomato Query Output)");
     // console.log("serviceability: ", serviceability);
     // console.log("rdc_score", rdc_score);
     // console.log("mfr_score", mfr_score);
     // console.log("rating", rating);
+    // console.log("acceptance", acceptance);
     // console.log("*****************--------------------********************");
 
     console.log("*****************--------------------********************");
@@ -184,6 +222,7 @@ const operationalHealthMongoDBData = async (
     console.log("rdc_score: ", rdc_score[0]?.rdc_score);
     console.log("mfr_score: ", mfr_score[0]?.mfr_score);
     console.log("rating: ", rating[0]?.delivery_ratings);
+    console.log("acceptance: ", acceptance[0]?.acceptance_score);
     console.log("*****************--------------------********************");
 
     client.close();
@@ -193,6 +232,7 @@ const operationalHealthMongoDBData = async (
       rdc_score: rdc_score[0]?.rdc_score,
       mfr_score: mfr_score[0]?.mfr_score,
       rating_score: rating[0]?.delivery_ratings,
+      acceptance_score: acceptance[0]?.acceptance_score,
     };
   } catch (err) {
     console.log(err);
@@ -225,6 +265,7 @@ const operationHealthDataFormatter = async (
       serviceability_score,
       oh_score,
       rating_score,
+      acceptance_score,
     } = data;
 
     const ohManually = calculateOHScoreManually({
@@ -322,20 +363,20 @@ const operationHealthDataFormatter = async (
           isDataPresent: mfr_score === undefined ? false : true,
         },
         // Todo: Empty data
-        // ? IGCC
-        {
-          name: "Customer Complaints",
-          type: "percentage",
-          info: "Complains <=1 Gets more orders",
-          benchmark: 1,
-          compareThen: "less",
-          recommendations: [
-            "Paste a menu + item poster at the packaging area",
-            "Retrain packagers on high order days",
-          ],
-          value: null,
-          isDataPresent: false,
-        },
+        // // ? IGCC
+        // {
+        //   name: "Customer Complaints",
+        //   type: "percentage",
+        //   info: "Complains <=1 Gets more orders",
+        //   benchmark: 1,
+        //   compareThen: "less",
+        //   recommendations: [
+        //     "Paste a menu + item poster at the packaging area",
+        //     "Retrain packagers on high order days",
+        //   ],
+        //   value: null,
+        //   isDataPresent: false,
+        // },
         // Todo: Empty data
         // ?Swiggy_Acceptance
         {
@@ -345,8 +386,11 @@ const operationHealthDataFormatter = async (
           benchmark: 99,
           compareThen: "grater",
           recommendations: ["Enable Auto acceptance"],
-          value: null,
-          isDataPresent: false,
+          value:
+            acceptance_score === undefined
+              ? null
+              : parseFloat(acceptance_score.toFixed(2)),
+          isDataPresent: acceptance_score === undefined ? false : true,
         },
       ],
     };

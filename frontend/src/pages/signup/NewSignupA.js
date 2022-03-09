@@ -214,6 +214,7 @@ const NewSignupA = () => {
       data["phone-number"] === "9448467130" ||
       data["phone-number"] === "1234554321" ||
       data["phone-number"] === "1234567890" ||
+      data["phone-number"] === "1122334455" ||
       data["phone-number"] === "1231231239"
     ) {
       cookie.save(VOOSH_APP_PHONE, data["phone-number"], { path: "/" });
@@ -318,6 +319,7 @@ const NewSignupA = () => {
         (data["phone-number"] === "1234554321" ||
           data["phone-number"] === "1234567890" ||
           data["phone-number"] === "5432112345" ||
+          data["phone-number"] === "1122334455" ||
           data["phone-number"] === "1231231239")) ||
       (data["phone-number"].includes("hack") &&
         data["phone-number"].replace(/hack/g, "").length === 10)
@@ -725,7 +727,7 @@ const NewSignupA = () => {
             <div className="logo">
               <img src={logo_img} alt="footer logo" />
             </div>
-            <div className="text">products@voosh.in,  +91-6366183606</div>
+            <div className="text">products@voosh.in, +91-6366183606</div>
           </div>
         </div>
       </>
@@ -735,7 +737,7 @@ const NewSignupA = () => {
       <>
         <div
           className="s2"
-          style={{ display: `${showPage === 1 ? "" : "none"}` }}
+          style={{ display: `${showPage === 1 && !isLoading ? "" : "none"}` }}
         >
           <div
             className="previous-page"

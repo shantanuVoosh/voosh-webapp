@@ -4,12 +4,70 @@ const VooshDB =
   "mongodb://analyst:gRn8uXH4tZ1wv@35.244.52.196:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const documentName = "operationsdb";
 
+const {
+  getMonthStartAndEndDateFromYearMonth,
+  geWeekStartAndEndDateFromYearMonth,
+} = require("../utils/dateProvide");
+
 const previousDay12HoursAgo = () => {
   const m = moment();
   const result = m.add(-12, "hours").add(-1, "days").format("YYYY-MM-DD");
   // console.log(result, "result");
   return result;
 };
+
+// Todo:
+async function checkOrderWiseHelper({
+  res_id,
+  resultType,
+  number,
+  startDate,
+  endDate,
+  year,
+}) {
+  const client = await MongoClient.connect(VooshDB, {
+    useNewUrlParser: true,
+  });
+
+  const db = client.db(documentName);
+
+  let allDates = {};
+  // ? format 02_Mar_2022 for order-wise collection
+  if (resultType === "week") {
+    allDates = geWeekStartAndEndDateFromYearMonth(year, number);
+  } else if (resultType === "month") {
+    allDates = getMonthStartAndEndDateFromYearMonth(year, number);
+  } else if (resultType === "Custom Range") {
+    allDates = {
+      start: startDate,
+      end: endDate,
+    };
+  }
+
+  // ? now check for no order in that date range
+  let checkNoOrder = await db
+    .collection("swiggy_revenue_products")
+    .aggregate([
+      {
+        $match: {
+          "Res Id": parseInt(res_id),
+          // Date: {
+          //   $regex: "02-Mar-2022",
+          // },
+          // Date: { $gte: startDate, $lte: endDate },
+          Date: {
+            $gte: {
+              $regex: `${allDates.start}`,
+            },
+            $lte: {
+              $regex: `${allDates.end}`,
+            },
+          },
+        },
+      },
+    ])
+    .toArray();
+}
 
 const revenueScoreFromMongoDB = async (
   res_id,
@@ -94,13 +152,28 @@ const revenueScoreFromMongoDB = async (
       }`
     );
     console.log("full revenue: ", revenue);
-    // console.log("revenue: ", revenue[0]?.revenue);
     console.log("*****************--------------------********************");
-
     client.close();
+    // Todo: now if the response array in mongodb is empty then,
+    // * we will check the order-wise collection to check if any order is present in that date range
+
+    // console.log(err);
+    // if (revenue.length !== 0) {
+    //   return {
+    //     revenue_score: revenue[0]?.daily_sub_total,
+    //     daily_sub_total: revenue[0]?.daily_sub_total,
+    //     daily_package_charge: revenue[0]?.daily_package_charge,
+    //     daily_total_tax: revenue[0]?.daily_total_tax,
+    //     swiggy_service_tax: revenue[0]?.swiggy_service_tax,
+    //     swiggy_tds: revenue[0]?.swiggy_tds,
+    //     swiggy_tcs: revenue[0]?.swiggy_tcs,
+    //   };
+    // }
+    // // ? if the size if the response array is 0 then,
+    // else {
+    // }
     return {
       revenue_score: revenue[0]?.daily_sub_total,
-
       daily_sub_total: revenue[0]?.daily_sub_total,
       daily_package_charge: revenue[0]?.daily_package_charge,
       daily_total_tax: revenue[0]?.daily_total_tax,
@@ -109,7 +182,6 @@ const revenueScoreFromMongoDB = async (
       swiggy_tcs: revenue[0]?.swiggy_tcs,
     };
   } catch (err) {
-    console.log(err);
     return {
       error: err,
     };
@@ -225,6 +297,7 @@ async function revenuDataOfPreviousMonth(res_id) {
             Miscellaneous: 0,
             TCS: 0,
             TDS: 0,
+            "GST Deduction": 0,
           },
         },
       };
@@ -293,6 +366,10 @@ async function revenuDataOfPreviousMonth(res_id) {
       TCS: parseFloat((swiggyReconsilation?.["tcs"]).toFixed(2)),
       // ? TDS
       TDS: parseFloat((swiggyReconsilation?.["tds"]).toFixed(2)),
+      // ? GST Deduction
+      "GST Deduction": parseFloat(
+        swiggyReconsilation?.["GST_Deduction_U/S_9(5)"].toFixed(2)
+      ),
     };
 
     console.log("*****************--------------------********************");

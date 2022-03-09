@@ -114,6 +114,39 @@ const getPreviousDay12HoursAgo = () => {
   return format;
 };
 
+// ! get Month start and end date
+function getMonthStartAndEndDateFromYearMonth(year, month) {
+  // month in moment is 0 based, so 9 is actually october, subtract 1 to compensate
+  // array is 'year', 'month', 'day', etc
+  const startDate = moment([year, month - 1]);
+  // .format("DD-MMM-YYYY");
+
+  // Clone the value before .endOf()
+  const endDate = moment(startDate).endOf("month");
+  // .format("DD-MMM-YYYY");
+
+  return {
+    start: startDate.format("DD-MMM-YYYY"),
+    end: endDate.format("DD-MMM-YYYY"),
+  };
+}
+// ! get Week start and end date
+function geWeekStartAndEndDateFromYearMonth(year, week) {
+  const startDate = moment(`${year}`)
+    .add(-12, "hours")
+    .add(week, "weeks")
+    .startOf("isoWeek");
+  const endDate = moment(`${year}`)
+    .add(-12, "hours")
+    .add(week, "weeks")
+    .endOf("isoWeek");
+  
+  return {
+    start: startDate.format("DD-MMM-YYYY"),
+    end: endDate.format("DD-MMM-YYYY"),
+  };
+}
+
 module.exports = {
   getTimeLog,
   getCurrentDate,
@@ -123,5 +156,7 @@ module.exports = {
   getYesterdayDateBefore12HoursAgo,
   getPreviousWeek,
   getPreviousMonth,
-  getPreviousDay12HoursAgo
+  getPreviousDay12HoursAgo,
+  getMonthStartAndEndDateFromYearMonth,
+  geWeekStartAndEndDateFromYearMonth
 };

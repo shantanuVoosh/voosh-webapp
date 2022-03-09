@@ -28,6 +28,46 @@ const NotificationModel = {
   "Registration Successful": `You have now successfully entered all details! Sit tight and Relax and we'll analyze and provide you restaurant recommendations!`,
 };
 
+router.post(
+  "/user/check/user-in-nvdp",
+  checkAuthentication,
+  async (req, res) => {
+    const { phone } = req.payload;
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    const nvdpColleaction = "non_voosh_dashboard_products_UAT";
+
+    try {
+      const isUserPresentInNVDP = await db.collection(nvdpColleaction).findOne({
+        owner_number: parseInt(phone),
+      });
+
+      if (isUserPresentInNVDP === null) {
+        return res.json({
+          status: "fail",
+          user: isUserPresentInNVDP,
+        });
+      }
+      // ! If user is present in nvdp
+      else {
+        return res.json({
+          status: "success",
+          message: "user present in nvdp",
+          phone,
+        });
+      }
+    } catch (error) {
+      console.log("Error in checking user in NVDP:", error);
+      res.json({
+        status: "error",
+        message: "Error in checking user in NVDP",
+      });
+    }
+  }
+);
+
 // !Get All Data
 router.post("/voosh-data", checkAuthentication, async (req, res) => {
   console.log("---------- <Get All Data Start> ----------------");
@@ -313,6 +353,7 @@ router.post("/login-voosh", async (req, res) => {
     const test_number = {
       1234567890: 9886850338,
       1234554321: 9448467130,
+      1122334455: 9015032535,
     };
     let customPhoneNumber;
 
@@ -1426,335 +1467,202 @@ router.post("/user/update/email", checkAuthentication, async (req, res) => {
       error: err,
     });
   }
-
-  // res.json({
-  //   status: "success",
-  //   message: "Email sent successfully",
-  // });
 });
 
-//! test route
-//? zomato lsitings
-router.post("/test-listing", async (req, res) => {
-  const { res_id } = req.body;
-  const collectionName = "zomato_audit_score";
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = client.db(documentName);
-    const userData = await db
-      .collection(collectionName)
-      .findOne({ zomto_res_id: res_id });
+//! Test Route
 
-    const result = {
-      delivery_no_review: userData?.delivery_no_review,
-      delivery_review: userData?.delivery_review,
-      offer_1: userData?.offer_1,
-      offer_2: userData?.offer_2,
-      offer_3: userData?.offer_3,
-      offer_4: userData?.offer_4,
+const moment = require("moment");
 
-      beverages_category: userData?.beverages,
-      desserts: userData?.dessert,
-      safety_tag: userData?.safety,
-      //?  .30701754385964913 --> 30%
-      Image: userData?.images,
-      //?  1 -> 100%
-      description: userData?.description,
-    };
+function getMonthDateRange(year, month) {
+  var moment = require("moment");
 
-    res.json({
-      user: userData,
-    });
-  } catch (err) {
-    res.json({
-      Error: err,
-    });
-  }
-});
-router.get(
-  "/sup",
-  // checkAuthentication,
-  async (req, res) => {
-    // const { phone } = req.body;
-    const res_id = 256302;
-    const number = 1;
+  var startDate = moment([year, month - 1]);
+  var endDate = moment(startDate).endOf("month");
+  console.log(startDate.toDate());
+  console.log(endDate.toDate());
 
-    const feedbackQuery = {
-      swiggy_res_id: parseInt(res_id),
-      month_no: parseInt(number),
-      sum: { $gt: 0 },
-    };
-    const OrdersPerRatingQuery = {
-      swiggy_res_id: parseInt(res_id),
-      month_no: parseInt(number),
-    };
-    try {
-      const client = await MongoClient.connect(VooshDB, {
-        useNewUrlParser: true,
-      });
-      const db = client.db(documentName);
-      // ? For Feedback Comments
-      // * sort by problem i.e. sum
-      const reviewOfProducts = await db
-        .collection("swiggy_weekly_review_products")
-        .aggregate([
-          {
-            $match: feedbackQuery,
-          },
-          { $sort: { sum: -1 } },
-        ])
-        .toArray();
+  // make sure to call toDate() for plain JavaScript date type
+  return { start: startDate, end: endDate };
+}
 
-      // * sort by sales
-      const reviewOfProductsSales = await db
-        .collection("swiggy_weekly_review_products")
-        .aggregate([
-          {
-            $match: feedbackQuery,
-          },
-          {
-            $lookup: {
-              from: "swiggy_item_sales_products",
-              pipeline: [
-                // ? $match: { swiggy_res_id: 256302, week_no: 52 }
-                { $match: OrdersPerRatingQuery },
-                {
-                  $group: {
-                    _id: "item_sales",
-                    item_sales: { $sum: "$item_income" },
-                  },
-                },
-              ],
-              localField: "item_name",
-              foreignField: "item_name",
-              as: "itemwise_sales",
-            },
-          },
-          {
-            $unwind: {
-              path: "$itemwise_sales",
-            },
-          },
-          {
-            $sort: {
-              "itemwise_sales.item_sales": -1,
-            },
-          },
-        ])
-        .toArray();
-
-      res.json({
-        reviewOfProducts,
-        reviewOfProductsSales,
-      });
-    } catch (err) {
-      res.json({
-        status: "error",
-        message: "Error while sending data from server data",
-        error: err,
-      });
-    }
-  }
-);
-
-router.get("/revenue", async (req, res) => {
-  const res_id = 56834;
-  const client = await MongoClient.connect(VooshDB, {
-    useNewUrlParser: true,
-  });
-  const db = client.db(documentName);
-
-  // ? Previous month Swiggy Revenue
-  const zomatoReconsilation = await db
-    .collection("zomato_revenue_reconsilation")
-    .findOne({
-      res_id: parseInt(res_id),
-      // month_no: customMonthNumber,
-      // year_no: customYearNumber,
-    });
-
-  // ? RDC or total Cancellation for previous month
-  const rdc = await db
-    .collection("zomato_rdc_products")
-    .aggregate([
-      {
-        $match: {
-          zomato_res_id: parseInt(res_id),
-          month_no: parseInt(1),
-        },
-      },
-      {
-        $group: {
-          _id: "$zomato_res_id",
-          rdc_score: { $sum: "$rdc" },
-        },
-      },
-    ])
-    .toArray();
-
-  res.json({
-    status: "success",
-    zomatoReconsilation,
-    rdc,
-  });
-});
-
-router.get("/test-review", async (req, res) => {
-  const res_id = 56834;
-  const number = 1;
-  // const ordersPerRatingQuery = {
-  //   zomato_res_id: parseInt(res_id),
-  //   month_no: parseInt(number),
-  // };
-  const weeklyReviewQuery = {
-    zomato_res_id: parseInt(res_id),
-    month_no: parseInt(number),
-    // sum: { $gt: 0 },
+// ! get Month start and end date
+function getMonthStartAndEndDateFromYearMonth(year, month) {
+  const startDate = moment([year, month - 1]);
+  const endDate = moment(startDate).endOf("month");
+  return {
+    start: startDate.format("YYYY-MM-DD"),
+    end: endDate.format("YYYY-MM-DD"),
   };
+}
+// ! get Week start and end date
+function getWeekStartAndEndDateFromYearWeek(year, week) {
+  const startDate = moment(`${year}`)
+    .add(-12, "hours")
+    .add(week, "weeks")
+    .startOf("isoWeek");
+  const endDate = moment(`${year}`)
+    .add(-12, "hours")
+    .add(week, "weeks")
+    .endOf("isoWeek");
+
+  return {
+    start: startDate.format("YYYY-MM-DD"),
+    end: endDate.format("YYYY-MM-DD"),
+  };
+}
+
+router.get("/test/no-order", async (req, res) => {
+  const res_id = 451888;
+  // const res_id = 256302;
+  const number = 9;
+  const year = 2022;
+  const date = "2022-03-02";
+  const phone = 7008237257;
+
+  // const response = getMonthStartAndEndDateFromYearMonth(year, number);
+  const response = getWeekStartAndEndDateFromYearWeek(year, number);
+  console.log(response);
+
   try {
     const client = await MongoClient.connect(VooshDB, {
       useNewUrlParser: true,
     });
-    const db = client.db(documentName);
+    const query = {
+      swiggy_res_id: parseInt(res_id),
+      week_no: parseInt(number),
+      year_no: parseInt(year),
+    };
 
-    const reviewOfProducts = await db
-      .collection("zomato_weekly_review_products")
+    const db = client.db(documentName);
+    let revenue = await db
+      .collection("swiggy_revenue_products")
       .aggregate([
         {
-          $match: weeklyReviewQuery,
+          $match: query,
         },
-
-        // { $sort: { sum: -1 } },
+        {
+          $group: {
+            _id: "$swiggy_res_id",
+            daily_sub_total: {
+              $sum: "$daily_sub_total",
+            },
+            daily_package_charge: {
+              $sum: "$daily_package_charge",
+            },
+            daily_total_tax: {
+              $sum: "$daily_total_tax",
+            },
+            swiggy_service_tax: {
+              $sum: "$swiggy_service_tax",
+            },
+            swiggy_tds: {
+              $sum: "$swiggy_tds",
+            },
+            swiggy_tcs: {
+              $sum: "$swiggy_tcs",
+            },
+          },
+        },
       ])
       .toArray();
 
-    res.json({
-      reviewOfProducts,
-    });
-  } catch (err) {
-    res.json({
-      err: err,
-    });
-  }
-});
+    console.log("reveue", revenue);
+    if (revenue.length === 0) {
+      let checkNoOder = await db
+        .collection("Non_Voosh_Orderwise2")
+        .aggregate([
+          {
+            $match: {
+              "Res Id": parseInt(res_id),
+            },
+          },
+        ])
+        .toArray();
 
-router.get("/get-cfh-data", async (req, res) => {
-  try {
-    // TODO get all data from mongodb specified resturant
-    // ? res_id & documnetName needed,
-    // ?or by default is set as some static value
-
-    const date = req.body.date;
-
-    const swiggy_res_id = 256302;
-    const zomato_res_id = 56834;
-    const z_res_id = 56834;
-    const s_res_id = 256302;
-    const listing_id = "P0051";
-    const phone = 9448467130;
-    const resultType = "Custom Range";
-    const number = null;
-    const startDate = "2020-12-01";
-    const endDate = "2021-02-24";
-
-    let { listingID } = req.body;
-
-    let newRestaurantList = [];
-
-    const getAllSwiggyAndZomatoRestaurantsData =
-      await getAllSwiggyAndZomatoRestaurants(phone);
-    newRestaurantList = [...getAllSwiggyAndZomatoRestaurantsData];
-
-    const swiggyData = await getAllSwiggyData(
-      parseInt(s_res_id),
-      number,
-      resultType,
-      startDate,
-      endDate
-    );
-    const zomatoData = await getAllZomatoData(
-      parseInt(z_res_id),
-      number,
-      resultType,
-      startDate,
-      endDate
-    );
-
-    console.log("---------- <Get All Data Success End> ----------------");
-    res.json({
-      data: {
-        res_name: "Sample Restaurant",
-        newRestaurantList: newRestaurantList,
-        api_data2: [swiggyData, zomatoData],
-        listingID: listingID !== "" ? listingID : listing_id,
-      },
-      status: "success",
-    });
-  } catch (err) {
-    console.log("Error:", err);
-    console.log("---------- <Get All Data Error End> ----------------");
-    res.json({
-      status: "error",
-      message: `Error while getting data :${err}`,
-    });
-  }
-});
-
-router.get("/data-x", async (req, res) => {
-  const nvdpColleaction = "non_voosh_dashboard_products";
-  let phone = 9448467130;
-  console.log("*****************--------------------********************");
-  console.log("inside getUserDetails");
-  console.log("phone", phone);
-
-  try {
-    const client = await MongoClient.connect(VooshDB, {
-      useNewUrlParser: true,
-    });
-    const db = client.db(documentName);
-    const userData = await db
-      .collection(nvdpColleaction)
-      .findOne({ owner_number: phone });
-
-    console.log("userData", userData);
-
-    if (userData) {
-      const {
-        owner_name,
-        owner_number,
-        kitchen_id,
-        swiggy_password,
-        swiggy_register_phone,
-        zomato_register_phone,
-      } = userData;
-
-      console.log("*****************--------------------********************");
-
-      res.json({
-        owner_name,
-        owner_number,
-        kitchen_id,
-        swiggy_password,
-        swiggy_register_phone,
-        zomato_register_phone,
+      const mutatedData = checkNoOder.map((item) => {
+        const date = moment(item.Date, "DD-MMM-YYYY HH:mm a").format(
+          "YYYY-MM-DD"
+        );
+        const orderId = item["Order Id"];
+        const resId = item["Res Id"];
+        const nomenclature = item["Nomenclature"];
+        const goodFoodReady = item["Good Food Ready"];
+        const orderStatus = item["Order Status"];
+        const amount = item["Amount"];
+        const rating = item["Rating"];
+        const whatCanBeImproved = item["What can be improved"];
+        const feedback = item["Feedback"];
+        const itemName = item["Item Name"];
+        const itemQuantity = item["Item Quantity"];
+        const itemPrice = item["Item Price"];
+        const breakup_amount = item["Breakup_amount"];
+        const url = item.Url;
+        return {
+          date,
+          orderId,
+          resId,
+          nomenclature,
+          goodFoodReady,
+          orderStatus,
+          amount,
+          rating,
+          whatCanBeImproved,
+          feedback,
+          itemName,
+          itemQuantity,
+          itemPrice,
+          breakup_amount,
+          url,
+        };
       });
-    } else {
-      console.log("*****************--------------------********************");
+
+      const filterData = mutatedData.filter(
+        (item) => item.date >= response.start && item.date <= response.end
+      );
+
+      // ! if the filtered data is empty then, check error log
+
+      if (filterData.length > 0) {
+        let checkError = "no error";
+        let count_no_order = 0;
+        filterData.forEach((item) => {
+          if (item.orderId == "no_order") {
+            count_no_order++;
+          }
+        });
+
+        checkError =
+          filterData.length === count_no_order ? "no order" : "working on it";
+
+        res.json({
+          checkError,
+          filterData,
+        });
+      }
+      // ? see error log
+      // ! not ready
+      else {
+        let checkErrorLog = await db
+          .collection("error_logs_products")
+          .aggregate([
+            {
+              $match: {
+                "Res Id": parseInt(res_id),
+              },
+            },
+          ])
+          .toArray();
+      }
+    }
+    // ? show revenue
+    else {
       res.json({
-        owner_name: null,
-        owner_number: null,
-        kitchen_id: null,
-        swiggy_password: null,
-        swiggy_register_phone: null,
-        zomato_register_phone: null,
+        revenue,
       });
     }
   } catch (err) {
-    console.log(err);
     res.json({
-      status: "error",
+      err: err,
     });
   }
 });
