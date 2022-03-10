@@ -230,6 +230,40 @@ const customerReviewsDataFormatter = async (
   }
 };
 
+const customerReviewsStaticRating = async (res_id) => {
+  const customerRatingsQuery = {
+    zomato_res_id: parseInt(res_id),
+  };
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    // ? Customer Ratings
+    // ? Customer Ratings
+    const customerRatings = await db
+      .collection("zomato_static_rating_products")
+      .aggregate([
+        {
+          $match: customerRatingsQuery,
+        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    return {
+      customerRatings: customerRatings[0]?.delivery_ratings,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: err,
+    };
+  }
+};
+
 module.exports = {
   customerReviewsDataFormatter,
+  customerReviewsStaticRating,
 };

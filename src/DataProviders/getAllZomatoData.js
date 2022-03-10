@@ -4,6 +4,7 @@ const {
 
 const {
   customerReviewsDataFormatter,
+  customerReviewsStaticRating,
 } = require("../collectionFormatterForZomato/customerReviews");
 
 const {
@@ -16,14 +17,14 @@ const {
   listingScoreDataFormatter,
 } = require("../collectionFormatterForZomato/listingScore");
 
-async function getAllZomatoData(
+async function getAllZomatoData({
   res_id,
   number,
   resultType,
-  startDate = "2021-12-01",
-  endDate = "2022-01-06",
-  year = 2022
-) {
+  startDate,
+  endDate,
+  year,
+}) {
   console.log("-----------------");
   console.log("inside---> Set All Zomato Data");
   console.log(res_id, "res_id");
@@ -50,6 +51,10 @@ async function getAllZomatoData(
     endDate,
     year
   );
+  const { customerRatings: crStaticRating } = await customerReviewsStaticRating(
+    res_id
+  );
+
   const ls = await listingScoreDataFormatter(
     res_id,
     number,
@@ -76,14 +81,18 @@ async function getAllZomatoData(
     name: "Zomato",
     operationHealth: oh,
     listingScore: ls,
-    customerReviews,
 
     revenue_score: {
       revenue_score,
       isDataPresent: revenue_score !== undefined ? true : false,
     },
     previousMonthRevenue: revenue_previous_month,
-
+    customerReviewsRating: {
+      value: crStaticRating === undefined ? 0 : crStaticRating,
+      benchmark: 4,
+      isDataPresent: crStaticRating !== undefined ? true : false,
+    },
+    customerReviews: customerReviews,
     // previousMonthRevenue: {
     //   previousDayRevenue: {
     //     isDataPresent: previousDayRevenue === undefined ? false : true,

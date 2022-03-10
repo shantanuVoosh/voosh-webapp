@@ -464,7 +464,40 @@ const customerReviewsDataFormatter = async (
   }
 };
 
+const customerReviewsStaticRating = async (res_id) => {
+  const customerRatingsQuery = {
+    res_id: parseInt(res_id),
+  };
+  try {
+    const client = await MongoClient.connect(VooshDB, {
+      useNewUrlParser: true,
+    });
+    const db = client.db(documentName);
+    // ? Customer Ratings
+    const customerRatings = await db
+      .collection("swiggy_static_rating_products")
+      .aggregate([
+        {
+          $match: customerRatingsQuery,
+        },
+        { $sort: { year_no: -1, month_no: -1, week_no: -1 } },
+        { $limit: 1 },
+      ])
+      .toArray();
+
+    return {
+      customerRatings: customerRatings[0]?.customer_rating,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: err,
+    };
+  }
+};
+
 module.exports = {
   customerReviewsDataFormatter,
-  customerReviewsMongoDBData,
+  customerReviewsMongoDBData, 
+  customerReviewsStaticRating
 };

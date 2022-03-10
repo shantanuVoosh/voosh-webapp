@@ -7,19 +7,21 @@ const {
 
 const {
   customerReviewsDataFormatter,
+  customerReviewsStaticRating,
 } = require("../collectionFormatterForSwiggy/customerReviews");
 const {
   revenuDataOfPreviousMonth,
   revenueScoreFromMongoDB,
 } = require("../collectionFormatterForSwiggy/revenue");
 
-async function getAllSwiggyData(
+async function getAllSwiggyData({
   res_id,
   number,
   resultType,
-  startDate = "2021-12-01",
-  endDate = "2022-01-06"
-) {
+  startDate,
+  endDate,
+  year,
+}) {
   console.log("-----------------");
   console.log("inside---> Get All Swiggy Data");
   console.log(res_id, "res_id");
@@ -50,6 +52,10 @@ async function getAllSwiggyData(
     startDate,
     endDate
   );
+  const { customerRatings: crStaticRating } = await customerReviewsStaticRating(
+    res_id
+  );
+
   const {
     revenue_score,
     daily_sub_total,
@@ -66,6 +72,10 @@ async function getAllSwiggyData(
     endDate
   );
 
+  console.log("-----------------");
+  console.log(crStaticRating, "crStaticRating");
+  console.log("-----------------");
+
   const rv_score =
     daily_sub_total +
     daily_package_charge +
@@ -80,10 +90,16 @@ async function getAllSwiggyData(
     operationHealth: oh,
     listingScore: ls,
     revenue_score: {
-      revenue_score: revenue_score !== undefined?rv_score:0,
+      revenue_score: revenue_score !== undefined ? rv_score : 0,
       isDataPresent: revenue_score !== undefined ? true : false,
     },
     previousMonthRevenue: revenue_previous_month,
+    customerReviewsRating: {
+      value: crStaticRating === undefined ? 0 : crStaticRating,
+      benchmark: 4,
+      isDataPresent: crStaticRating !== undefined ? true : false,
+    },
+
     customerReviews: customerReviews,
   };
 }

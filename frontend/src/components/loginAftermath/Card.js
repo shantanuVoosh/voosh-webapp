@@ -58,9 +58,11 @@ const Card = ({ iconName, name, info, sectionName }) => {
     previousMonthRevenue: {
       financialData: { totalSales },
     },
-    customerReviews: {
+    
+    customerReviewsRating: {
       value: customerReviewsRating,
       benchmark: customerReviewsRatingBenchmark,
+      isDataPresent: isCustomerReviewsRatingPresent,
     },
   } = currentProductData;
 
@@ -216,13 +218,13 @@ const Card = ({ iconName, name, info, sectionName }) => {
                 value: customerReviewsRating,
                 benchmark: customerReviewsRatingBenchmark,
                 type: "number",
-                changeTypeDirection: isCustomerReviewsPresent.isDataPresent
+                changeTypeDirection: !isCustomerReviewsRatingPresent
                   ? "up"
                   : customerReviewsRating >= customerReviewsRatingBenchmark
                   ? "up"
                   : "down",
                 change: customerReviewsRatingBenchmark,
-                isDataPresent: isCustomerReviewsPresent,
+                isDataPresent: isCustomerReviewsRatingPresent,
               }}
             />
           )}

@@ -280,12 +280,12 @@ function listingScoreBenchmarks(name, partner_name, value) {
     }
     // *7-10 this will not have know more btn(Time Graph)
     else if (
-      name === "Offer 1" ||
+      name === "Offer 1" || 
       name === "Offer 2" ||
       name === "Offer 3" ||
       name === "Offer 4"
     ) {
-      resultValue = value === " Applicable" ? 0 : 1;
+      resultValue = value !== "Applicable" ? 0 : 1;
       resultBenchmark = 1;
       showColor = resultValue === resultBenchmark ? "green" : "red";
     }

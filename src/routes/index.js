@@ -75,6 +75,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
     // TODO get all data from mongodb specified resturant
     // ? res_id & documnetName needed,
     // ?or by default is set as some static value
+    // ! add year
     const {
       res_id,
       id,
@@ -85,7 +86,6 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       swiggy_res_id,
       zomato_res_id,
     } = req.payload;
-    const date = req.body.date;
 
     let {
       number,
@@ -95,6 +95,7 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
       zomato_res_id: z_res_id,
       swiggy_res_id: s_res_id,
       listingID,
+      date,
     } = req.body;
 
     console.log("Current User( req.payload): ", req.payload);
@@ -140,39 +141,43 @@ router.post("/voosh-data", checkAuthentication, async (req, res) => {
         (s_res_id !== null && s_res_id !== swiggy_res_id))
     ) {
       console.log("new call/n", "it means z_id or s_id is changed or provided");
-      swiggyData = await getAllSwiggyData(
-        parseInt(s_res_id),
+      swiggyData = await getAllSwiggyData({
+        res_id: parseInt(s_res_id),
         number,
         resultType,
         startDate,
-        endDate
-      );
-      zomatoData = await getAllZomatoData(
-        parseInt(z_res_id),
+        endDate,
+        year: 2022,
+      });
+      zomatoData = await getAllZomatoData({
+        res_id: parseInt(z_res_id),
         number,
         resultType,
         startDate,
-        endDate
-      );
+        endDate,
+        year: 2022,
+      });
     } else {
       console.log(
         "old call\n",
         "it means we are using the base zomato id and swiggy id "
       );
-      swiggyData = await getAllSwiggyData(
-        parseInt(swiggy_res_id),
+      swiggyData = await getAllSwiggyData({
+        res_id: parseInt(swiggy_res_id),
         number,
         resultType,
         startDate,
-        endDate
-      );
-      zomatoData = await getAllZomatoData(
-        parseInt(zomato_res_id),
+        endDate,
+        year: 2022,
+      });
+      zomatoData = await getAllZomatoData({
+        res_id: parseInt(zomato_res_id),
         number,
         resultType,
         startDate,
-        endDate
-      );
+        endDate,
+        year: 2022,
+      });
     }
 
     console.log("---------- <Get All Data Success End> ----------------");
